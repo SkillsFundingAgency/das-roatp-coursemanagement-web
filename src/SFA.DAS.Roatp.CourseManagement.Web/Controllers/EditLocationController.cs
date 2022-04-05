@@ -15,6 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         public IActionResult Index()
         {
+            _logger.LogInformation("Get edit location in course management.");
             return View(new EditLocationViewModel { Name = "Coventry" });
         }
     }
