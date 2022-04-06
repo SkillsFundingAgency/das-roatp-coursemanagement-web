@@ -1,8 +1,10 @@
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI.Startup;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
@@ -11,7 +13,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            var config = new ConfigurationBuilder()
+                .AddConfiguration(configuration)
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddEnvironmentVariables();
+
+            config.AddAzureTableStorage(options =>
+            {
+                options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+                options.EnvironmentName = configuration["Environment"];
+                options.PreFixConfigurationKeys = false;
+            });
+
+            Configuration = config.Build();
         }
 
         public IConfiguration Configuration { get; }
