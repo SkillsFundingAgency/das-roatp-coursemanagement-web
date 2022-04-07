@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [Route("ping")]
         public IActionResult Index()
         {
-            return Ok("Pong");
+            return new OkObjectResult("Pong");
         }
     }
 }
