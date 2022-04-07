@@ -14,10 +14,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             
             var expectedResponse = "Pong";
 
-            var result = controller.Index() as OkObjectResult;
+            var result = controller.Index();
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Value, Is.EqualTo(expectedResponse));
+            Assert.That(result, Is.TypeOf<OkObjectResult>());
+            Assert.That((result as OkObjectResult).Value, Is.EqualTo(expectedResponse));
         }
     }
 }
