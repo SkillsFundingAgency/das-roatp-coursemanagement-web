@@ -4,6 +4,10 @@
     ViewData["Title"] = "Location details";
 }
 
-<h1>Location Detail</h1>
-<h4>@Model.Name</h4>
+@section breadcrumb {
+    <a href="#" class="govuk-back-link">Back</a>
+}
+
+<h1 class="govuk-heading-xl">Location details</h1>
+<p>@Model.Name</p>
 
