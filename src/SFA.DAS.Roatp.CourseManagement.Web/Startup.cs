@@ -68,8 +68,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddProviderUiServiceRegistration(_configuration);
 
-            //services.AddMediatR(typeof(GetCreateCourseDemandQuery).Assembly);
-            //services.AddMediatRValidation();
+            /// services.AddMediatR(typeof(GetCreateCourseDemandQuery).Assembly);
+            /// services.AddMediatRValidation();
 
             services.AddAuthorizationServicePolicies();
 
@@ -99,9 +99,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             })
             .SetDefaultNavigationSection(NavigationSection.Home)
-            //.EnableGoogleAnalytics()
+            /// .EnableGoogleAnalytics()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-            //.SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
+            /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
 
             if (_configuration.IsDev() || _configuration.IsLocal())
             {
