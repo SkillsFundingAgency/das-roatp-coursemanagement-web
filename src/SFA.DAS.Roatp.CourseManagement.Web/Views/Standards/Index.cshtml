@@ -1,11 +1,14 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 @model ViewStandardsListViewModel
 @{
-    ViewBag.Title = "Check your record";
+    ViewBag.Title = "Standards";
 }
-
+<a href="#" class="govuk-back-link">Back</a>
 <div class="grid-row">
     <div class="column-two-thirds">
+        <h2 class="heading-medium">
+            Check your record
+        </h2>
         <h1 class="heading-xlarge">Standards you deliver</h1>
         <p class="govuk-body">Check this list of your standards and make sure they stay up to date. This is important as they are used when employers want to find apprenticeship training.</p>
 
@@ -17,30 +20,38 @@
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
-                @foreach( var standard in Model.Standards)
+                @foreach (var standard in Model.Standards)
                 {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        @standard.CourseName
-                    </td>
-                    <td class="govuk-table__cell">
-                        @if(standard.IsImported)
-                        {
-                        <strong class="govuk-tag govuk-tag--green">CHECKED</strong>
-                        }
-                        else
-                        {
-                        <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
-                        }
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <a href="#" aria-describedby="read-declaration-status">
+                                    @standard.CourseName (Level @standard.Level)
+                                </a>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @if (standard.IsImported)
+                            {
+                                <strong class="govuk-tag govuk-tag--green">CHECKED</strong>
+                            }
+                            else
+                            {
+                                <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
+                            }
 
-                    </td>
-                </tr>
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
-        <a href="">Add a standard</a>
-        <div class="form-group">
-            <a href="/" class="button button-start" title="Save and continue" aria-label=Save and continue">Save and continue</a>
-        </div>
+        <span class="app-task-list__task-name">
+            <a href="#" aria-describedby="read-declaration-status">
+                Add a standard
+            </a>
+        </span>
+        <br />
+        <br />
+        <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">Save and continue</button>
     </div>
 </div>
