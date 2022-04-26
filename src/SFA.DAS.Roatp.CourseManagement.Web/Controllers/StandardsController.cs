@@ -16,15 +16,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         private readonly IRoatpCourseManagementOuterApiClient _roatpCourseManagementOuterApiClient;
         private readonly ILogger<StandardsController> _logger;
 
-        public StandardsController(ILogger<StandardsController> logger, IRoatpCourseManagementOuterApiClient roatpCourseManagementOuterApiClient)
+        public StandardsController(IRoatpCourseManagementOuterApiClient roatpCourseManagementOuterApiClient, ILogger<StandardsController> logger)
         {
             _logger = logger;
             _roatpCourseManagementOuterApiClient = roatpCourseManagementOuterApiClient;
         }
 
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public async Task<IActionResult> GetStandards()
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+            if(string.IsNullOrEmpty(ukprn))
+            {
+                _logger.LogInformation("ukprn number is not valid ");
+            }
 
             _logger.LogInformation("Logged into course management with ukprn {ukprn}", ukprn);
 
@@ -39,7 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 model.Standards = result.Standards;
             }
 
-            return View(model);
+            return View("~/Views/Standards/ViewStandards.cshtml", model);
         }
     }
 }
