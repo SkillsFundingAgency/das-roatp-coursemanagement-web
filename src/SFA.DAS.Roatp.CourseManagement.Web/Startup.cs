@@ -16,6 +16,7 @@ using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
@@ -121,6 +122,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 services.AddDataProtection(_configuration);
             }
 
+            var handlerLifeTime = TimeSpan.FromMinutes(5);
+            services.AddHttpClient<IRoatpCourseManagementOuterApiClient, RoatpCourseManagementOuterApiClient>(config =>
+            {
+                var configuration = _configuration
+                    .GetSection(nameof(RoatpCourseManagementOuterApi))
+                    .Get<RoatpCourseManagementOuterApi>();
+
+                config.BaseAddress = new Uri(configuration.BaseUrl);
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+                config.DefaultRequestHeaders.Add("SubscriptionKey", configuration.SubscriptionKey);
+            })
+           .SetHandlerLifetime(handlerLifeTime);
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -184,7 +198,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Standards}/{action=Index}/{id?}");
             });
         }
     }

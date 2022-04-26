@@ -6,9 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.20.0" />
+    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.8" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="3.1.24" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="3.1.24" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="3.1.24" />
+    <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.6.2" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="3.1.24" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.24" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="3.1.24" />
@@ -26,6 +28,10 @@
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Application\SFA.DAS.Roatp.CourseManagement.Application.csproj" />
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Domain\SFA.DAS.Roatp.CourseManagement.Domain.csproj" />
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Infrastructure\SFA.DAS.Roatp.CourseManagement.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Standards\" />
   </ItemGroup>
 
 </Project>

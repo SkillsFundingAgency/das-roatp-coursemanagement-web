@@ -1,0 +1,46 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model ViewStandardsListViewModel
+@{
+    ViewBag.Title = "Check your record";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h1 class="heading-xlarge">Standards you deliver</h1>
+        <p class="govuk-body">Check this list of your standards and make sure they stay up to date. This is important as they are used when employers want to find apprenticeship training.</p>
+
+        <table class="govuk-table">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col"> Standard </th>
+                    <th class="govuk-table__header" scope="col"> </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach( var standard in Model.Standards)
+                {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @standard.CourseName
+                    </td>
+                    <td class="govuk-table__cell">
+                        @if(standard.IsImported)
+                        {
+                        <strong class="govuk-tag govuk-tag--green">CHECKED</strong>
+                        }
+                        else
+                        {
+                        <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
+                        }
+
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <a href="">Add a standard</a>
+        <div class="form-group">
+            <a href="/" class="button button-start" title="Save and continue" aria-label=Save and continue">Save and continue</a>
+        </div>
+    </div>
+</div>
