@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
-using System.Net.Http;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Firewall;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Exceptions;
 
@@ -25,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients
         protected readonly HttpClient _httpClient;
         protected readonly ILogger<AC> _logger;
 
-        public ApiClientBase(HttpClient httpClient, ILogger<AC> logger)
+        protected ApiClientBase(HttpClient httpClient, ILogger<AC> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
