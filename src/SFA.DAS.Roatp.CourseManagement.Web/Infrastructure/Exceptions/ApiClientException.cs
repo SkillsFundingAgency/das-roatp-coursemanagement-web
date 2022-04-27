@@ -9,7 +9,6 @@ using System.Text;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Exceptions
 {
     [ExcludeFromCodeCoverage]
-    [Serializable]
     public class ApiClientException : ApplicationException
     {
         public string HttpMethod { get; }
