@@ -22,6 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         private Mock<IRoatpCourseManagementOuterApiClient> _outerApiClient;
         private Mock<ILogger<StandardsController>> _logger;
         private int _ukprn;
+        private ViewStandardsListViewModel expectedModel;
 
         [SetUp]
         public void Before_each_test()
@@ -63,6 +64,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
             response.Standards.Add(standard1);
             response.Standards.Add(standard2);
+            expectedModel = response;
 
             _outerApiClient.Setup(x => x.GetAllStandards(_ukprn)).ReturnsAsync(response);
 
@@ -85,6 +87,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("ViewStandards.cshtml");
             viewResult.Model.Should().NotBeNull();
+            viewResult.Model.Should().BeEquivalentTo(expectedModel);
         }
     }
 }
