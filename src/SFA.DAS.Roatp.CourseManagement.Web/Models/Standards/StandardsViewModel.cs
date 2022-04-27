@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class ViewStandardsViewModel
+    public class StandardsViewModel
     {
         public int ProviderCourseId { get; set; }
         public string CourseName { get; set; }

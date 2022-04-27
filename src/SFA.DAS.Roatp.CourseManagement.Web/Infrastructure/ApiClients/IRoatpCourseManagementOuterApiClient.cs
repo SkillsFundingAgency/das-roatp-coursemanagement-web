@@ -5,6 +5,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients
 {
     public interface IRoatpCourseManagementOuterApiClient
     {
-        Task<ViewStandardsListViewModel> GetAllStandards(int ukprn);
+        Task<StandardsListViewModel> GetAllStandards(int ukprn);
     }
 }

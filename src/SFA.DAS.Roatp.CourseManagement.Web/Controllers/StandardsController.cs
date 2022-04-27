@@ -30,9 +30,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
            var result = await _roatpCourseManagementOuterApiClient.GetAllStandards(int.Parse(ukprn));
 
-            var model = new ViewStandardsListViewModel
+            var model = new StandardsListViewModel
             {
-                Standards = new System.Collections.Generic.List<ViewStandardsViewModel>()
+                Standards = new System.Collections.Generic.List<StandardsViewModel>()
             };
             if(result != null)
             {

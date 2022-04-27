@@ -13,10 +13,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients
         {
         }
 
-        public async Task<ViewStandardsListViewModel> GetAllStandards(int ukprn)
+        public async Task<StandardsListViewModel> GetAllStandards(int ukprn)
         {
-            var result = await Get<List<ViewStandardsViewModel>>($"/Standards/{ukprn}");
-            var response = new ViewStandardsListViewModel
+            var result = await Get<List<StandardsViewModel>>($"/Standards/{ukprn}");
+            var response = new StandardsListViewModel
             {
                 Standards = result
             };

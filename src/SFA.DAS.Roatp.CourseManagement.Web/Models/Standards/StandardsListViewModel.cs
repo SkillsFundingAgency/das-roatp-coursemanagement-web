@@ -2,8 +2,8 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class ViewStandardsListViewModel
+    public class StandardsListViewModel
     {
-       public List<ViewStandardsViewModel> Standards { get; set; }
+       public List<StandardsViewModel> Standards { get; set; }
     }
 }

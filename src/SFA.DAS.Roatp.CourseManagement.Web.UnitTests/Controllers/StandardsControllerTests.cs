@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         private Mock<IRoatpCourseManagementOuterApiClient> _outerApiClient;
         private Mock<ILogger<StandardsController>> _logger;
         private int _ukprn;
-        private ViewStandardsListViewModel expectedModel;
+        private StandardsListViewModel expectedModel;
 
         [SetUp]
         public void Before_each_test()
@@ -45,19 +45,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 new Claim(ProviderClaims.ProviderUkprn,"111"),
             }, "mock"));
 
-            var response = new ViewStandardsListViewModel
+            var response = new StandardsListViewModel
             {
-                Standards = new System.Collections.Generic.List<ViewStandardsViewModel>()
+                Standards = new System.Collections.Generic.List<StandardsViewModel>()
             };
 
-            var standard1 = new ViewStandardsViewModel
+            var standard1 = new StandardsViewModel
             {
                 ProviderCourseId = 1,
                 CourseName = "test1",
                 Level =1,
                 IsImported = true
             };
-            var standard2 = new ViewStandardsViewModel
+            var standard2 = new StandardsViewModel
             {
                 ProviderCourseId = 2,
                 CourseName = "test2",
