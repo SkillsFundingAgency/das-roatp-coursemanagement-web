@@ -1,0 +1,51 @@
+﻿@model ReviewYourDetailsViewModel
+@{
+    ViewData["Title"] = "Review your details";
+    ViewData["Description"] = "Check and confirm your standards and location details.";
+}
+<a href="@Model.DashboardUrl" class="govuk-back-link">Back</a>
+<main class="govuk-main-wrapper govuk-main-wrapper--autospacing" id="main_content">
+    <div class="govuk-caption-xl">Check your record</div>
+    <h1 class="govuk-heading-xl">Review your details</h1>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <p>Check your organisation's details are correct. If anything changes in the future, come back to this service and update them.</p>
+            <ol class="das-task-list">
+                <li>
+                    <h2 class="das-task-list__section govuk-!-font-size-36">
+                        Your information
+                    </h2>
+                    <ul class="das-task-list__items govuk-!-padding-0">
+                        <li class="das-task-list__item">
+                            <span class="das-task-list__task-name">
+                                <a class="govuk-link" href="#">
+                                    Training locations
+                                </a>
+                            </span>
+                        </li>
+                        <li class="das-task-list__item">
+                            <span class="das-task-list__task-name">
+                                <a class="govuk-link" href="#">
+                                    Standards
+                                </a>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <h2 class="das-task-list__section">
+                        Confirm your details
+                    </h2>
+                    <p>When you have checked and are happy that these details are correct, confirm them for our record.</p>
+                    <ul class="das-task-list__items govuk-!-padding-0">
+                        <li class="das-task-list__item">
+                            <span class="das-task-list__task-name">
+                                Submit this information
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+            </ol>
+        </div>
+    </div>
+</main>
