@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Text;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Firewall;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Exceptions;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients
 {
@@ -16,6 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients
     /// Please read documentation on all methods.
     /// </summary>
     /// <typeparam name="AC">The inherited ApiClient.</typeparam>
+    [ExcludeFromCodeCoverage]
     public abstract class ApiClientBase<AC>
     {
         private const string _acceptHeaderName = "Accept";

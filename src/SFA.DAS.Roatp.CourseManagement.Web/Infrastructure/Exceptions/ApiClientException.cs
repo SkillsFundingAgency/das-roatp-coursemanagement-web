@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Net.Http;
 using System.Runtime.Serialization;
@@ -7,6 +8,7 @@ using System.Text;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Exceptions
 {
+    [ExcludeFromCodeCoverage]
     [Serializable]
     public class ApiClientException : ApplicationException
     {
