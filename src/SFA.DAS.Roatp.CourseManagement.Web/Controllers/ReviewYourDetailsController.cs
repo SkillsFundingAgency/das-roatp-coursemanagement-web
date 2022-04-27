@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _pasSharedConfiguration = config.Value;
         }
 
-        [Route("roatp/review-your-details")]
+        [Route("review-your-details")]
         [HttpGet]
         public IActionResult ReviewYourDetails()
         {
