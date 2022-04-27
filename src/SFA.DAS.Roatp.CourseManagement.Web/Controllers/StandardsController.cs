@@ -9,7 +9,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [ExcludeFromCodeCoverage] // just a place holder at the moment, will be removed or re-purposed 
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class StandardsController : Controller
     {
