@@ -25,10 +25,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public async Task<IActionResult> GetStandards()
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            if(string.IsNullOrEmpty(ukprn))
-            {
-                _logger.LogInformation("ukprn number is not valid ");
-            }
 
             _logger.LogInformation("Logged into course management with ukprn {ukprn}", ukprn);
 
