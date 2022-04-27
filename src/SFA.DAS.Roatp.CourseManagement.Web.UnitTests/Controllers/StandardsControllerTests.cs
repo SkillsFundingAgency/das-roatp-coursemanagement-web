@@ -52,12 +52,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var standard1 = new ViewStandardsViewModel
             {
+                ProviderCourseId = 1,
                 CourseName = "test1",
                 Level =1,
                 IsImported = true
             };
             var standard2 = new ViewStandardsViewModel
             {
+                ProviderCourseId = 2,
                 CourseName = "test2",
                 Level = 2,
                 IsImported = false
