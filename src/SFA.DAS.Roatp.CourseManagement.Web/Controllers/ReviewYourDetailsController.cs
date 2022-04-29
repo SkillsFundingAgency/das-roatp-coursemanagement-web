@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Provider.Shared.UI.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
@@ -16,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _pasSharedConfiguration = config.Value;
         }
 
-        [Route("review-your-details")]
+        [Route("{ukprn}/review-your-details", Name = RouteNames.ReviewYourDetails)]
         [HttpGet]
         public IActionResult ReviewYourDetails()
         {

@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
                 {
                     options.MetadataAddress = idams.MetadataAddress;
                     options.Wtrealm = idams.Wtrealm;
-                    options.CallbackPath = "/{ukprn}/home"; //This needs to be tested and fixed if required
+                    options.CallbackPath = "/{ukprn}/home"; 
                     options.Events.OnSecurityTokenValidated = async (ctx) =>
                     {
                         await PopulateProviderClaims(ctx.HttpContext, ctx.Principal);
