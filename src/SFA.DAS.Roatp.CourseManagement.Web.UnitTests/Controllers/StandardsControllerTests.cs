@@ -31,17 +31,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             _logger = new Mock<ILogger<StandardsController>>();
             _ukprn = 111;
 
-            var signInId = Guid.NewGuid();
-            var givenNames = "Test";
-            var familyName = "User";
-
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
-                new Claim(ClaimTypes.Name, $"{givenNames} {familyName}"),
-                new Claim(ClaimTypes.NameIdentifier, "1"),
-                new Claim("Email", "test@test.com"),
-                new Claim("sub", signInId.ToString()),
-                new Claim("custom-claim", "example claim value"),
                 new Claim(ProviderClaims.ProviderUkprn,"111"),
             }, "mock"));
 

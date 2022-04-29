@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.ApiClients
         }
 
         [Test]
-        public async Task Client_retrieves_list_of_Standards()
+        public async Task RoatpCourseManagementOuterApiClient_Retrieves_listOfStandards()
         {
             int ukprn = 111;
             var result = await _apiClient.GetAllStandards(ukprn);
