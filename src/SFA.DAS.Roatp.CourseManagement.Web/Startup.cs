@@ -184,7 +184,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Introduction}/{action=Index}/{id?}");
             });
         }
     }

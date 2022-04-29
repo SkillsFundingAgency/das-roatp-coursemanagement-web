@@ -1,0 +1,28 @@
+﻿@model IntroductionViewModel
+@{
+    ViewData["Title"] = "Check your records";
+    ViewData["Description"] = "Introduction page";
+}
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h1 class="govuk-heading-xl">Check your record</h1>
+        <p class="govuk-body">You will be able to check and edit these sections in your provider account:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>your organisation’s details</li>
+            <li>the apprenticeship standards you deliver</li>
+            <li>the locations where you do the training</li>
+        </ul>
+        <p class="govuk-body">This information will be shared with Find apprenticeship training.</p>
+        <h2 class="heading-medium">Before you start,</h2><p class="govuk-body">you must review these sections to make sure the information we have pre-filled for you is correct.</p>
+        <a asp-controller="ReviewYourDetails" asp-action="ReviewYourDetails" title="Start now" aria-label="Start now" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
+            Start now
+            <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19" viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+            </svg>
+        </a>
+        <a class="govuk-link" href=@Model.DashboardUrl>I'll do this later</a>
+        <br />
+        <p class="govuk-body">You no longer need to do this in the course directory.</p>
+    </div>
+</div>
