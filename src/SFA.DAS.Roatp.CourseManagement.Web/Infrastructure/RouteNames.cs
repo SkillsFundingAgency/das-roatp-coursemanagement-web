@@ -10,5 +10,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string ProviderDashboard = "provider-demand-dashboard";
         public const string ProviderSignOut = "provider-signout";
+        public const string ViewStandards = "view-standards";
     }
 }

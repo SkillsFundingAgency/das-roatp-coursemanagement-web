@@ -1,16 +1,19 @@
 ﻿using FluentAssertions;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
+using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
+using SFA.DAS.Roatp.CourseManagement.Domain.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
@@ -19,49 +22,46 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
     public class StandardsControllerTests
     {
         private StandardsController _controller;
-        private Mock<IRoatpCourseManagementOuterApiClient> _outerApiClient;
         private Mock<ILogger<StandardsController>> _logger;
-        private int _ukprn;
-        private StandardsListViewModel expectedModel;
+        private Mock<IMediator> _mediator;
+        private StandardListViewModel expectedModel;
 
         [SetUp]
         public void Before_each_test()
         {
-            _outerApiClient = new Mock<IRoatpCourseManagementOuterApiClient>();
             _logger = new Mock<ILogger<StandardsController>>();
-            _ukprn = 111;
-
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
             {
                 new Claim(ProviderClaims.ProviderUkprn,"111"),
             }, "mock"));
 
-            var response = new StandardsListViewModel
-            {
-                Standards = new System.Collections.Generic.List<StandardsViewModel>()
-            };
+            var response = new System.Collections.Generic.List<Standard>();
 
-            var standard1 = new StandardsViewModel
+            var standard1 = new Standard
             {
                 ProviderCourseId = 1,
                 CourseName = "test1",
                 Level =1,
                 IsImported = true
             };
-            var standard2 = new StandardsViewModel
+            var standard2 = new Standard
             {
                 ProviderCourseId = 2,
                 CourseName = "test2",
                 Level = 2,
                 IsImported = false
             };
-            response.Standards.Add(standard1);
-            response.Standards.Add(standard2);
-            expectedModel = response;
+            response.Add(standard1);
+            response.Add(standard2);
 
-            _outerApiClient.Setup(x => x.GetAllStandards(_ukprn)).ReturnsAsync(response);
+            _mediator = new Mock<IMediator>();
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new GetStandardQueryResult
+                {
+                    Standards = response
+                });
 
-            _controller = new StandardsController(_outerApiClient.Object,  _logger.Object)
+            _controller = new StandardsController(_mediator.Object,  _logger.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -74,13 +74,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         [Test]
         public async Task StandardsController_GetStandards_ReturnsValidResponse()
         {
-            var result = await _controller.GetStandards();
+            var result = await _controller.ViewStandards();
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("ViewStandards.cshtml");
             viewResult.Model.Should().NotBeNull();
-            viewResult.Model.Should().BeEquivalentTo(expectedModel);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿@model ReviewYourDetailsViewModel
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model ReviewYourDetailsViewModel
 @{
     ViewData["Title"] = "Review your details";
     ViewData["Description"] = "Check and confirm your standards and location details.";
@@ -25,7 +26,7 @@
                         </li>
                         <li class="das-task-list__item">
                             <span class="das-task-list__task-name">
-                                <a class="govuk-link" asp-controller="Standards" asp-action="GetStandards">
+                                <a class="govuk-link" asp-route="@RouteNames.ViewStandards" asp-all-route-data="@Model.RouteDictionary">
                                     Standards
                                 </a>
                             </span>

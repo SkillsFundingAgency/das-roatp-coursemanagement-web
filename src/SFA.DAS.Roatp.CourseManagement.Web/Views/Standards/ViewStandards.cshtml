@@ -1,5 +1,5 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@model StandardsListViewModel
+@model StandardListViewModel
 @{
     ViewBag.Title = "Standards";
 }
@@ -25,7 +25,7 @@
                         <td class="govuk-table__cell">
                             <span class="app-task-list__task-name">
                                 <a href="#" aria-describedby="standard-name">
-                                    @standard.CourseName (Level @standard.Level)
+                                    @standard.CourseDisplayName
                                 </a>
                             </span>
                         </td>

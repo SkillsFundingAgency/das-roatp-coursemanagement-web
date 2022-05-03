@@ -1,17 +1,13 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
-using Newtonsoft.Json;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients;
+using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients.CourseManagementOuterApi;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -19,12 +15,12 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.ApiClients
 {
     [TestFixture]
-    public class RoatpCourseManagementOuterApiClientTests
+    public class GetStandardsApiClientTests
     {
         private const string RoatpCourseManagementOuterApiBaseAddress = "http://localhost:5334";
 
         //private IConfigurationService _config;
-        private RoatpCourseManagementOuterApiClient _apiClient;
+        private GetStandardsApiClient _apiClient;
 
         [SetUp]
         public void Before_each_test()
@@ -54,9 +50,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.ApiClients
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
 
-            var logger = new Mock<ILogger<RoatpCourseManagementOuterApiClient>>();
+            var logger = new Mock<ILogger<GetStandardsApiClient>>();
 
-            _apiClient = new RoatpCourseManagementOuterApiClient(httpClient, logger.Object);
+            _apiClient = new GetStandardsApiClient(httpClient, logger.Object);
         }
 
         [Test]

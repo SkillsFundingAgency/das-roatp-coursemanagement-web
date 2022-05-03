@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.ApiClients
+namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
 {
     /// <summary>
     /// Base class containing common functionality that all ApiClients should use.
