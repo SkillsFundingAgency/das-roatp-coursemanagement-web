@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using SFA.DAS.Roatp.CourseManagement.Domain.Standards;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
