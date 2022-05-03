@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients.CourseManagementOuterApi;
 using System;
 using System.Net;
@@ -12,7 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.ApiClients
+namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
 {
     [TestFixture]
     public class GetStandardsApiClientTests

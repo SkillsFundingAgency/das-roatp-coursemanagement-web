@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
-using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Roatp.CourseManagement.Domain.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -24,7 +23,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private StandardListViewModel expectedModel;
 
         [SetUp]
         public void Before_each_test()
