@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,21 +29,41 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             _query = autoFixture.Create<GetStandardQuery>();
             _queryResult = autoFixture.Create<GetStandardQueryResult>();
             standards = autoFixture.Create<List<Domain.Standards.Standard>>();
-
             _apiClient = new Mock<IGetStandardsApiClient>();
-            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).ReturnsAsync(() => standards);
             _logger = new Mock<ILogger<GetStandardQueryHandler>>();
-            _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
+
         }
 
         [Test]
-        public async Task GetStandardQueryHandler_Returns_Response()
+        public async Task GetStandardQueryHandler_Returns_ValidResponse()
         {
+            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).ReturnsAsync(() => standards);
+            _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
+
             var result = await _handler.Handle(_query, CancellationToken.None);
 
             var compareLogic = new CompareLogic(new ComparisonConfig { IgnoreObjectTypes = true });
             var comparisonResult = compareLogic.Compare(_queryResult.Standards, result);
             Assert.IsTrue(comparisonResult.AreEqual);
+        }
+
+        [Test]
+        public async Task GetStandardQueryHandler_Returns_NullResponse()
+        {
+            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).ReturnsAsync(() => null);
+            _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
+
+            var result = await _handler.Handle(_query, CancellationToken.None);
+
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void GetStandardQueryHandler_Returns_Exception()
+        {
+            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).Throws(new Exception());
+            _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
+            Assert.ThrowsAsync<Exception>(() => _handler.Handle(_query, CancellationToken.None));
         }
     }
 }
