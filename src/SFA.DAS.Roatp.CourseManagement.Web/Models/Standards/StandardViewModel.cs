@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
     public class StandardViewModel 
     {
@@ -8,7 +10,7 @@
         public bool IsImported { get; set; }
         public string CourseDisplayName { get; set; }
 
-        public static implicit operator StandardViewModel(Domain.Standards.Standard source)
+        public static implicit operator StandardViewModel(Standard source)
         {
             return new StandardViewModel
             {

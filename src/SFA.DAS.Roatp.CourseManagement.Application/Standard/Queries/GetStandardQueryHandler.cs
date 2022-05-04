@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
         }
         public async Task<GetStandardQueryResult> Handle(GetStandardQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Get Standards request received for Ukprn number {Ukprn}", request.Ukprn);
+            _logger.LogInformation("Get Standards request received for Ukprn number {ukprn}", request.Ukprn);
             try
             {
                 var standards = await _getStandardApiClient.GetAllStandards(request.Ukprn);

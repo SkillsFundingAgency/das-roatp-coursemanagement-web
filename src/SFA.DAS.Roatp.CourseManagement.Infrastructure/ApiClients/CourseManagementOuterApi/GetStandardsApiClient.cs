@@ -2,8 +2,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using SFA.DAS.Roatp.CourseManagement.Domain.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients.CourseManagementOuterApi
 {

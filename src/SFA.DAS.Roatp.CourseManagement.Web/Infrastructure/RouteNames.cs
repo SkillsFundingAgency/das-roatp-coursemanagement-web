@@ -6,9 +6,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
     public static class RouteNames
     {
         public const string ProviderSignOut = "provider-signout";
-      
         public const string ReviewYourDetails = "review-your-details";
-      
         public const string ViewStandards = "view-standards";
     }
 }

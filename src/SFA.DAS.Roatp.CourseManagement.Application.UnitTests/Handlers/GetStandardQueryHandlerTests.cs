@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         private Mock<ILogger<GetStandardQueryHandler>> _logger;
         private GetStandardQuery _query;
         private GetStandardQueryResult _queryResult;
-        private List<Domain.Standards.Standard> standards;
+        private List<Domain.ApiModels.Standard> standards;
 
         [SetUp]
         public void Setup()
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 
             _query = autoFixture.Create<GetStandardQuery>();
             _queryResult = autoFixture.Create<GetStandardQueryResult>();
-            standards = autoFixture.Create<List<Domain.Standards.Standard>>();
+            standards = autoFixture.Create<List<Domain.ApiModels.Standard>>();
             _apiClient = new Mock<IGetStandardsApiClient>();
             _logger = new Mock<ILogger<GetStandardQueryHandler>>();
 

@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Domain.Standards
+﻿namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
     public class Standard
     {

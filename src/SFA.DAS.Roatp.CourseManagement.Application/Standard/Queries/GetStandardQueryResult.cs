@@ -4,6 +4,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
 {
     public class GetStandardQueryResult
     {
-        public List<Domain.Standards.Standard> Standards { get; set; }
+        public List<Domain.ApiModels.Standard> Standards { get; set; }
     }
 }

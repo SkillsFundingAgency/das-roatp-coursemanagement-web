@@ -48,14 +48,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
             {
                 using (var response = await _httpClient.GetAsync(new Uri(uri, UriKind.Relative)))
                 {
-
                     await LogErrorIfUnsuccessfulResponse(response);
                     if (response.IsSuccessStatusCode)
                     {
                         return await response.Content.ReadAsAsync<T>();
                     }
                     return default;
-
                 }
             }
             catch (HttpRequestException ex)
@@ -108,6 +106,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
                 _logger.LogError($"Method: {callingMethod} || HTTP {statusCode} {reasonPhrase} || {httpMethod}: {requestUri} || Message: {apiErrorMessage}");
             }
         }
-
     }
 }

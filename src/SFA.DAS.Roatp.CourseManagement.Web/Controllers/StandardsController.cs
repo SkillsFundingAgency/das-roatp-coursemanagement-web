@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
 
-            _logger.LogInformation("Logged into course management with ukprn {ukprn}", ukprn);
+            _logger.LogInformation("Getting standards for {ukprn}", ukprn);
 
             var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
 

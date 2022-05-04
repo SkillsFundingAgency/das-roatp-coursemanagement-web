@@ -7,10 +7,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
-using SFA.DAS.Roatp.CourseManagement.Domain.Standards;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,7 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         }
 
         [Test]
-        public async Task StandardsController_GetStandards_ReturnsValidResponse()
+        public async Task StandardsController_ViewStandards_ReturnsValidResponse()
         {
             var result = await _controller.ViewStandards();
 
