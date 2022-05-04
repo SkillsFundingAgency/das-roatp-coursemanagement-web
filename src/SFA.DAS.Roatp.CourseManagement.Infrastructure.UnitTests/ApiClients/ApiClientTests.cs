@@ -51,12 +51,77 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
         }
 
         [Test]
-        public async Task RoatpCourseManagementOuterApiClient_Retrieves_listOfStandards()
+        public async Task ApiClient_GetMethodRetrieves_listOfStandards()
         {
             int ukprn = 111;
             var result = await _apiClient.Get<List<Domain.ApiModels.Standard>>($"/Standards/{ukprn}");
 
             result.Should().NotBeNull();
+            result.Count.Should().BeGreaterThan(0);
         }
+        [Test]
+        public async Task ApiClient_GetMethodReturns_NullResponse()
+        {
+            int ukprn = 111;
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(() => new HttpResponseMessage(HttpStatusCode.InternalServerError))
+                .Verifiable();
+
+            var httpClient = new HttpClient(handlerMock.Object)
+            {
+                BaseAddress = new Uri(RoatpCourseManagementOuterApiBaseAddress),
+            };
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            var logger = new Mock<ILogger<ApiClient>>();
+
+            _apiClient = new ApiClient(httpClient, logger.Object);
+
+            var result = await _apiClient.Get<List<Domain.ApiModels.Standard>>($"/Standards/{ukprn}");
+
+            result.Should().BeNull();
+        }
+
+        [Test]
+        public async Task ApiClient_GetMethodReturns_Exception()
+        {
+            int ukprn = 111;
+            var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
+            handlerMock
+                .Protected()
+                .Setup<Task<HttpResponseMessage>>(
+                    "SendAsync",
+                    ItExpr.IsAny<HttpRequestMessage>(),
+                    ItExpr.IsAny<CancellationToken>()
+                )
+                .ReturnsAsync(() => null)
+                .Verifiable();
+
+            var httpClient = new HttpClient(handlerMock.Object)
+            {
+                BaseAddress = new Uri(RoatpCourseManagementOuterApiBaseAddress),
+            };
+            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            var logger = new Mock<ILogger<ApiClient>>();
+
+            _apiClient = new ApiClient(httpClient, logger.Object);
+
+            Assert.ThrowsAsync<InvalidOperationException>(async() => await _apiClient.Get<List<Domain.ApiModels.Standard>>($"/Standards/{ukprn}"));
+        }
+
+        [Test]
+        public async Task ApiClient_PostMethodReturns_Exception()
+        {
+            var result = await _apiClient.Post($"/Test", new List<Domain.ApiModels.Standard>());
+
+            result.Should().Be(HttpStatusCode.OK);
+        }
+
     }
 }

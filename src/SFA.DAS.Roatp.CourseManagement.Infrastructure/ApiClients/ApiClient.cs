@@ -16,7 +16,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
     /// Please read documentation on all methods.
     /// </summary>
     /// <typeparam name="AC">The inherited ApiClient.</typeparam>
-    [ExcludeFromCodeCoverage]
     public class ApiClient : IApiClient
     {
         protected const string _contentType = "application/json";
