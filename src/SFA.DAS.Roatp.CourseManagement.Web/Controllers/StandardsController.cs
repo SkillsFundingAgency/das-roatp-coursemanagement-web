@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -32,9 +33,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
 
-            var model = new StandardListViewModel();
-           
-            if(result != null)
+            var model = new StandardListViewModel
+            {
+                RouteDictionary = new Dictionary<string, string>
+                {
+                    { "ukprn", HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value }
+                }
+            };
+
+
+            if (result != null)
             {
                 model.Standards = result.Standards.Select(c => (StandardViewModel)c).ToList();
             };

@@ -1,9 +1,10 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 @model StandardListViewModel
 @{
     ViewBag.Title = "Standards";
 }
-<a asp-controller="ReviewYourDetails" asp-action="ReviewYourDetails" class="govuk-back-link">Back</a>
+<a class="govuk-back-link" asp-route="@RouteNames.ReviewYourDetails" asp-all-route-data="@Model.RouteDictionary" >Back</a>
 
 <div class="grid-row">
     <div class="column-two-thirds">
