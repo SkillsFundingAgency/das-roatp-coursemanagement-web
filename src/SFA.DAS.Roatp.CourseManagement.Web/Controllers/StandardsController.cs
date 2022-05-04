@@ -33,14 +33,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
 
-            var model = new StandardListViewModel
-            {
-                RouteDictionary = new Dictionary<string, string>
-                {
-                    { "ukprn", HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value }
-                }
-            };
-
+            var model = new StandardListViewModel(HttpContext);
+         
             if(result == null)
             {
                 _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
