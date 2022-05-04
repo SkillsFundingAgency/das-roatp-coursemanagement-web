@@ -21,16 +21,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         {
             var mockOptions = new Mock<IOptions<ProviderSharedUIConfiguration>>();
             ProviderSharedUIConfiguration config = new ProviderSharedUIConfiguration() { DashboardUrl = @"https://dashboard.com" };
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
-           {
-                new Claim(ProviderClaims.ProviderUkprn,"111"),
-           }, "mock"));
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{new Claim(ProviderClaims.ProviderUkprn,"111")}, "mock"));
             var expectedModel = new ReviewYourDetailsViewModel()
             {
                 DashboardUrl = config.DashboardUrl,
                 RouteDictionary = new Dictionary<string, string>
-                {
-                { "ukprn", "111" } }
+                {{ "ukprn", "111" } }
             };
             mockOptions.Setup(o => o.Value).Returns(config);
             var sut = new ReviewYourDetailsController(mockOptions.Object)
@@ -42,7 +38,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
 
             var result = sut.ReviewYourDetails() as ViewResult;
-
             result.Should().NotBeNull();
             result.ViewName.Should().Contain(nameof(ReviewYourDetailsController.ReviewYourDetails));
             result.Model.Should().BeEquivalentTo(expectedModel);

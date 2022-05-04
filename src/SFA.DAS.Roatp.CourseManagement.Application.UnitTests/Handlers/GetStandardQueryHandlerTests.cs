@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using KellermanSoftware.CompareNetObjects;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -29,9 +29,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             _query = autoFixture.Create<GetStandardQuery>();
             _queryResult = autoFixture.Create<GetStandardQueryResult>();
             standards = autoFixture.Create<List<Domain.ApiModels.Standard>>();
+            _queryResult.Standards = standards;
             _apiClient = new Mock<IApiClient>();
             _logger = new Mock<ILogger<GetStandardQueryHandler>>();
-
         }
 
         [Test]
@@ -41,10 +41,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
-
-            var compareLogic = new CompareLogic(new ComparisonConfig { IgnoreObjectTypes = true });
-            var comparisonResult = compareLogic.Compare(_queryResult.Standards, result);
-            Assert.IsTrue(comparisonResult.AreEqual);
+            result.Should().NotBeNull();
+            result.Standards.Should().BeEquivalentTo(_queryResult.Standards);
         }
 
         [Test]
@@ -59,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public void Handle_NoStandardsRetruned_ReturnsNullResponse()
+        public void GetStandardQueryHandler_Returns_Exception()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).Throws(new Exception());
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);

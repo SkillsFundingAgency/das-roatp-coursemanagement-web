@@ -85,6 +85,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
 
         private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
         {
+            if (response.IsSuccessStatusCode) return;
             if (response?.RequestMessage != null && !response.IsSuccessStatusCode)
             {
                 var callingMethod = new System.Diagnostics.StackFrame(1).GetMethod().Name;
