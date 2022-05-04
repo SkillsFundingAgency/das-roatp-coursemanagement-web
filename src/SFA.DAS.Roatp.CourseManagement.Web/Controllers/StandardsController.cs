@@ -41,11 +41,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 }
             };
 
-
-            if (result != null)
+            if(result == null)
             {
-                model.Standards = result.Standards.Select(c => (StandardViewModel)c).ToList();
-            };
+                _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
+                return View("~/Views/Standards/ViewStandards.cshtml", model);
+            }
+
+            model.Standards = result.Standards.Select(c => (StandardViewModel)c).ToList();
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
         }
