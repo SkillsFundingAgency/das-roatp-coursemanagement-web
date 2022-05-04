@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
         }
 
         [Test]
-        public async Task ApiClient_GetMethodReturns_Exception()
+        public void ApiClient_GetMethodReturns_Exception()
         {
             int ukprn = 111;
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
