@@ -6,6 +6,5 @@
         public string CourseName { get; set; }
         public int Level { get; set; }
         public bool IsImported { get; set; }
-        public bool CourseDisplayName { get; set; }
     }
 }

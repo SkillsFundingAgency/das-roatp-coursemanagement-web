@@ -3,8 +3,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients.CourseManagementOuterApi;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -17,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
     public class GetStandardsApiClientTests
     {
         private const string RoatpCourseManagementOuterApiBaseAddress = "http://localhost:5334";
-        private GetStandardsApiClient _apiClient;
+        private ApiClient _apiClient;
 
         [SetUp]
         public void Before_each_test()
@@ -44,16 +45,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
             httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
 
 
-            var logger = new Mock<ILogger<GetStandardsApiClient>>();
+            var logger = new Mock<ILogger<ApiClient>>();
 
-            _apiClient = new GetStandardsApiClient(httpClient, logger.Object);
+            _apiClient = new ApiClient(httpClient, logger.Object);
         }
 
         [Test]
         public async Task RoatpCourseManagementOuterApiClient_Retrieves_listOfStandards()
         {
             int ukprn = 111;
-            var result = await _apiClient.GetAllStandards(ukprn);
+            var result = await _apiClient.Get<List<Domain.ApiModels.Standard>>($"/Standards/{ukprn}");
 
             result.Should().NotBeNull();
         }

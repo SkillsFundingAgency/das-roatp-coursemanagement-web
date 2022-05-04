@@ -19,8 +19,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients.CourseManagementOuterApi;
 using MediatR;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -125,7 +125,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 services.AddDataProtection(_configuration);
             }
 
-            ConfigHttpClients(services);
+            ConfigureHttpClient(services);
            
             services.AddSession(options =>
             {
@@ -143,10 +143,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 #endif
         }
 
-        private void ConfigHttpClients(IServiceCollection services)
+        private void ConfigureHttpClient(IServiceCollection services)
         {
             var handlerLifeTime = TimeSpan.FromMinutes(5);
-            services.AddHttpClient<IGetStandardsApiClient, GetStandardsApiClient>(config =>
+            services.AddHttpClient<IApiClient, ApiClient>(config =>
             {
                 var configuration = _configuration
                     .GetSection(nameof(RoatpCourseManagementOuterApi))
@@ -154,7 +154,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
                 config.BaseAddress = new Uri(configuration.BaseUrl);
                 config.DefaultRequestHeaders.Add("Accept", "application/json");
-                config.DefaultRequestHeaders.Add("SubscriptionKey", configuration.SubscriptionKey);
+                config.DefaultRequestHeaders.Add("X-Version", "1");
+                config.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", configuration.SubscriptionKey);
             })
            .SetHandlerLifetime(handlerLifeTime);
         }

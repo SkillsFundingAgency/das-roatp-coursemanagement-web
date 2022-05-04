@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
     public class GetStandardQueryHandlerTests
     {
         private GetStandardQueryHandler _handler;
-        private Mock<IGetStandardsApiClient> _apiClient;
+        private Mock<IApiClient> _apiClient;
         private Mock<ILogger<GetStandardQueryHandler>> _logger;
         private GetStandardQuery _query;
         private GetStandardQueryResult _queryResult;
@@ -29,15 +29,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             _query = autoFixture.Create<GetStandardQuery>();
             _queryResult = autoFixture.Create<GetStandardQueryResult>();
             standards = autoFixture.Create<List<Domain.ApiModels.Standard>>();
-            _apiClient = new Mock<IGetStandardsApiClient>();
+            _apiClient = new Mock<IApiClient>();
             _logger = new Mock<ILogger<GetStandardQueryHandler>>();
 
         }
 
         [Test]
-        public async Task GetStandardQueryHandler_Returns_ValidResponse()
+        public async Task Handle_ValidRequest_ReturnsValidResponse()
         {
-            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).ReturnsAsync(() => standards);
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).ReturnsAsync(() => standards);
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
@@ -48,9 +48,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public async Task GetStandardQueryHandler_Returns_NullResponse()
+        public async Task Handle_NoStandardsReturned_ReturnsNullResponse()
         {
-            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).ReturnsAsync(() => null);
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).ReturnsAsync(() => null);
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
@@ -59,9 +59,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public void GetStandardQueryHandler_Returns_Exception()
+        public void Handle_NoStandardsRetruned_ReturnsNullResponse()
         {
-            _apiClient.Setup(x => x.GetAllStandards(_query.Ukprn)).Throws(new Exception());
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).Throws(new Exception());
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
             Assert.ThrowsAsync<Exception>(() => _handler.Handle(_query, CancellationToken.None));
         }

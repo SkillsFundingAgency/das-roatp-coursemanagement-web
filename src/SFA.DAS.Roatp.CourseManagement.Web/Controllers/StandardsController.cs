@@ -16,7 +16,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<StandardsController> _logger;
-
         public StandardsController(IMediator mediator, ILogger<StandardsController> logger)
         {
             _logger = logger;

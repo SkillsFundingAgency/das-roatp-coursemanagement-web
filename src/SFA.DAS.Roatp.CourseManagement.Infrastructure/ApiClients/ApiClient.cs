@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
 {
@@ -16,23 +17,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
     /// </summary>
     /// <typeparam name="AC">The inherited ApiClient.</typeparam>
     [ExcludeFromCodeCoverage]
-    public abstract class ApiClientBase<AC>
+    public class ApiClient : IApiClient
     {
-        protected const string _acceptHeaderName = "Accept";
         protected const string _contentType = "application/json";
-
         protected readonly HttpClient _httpClient;
-        protected readonly ILogger<AC> _logger;
+        protected readonly ILogger<ApiClient> _logger;
 
-        protected ApiClientBase(HttpClient httpClient, ILogger<AC> logger)
+        public ApiClient(HttpClient httpClient, ILogger<ApiClient> logger)
         {
             _httpClient = httpClient;
             _logger = logger;
-
-            if (!_httpClient.DefaultRequestHeaders.Contains(_acceptHeaderName))
-            {
-                _httpClient.DefaultRequestHeaders.Add(_acceptHeaderName, _contentType);
-            }
         }
 
         /// <summary>
@@ -42,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
         /// <param name="uri">The URI to the end point you wish to interact with.</param>
         /// <returns>A Task yielding the result (of type T).</returns>
         /// <exception cref="HttpRequestException">Thrown if something unexpected occurred when sending the request.</exception>
-        protected async Task<T> Get<T>(string uri)
+        public async Task<T> Get<T>(string uri)
         {
             try
             {
@@ -69,7 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
         /// <param name="uri">The URI to the end point you wish to interact with.</param>
         /// <returns>The HttpStatusCode, which is the responsibility of the caller to handle.</returns>
         /// <exception cref="HttpRequestException">Thrown if something unexpected occurred when sending the request.</exception>
-        protected async Task<HttpStatusCode> Post<T>(string uri, T model)
+        public async Task<HttpStatusCode> Post<T>(string uri, T model)
         {
             var serializeObject = JsonConvert.SerializeObject(model);
 
