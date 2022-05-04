@@ -17,8 +17,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
     public class GetStandardsApiClientTests
     {
         private const string RoatpCourseManagementOuterApiBaseAddress = "http://localhost:5334";
-
-        //private IConfigurationService _config;
         private GetStandardsApiClient _apiClient;
 
         [SetUp]
@@ -27,13 +25,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
             var handlerMock = new Mock<HttpMessageHandler>(MockBehavior.Strict);
             handlerMock
                .Protected()
-               // Setup the PROTECTED method to mock
                .Setup<Task<HttpResponseMessage>>(
                   "SendAsync",
                   ItExpr.IsAny<HttpRequestMessage>(),
                   ItExpr.IsAny<CancellationToken>()
                )
-               // prepare the expected response of the mocked http call
                .ReturnsAsync(new HttpResponseMessage()
                {
                    StatusCode = HttpStatusCode.OK,
@@ -41,7 +37,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
                })
                .Verifiable();
 
-            // use real http client with mocked handler here
             var httpClient = new HttpClient(handlerMock.Object)
             {
                 BaseAddress = new Uri(RoatpCourseManagementOuterApiBaseAddress),
