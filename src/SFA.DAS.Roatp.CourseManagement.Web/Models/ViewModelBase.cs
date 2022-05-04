@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
     public abstract class ViewModelBase
     {
         public Dictionary<string, string> RouteDictionary { get; } = new Dictionary<string, string>();
-        public ViewModelBase(HttpContext context)
+        protected ViewModelBase(HttpContext context)
         {
             RouteDictionary.Add("ukprn", context.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value);
         }
