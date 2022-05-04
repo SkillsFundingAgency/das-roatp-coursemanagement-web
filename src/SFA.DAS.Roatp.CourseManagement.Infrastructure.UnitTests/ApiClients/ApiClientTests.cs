@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
 {
     [TestFixture]
-    public class GetStandardsApiClientTests
+    public class ApiClientTests
     {
         private const string RoatpCourseManagementOuterApiBaseAddress = "http://localhost:5334";
         private ApiClient _apiClient;
