@@ -23,11 +23,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public IActionResult ReviewYourDetails()
         {
             /// Viewmodel should be built from a mediatr response eventually
-            return View("ReviewYourDetails", new ReviewYourDetailsViewModel() { DashboardUrl = _pasSharedConfiguration.DashboardUrl,
+            return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
+            {
+                DashboardUrl = _pasSharedConfiguration.DashboardUrl,
                 RouteDictionary = new Dictionary<string, string>
-                {
-                { "ukprn", HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value },
-            } });
+                {{ "ukprn", HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value }}
+            });
         }
     }
 }
