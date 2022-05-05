@@ -10,12 +10,6 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
 {
-    /// <summary>
-    /// Base class containing common functionality that all ApiClients should use.
-    /// Includes functionality to write an error log entry for any unsuccessful API calls.
-    /// Please read documentation on all methods.
-    /// </summary>
-    /// <typeparam name="AC">The inherited ApiClient.</typeparam>
     public class ApiClient : IApiClient
     {
         protected const string _contentType = "application/json";
