@@ -1,0 +1,49 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model StandardListViewModel
+@{
+    ViewBag.Title = "Standards";
+}
+<a class="govuk-back-link" asp-route="@RouteNames.ReviewYourDetails" asp-all-route-data="@Model.RouteDictionary" >Back</a>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="govuk-caption-xl">Check your record</div>
+        <h1 class="govuk-heading-xl">Standards you deliver</h1>
+        <p class="govuk-body">Check this list of your standards and make sure they stay up to date. This is important as they are used when employers want to find apprenticeship training.</p>
+
+        <table class="govuk-table" aria-describedby="Standards">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col"> Standard</th>
+                    <th class="govuk-table__header" scope="col" style="display: none; visibility: hidden"> </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var standard in Model.Standards)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <a href="#" aria-describedby="standard-name">
+                                    @standard.CourseDisplayName
+                                </a>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell" style="display: none; visibility: hidden">
+                            <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
+            <a href="#" aria-describedby="Add-a-standard" class="govuk-link">
+                Add a standard
+            </a>
+        </span>
+        <br />
+        <br />
+        <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
+    </div>
+</div>

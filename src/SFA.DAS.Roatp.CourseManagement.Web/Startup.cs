@@ -13,10 +13,14 @@ using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
+using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
+using MediatR;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -68,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddProviderUiServiceRegistration(_configuration);
 
-            /// services.AddMediatR(typeof(GetCreateCourseDemandQuery).Assembly);
+            services.AddMediatR(typeof(GetStandardQueryHandler).Assembly);
             /// services.AddMediatRValidation();
 
             services.AddAuthorizationServicePolicies();
@@ -121,6 +125,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 services.AddDataProtection(_configuration);
             }
 
+            ConfigureHttpClient(services);
+           
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -135,6 +141,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 #endif
+        }
+
+        private void ConfigureHttpClient(IServiceCollection services)
+        {
+            var handlerLifeTime = TimeSpan.FromMinutes(5);
+            services.AddHttpClient<IApiClient, ApiClient>(config =>
+            {
+                var configuration = _configuration
+                    .GetSection(nameof(RoatpCourseManagementOuterApi))
+                    .Get<RoatpCourseManagementOuterApi>();
+
+                config.BaseAddress = new Uri(configuration.BaseUrl);
+                config.DefaultRequestHeaders.Add("Accept", "application/json");
+                config.DefaultRequestHeaders.Add("X-Version", "1");
+                config.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", configuration.SubscriptionKey);
+            })
+           .SetHandlerLifetime(handlerLifeTime);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

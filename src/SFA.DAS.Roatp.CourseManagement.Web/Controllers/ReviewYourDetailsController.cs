@@ -5,6 +5,7 @@ using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -22,7 +23,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public IActionResult ReviewYourDetails()
         {
             /// Viewmodel should be built from a mediatr response eventually
-            return View("ReviewYourDetails", new ReviewYourDetailsViewModel() { DashboardUrl = _pasSharedConfiguration.DashboardUrl });
+            return View("ReviewYourDetails", new ReviewYourDetailsViewModel(HttpContext)
+            {
+                DashboardUrl = _pasSharedConfiguration.DashboardUrl,
+            });
         }
     }
 }
