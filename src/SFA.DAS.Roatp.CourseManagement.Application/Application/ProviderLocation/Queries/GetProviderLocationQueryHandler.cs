@@ -24,13 +24,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocation.Queries
             try
             {
                 var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{request.Ukprn}/locations");
-                //var trainingLocations = new List<Domain.ApiModels.ProviderLocation>();
-                //var location = new Domain.ApiModels.ProviderLocation();
-                //location.LocationName = "Test";
-                //location.Email = "Test";
-                //location.Phone = "Test";
-                //location.Postcode = "Test";
-                //trainingLocations.Add(location);
                 if (trainingLocations == null)
                 {
                     _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
