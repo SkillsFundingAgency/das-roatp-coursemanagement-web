@@ -10,6 +10,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string Postcode { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public LocationType LocationType { get; set; }
 
         public static implicit operator ProviderLocationViewModel(ProviderLocation source)
         {
@@ -20,6 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Postcode = source.Postcode,
                 Email = source.Email,
                 Phone = source.Phone,
+                LocationType = source.LocationType
             };
         }
     }

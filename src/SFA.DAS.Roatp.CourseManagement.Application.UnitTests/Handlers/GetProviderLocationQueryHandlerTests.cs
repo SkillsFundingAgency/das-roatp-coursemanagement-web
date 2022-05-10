@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 
             var result = await _handler.Handle(_query, CancellationToken.None);
             result.Should().NotBeNull();
-            result.ProviderLocations.Should().BeEquivalentTo(_queryResult.ProviderLocations);
+            result.ProviderLocations.Should().BeEquivalentTo(_queryResult.ProviderLocations.FindAll(l=>l.LocationType == Domain.ApiModels.LocationType.Provider));
         }
 
         [Test]

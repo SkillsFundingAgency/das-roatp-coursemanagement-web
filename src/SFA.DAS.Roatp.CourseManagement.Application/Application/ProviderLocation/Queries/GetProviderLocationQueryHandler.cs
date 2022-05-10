@@ -30,9 +30,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocation.Queries
                     return null;
                 }
 
+                var providerLocations = trainingLocations.FindAll(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
+                if (providerLocations == null)
+                {
+                    _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
+                    return null;
+                }
+
                 return new GetProviderLocationQueryResult
                 {
-                    ProviderLocations = trainingLocations
+                    ProviderLocations = providerLocations
                 };
             }
             catch (Exception ex)

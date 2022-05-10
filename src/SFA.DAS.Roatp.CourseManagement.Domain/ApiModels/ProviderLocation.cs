@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
+﻿namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
     public class ProviderLocation
     {
@@ -9,5 +7,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public string Postcode { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
+        public LocationType LocationType { get; set; }
     }
 }
