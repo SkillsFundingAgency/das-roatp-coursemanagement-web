@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -33,9 +32,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
 
-            var model = new StandardListViewModel(HttpContext);
-         
-            if(result == null)
+            var model = new StandardListViewModel()
+            {
+                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
+                {
+                    ukprn = ukprn,
+                }, Request.Scheme, Request.Host.Value)
+            };
+
+            if (result == null)
             {
                 _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
                 return View("~/Views/Standards/ViewStandards.cshtml", model);

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocation.Queries
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
 {
     public class GetProviderLocationQuery : IRequest<GetProviderLocationQueryResult>
     {

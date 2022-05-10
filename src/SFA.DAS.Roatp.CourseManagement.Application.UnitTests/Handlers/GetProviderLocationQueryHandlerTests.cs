@@ -3,23 +3,26 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocation.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 {
+    [TestFixture]
     public class GetProviderLocationQueryHandlerTests
     {
         private GetProviderLocationQueryHandler _handler;
         private Mock<IApiClient> _apiClient;
-        private Mock<ILogger<GetProviderLocationQueryHandler>> _logger;
         private GetProviderLocationQuery _query;
-        private GetProviderLocationQueryResult _queryResult;
-        private List<Domain.ApiModels.ProviderLocation> _providerLocations;
+        private readonly ProviderLocation _regionalLocation = new ProviderLocation() { LocationType = LocationType.Regional };
+        private readonly ProviderLocation _nationalLocation = new ProviderLocation() { LocationType = LocationType.National };
+        private readonly ProviderLocation _providerLocation = new ProviderLocation() { LocationType = LocationType.Provider };
 
         [SetUp]
         public void Setup()
@@ -27,42 +30,66 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             var autoFixture = new Fixture();
 
             _query = autoFixture.Create<GetProviderLocationQuery>();
-            _queryResult = autoFixture.Create<GetProviderLocationQueryResult>();
-            _providerLocations = autoFixture.Create<List<Domain.ApiModels.ProviderLocation>>();
-            _queryResult.ProviderLocations = _providerLocations;
             _apiClient = new Mock<IApiClient>();
-            _logger = new Mock<ILogger<GetProviderLocationQueryHandler>>();
+            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, Mock.Of<ILogger<GetProviderLocationQueryHandler>>());
         }
         
         [Test]
-        public async Task Handle_ValidRequest_ReturnsValidResponse()
+        public async Task Handle_ValidApiRequest_ReturnsValidResponse()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => _providerLocations);
-            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
+            var providerLocations = new List<ProviderLocation> { _providerLocation };
+            _apiClient.Setup(x => x.Get<List<ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(providerLocations);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
+
             result.Should().NotBeNull();
-            result.ProviderLocations.Should().BeEquivalentTo(_queryResult.ProviderLocations);
+            result.ProviderLocations.Should().BeEquivalentTo(providerLocations);
         }
 
         [Test]
-        public async Task Handle_NoProviderLocationsReturned_ReturnsNullResponse()
+        public void Handle_InvalidApiResponse_ThrowsException()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => null);
-            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
+            _apiClient.Setup(x => x.Get<List<ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync((List<ProviderLocation>)null);
+
+            Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_query, CancellationToken.None));
+        }
+
+        [Test]
+        public async Task Handle_NoProviderTrainingLocations_ReturnsEmptyList()
+        {
+            _apiClient.Setup(x => x.Get<List<ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<ProviderLocation>());
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
-            Assert.IsNull(result);
-            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
+            result.Should().NotBeNull();
+            result.ProviderLocations.Should().BeEmpty();
         }
 
         [Test]
-        public void GetProviderLocationQueryHandler_Returns_Exception()
+        public async Task Handle_NoProviderLocations_ShouldReturnsEmptyList()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).Throws(new Exception());
-            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
-            Assert.ThrowsAsync<Exception>(() => _handler.Handle(_query, CancellationToken.None));
+            var providerLocations = new List<ProviderLocation>() { _regionalLocation, _nationalLocation };
+            _apiClient.Setup(x => x.Get<List<ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(providerLocations);
+
+            var result = await _handler.Handle(_query, CancellationToken.None);
+
+            result.Should().NotBeNull();
+            result.ProviderLocations.Should().BeEmpty();
         }
+
+
+        [Test]
+        public async Task Handle_ReturnsProviderTrainingLocationsOnly()
+        {
+            var providerLocations = new List<ProviderLocation>() { _regionalLocation, _nationalLocation, _providerLocation };
+            var expectedProviderLocations = new List<ProviderLocation>() { _providerLocation };
+            _apiClient.Setup(x => x.Get<List<ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(providerLocations);
+
+            var result = await _handler.Handle(_query, CancellationToken.None);
+
+            result.Should().NotBeNull();
+            result.ProviderLocations.Should().BeEquivalentTo(expectedProviderLocations);
+        }
+
     }
 }

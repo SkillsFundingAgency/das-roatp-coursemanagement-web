@@ -2,13 +2,15 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocation.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using System;
@@ -19,11 +21,13 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 {
     [TestFixture]
-    public class ProviderLocationsControllerTests
+    public class GetProvidersTrainingLocationsTest
     {
         private ProviderLocationsController _controller;
         private Mock<ILogger<ProviderLocationsController>> _logger;
         private Mock<IMediator> _mediator;
+        private Mock<IUrlHelper> urlHelper;
+        string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_each_test()
@@ -35,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var ProviderLocation1 = new ProviderLocation
             {
-                ProviderId = 1,
+                LocationId = 1,
                 LocationName = "test1",
                 Postcode = "IG117WQ",
                 Email = "test1@test.com",
@@ -43,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
             var ProviderLocation2 = new ProviderLocation
             {
-                ProviderId = 2,
+                LocationId = 2,
                 LocationName = "test2",
                 Postcode = "IG117XR",
                 Email = "test2@test.com",
@@ -67,24 +71,38 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
+
+            urlHelper = new Mock<IUrlHelper>();
+            
+            UrlRouteContext verifyRouteValues = null;
+            urlHelper
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                   c.RouteName.Equals(RouteNames.ReviewYourDetails)
+               )))
+               .Returns(verifyUrl)
+               .Callback<UrlRouteContext>(c =>
+               {
+                   verifyRouteValues = c;
+               });
+            _controller.Url = urlHelper.Object;
         }
 
         [Test]
-        public async Task ProviderLocationsController_ViewProviderLocations_ReturnsValidResponse()
+        public async Task GetProvidersTrainingLocation_ReturnsValidResponse()
         {
-            var result = await _controller.ViewProviderLocations();
+            var result = await _controller.GetProvidersTrainingLocation();
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("ViewProviderLocations.cshtml");
-            viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
             model.ProviderLocations.Should().NotBeNull();
+            model.BackUrl.Should().Be(verifyUrl);
         }
 
         [Test]
-        public async Task ProviderLocationsController_ViewProviderLocations_ReturnsNoProviderLocationData()
+        public async Task GetProvidersTrainingLocation_ReturnsNoProviderLocationData()
         {
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderLocationQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
@@ -98,16 +116,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
-            var result = await _controller.ViewProviderLocations();
+            _controller.Url = urlHelper.Object;
+            var result = await _controller.GetProvidersTrainingLocation();
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("ViewProviderLocations.cshtml");
-            viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
             model.ProviderLocations.Should().BeEmpty();
-            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Exactly(2));
+            model.BackUrl.Should().Be(verifyUrl);
         }
     }
 }

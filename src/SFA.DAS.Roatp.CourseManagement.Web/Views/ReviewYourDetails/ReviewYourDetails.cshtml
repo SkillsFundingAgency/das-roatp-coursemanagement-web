@@ -4,7 +4,7 @@
     ViewData["Title"] = "Review your details";
     ViewData["Description"] = "Check and confirm your standards and location details.";
 }
-<a href="@Model.DashboardUrl" class="govuk-back-link">Back</a>
+<a href="@Model.BackUrl" class="govuk-back-link">Back</a>
 <main class="govuk-main-wrapper govuk-main-wrapper--autospacing" id="main_content">
     <div class="govuk-caption-xl">Check your record</div>
     <h1 class="govuk-heading-xl">Review your details</h1>
@@ -19,14 +19,14 @@
                     <ul class="das-task-list__items govuk-!-padding-0">
                         <li class="das-task-list__item">
                             <span class="das-task-list__task-name">
-                                <a class="govuk-link" asp-route="@RouteNames.ViewProviderLocations" asp-all-route-data="@Model.RouteDictionary">
+                                <a class="govuk-link" href ="@Model.ProviderLocationsUrl">
                                     Training locations
                                 </a>
                             </span>
                         </li>
                         <li class="das-task-list__item">
                             <span class="das-task-list__task-name">
-                                <a class="govuk-link" asp-route="@RouteNames.ViewStandards" asp-all-route-data="@Model.RouteDictionary">
+                                <a class="govuk-link" href ="@Model.StandardsUrl">
                                     Standards
                                 </a>
                             </span>
