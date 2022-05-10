@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocation.Queries
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
 {
     public class GetProviderLocationQueryHandler : IRequestHandler<GetProviderLocationQuery, GetProviderLocationQueryResult>
     {

@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
+namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries
 {
     public class GetStandardQueryHandler : IRequestHandler<GetStandardQuery, GetStandardQueryResult>
     {

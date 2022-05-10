@@ -13,7 +13,7 @@ using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
