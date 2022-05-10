@@ -5,7 +5,6 @@ using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {

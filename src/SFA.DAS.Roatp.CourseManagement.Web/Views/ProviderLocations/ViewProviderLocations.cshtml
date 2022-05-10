@@ -1,0 +1,62 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model ProviderLocationListViewModel
+@{
+    ViewBag.Title = "Training locations";
+}
+<a class="govuk-back-link" asp-route="@RouteNames.ReviewYourDetails" asp-all-route-data="@Model.RouteDictionary" >Back</a>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="govuk-caption-xl">Check your record</div>
+        <h1 class="govuk-heading-xl">Training locations</h1>
+        <p class="govuk-body">It is important that we have an up to date list of where you deliver your training.</p>
+        <p class="govuk-body">We have pre-filled the list with places that you entered previously in the course directory. Check they are still up to date, and add any new locations that are not present.</p>
+
+        <table class="govuk-table" aria-describedby="training-locations">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col"> Venue name</th>
+                    <th class="govuk-table__header" scope="col"> Email address</th>
+                    <th class="govuk-table__header" scope="col"> Telephone number</th>
+                    <th class="govuk-table__header" scope="col"> Postcode</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var location in Model.ProviderLocations)
+                {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            @location.LocationName
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            @location.Email
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            @location.Phone
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            @location.Postcode
+                        </span>
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
+            <a href="#" aria-describedby="Add-a-new-training-location" class="govuk-link">
+                Add a new training location
+            </a>
+        </span>
+        <br />
+        <br />
+        <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
+    </div>
+</div>
