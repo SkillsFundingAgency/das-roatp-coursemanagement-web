@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task Handle_NoStandardsReturned_ReturnsNullResponse()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).ReturnsAsync(() => null);
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"Standards/{_query.Ukprn}")).ReturnsAsync(() => null);
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public void GetStandardQueryHandler_Returns_Exception()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).Throws(new Exception());
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"Standards/{_query.Ukprn}")).Throws(new Exception());
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
             Assert.ThrowsAsync<Exception>(() => _handler.Handle(_query, CancellationToken.None));
         }
