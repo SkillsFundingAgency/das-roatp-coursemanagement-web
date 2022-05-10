@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task Handle_ValidRequest_ReturnsValidResponse()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"/Standards/{_query.Ukprn}")).ReturnsAsync(() => _standards);
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"Standards/{_query.Ukprn}")).ReturnsAsync(() => _standards);
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
