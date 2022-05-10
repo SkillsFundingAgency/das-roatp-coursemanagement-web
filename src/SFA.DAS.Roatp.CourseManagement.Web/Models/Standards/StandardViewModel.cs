@@ -9,6 +9,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public int Level { get; set; }
         public bool IsImported { get; set; }
         public string CourseDisplayName { get; set; }
+        public int LarsCode { get; set; }
+        public string StandardUrl { get; set; }
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -19,6 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 Level = source.Level,
                 IsImported = source.IsImported,
                 CourseDisplayName = source.CourseName + " (Level " + source.Level + ")",
+                LarsCode = source.LarsCode
             };
         }
     }

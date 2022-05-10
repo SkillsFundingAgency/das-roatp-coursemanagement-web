@@ -1,4 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,21 +18,18 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
 {
     [TestFixture]
-    public class StandardsControllerTests
+    public class ViewStandardsTests
     {
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
+        string verifyStandardUrl = "http://test-standard";
 
         [SetUp]
         public void Before_each_test()
@@ -71,6 +73,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
             urlHelper = new Mock<IUrlHelper>();
 
+            UrlRouteContext verifyRouteValues2 = null;
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c=>c.RouteName.Equals(RouteNames.ViewStandardDetails))
+                ))
+                .Returns(verifyStandardUrl)
+                .Callback<UrlRouteContext>(c =>
+                {
+                    verifyRouteValues2 = c;
+                });
+
             UrlRouteContext verifyRouteValues = null;
             urlHelper
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
@@ -81,6 +93,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                {
                    verifyRouteValues = c;
                });
+
             _controller.Url = urlHelper.Object;
         }
 
@@ -97,6 +110,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             model.Should().NotBeNull();
             model.Standards.Should().NotBeNull();
             model.BackUrl.Should().Be(verifyUrl);
+            model.Standards.First().StandardUrl.Should().Be(verifyStandardUrl);
         }
 
         [Test]
