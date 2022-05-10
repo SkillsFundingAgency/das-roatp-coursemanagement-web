@@ -9,5 +9,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         {
         }
         public List<StandardViewModel> Standards { get; set; } = new List<StandardViewModel>();
+        public string Ukprn { get; set; }
     }
 }

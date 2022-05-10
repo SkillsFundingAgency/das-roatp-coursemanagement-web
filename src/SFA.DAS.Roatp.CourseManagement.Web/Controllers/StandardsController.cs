@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
 
             var model = new StandardListViewModel(HttpContext);
-         
+
             if(result == null)
             {
                 _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
@@ -42,8 +41,46 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             model.Standards = result.Standards.Select(c => (StandardViewModel)c).ToList();
+            model.Ukprn = ukprn;
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
+        }
+
+        [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.ViewStandardDetails)]
+        [HttpGet]
+        public async Task<IActionResult> ViewStandard(int ukprn,int larsCode)
+        {
+            var ukprnFromContext = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+            if (ukprn.ToString() != ukprnFromContext)
+            {
+                _logger.LogWarning("An attempt has been made to get the provider course details for ukprn {ukprnFromContext} and larsCode {larsCode} using different ukprn [{ukprn}]", ukprnFromContext,larsCode,ukprn);
+                return null;
+            }
+
+            _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
+
+            var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn,larsCode));
+
+            if (result==null)
+            {
+                _logger.LogWarning("Provider course details not found for ukprn {ukprn} and LarsCode {larsCode}", ukprn, larsCode);
+                return null;
+            }
+
+            var standardDetails = result.StandardDetails;
+
+            var model = new StandardDetailsViewModel(HttpContext)
+            {
+                CourseName = standardDetails.CourseName,
+                Level = standardDetails.Level,
+                IFateReferenceNumber = standardDetails.IFateReferenceNumber,
+                LarsCode = standardDetails.LarsCode,
+                RegulatorName = standardDetails.RegulatorName,
+                Sector = standardDetails.Sector,
+                Version = standardDetails.Version
+            };
+
+            return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }
     }
 }

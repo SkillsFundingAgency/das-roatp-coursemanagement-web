@@ -1,4 +1,8 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +15,11 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
 {
     [TestFixture]
-    public class StandardsControllerTests
+    public class ViewStandardsTests
     {
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;

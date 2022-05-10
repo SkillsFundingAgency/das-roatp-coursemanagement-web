@@ -25,7 +25,8 @@
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
                             <span class="app-task-list__task-name">
-                                <a href="#" aria-describedby="standard-name">
+                                @*<a href="#" aria-describedby="standard-name">*@
+                                <a class="govuk-link" asp-controller="Standards" asp-action="ViewStandard" asp-route-larsCode="@standard.LarsCode" asp-route-Ukprn="@Model.Ukprn" aria-describedby="standard-name">
                                     @standard.CourseDisplayName
                                 </a>
                             </span>

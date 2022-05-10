@@ -1,0 +1,91 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model StandardDetailsViewModel
+@{
+    ViewBag.Title = "Standards";
+}
+  <a class="govuk-back-link" asp-route="@RouteNames.ViewStandards" asp-all-route-data="@Model.RouteDictionary" >Back</a>  
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <div class="govuk-caption-xl">Check your record</div>
+        <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
+      
+        <table class="govuk-table" aria-describedby="StandardDetails">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" colspan="2" > </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                IFATE Reference
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.IFateReferenceNumber
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Version
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.Version
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Sector
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.Sector
+                    </td>
+                </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <span class="app-task-list__task-name">
+                        <strong>
+                            LARS code
+                        </strong>
+                    </span>
+                </td>
+                <td class="govuk-table__cell">
+                    @Model.LarsCode
+                </td>
+            </tr>
+            @if (Model.IsRegulatorPresent)
+            {
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Regulator
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.RegulatorName
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+      
+        <br />
+        <br />
+        <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
+    </div>
+</div>

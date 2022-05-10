@@ -8,5 +8,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string ProviderSignOut = "provider-signout";
         public const string ReviewYourDetails = "review-your-details";
         public const string ViewStandards = "view-standards";
+        public const string ViewStandardDetails = "view-standard-details";
     }
 }
