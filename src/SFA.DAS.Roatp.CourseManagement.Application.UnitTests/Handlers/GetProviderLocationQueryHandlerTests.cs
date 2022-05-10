@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
         
         [Test]
-        public async Task Handle_ValidRequest_ReturnsValidResponse()
+        public async Task Handle_WithValidRequest_ReturnsValidResponse()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => _providerLocations);
             _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public async Task Handle_NoProviderLocationsReturned_ReturnsNullResponse()
+        public async Task Handle_NoTrainingLocations_ReturnsNullResponse()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => null);
             _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
@@ -58,7 +58,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public void GetProviderLocationQueryHandler_Returns_Exception()
+        public async Task Handle_NoProviderLocations_ReturnsNullResponse()
+        {
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<Domain.ApiModels.ProviderLocation>());
+            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
+
+            var result = await _handler.Handle(_query, CancellationToken.None);
+            Assert.IsNull(result);
+        }
+
+        [Test]
+        public void Handle_Returns_Exception()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).Throws(new Exception());
             _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);

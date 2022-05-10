@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/traininglocations", Name = RouteNames.ViewProviderLocations)]
         [HttpGet]
-        public async Task<IActionResult> ViewProviderLocations()
+        public async Task<IActionResult> GetProvidersTrainingLocation()
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
 

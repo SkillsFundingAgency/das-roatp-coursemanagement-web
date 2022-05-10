@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
                 }
 
                 var providerLocations = trainingLocations.FindAll(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
-                if (providerLocations == null)
+                if (!providerLocations.Any())
                 {
                     _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
                     return null;
