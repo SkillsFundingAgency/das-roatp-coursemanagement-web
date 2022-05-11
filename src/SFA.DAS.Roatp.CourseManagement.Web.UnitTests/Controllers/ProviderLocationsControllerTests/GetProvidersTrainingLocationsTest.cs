@@ -2,6 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -9,6 +10,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using System;
@@ -24,6 +26,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         private ProviderLocationsController _controller;
         private Mock<ILogger<ProviderLocationsController>> _logger;
         private Mock<IMediator> _mediator;
+        private Mock<IUrlHelper> urlHelper;
+        string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_each_test()
@@ -67,6 +71,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
+
+            urlHelper = new Mock<IUrlHelper>();
+            
+            UrlRouteContext verifyRouteValues = null;
+            urlHelper
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                   c.RouteName.Equals(RouteNames.ReviewYourDetails)
+               )))
+               .Returns(verifyUrl)
+               .Callback<UrlRouteContext>(c =>
+               {
+                   verifyRouteValues = c;
+               });
+            _controller.Url = urlHelper.Object;
         }
 
         [Test]
@@ -80,6 +98,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
             model.ProviderLocations.Should().NotBeNull();
+            model.BackUrl.Should().Be(verifyUrl);
         }
 
         [Test]
@@ -97,6 +116,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
+            _controller.Url = urlHelper.Object;
             var result = await _controller.GetProvidersTrainingLocation();
 
             var viewResult = result as ViewResult;
@@ -105,6 +125,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
             model.ProviderLocations.Should().BeEmpty();
+            model.BackUrl.Should().Be(verifyUrl);
         }
     }
 }

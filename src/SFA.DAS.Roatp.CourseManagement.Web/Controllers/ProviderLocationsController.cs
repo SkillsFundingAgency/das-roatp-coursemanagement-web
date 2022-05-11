@@ -32,9 +32,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetProviderLocationQuery(int.Parse(ukprn)));
 
-            var model = new ProviderLocationListViewModel(HttpContext);
-         
-            if(result == null)
+            var model = new ProviderLocationListViewModel
+            {
+                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
+                {
+                    ukprn = ukprn,
+                }, Request.Scheme, Request.Host.Value)
+            };
+
+
+            if (result == null)
             {
                 _logger.LogInformation("Provider Locations data not found for {ukprn}", ukprn);
                 return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
