@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 BackUrl = _pasSharedConfiguration.DashboardUrl,
                 StandardsUrl = standardsUrl,
                 ProviderLocationsUrl = providerLocationsUrl
-            });;
+            });
         }
     }
 }
