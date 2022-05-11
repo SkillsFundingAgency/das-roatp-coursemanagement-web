@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
                 if (!providerLocations.Any())
                 {
                     _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
-                    return new GetProviderLocationQueryResult();
+                    return new GetProviderLocationQueryResult() { ProviderLocations = new List<Domain.ApiModels.ProviderLocation>() };
                 }
 
                 return new GetProviderLocationQueryResult

@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public void Handle_NoTrainingLocations_ShouldReturnsException()
+        public void Handle_NoTrainingLocations_ShouldReturnException()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<Domain.ApiModels.ProviderLocation>());
             _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task Handle_NoProviderLocations_ShouldReturnsEmptyList()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<Domain.ApiModels.ProviderLocation>() {new Domain.ApiModels.ProviderLocation() });
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<Domain.ApiModels.ProviderLocation>() { new Domain.ApiModels.ProviderLocation() { LocationType = Domain.ApiModels.LocationType.Regional } });
             _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
             var result = await _handler.Handle(_query, CancellationToken.None);
             result.Should().NotBeNull();
