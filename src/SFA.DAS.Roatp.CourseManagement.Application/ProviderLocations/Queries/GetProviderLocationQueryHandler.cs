@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
@@ -25,17 +26,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
             try
             {
                 var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{request.Ukprn}/locations");
-                if (trainingLocations == null)
+                if (!trainingLocations.Any())
                 {
-                    _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
-                    return null;
+                    _logger.LogError("Provider Locations not found for {ukprn}", request.Ukprn);
+                    throw new ValidationException("Provider Locations not found for {request.Ukprn}", null);
                 }
 
                 var providerLocations = trainingLocations.FindAll(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
                 if (!providerLocations.Any())
                 {
                     _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
-                    return null;
+                    return new GetProviderLocationQueryResult();
                 }
 
                 return new GetProviderLocationQueryResult

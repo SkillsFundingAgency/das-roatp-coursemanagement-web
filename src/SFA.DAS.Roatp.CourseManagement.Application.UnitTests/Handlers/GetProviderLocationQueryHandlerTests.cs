@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,25 +47,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public async Task Handle_NoTrainingLocations_ReturnsNullResponse()
-        {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => null);
-            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
-
-            var result = await _handler.Handle(_query, CancellationToken.None);
-
-            Assert.IsNull(result);
-            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
-        }
-
-        [Test]
-        public async Task Handle_NoProviderLocations_ReturnsNullResponse()
+        public void Handle_NoTrainingLocations_ShouldReturnsException()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<Domain.ApiModels.ProviderLocation>());
             _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
 
+            Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_query, CancellationToken.None));
+            _logger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
+        }
+
+        [Test]
+        public async Task Handle_NoProviderLocations_ShouldReturnsEmptyList()
+        {
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{_query.Ukprn}/locations")).ReturnsAsync(() => new List<Domain.ApiModels.ProviderLocation>() {new Domain.ApiModels.ProviderLocation() });
+            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, _logger.Object);
             var result = await _handler.Handle(_query, CancellationToken.None);
-            Assert.IsNull(result);
+            result.Should().NotBeNull();
+            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
+            result.ProviderLocations.Count.Should().Be(0);
         }
 
         [Test]
