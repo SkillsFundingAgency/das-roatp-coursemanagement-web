@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
         public async Task<GetProviderLocationQueryResult> Handle(GetProviderLocationQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get Provider Locations request received for Ukprn number {ukprn}", request.Ukprn);
-            var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{request.Ukprn}/locations");
+            var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"providers/{request.Ukprn}/locations");
             if (trainingLocations == null)
             {
                 _logger.LogError("Provider Locations not found for {ukprn}", request.Ukprn);
