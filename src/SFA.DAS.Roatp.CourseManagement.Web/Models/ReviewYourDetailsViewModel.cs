@@ -3,9 +3,10 @@
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models
 {
     [ExcludeFromCodeCoverage]
-    public class ReviewYourDetailsViewModel : ViewModelBase
+    public class ReviewYourDetailsViewModel 
     {
         public string StandardsUrl { get; set; }
         public string ProviderLocationsUrl { get; set; }
+        public string BackUrl { get; set; }
     }
 }
