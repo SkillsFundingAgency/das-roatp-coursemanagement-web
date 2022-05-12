@@ -1,12 +1,10 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
-using System.ComponentModel.DataAnnotations;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
@@ -23,32 +21,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
         public async Task<GetProviderLocationQueryResult> Handle(GetProviderLocationQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get Provider Locations request received for Ukprn number {ukprn}", request.Ukprn);
-            try
+            var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{request.Ukprn}/locations");
+            if (trainingLocations == null)
             {
-                var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"/providers/{request.Ukprn}/locations");
-                if (!trainingLocations.Any())
-                {
-                    _logger.LogError("Provider Locations not found for {ukprn}", request.Ukprn);
-                    throw new ValidationException("Provider Locations not found for {request.Ukprn}", null);
-                }
-
-                var providerLocations = trainingLocations.FindAll(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
-                if (!providerLocations.Any())
-                {
-                    _logger.LogInformation("Provider Locations not found for {ukprn}", request.Ukprn);
-                    return new GetProviderLocationQueryResult() { ProviderLocations = new List<Domain.ApiModels.ProviderLocation>() };
-                }
-
-                return new GetProviderLocationQueryResult
-                {
-                    ProviderLocations = providerLocations
-                };
+                _logger.LogError("Provider Locations not found for {ukprn}", request.Ukprn);
+                throw new ValidationException("Provider Locations not found for {request.Ukprn}", null);
             }
-            catch (Exception ex)
+
+            var providerLocations = trainingLocations.FindAll(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
+
+            return new GetProviderLocationQueryResult
             {
-                _logger.LogError(ex, $"Error occurred trying to retrieve Provider Locations for Ukprn {request.Ukprn}");
-                throw;
-            }
+                ProviderLocations = providerLocations
+            };
         }
     }
 }
