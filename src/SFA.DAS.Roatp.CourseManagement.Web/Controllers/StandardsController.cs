@@ -64,18 +64,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.ViewStandardDetails)]
         [HttpGet]
-        public async Task<IActionResult> ViewStandard(int ukprn,int larsCode)
+        public async Task<IActionResult> ViewStandard(int larsCode)
         {
-            var ukprnFromContext = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            if (ukprn.ToString() != ukprnFromContext)
-            {
-                _logger.LogWarning("An attempt has been made to get the provider course details for ukprn {ukprnFromContext} and larsCode {larsCode} using different ukprn [{ukprn}]", ukprnFromContext,larsCode,ukprn);
-                return null;
-            }
-
+            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
             _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
 
-            var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn,larsCode));
+            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn),larsCode));
 
             if (result==null)
             {
