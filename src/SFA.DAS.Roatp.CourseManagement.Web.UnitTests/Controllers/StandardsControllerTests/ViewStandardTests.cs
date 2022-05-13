@@ -84,7 +84,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_ReturnsValidResponse()
         {
-            var result = await _controller.ViewStandard(Ukprn, LarsCode);
+            var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
@@ -96,28 +96,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Version.Should().Be(Version);
             model.BackUrl.Should().Be(verifyUrl);
             _logger.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Never);
-        }
-
-        [Test]
-        public async Task ViewStandard_MismatchedUkprnReturnsNoDetails()
-        {
-            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => null);
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, UnmatchedUkprn.ToString()), }, "mock"));
-
-            _controller = new StandardsController(_mediator.Object, _logger.Object)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = new DefaultHttpContext() { User = user },
-                },
-                TempData = Mock.Of<ITempDataDictionary>()
-            };
-            var result = await _controller.ViewStandard(Ukprn, LarsCode);
-
-            result.Should().BeNull();
-            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Never);
-            _logger.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
         }
 
         [Test]
@@ -135,7 +113,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
-            var result = await _controller.ViewStandard(Ukprn,LarsCode);
+            var result = await _controller.ViewStandard(LarsCode);
 
             result.Should().BeNull();
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
