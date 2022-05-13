@@ -91,7 +91,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 LarsCode = standardDetails.LarsCode,
                 RegulatorName = standardDetails.RegulatorName,
                 Sector = standardDetails.Sector,
-                Version = standardDetails.Version
+                Version = standardDetails.Version,
+                StandardInfoUrl = standardDetails.StandardInfoUrl,
+                ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
+                ContactUsEmail = standardDetails.ContactUsEmail,
+                ContactUsPageUrl = standardDetails.ContactUsPageUrl
             };
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);

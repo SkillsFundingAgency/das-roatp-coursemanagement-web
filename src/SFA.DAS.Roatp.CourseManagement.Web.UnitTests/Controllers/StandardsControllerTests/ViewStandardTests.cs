@@ -47,7 +47,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 Sector = "Digital",
                 LarsCode = LarsCode,
                 RegulatorName = "",
-                Version = Version
+                Version = Version,
+                StandardInfoUrl = "www.test.com",
+                ContactUsEmail = "test@test.com",
+                ContactUsPageUrl = "www.test.com/ContactUs",
+                ContactUsPhoneNumber = "123456789"
             };
             
             _mediator = new Mock<IMediator>();

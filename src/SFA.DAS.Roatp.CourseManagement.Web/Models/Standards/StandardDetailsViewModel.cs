@@ -11,6 +11,10 @@
         public string RegulatorName { get; set; }
         public string Version { get; set; }
         public bool IsRegulatorPresent => !string.IsNullOrEmpty(RegulatorName);
+        public string StandardInfoUrl { get; set; }
+        public string ContactUsPhoneNumber { get; set; }
+        public string ContactUsEmail { get; set; }
+        public string ContactUsPageUrl { get; set; }
         public string BackUrl { get; set; }
     }
 }
