@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             var result = await _handler.Handle(_query, CancellationToken.None);
         
             Assert.IsNull(result);
-            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
+            _logger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
         }
         
         [Test]

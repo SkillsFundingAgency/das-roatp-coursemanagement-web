@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -18,14 +17,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
         }
         public async Task<GetStandardDetailsQueryResult> Handle(GetStandardDetailsQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Get Standards details request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn,request.LarsCode);
-            try
-            {
-                var url = $"ProviderCourse/{request.Ukprn}/Course/{request.LarsCode}";
+            _logger.LogInformation("Get Standards details request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn, request.LarsCode);
+            var url = $"ProviderCourse/{request.Ukprn}/Course/{request.LarsCode}";
                 var standardDetails = await _apiClient.Get<Domain.ApiModels.StandardDetails>(url);
                 if (standardDetails == null)
                 {
-                    _logger.LogInformation("Standard details not found for ukprn {ukprn} and LarsCode {larsCode}", request.Ukprn, request.LarsCode);
+                    _logger.LogError("Standard details not found for ukprn {request.Ukprn} and LarsCode {request.LarsCode}");
                     return null;
                 }
 
@@ -33,12 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
                 {
                    StandardDetails = standardDetails
                 };
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, $"Error occurred trying to retrieve Standard details for for ukprn {request.Ukprn} and larsCode {request.LarsCode}");
-                throw;
-            }
+
         }
     }
 }

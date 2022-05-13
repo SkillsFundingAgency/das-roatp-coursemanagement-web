@@ -1,11 +1,8 @@
 ﻿using System.Linq;
-using System.Security.Policy;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
@@ -47,6 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
+                // redirected back to main view standards page
                 return View("~/Views/Standards/ViewStandards.cshtml", model);
             }
 
@@ -81,7 +79,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             if (result==null)
             {
-                _logger.LogWarning("Provider course details not found for ukprn {ukprn} and LarsCode {larsCode}", ukprn, larsCode);
+                // SHUTTER-PAGE will need redirect back to shutter page
                 return null;
             }
 
