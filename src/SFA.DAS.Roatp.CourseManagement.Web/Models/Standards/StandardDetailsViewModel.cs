@@ -10,7 +10,7 @@
         public string Sector { get; set; }
         public string RegulatorName { get; set; }
         public string Version { get; set; }
-        public bool IsRegulatorPresent => !string.IsNullOrEmpty(RegulatorName);
+        public bool IsStandardRegulated => !string.IsNullOrEmpty(RegulatorName);
         public string BackUrl { get; set; }
     }
 }
