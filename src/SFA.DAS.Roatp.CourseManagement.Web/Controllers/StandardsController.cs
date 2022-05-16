@@ -80,16 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var standardDetails = result.StandardDetails;
 
-            var model = new StandardDetailsViewModel
-            {
-                CourseName = standardDetails.CourseName,
-                Level = standardDetails.Level,
-                IFateReferenceNumber = standardDetails.IFateReferenceNumber,
-                LarsCode = standardDetails.LarsCode,
-                RegulatorName = standardDetails.RegulatorName,
-                Sector = standardDetails.Sector,
-                Version = standardDetails.Version
-            };
+            var model =  (StandardDetailsViewModel)standardDetails;
             model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new
             {
                 ukprn = ukprn,
