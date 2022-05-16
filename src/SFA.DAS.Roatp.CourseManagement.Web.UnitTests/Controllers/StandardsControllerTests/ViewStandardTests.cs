@@ -29,7 +29,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private int Ukprn = 10000001;
         private int LarsCode = 123;
         private string Version = "1.1";
-        private int UnmatchedUkprn = 10000002;
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
 
