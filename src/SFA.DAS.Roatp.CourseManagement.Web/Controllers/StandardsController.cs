@@ -28,7 +28,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public async Task<IActionResult> ViewStandards()
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-
             _logger.LogInformation("Getting standards for {ukprn}", ukprn);
 
             var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
@@ -44,18 +43,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
-                // redirected back to main view standards page
                 return View("~/Views/Standards/ViewStandards.cshtml", model);
             }
 
             model.Standards = result.Standards.Select(c => (StandardViewModel)c).ToList();
+
             foreach (var standard in model.Standards)
             {
-                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new
-                        {
-                        ukprn,
-                        larsCode=standard.LarsCode
-                        }
+
+                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, 
+                    new
+                            {
+                                ukprn,
+                                larsCode=standard.LarsCode
+                            }
                     );
             }
 
@@ -79,24 +80,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var standardDetails = result.StandardDetails;
 
-            var model = new StandardDetailsViewModel
+            var model =  (StandardDetailsViewModel)standardDetails;
+            model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new
             {
-                BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new
-                {
-                    ukprn = ukprn,
-                }, Request.Scheme, Request.Host.Value),
-                CourseName = standardDetails.CourseName,
-                Level = standardDetails.Level,
-                IFateReferenceNumber = standardDetails.IFateReferenceNumber,
-                LarsCode = standardDetails.LarsCode,
-                RegulatorName = standardDetails.RegulatorName,
-                Sector = standardDetails.Sector,
-                Version = standardDetails.Version,
-                StandardInfoUrl = standardDetails.StandardInfoUrl,
-                ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
-                ContactUsEmail = standardDetails.ContactUsEmail,
-                ContactUsPageUrl = standardDetails.ContactUsPageUrl
-            };
+                ukprn = ukprn,
+            }, Request.Scheme, Request.Host.Value);
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }

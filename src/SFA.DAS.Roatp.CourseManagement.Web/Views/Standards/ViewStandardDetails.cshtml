@@ -53,33 +53,33 @@
                         @Model.Sector
                     </td>
                 </tr>
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">
+                    <span class="app-task-list__task-name">
+                        <strong>
+                            LARS code
+                        </strong>
+                    </span>
+                </td>
+                <td class="govuk-table__cell">
+                    @Model.LarsCode
+                </td>
+            </tr>
+            @if (Model.IsStandardRegulated)
+            {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                         <span class="app-task-list__task-name">
                             <strong>
-                                LARS code
+                                Regulator
                             </strong>
                         </span>
                     </td>
                     <td class="govuk-table__cell">
-                        @Model.LarsCode
+                        @Model.RegulatorName
                     </td>
                 </tr>
-                @if (Model.IsRegulatorPresent)
-                {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <span class="app-task-list__task-name">
-                                <strong>
-                                    Regulator
-                                </strong>
-                            </span>
-                        </td>
-                        <td class="govuk-table__cell">
-                            @Model.RegulatorName
-                        </td>
-                    </tr>
-                }
+            }
             </tbody>
         </table>
 
