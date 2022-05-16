@@ -53,33 +53,33 @@
                         @Model.Sector
                     </td>
                 </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    <span class="app-task-list__task-name">
-                        <strong>
-                            LARS code
-                        </strong>
-                    </span>
-                </td>
-                <td class="govuk-table__cell">
-                    @Model.LarsCode
-                </td>
-            </tr>
-            @if (Model.IsStandardRegulated)
-            {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                         <span class="app-task-list__task-name">
                             <strong>
-                                Regulator
+                                LARS code
                             </strong>
                         </span>
                     </td>
                     <td class="govuk-table__cell">
-                        @Model.RegulatorName
+                        @Model.LarsCode
                     </td>
                 </tr>
-            }
+                @if (Model.IsStandardRegulated)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <strong>
+                                    Regulator
+                                </strong>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Model.RegulatorName
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
@@ -161,4 +161,71 @@
         </span>
     </div>
 </div>
+<div class="grid-row" style="display:@(Model.IsStandardRegulated ?" display" :"none")">
+        <div class="column-two-thirds">
+            <h2 class="govuk-heading-m">Regulation</h2>
+            <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
+
+            <table class="govuk-table" aria-describedby="ContactDetails">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" colspan="3"> </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <strong>
+                                    Regulator
+                                </strong>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Model.RegulatorName
+                        </td>
+                        <td class="govuk-table__cell">
+                            
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <strong>
+                                    Approved
+                                </strong>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            Unknown
+                        </td>
+                        <td class="govuk-table__cell">
+                            <a href="#" aria-describedby="change-approved-regulator" class="govuk-link">
+                                Change
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <br />
+            <details class="govuk-details" data-module="govuk-details">
+                <summary class="govuk-details__summary">
+                    <span class="govuk-details__summary-text">
+                        What is a regulated standard?
+                    </span>
+                </summary>
+                <div class="govuk-details__text">
+                    This means there is a regulator that is responsible for this standard, and you must be approved by them to deliver it.
+                </div>
+                <div class="govuk-details__text">
+                    Not having the regulator’s approval will invalidate the training you give your apprentices. They will also not be accepted for assessment.
+                </div>
+                <div class="govuk-details__text">
+                    <a href="https://www.instituteforapprenticeships.org/developing-new-apprenticeships/statutory-regulated-occupations/" aria-describedby="Read-more-on-the-role-of-the-regulator" class="govuk-link">
+                        Read more on the role of the regulator
+                    </a>  in certain occupations.
+                </div>
+            </details>
+        </div>
+    </div>
 
