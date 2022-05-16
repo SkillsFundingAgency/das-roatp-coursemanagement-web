@@ -13,6 +13,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string RegulatorName { get; set; }
         public string Version { get; set; }
         public bool IsStandardRegulated => !string.IsNullOrEmpty(RegulatorName);
+        public string StandardInfoUrl { get; set; }
+        public string ContactUsPhoneNumber { get; set; }
+        public string ContactUsEmail { get; set; }
+        public string ContactUsPageUrl { get; set; }
         public string BackUrl { get; set; }
 
         public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
@@ -25,7 +29,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 LarsCode = standardDetails.LarsCode,
                 RegulatorName = standardDetails.RegulatorName,
                 Sector = standardDetails.Sector,
-                Version = standardDetails.Version
+                Version = standardDetails.Version,
+                StandardInfoUrl = standardDetails.StandardInfoUrl,
+                ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
+                ContactUsEmail = standardDetails.ContactUsEmail,
+                ContactUsPageUrl = standardDetails.ContactUsPageUrl,
             };
         }
     }
