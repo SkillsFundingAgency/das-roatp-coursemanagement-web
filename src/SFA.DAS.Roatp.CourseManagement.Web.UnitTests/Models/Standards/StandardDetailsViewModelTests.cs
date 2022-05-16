@@ -8,14 +8,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     [TestFixture]
     public class StandardDetailsViewModelTests
     {
-        /// <summary>
-        /// e
-        /// </summary>
-        /// <param name="regulatorName"></param>
-        /// <param name="isRegulated"></param>
         [TestCase("regulator name",true)]
         [TestCase("",false)]
-        public void ImplicitOperator_ConvertsFroStandardDetails(string regulatorName, bool isRegulated)
+        public void ImplicitOperator_ConvertsFromStandardDetails(string regulatorName, bool isRegulated)
         {
             const string courseName = "course name";
             const string level = "2";
