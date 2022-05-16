@@ -5,7 +5,6 @@ using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -22,10 +21,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public IActionResult ReviewYourDetails()
         {
-            /// Viewmodel should be built from a mediatr response eventually
-            return View("ReviewYourDetails", new ReviewYourDetailsViewModel(HttpContext)
+            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+
+            var standardsUrl = Url.RouteUrl(RouteNames.ViewStandards, new
             {
-                DashboardUrl = _pasSharedConfiguration.DashboardUrl,
+                ukprn = ukprn,
+            }, Request.Scheme, Request.Host.Value);
+
+            var providerLocationsUrl = Url.RouteUrl(RouteNames.ViewProviderLocations, new
+            {
+                ukprn = ukprn,
+            }, Request.Scheme, Request.Host.Value);
+
+            /// Viewmodel should be built from a mediatr response eventually
+            return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
+            {
+                BackUrl = _pasSharedConfiguration.DashboardUrl,
+                StandardsUrl = standardsUrl,
+                ProviderLocationsUrl = providerLocationsUrl
             });
         }
     }

@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         private Mock<ILogger<GetStandardQueryHandler>> _logger;
         private GetStandardQuery _query;
         private GetStandardQueryResult _queryResult;
-        private List<Domain.ApiModels.Standard> standards;
+        private List<Domain.ApiModels.Standard> _standards;
 
         [SetUp]
         public void Setup()
@@ -28,8 +28,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 
             _query = autoFixture.Create<GetStandardQuery>();
             _queryResult = autoFixture.Create<GetStandardQueryResult>();
-            standards = autoFixture.Create<List<Domain.ApiModels.Standard>>();
-            _queryResult.Standards = standards;
+            _standards = autoFixture.Create<List<Domain.ApiModels.Standard>>();
+            _queryResult.Standards = _standards;
             _apiClient = new Mock<IApiClient>();
             _logger = new Mock<ILogger<GetStandardQueryHandler>>();
         }
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task Handle_ValidRequest_ReturnsValidResponse()
         {
-            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"Standards/{_query.Ukprn}")).ReturnsAsync(() => standards);
+            _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>($"Standards/{_query.Ukprn}")).ReturnsAsync(() => _standards);
             _handler = new GetStandardQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
