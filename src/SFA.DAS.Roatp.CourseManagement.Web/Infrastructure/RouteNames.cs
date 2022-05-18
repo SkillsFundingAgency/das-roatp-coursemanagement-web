@@ -9,5 +9,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string ReviewYourDetails = "review-your-details";
         public const string ViewStandards = "standards";
         public const string ViewProviderLocations = "traininglocations";
+        public const string ViewStandardDetails = "view-standard-details";
     }
 }
