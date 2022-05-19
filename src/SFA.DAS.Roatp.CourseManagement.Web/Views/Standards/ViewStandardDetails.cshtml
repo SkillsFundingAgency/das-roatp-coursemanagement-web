@@ -53,33 +53,33 @@
                         @Model.Sector
                     </td>
                 </tr>
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    <span class="app-task-list__task-name">
-                        <strong>
-                            LARS code
-                        </strong>
-                    </span>
-                </td>
-                <td class="govuk-table__cell">
-                    @Model.LarsCode
-                </td>
-            </tr>
-            @if (Model.IsStandardRegulated)
-            {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                         <span class="app-task-list__task-name">
                             <strong>
-                                Regulator
+                                LARS code
                             </strong>
                         </span>
                     </td>
                     <td class="govuk-table__cell">
-                        @Model.RegulatorName
+                        @Model.LarsCode
                     </td>
                 </tr>
-            }
+                @if (Model.IsStandardRegulated)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <strong>
+                                    Regulator
+                                </strong>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Model.RegulatorName
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
@@ -161,4 +161,61 @@
         </span>
     </div>
 </div>
+
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h3 class="govuk-heading-m">Where you deliver this standard</h3>
+        <table class="govuk-table" aria-describedby="ContactDetails">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        This standard can be delivered at both training sites and employer addresses within certain regions
+                    </td>
+                    <td class="govuk-table__cell">
+                        <a href="#" aria-describedby="Change-providerCourse-locations" class="govuk-link">
+                            Change
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="govuk-table" aria-describedby="providerCourse-locations">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col"> Venue name </th>
+                    <th class="govuk-table__header" scope="col"> Delivery method</th>
+                    <th class="govuk-table__header" scope="col"> Flexi-job apprenticeship</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var location in Model.ProviderCourseLocations)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                @location.LocationName
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                @location.DeliveryOption()
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                @location.HasOffersPortableFlexiJob
+                            </span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
 

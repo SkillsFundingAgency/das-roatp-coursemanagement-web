@@ -28,6 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private Mock<IMediator> _mediator;
         private int Ukprn = 10000001;
         private int LarsCode = 123;
+        private int ProviderCourseId = 567;
         private string Version = "1.1";
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
@@ -87,7 +88,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_ReturnsValidResponse()
         {
-            var result = await _controller.ViewStandard(LarsCode);
+            var result = await _controller.ViewStandard(LarsCode, ProviderCourseId);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
@@ -116,7 +117,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
-            var result = await _controller.ViewStandard(LarsCode);
+            var result = await _controller.ViewStandard(LarsCode, ProviderCourseId);
 
             result.Should().BeNull();
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);

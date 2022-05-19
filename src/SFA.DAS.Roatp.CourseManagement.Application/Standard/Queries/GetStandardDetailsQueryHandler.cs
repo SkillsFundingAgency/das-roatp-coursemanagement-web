@@ -17,8 +17,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
         }
         public async Task<GetStandardDetailsQueryResult> Handle(GetStandardDetailsQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Get Standards details request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn, request.LarsCode);
-            var url = $"ProviderCourse/{request.Ukprn}/Course/{request.LarsCode}";
+            _logger.LogInformation("Get Standards details request received for ukprn {ukprn} , larsCode {larsCode}, providerCourseId {providerCourseId}", request.Ukprn, request.LarsCode, request.ProviderCourseId);
+            var url = $"ProviderCourse/{request.Ukprn}/Course/{request.LarsCode}/providerCourseLocation/{request.ProviderCourseId}/";
                 var standardDetails = await _apiClient.Get<Domain.ApiModels.StandardDetails>(url);
                 if (standardDetails == null)
                 {

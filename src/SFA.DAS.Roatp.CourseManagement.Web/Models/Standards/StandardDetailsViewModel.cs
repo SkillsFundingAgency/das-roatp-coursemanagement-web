@@ -1,4 +1,7 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -17,6 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
+        public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
         public string BackUrl { get; set; }
 
         public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
@@ -34,6 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
                 ContactUsEmail = standardDetails.ContactUsEmail,
                 ContactUsPageUrl = standardDetails.ContactUsPageUrl,
+                ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a=>a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList()
             };
         }
     }

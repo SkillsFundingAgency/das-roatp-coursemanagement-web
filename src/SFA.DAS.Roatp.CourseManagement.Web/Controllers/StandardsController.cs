@@ -55,22 +55,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                     new
                             {
                                 ukprn,
-                                larsCode=standard.LarsCode
-                            }
+                                larsCode=standard.LarsCode,
+                                providerCourseId = standard.ProviderCourseId,
+                    }
                     );
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
         }
 
-        [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.ViewStandardDetails)]
+        [Route("{ukprn}/standards/{larsCode}/providerCourseLocations/{providerCourseId}", Name = RouteNames.ViewStandardDetails)]
         [HttpGet]
-        public async Task<IActionResult> ViewStandard(int larsCode)
+        public async Task<IActionResult> ViewStandard(int larsCode, int providerCourseId)
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
+            _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode} providerCourseId {providerCourseId}", ukprn, larsCode, providerCourseId);
 
-            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn),larsCode));
+            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn),larsCode, providerCourseId));
 
             if (result==null)
             {
