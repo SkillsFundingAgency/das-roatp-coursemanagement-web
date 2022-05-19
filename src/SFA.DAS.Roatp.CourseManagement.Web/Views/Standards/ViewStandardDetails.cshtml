@@ -9,11 +9,11 @@
     <div class="column-two-thirds">
         <div class="govuk-caption-xl">Check your record</div>
         <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
-      
+
         <table class="govuk-table" aria-describedby="StandardDetails">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col" colspan="2" > </th>
+                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -82,9 +82,83 @@
             }
             </tbody>
         </table>
-      
+
         <br />
         <br />
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
+<div class="grid-row">
+    <div class="column-two-thirds">
+        <h2 class="govuk-heading-l">Information that is specific for this standard</h2>
+        <h3 class="govuk-heading-m">Contact details</h3>
+        <p class="govuk-body">If there is a specific person or team that should be contacted for this standard, update these contact details.</p>
+
+        <table class="govuk-table" aria-describedby="ContactDetails">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Email address
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.ContactUsEmail
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Telephone number
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.ContactUsPhoneNumber
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Contact page link
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.ContactUsPageUrl
+                    </td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <strong>
+                                Website page
+                            </strong>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @Model.StandardInfoUrl
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br />
+        <br />
+        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
+            <a href="#" aria-describedby="Update-contact-details" class="govuk-link">
+                Update these contact details
+            </a>
+        </span>
+    </div>
+</div>
+
