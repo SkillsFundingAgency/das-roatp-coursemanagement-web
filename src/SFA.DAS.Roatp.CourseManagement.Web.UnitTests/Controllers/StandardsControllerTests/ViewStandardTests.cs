@@ -26,12 +26,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private int Ukprn = 10000001;
-        private int LarsCode = 123;
-        private int ProviderCourseId = 567;
-        private string Version = "1.1";
+        private readonly int Ukprn = 10000001;
+        private readonly int LarsCode = 123;
+        private readonly string Version = "1.1";
+        private int ProviderCourseId = 4567;
         private Mock<IUrlHelper> urlHelper;
-        string verifyUrl = "http://test";
+        private readonly string verifyUrl = "http://test";
+        private readonly string Regulator = "Test-Regulator";
 
         [SetUp]
         public void Before_each_test()
@@ -121,6 +122,44 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             result.Should().BeNull();
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
+        }
+
+        [Test]
+        public async Task ViewStandard_ResponseIncludesRegulator()
+        {
+            var response = new StandardDetails
+            {
+                RegulatorName = Regulator,
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new GetStandardDetailsQueryResult
+                {
+                    StandardDetails = response
+                });
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn.ToString()), }, "mock"));
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object)
+            {
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext() { User = user },
+                },
+                TempData = Mock.Of<ITempDataDictionary>()
+            };
+
+            urlHelper = new Mock<IUrlHelper>();
+
+            _controller.Url = urlHelper.Object;
+
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.Should().NotBeNull();
+            model.RegulatorName.Should().Be(Regulator);
+            model.IsStandardRegulated.Should().Be(true);
         }
     }
 }
