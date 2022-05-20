@@ -29,7 +29,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private readonly int Ukprn = 10000001;
         private readonly int LarsCode = 123;
         private readonly string Version = "1.1";
-        private int ProviderCourseId = 4567;
         private Mock<IUrlHelper> urlHelper;
         private readonly string verifyUrl = "http://test";
         private readonly string Regulator = "Test-Regulator";
@@ -89,7 +88,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_ReturnsValidResponse()
         {
-            var result = await _controller.ViewStandard(LarsCode, ProviderCourseId);
+            var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
@@ -118,7 +117,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
-            var result = await _controller.ViewStandard(LarsCode, ProviderCourseId);
+            var result = await _controller.ViewStandard(LarsCode);
 
             result.Should().BeNull();
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
@@ -152,7 +151,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             _controller.Url = urlHelper.Object;
 
-            var result = await _controller.ViewStandard(LarsCode, ProviderCourseId);
+            var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();

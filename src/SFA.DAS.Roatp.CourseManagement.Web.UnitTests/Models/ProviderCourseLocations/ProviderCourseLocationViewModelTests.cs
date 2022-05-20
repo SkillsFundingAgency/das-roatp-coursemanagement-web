@@ -21,23 +21,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
         {
             const string _locationName = "Test location";
             LocationType _locationType = locationType;
-            bool _hasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption;
-            bool _hasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption;
-            bool _offersPortableFlexiJob = offersPortableFlexiJob;
             var providerCourseLocation = new ProviderCourseLocation 
-            { LocationName = _locationName, 
+            {   
+                LocationName = _locationName, 
                 LocationType = _locationType, 
-                HasBlockReleaseDeliveryOption = _hasBlockReleaseDeliveryOption, 
-                HasDayReleaseDeliveryOption = _hasDayReleaseDeliveryOption, 
-                OffersPortableFlexiJob = _offersPortableFlexiJob 
+                HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption, 
+                HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption, 
+                OffersPortableFlexiJob = offersPortableFlexiJob
             };
 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
             viewModel.LocationName.Should().Be(_locationName);
             viewModel.LocationType.Should().Be(_locationType);
-            viewModel.HasBlockReleaseDeliveryOption.Should().Be(_hasBlockReleaseDeliveryOption);
-            viewModel.HasDayReleaseDeliveryOption.Should().Be(_hasDayReleaseDeliveryOption);
-            viewModel.OffersPortableFlexiJob.Should().Be(_offersPortableFlexiJob);
+            viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
+            viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+            viewModel.OffersPortableFlexiJob.Should().Be(offersPortableFlexiJob);
         }
     }
 }
