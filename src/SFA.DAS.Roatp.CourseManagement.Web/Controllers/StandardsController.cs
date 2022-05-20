@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,6 +7,8 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -51,13 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             foreach (var standard in model.Standards)
             {
 
-                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, 
-                    new
-                            {
-                                ukprn,
-                                larsCode=standard.LarsCode
-                            }
-                    );
+                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {ukprn, larsCode = standard.LarsCode});
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
@@ -70,9 +64,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
             _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
 
-            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn),larsCode));
+            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn), larsCode));
 
-            if (result==null)
+            if (result == null)
             {
                 // SHUTTER-PAGE will need redirect back to shutter page
                 return null;
@@ -80,11 +74,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var standardDetails = result.StandardDetails;
 
-            var model =  (StandardDetailsViewModel)standardDetails;
+            var model = (StandardDetailsViewModel)standardDetails;
             model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new
             {
                 ukprn = ukprn,
-            }, Request.Scheme, Request.Host.Value);
+            });
+
+            model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { ukprn, larsCode });
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }
