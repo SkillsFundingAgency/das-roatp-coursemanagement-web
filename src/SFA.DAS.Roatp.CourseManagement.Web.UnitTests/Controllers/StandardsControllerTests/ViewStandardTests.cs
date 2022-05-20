@@ -152,7 +152,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             _controller.Url = urlHelper.Object;
 
-            var result = await _controller.ViewStandard(LarsCode);
+            var result = await _controller.ViewStandard(LarsCode, ProviderCourseId);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
