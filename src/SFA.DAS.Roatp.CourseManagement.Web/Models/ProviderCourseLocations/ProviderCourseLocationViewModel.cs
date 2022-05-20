@@ -11,21 +11,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         public bool? OffersPortableFlexiJob { get; set; }
         public string DeliveryOption()
         {
-            if (HasDayReleaseDeliveryOption.Value && HasBlockReleaseDeliveryOption.Value)
+            if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) && (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
             {
                 return "Day & block release";
             }
-            if (HasDayReleaseDeliveryOption.Value)
+            if (HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value)
             {
                 return "Day release";
             }
-            if (HasBlockReleaseDeliveryOption.Value)
+            if (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value)
             {
                 return "Block release";
             }
             return string.Empty;
         }
-        public string HasOffersPortableFlexiJob => OffersPortableFlexiJob.Value ? "Yes" : "No";
+        public string HasOffersPortableFlexiJob => OffersPortableFlexiJob.HasValue && OffersPortableFlexiJob.Value ? "Yes" : "No";
         public static implicit operator ProviderCourseLocationViewModel(ProviderCourseLocation providerCourseLocation)
         {
             return new ProviderCourseLocationViewModel

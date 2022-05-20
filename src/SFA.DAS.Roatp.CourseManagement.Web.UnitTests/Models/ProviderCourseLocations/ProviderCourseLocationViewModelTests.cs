@@ -37,5 +37,64 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
             viewModel.OffersPortableFlexiJob.Should().Be(offersPortableFlexiJob);
         }
+
+        public void ImplicitOperator_ViewModelShouldReturnDayReleaseDeliveryOption()
+        {
+            const string expectedDeliveryOptionDayRelease = "Day release";
+            bool hasDayReleaseDeliveryOption = true;
+            var providerCourseLocation = new ProviderCourseLocation
+            {
+                HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption,
+            };
+
+            ProviderCourseLocationViewModel viewModel = providerCourseLocation;
+            viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+            viewModel.DeliveryOption().Should().Be(expectedDeliveryOptionDayRelease);
+        }
+
+        public void ImplicitOperator_ViewModelShouldReturnBlockReleaseDeliveryOption()
+        {
+            const string expectedDeliveryOptionBlockRelease = "Block release";
+            bool hasBlockReleaseDeliveryOption = true;
+            var providerCourseLocation = new ProviderCourseLocation
+            {
+                HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption,
+            };
+
+            ProviderCourseLocationViewModel viewModel = providerCourseLocation;
+            viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
+            viewModel.DeliveryOption().Should().Be(expectedDeliveryOptionBlockRelease);
+        }
+
+        public void ImplicitOperator_ViewModelShouldReturnDayAndBlockReleaseDeliveryOption()
+        {
+            const string expectedDeliveryOptionBlockAndDayRelease = "Day & block release";
+            bool hasDayReleaseDeliveryOption = true;
+            bool hasBlockReleaseDeliveryOption = true;
+            var providerCourseLocation = new ProviderCourseLocation
+            {
+                HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption,
+                HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption,
+            };
+
+            ProviderCourseLocationViewModel viewModel = providerCourseLocation;
+            viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
+            viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+            viewModel.DeliveryOption().Should().Be(expectedDeliveryOptionBlockAndDayRelease);
+        }
+
+        [TestCase(true, "Yes")]
+        [TestCase(false, "No")]
+        public void ImplicitOperator_ViewModelShouldReturnDayAndBlockReleaseDeliveryOption(bool offersPortableFlexiJob, string displayText)
+        {
+            var providerCourseLocation = new ProviderCourseLocation
+            {
+                OffersPortableFlexiJob = offersPortableFlexiJob
+            };
+
+            ProviderCourseLocationViewModel viewModel = providerCourseLocation;
+            viewModel.OffersPortableFlexiJob.Should().Be(offersPortableFlexiJob);
+            viewModel.HasOffersPortableFlexiJob.Should().Be(displayText);
+        }
     }
 }
