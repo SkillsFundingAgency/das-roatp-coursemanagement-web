@@ -38,6 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             viewModel.OffersPortableFlexiJob.Should().Be(offersPortableFlexiJob);
         }
 
+        [Test]
         public void ImplicitOperator_ViewModelShouldReturnDayReleaseDeliveryOption()
         {
             const string expectedDeliveryOptionDayRelease = "Day release";
@@ -52,6 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             viewModel.DeliveryOption().Should().Be(expectedDeliveryOptionDayRelease);
         }
 
+        [Test]
         public void ImplicitOperator_ViewModelShouldReturnBlockReleaseDeliveryOption()
         {
             const string expectedDeliveryOptionBlockRelease = "Block release";
@@ -66,6 +68,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             viewModel.DeliveryOption().Should().Be(expectedDeliveryOptionBlockRelease);
         }
 
+        [Test]
         public void ImplicitOperator_ViewModelShouldReturnDayAndBlockReleaseDeliveryOption()
         {
             const string expectedDeliveryOptionBlockAndDayRelease = "Day & block release";
@@ -81,6 +84,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
             viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
             viewModel.DeliveryOption().Should().Be(expectedDeliveryOptionBlockAndDayRelease);
+        }
+
+        [Test]
+        public void ImplicitOperator_ViewModelShouldReturnNoDeliveryOption()
+        {
+            var providerCourseLocation = new ProviderCourseLocation();
+            ProviderCourseLocationViewModel viewModel = providerCourseLocation;
+            viewModel.DeliveryOption().Should().BeEmpty();
         }
 
         [TestCase(true, "Yes")]
