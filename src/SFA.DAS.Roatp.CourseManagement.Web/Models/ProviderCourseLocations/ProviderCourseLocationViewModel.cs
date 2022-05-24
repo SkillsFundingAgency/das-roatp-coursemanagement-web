@@ -11,7 +11,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         public bool? OffersPortableFlexiJob { get; set; }
         public string DeliveryOption()
         {
-            if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) && (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
+            if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) && 
+                (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
             {
                 return "Day & block release";
             }
