@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -69,6 +70,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
             _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
+
+            StandardDetails stubbedData;
+            stubbedData = StubbedDataService.GetStubbedData(ukprn, larsCode);
+
+            if (stubbedData != null)
+            {
+                var stubbedModel = (StandardDetailsViewModel)stubbedData;
+                return View("~/Views/Standards/ViewStandardDetails.cshtml", stubbedModel);
+            }
 
             var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn),larsCode));
 

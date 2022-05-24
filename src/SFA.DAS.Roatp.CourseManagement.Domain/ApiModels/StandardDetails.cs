@@ -1,4 +1,7 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
     public class StandardDetails
     {
@@ -13,6 +16,6 @@
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
-        public string BackUrl { get; set; }
+        public List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
     }
-}
+} 
