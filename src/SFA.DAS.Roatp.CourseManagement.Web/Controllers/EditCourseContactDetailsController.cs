@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class EditCourseContactDetailsController : Controller
+    public class EditCourseContactDetailsController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<EditCourseContactDetailsController> _logger;
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromRoute] int larsCode)
         {
-            var ukprn = int.Parse(HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value);
+            var ukprn = Ukprn;
 
             var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn, larsCode));
 
@@ -49,20 +49,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(EditCourseContactDetailsViewModel model)
         {
-            var ukprn = int.Parse(HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value);
             if (!ModelState.IsValid)
             {
-                model.BackLink = model.CancelLink = GetStandardDetailsUrl(ukprn, model.LarsCode);
+                model.BackLink = model.CancelLink = GetStandardDetailsUrl(Ukprn, model.LarsCode);
                 return View(model);
             }
 
             var command = (UpdateProviderCourseContactDetailsCommand)model;
-            command.Ukprn = ukprn;
-            command.UserId = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.UserId)).Value;
+            command.Ukprn = Ukprn;
+            command.UserId = UserId;
 
             await _mediator.Send(command);
 
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new {ukprn, model.LarsCode });
+            return RedirectToRoute(RouteNames.ViewStandardDetails, new {Ukprn, model.LarsCode });
         }
 
         private string GetStandardDetailsUrl(int ukprn, int larsCode) => Url.RouteUrl(RouteNames.ViewStandardDetails, new { ukprn, larsCode });

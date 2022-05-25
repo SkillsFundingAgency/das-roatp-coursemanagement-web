@@ -7,13 +7,14 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class StandardsController : Controller
+    public class StandardsController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<StandardsController> _logger;
@@ -27,22 +28,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewStandards()
         {
-            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            _logger.LogInformation("Getting standards for {ukprn}", ukprn);
+            _logger.LogInformation("Getting standards for {ukprn}", Ukprn);
 
-            var result = await _mediator.Send(new GetStandardQuery(int.Parse(ukprn)));
+            var result = await _mediator.Send(new GetStandardQuery(Ukprn));
 
             var model = new StandardListViewModel
             {
                 BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
                 {
-                    ukprn = ukprn,
+                    ukprn = Ukprn,
                 }, Request.Scheme, Request.Host.Value)
             };
 
             if (result == null)
             {
-                _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
+                _logger.LogInformation("Standards data not found for {ukprn}", Ukprn);
                 return View("~/Views/Standards/ViewStandards.cshtml", model);
             }
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             foreach (var standard in model.Standards)
             {
 
-                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {ukprn, larsCode = standard.LarsCode});
+                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
@@ -61,15 +61,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewStandard(int larsCode)
         {
-            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
+            _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
 
-            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn), larsCode));
+            var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
             if (result == null)
             {
-                // SHUTTER-PAGE will need redirect back to shutter page
-                return null;
+                throw new InvalidOperationException();
             }
 
             var standardDetails = result.StandardDetails;
@@ -77,10 +75,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = (StandardDetailsViewModel)standardDetails;
             model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new
             {
-                ukprn = ukprn,
+                ukprn = Ukprn,
             });
 
-            model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { ukprn, larsCode });
+            model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }
