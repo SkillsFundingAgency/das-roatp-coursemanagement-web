@@ -12,7 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class ProviderLocationsController : Controller
+    public class ProviderLocationsController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ProviderLocationsController> _logger;
@@ -26,24 +26,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProvidersTrainingLocation()
         {
-            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+            _logger.LogInformation("Getting Provider Locations for {ukprn}", Ukprn);
 
-            _logger.LogInformation("Getting Provider Locations for {ukprn}", ukprn);
-
-            var result = await _mediator.Send(new GetProviderLocationQuery(int.Parse(ukprn)));
+            var result = await _mediator.Send(new GetProviderLocationQuery(Ukprn));
 
             var model = new ProviderLocationListViewModel
             {
                 BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
                 {
-                    ukprn = ukprn,
+                    ukprn = Ukprn,
                 }, Request.Scheme, Request.Host.Value)
             };
 
 
             if (result == null)
             {
-                _logger.LogInformation("Provider Locations data not found for {ukprn}", ukprn);
+                _logger.LogInformation("Provider Locations data not found for {ukprn}", Ukprn);
                 return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
             }
 
