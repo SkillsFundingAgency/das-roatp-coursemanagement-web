@@ -9,24 +9,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public bool? OffersPortableFlexiJob { get; set; }
+        private const string DayAndBlockReleaseDeliveryOption = "Day & block release";
+        private const string DayReleaseDeliveryOption = "Day release";
+        private const string BlockReleaseDeliveryOption = "Block release";
+        private const string Yes = "Yes";
+        private const string No = "No";
         public string DeliveryOption()
         {
             if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) && 
                 (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
             {
-                return "Day & block release";
+                return DayAndBlockReleaseDeliveryOption;
             }
             if (HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value)
             {
-                return "Day release";
+                return DayReleaseDeliveryOption;
             }
             if (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value)
             {
-                return "Block release";
+                return BlockReleaseDeliveryOption;
             }
             return string.Empty;
         }
-        public string HasOffersPortableFlexiJob => OffersPortableFlexiJob.HasValue && OffersPortableFlexiJob.Value ? "Yes" : "No";
+        public string HasOffersPortableFlexiJob => OffersPortableFlexiJob.HasValue && OffersPortableFlexiJob.Value ? Yes : No;
         public static implicit operator ProviderCourseLocationViewModel(ProviderCourseLocation providerCourseLocation)
         {
             return new ProviderCourseLocationViewModel
