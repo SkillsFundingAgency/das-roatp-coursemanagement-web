@@ -105,7 +105,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         }
 
         [Test]
-        public async Task ViewStandard_ReturnsNoDetails()
+        public async Task ViewStandard_HandlerReturnsNull_ThrowsInvalidOperaionException()
         {
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
@@ -119,9 +119,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 },
                 TempData = Mock.Of<ITempDataDictionary>()
             };
-            var result = await _controller.ViewStandard(LarsCode);
 
-            result.Should().BeNull();
+            Func<Task> action = () => _controller.ViewStandard(LarsCode);
+
+            await action.Should().ThrowAsync<InvalidOperationException>();
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Once);
         }
 

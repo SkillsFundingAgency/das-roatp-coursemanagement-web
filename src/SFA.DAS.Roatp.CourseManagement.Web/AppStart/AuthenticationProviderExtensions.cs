@@ -43,7 +43,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
                     {
                         await PopulateProviderClaims(ctx.HttpContext, ctx.Principal);
                     };
-                }).AddCookie(cookieOptions);
+                })
+                .AddCookie(cookieOptions);
 
         }
 
