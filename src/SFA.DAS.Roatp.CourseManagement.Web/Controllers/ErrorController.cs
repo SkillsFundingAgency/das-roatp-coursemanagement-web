@@ -35,6 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public IActionResult ErrorInService()
         {
             var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
             if (User.Identity.IsAuthenticated)
             {
                 _logger.LogError(feature.Error, "Unexpected error occured during request to path: {path} by user: {user}", feature.Path, User.FindFirstValue(ProviderClaims.UserId));
