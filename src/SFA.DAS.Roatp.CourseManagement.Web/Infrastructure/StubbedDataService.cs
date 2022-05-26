@@ -84,24 +84,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationName = "office 1",
                     LocationType = LocationType.Provider,
                     HasDayReleaseDeliveryOption = null,
-                    HasBlockReleaseDeliveryOption = true,
-                    OffersPortableFlexiJob = false
+                    HasBlockReleaseDeliveryOption = true
                 },
                 new ProviderCourseLocation
                 {
                     LocationName = "office 2",
                     LocationType = LocationType.Provider,
                     HasDayReleaseDeliveryOption = true,
-                    HasBlockReleaseDeliveryOption = false,
-                    OffersPortableFlexiJob = true
+                    HasBlockReleaseDeliveryOption = false
                 },
                 new ProviderCourseLocation
                 {
                     LocationName = "office 3",
                     LocationType = LocationType.Provider,
                     HasDayReleaseDeliveryOption = true,
-                    HasBlockReleaseDeliveryOption = true,
-                    OffersPortableFlexiJob = false
+                    HasBlockReleaseDeliveryOption = true
                 },
             };
 
@@ -118,8 +115,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationName = "National",
                     LocationType = LocationType.National,
                     HasDayReleaseDeliveryOption = null,
-                    HasBlockReleaseDeliveryOption = true,
-                    OffersPortableFlexiJob = false
+                    HasBlockReleaseDeliveryOption = true
                 }
             };
 
@@ -137,7 +133,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = null,
                     HasBlockReleaseDeliveryOption = true,
-                    OffersPortableFlexiJob = false,
                     RegionName = "East of England"
                 },
                 new ProviderCourseLocation
@@ -146,7 +141,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = true,
                     HasBlockReleaseDeliveryOption = false,
-                    OffersPortableFlexiJob = true,
                     RegionName="South West"
                 },
                 new ProviderCourseLocation
@@ -155,7 +149,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = true,
                     HasBlockReleaseDeliveryOption = false,
-                    OffersPortableFlexiJob = true,
                     RegionName="South West"
                 },
                 new ProviderCourseLocation
@@ -164,7 +157,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = true,
                     HasBlockReleaseDeliveryOption = true,
-                    OffersPortableFlexiJob = false,
                     RegionName="East Midlands"
                 },
                 new ProviderCourseLocation
@@ -173,7 +165,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = null,
                     HasBlockReleaseDeliveryOption = true,
-                    OffersPortableFlexiJob = false,
                     RegionName="South East"
                 },
                 new ProviderCourseLocation
@@ -182,7 +173,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = true,
                     HasBlockReleaseDeliveryOption = false,
-                    OffersPortableFlexiJob = true,
                     RegionName="South West"
                 }
             };

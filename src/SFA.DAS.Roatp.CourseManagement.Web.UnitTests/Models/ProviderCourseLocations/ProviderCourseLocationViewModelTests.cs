@@ -9,16 +9,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
     [TestFixture]
     public class ProviderCourseLocationViewModelTests
     {
-        [TestCase(LocationType.Provider, true, true, true)]
-        [TestCase(LocationType.Regional, true, true, true)]
-        [TestCase(LocationType.National, true, true, true)]
-        [TestCase(LocationType.Provider, true, false, true)]
-        [TestCase(LocationType.Regional, true, false, true)]
-        [TestCase(LocationType.National, true, false, true)]
-        [TestCase(LocationType.Provider, true, false, false)]
-        [TestCase(LocationType.Regional, true, false, false)]
-        [TestCase(LocationType.National, true, false, false)]
-        public void ImplicitOperator_ConvertsFromProviderCourseLocation(LocationType locationType, bool hasBlockReleaseDeliveryOption, bool hasDayReleaseDeliveryOption, bool offersPortableFlexiJob)
+        [TestCase(LocationType.Provider, true, true)]
+        [TestCase(LocationType.Regional, true, true)]
+        [TestCase(LocationType.National, true, true)]
+        [TestCase(LocationType.Provider, true, false)]
+        [TestCase(LocationType.Regional, true, false)]
+        [TestCase(LocationType.National, true, false)]
+        [TestCase(LocationType.Provider, true, false)]
+        [TestCase(LocationType.Regional, true, false)]
+        [TestCase(LocationType.National, true, false)]
+        public void ImplicitOperator_ConvertsFromProviderCourseLocation(LocationType locationType, bool hasBlockReleaseDeliveryOption, bool hasDayReleaseDeliveryOption)
         {
             const string _locationName = "Test location";
             LocationType _locationType = locationType;
@@ -27,8 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
                 LocationName = _locationName,
                 LocationType = _locationType,
                 HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption,
-                HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption,
-                OffersPortableFlexiJob = offersPortableFlexiJob
+                HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption
             };
 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
@@ -36,7 +35,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             viewModel.LocationType.Should().Be(_locationType);
             viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
             viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
-            viewModel.OffersPortableFlexiJob.Should().Be(offersPortableFlexiJob);
         }
 
         [Test]
