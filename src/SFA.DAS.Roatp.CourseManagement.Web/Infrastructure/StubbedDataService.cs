@@ -142,7 +142,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                 },
                 new ProviderCourseLocation
                 {
-                    LocationName = "Bristol",
+                    LocationName = "Bath and North East Somerset",
                     LocationType = LocationType.Regional,
                     HasDayReleaseDeliveryOption = true,
                     HasBlockReleaseDeliveryOption = false,
@@ -175,6 +175,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
                     HasBlockReleaseDeliveryOption = true,
                     OffersPortableFlexiJob = false,
                     RegionName="South East"
+                },
+                new ProviderCourseLocation
+                {
+                    LocationName = "Bristol",
+                    LocationType = LocationType.Regional,
+                    HasDayReleaseDeliveryOption = true,
+                    HasBlockReleaseDeliveryOption = false,
+                    OffersPortableFlexiJob = true,
+                    RegionName="South West"
                 }
             };
 

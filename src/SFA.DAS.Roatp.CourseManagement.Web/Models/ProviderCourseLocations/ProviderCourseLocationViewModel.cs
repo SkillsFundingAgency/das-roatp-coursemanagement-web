@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
@@ -10,24 +11,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public bool? OffersPortableFlexiJob { get; set; }
+       
         public string RegionName { get; set; }
-        public string DeliveryOption()
+
+        public CourseLocationDeliveryOption DeliveryOption()
         {
-            if (HasBlockReleaseDeliveryOption != null && HasDayReleaseDeliveryOption != null && (HasDayReleaseDeliveryOption.Value) && HasBlockReleaseDeliveryOption.Value)
+            if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) &&
+                (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
             {
-                return "Day & block release";
+                return CourseLocationDeliveryOption.DayAndBlockRelease;
             }
-            if (HasDayReleaseDeliveryOption != null && HasDayReleaseDeliveryOption.Value)
+            if (HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value)
             {
-                return "Day release";
+                return CourseLocationDeliveryOption.DayRelease;
             }
-            if (HasBlockReleaseDeliveryOption != null && HasBlockReleaseDeliveryOption.Value)
+            if (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value)
             {
-                return "Block release";
+                return CourseLocationDeliveryOption.BlockRelease;
             }
-            return string.Empty;
+            return CourseLocationDeliveryOption.NotSet;
         }
-        public string HasOffersPortableFlexiJob => OffersPortableFlexiJob != null && OffersPortableFlexiJob.Value ? "Yes" : "No";
+        
+        // public string HasOffersPortableFlexiJob => OffersPortableFlexiJob != null && OffersPortableFlexiJob.Value ? "Yes" : "No";
         public static implicit operator ProviderCourseLocationViewModel(ProviderCourseLocation providerCourseLocation)
         {
             return new ProviderCourseLocationViewModel

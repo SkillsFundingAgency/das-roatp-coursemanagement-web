@@ -1,6 +1,4 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
-@using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 @using SFA.DAS.Roatp.CourseManagement.Application.Constants
 @model StandardDetailsViewModel
 @{
@@ -245,20 +243,20 @@
                             @{
                                 switch (Model.LocationSummary())
                                 {
-                                    case (WhereIsStandardDelivered.NationalOnly):
-                                        @Html.Raw("This standard is only delivered at an employer's address anywhere in England.");
+                                    case WhereIsCourseDelivered.NationalOnly:
+                                        @WhereIsCourseDeliveredText.NationalOnly
                                         break;
-                                    case (WhereIsStandardDelivered.ProvidersOnly):
-                                        @Html.Raw("This standard is only delivered at your training locations.");
+                                    case WhereIsCourseDelivered.ProvidersOnly:
+                                        @WhereIsCourseDeliveredText.ProvidersOnly
                                         break;
-                                    case (WhereIsStandardDelivered.SubregionsOnly):
-                                        @Html.Raw("This standard is only delivered at an employer's address.");
+                                    case WhereIsCourseDelivered.SubregionsOnly:
+                                        @WhereIsCourseDeliveredText.SubregionsOnly
                                         break;
-                                    case (WhereIsStandardDelivered.ProvidersAndNational):
-                                        @Html.Raw("This standard can be delivered at both training sites and employer addresses anywhere in England.");
+                                    case WhereIsCourseDelivered.ProvidersAndNational:
+                                        @WhereIsCourseDeliveredText.ProvidersAndNationalOnly
                                         break;
-                                    case (WhereIsStandardDelivered.ProviersAndSubregions):
-                                        @Html.Raw("This standard can be delivered at both training sites and employer addresses within certain regions.");
+                                    case WhereIsCourseDelivered.ProvidersAndSubregions:
+                                        @WhereIsCourseDeliveredText.ProvidersAndSubregionsOnly
                                         break;
                                 }
                             }
@@ -272,18 +270,17 @@
                 </tbody>
             </table>
             @if (Model.ProviderCourseLocations.Any())
-                                        {
+            {
                 <table class="govuk-table" aria-describedby="providerCourse-locations">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="col"> Venue name </th>
                         <th class="govuk-table__header" scope="col"> Delivery method</th>
-                        <th class="govuk-table__header" scope="col"> Flexi-job apprenticeship</th>
                     </tr>
                     </thead>
                     <tbody class="govuk-table__body">
                     @foreach (var location in Model.ProviderCourseLocations)
-                                        {
+                    {
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">
                                 <span class="app-task-list__task-name">
@@ -292,53 +289,74 @@
                             </td>
                             <td class="govuk-table__cell">
                                 <span class="app-task-list__task-name">
-                                    @location.DeliveryOption()
-                                </span>
-                            </td>
-                            <td class="govuk-table__cell">
-                                <span class="app-task-list__task-name">
-                                    @location.HasOffersPortableFlexiJob
+                                    @switch (location.DeliveryOption())
+                                    {
+                                        case CourseLocationDeliveryOption.DayAndBlockRelease:
+                                            @CourseLocationDeliveryOptionText.DayAndBlockRelease;
+                                            break;
+                                        case CourseLocationDeliveryOption.BlockRelease:
+                                            @CourseLocationDeliveryOptionText.BlockRelease;
+                                            break;
+                                        case CourseLocationDeliveryOption.DayRelease:
+                                            @CourseLocationDeliveryOptionText.DayRelease;
+                                            break;
+                                    }
                                 </span>
                             </td>
                         </tr>
                     }
                     </tbody>
                 </table>
+                <span class="app-task-list__task-name">
+                    <a href="#" aria-describedby="Update-training-locations" class="govuk-link">
+                        Update training locations
+                    </a>
+                </span>
             }
-                                @if (Model.SubRegionCourseLocations.Any())
+            @if (Model.SubRegionCourseLocations.Any())
             {
                 <div class="govuk-body">
                     Training can be delivered on site at the employer's address, as long as they are within these regions:
                 </div>
                 @foreach (var region in Model.Regions)
                 {
+                    <div class="govuk-table__header"></div>
                     <h3 class="govuk-heading-m">@region</h3>
                     <table class="govuk-table" aria-describedby="providerCourse-locations">
-                        <thead class="govuk-table__head">
-                            <tr class="govuk-table__row">
-                                <th class="govuk-table__header" scope="col"> Region </th>
-                                <th class="govuk-table__header" scope="col"> Portable Flexi-Job Apprenticeship</th>
-                            </tr>
-                        </thead>
                         <tbody class="govuk-table__body">
-                            @foreach (var location in Model.SubRegionCourseLocations.Where(x => x.RegionName == region))
+                        @{
+                            var locations = Model.SubRegionCourseLocations.Where(x => x.RegionName == region).OrderBy(x => x.LocationName).ToArray();
+
+                            for (var i = 0; i < locations.Count(); i = i + 2)
                             {
+
                                 <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
+
+                                    <td>
                                         <span class="app-task-list__task-name">
-                                            @location.LocationName
+                                            @locations[i].LocationName
                                         </span>
                                     </td>
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            @location.HasOffersPortableFlexiJob
-                                        </span>
-                                    </td>
+                                    @if (i + 1 < locations.Count())
+                                    {
+                                        <td>
+                                            <span class="app-task-list__task-name">
+                                                @locations[i + 1].LocationName
+                                            </span>
+                                        </td>
+                                    }
                                 </tr>
+
                             }
+                        }
                         </tbody>
                     </table>
                 }
+                <span class="app-task-list__task-name">
+                    <a href="#" aria-describedby="edit-regions" class="govuk-link">
+                        Edit these regions
+                    </a>
+                </span>
             }
         </div>
     </div>

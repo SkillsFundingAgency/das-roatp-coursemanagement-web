@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -12,6 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         [TestCase("",false)]
         public void ImplicitOperator_ConvertsFromStandardDetails(string regulatorName, bool isRegulated)
         {
+            //MFCMFC needs more
             const string courseName = "course name";
             const string level = "2";
             const string iFateReferenceNumber = "STD_1";
@@ -19,6 +21,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const int larsCode = 133;
             const string version = "3";
             var expectedCourseDisplayName = $"{courseName} (Level {level})";
+            var providerCourseLocations = new List<ProviderCourseLocation>()
+            {
+                new ProviderCourseLocation { LocationName ="Test", LocationType = LocationType.Provider, HasBlockReleaseDeliveryOption = true, HasDayReleaseDeliveryOption= true, OffersPortableFlexiJob= true}
+            };
 
             var standardDetails = new StandardDetails
             {
@@ -28,7 +34,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 IFateReferenceNumber = iFateReferenceNumber,
                 Sector = sector,
                 Version = version,
-                RegulatorName = regulatorName
+                RegulatorName = regulatorName,
+                ProviderCourseLocations = providerCourseLocations
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
@@ -41,6 +48,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.RegulatorName.Should().Be(regulatorName);
             viewModel.IsStandardRegulated.Should().Be(isRegulated);
             viewModel.CourseDisplayName.Should().Be(expectedCourseDisplayName);
+            viewModel.ProviderCourseLocations.Should().BeEquivalentTo(providerCourseLocations);
+
         }
     }
 }

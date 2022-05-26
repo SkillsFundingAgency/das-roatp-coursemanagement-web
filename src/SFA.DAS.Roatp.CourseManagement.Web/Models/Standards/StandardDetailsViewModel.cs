@@ -38,20 +38,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             SubRegionCourseLocations
                 .OrderBy(x => x.RegionName)
                 .Distinct().Select(region => region.RegionName).Distinct().ToList();
-        public WhereIsStandardDelivered LocationSummary()
+        public WhereIsCourseDelivered LocationSummary()
         {
             if (ProviderCourseLocations.Any())
             {
                 if (NationalCourseLocation != null)
-                    return WhereIsStandardDelivered.ProvidersAndNational;
+                    return WhereIsCourseDelivered.ProvidersAndNational;
 
                 if (SubRegionCourseLocations.Any())
-                    return WhereIsStandardDelivered.ProviersAndSubregions;
+                    return WhereIsCourseDelivered.ProvidersAndSubregions;
 
-                return WhereIsStandardDelivered.ProvidersOnly;
+                return WhereIsCourseDelivered.ProvidersOnly;
             }
 
-            return NationalCourseLocation != null ? WhereIsStandardDelivered.NationalOnly : WhereIsStandardDelivered.SubregionsOnly;
+            return NationalCourseLocation != null ? WhereIsCourseDelivered.NationalOnly : WhereIsCourseDelivered.SubregionsOnly;
         }
 
         public string BackUrl { get; set; }
