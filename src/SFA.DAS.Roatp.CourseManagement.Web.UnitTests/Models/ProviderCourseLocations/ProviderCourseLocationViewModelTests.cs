@@ -20,18 +20,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
         [TestCase(LocationType.National, true, false)]
         public void ImplicitOperator_ConvertsFromProviderCourseLocation(LocationType locationType, bool hasBlockReleaseDeliveryOption, bool hasDayReleaseDeliveryOption)
         {
-            const string _locationName = "Test location";
+            const string locationName = "Test location";
             LocationType _locationType = locationType;
             var providerCourseLocation = new ProviderCourseLocation
             {
-                LocationName = _locationName,
+                LocationName = locationName,
                 LocationType = _locationType,
                 HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption,
                 HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption
             };
 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
-            viewModel.LocationName.Should().Be(_locationName);
+            viewModel.LocationName.Should().Be(locationName);
             viewModel.LocationType.Should().Be(_locationType);
             viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
             viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
         [Test]
         public void ImplicitOperator_ViewModelShouldReturnDayReleaseDeliveryOption()
         {
-            var hasDayReleaseDeliveryOption = true;
+            const bool hasDayReleaseDeliveryOption = true;
             var providerCourseLocation = new ProviderCourseLocation
             {
                 HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption,
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
         [Test]
         public void ImplicitOperator_ViewModelShouldReturnBlockReleaseDeliveryOption()
         {
-            var hasBlockReleaseDeliveryOption = true;
+            const bool hasBlockReleaseDeliveryOption = true;
             var providerCourseLocation = new ProviderCourseLocation
             {
                 HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption,
@@ -68,8 +68,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
         [Test]
         public void ImplicitOperator_ViewModelShouldReturnDayAndBlockReleaseDeliveryOption()
         {
-            bool hasDayReleaseDeliveryOption = true;
-            bool hasBlockReleaseDeliveryOption = true;
+            const bool hasDayReleaseDeliveryOption = true;
+            const bool hasBlockReleaseDeliveryOption = true;
             var providerCourseLocation = new ProviderCourseLocation
             {
                 HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption,

@@ -15,11 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string Sector { get; set; }
         public string RegulatorName { get; set; }
         public string Version { get; set; }
-        public string CourseDisplayName
-        {
-            get => $"{CourseName} (Level {Level})";
-            set => throw new System.NotImplementedException();
-        }
+        public string CourseDisplayName => $"{CourseName} (Level {Level})";
 
         public bool IsStandardRegulated => !string.IsNullOrEmpty(RegulatorName);
 
