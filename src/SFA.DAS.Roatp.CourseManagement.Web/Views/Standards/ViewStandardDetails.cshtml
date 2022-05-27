@@ -1,9 +1,9 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 @using SFA.DAS.Roatp.CourseManagement.Application.Constants
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 @model StandardDetailsViewModel
 @{
     ViewBag.Title = "Standards";
-
 }
 <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
 <div class="grid-row">
@@ -153,10 +153,8 @@
             </tbody>
         </table>
 
-        <br />
-        <br />
-        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
-            <a href="#" aria-describedby="Update-contact-details" class="govuk-link">
+        <span>
+            <a href="@Model.EditContactDetailsUrl" aria-describedby="Update-contact-details" class="govuk-link">
                 Update these contact details
             </a>
         </span>
@@ -257,9 +255,12 @@
                                         break;
                                     case WhereIsCourseDelivered.ProvidersAndSubregions:
                                         @WhereIsCourseDeliveredText.ProvidersAndSubregionsOnly
+                                            break;
+                                    case WhereIsCourseDelivered.NoneSet:
+                                        @WhereIsCourseDeliveredText.NoneSet
                                         break;
+                                    }
                                 }
-                            }
                         </td>
                         <td class="govuk-table__cell">
                             <a href="#" aria-describedby="Change-providerCourse-locations" class="govuk-link">
@@ -270,7 +271,7 @@
                 </tbody>
             </table>
             @if (Model.ProviderCourseLocations.Any())
-            {
+                                {
                 <table class="govuk-table" aria-describedby="providerCourse-locations">
                     <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -280,7 +281,7 @@
                     </thead>
                     <tbody class="govuk-table__body">
                     @foreach (var location in Model.ProviderCourseLocations)
-                    {
+                                {
                         <tr class="govuk-table__row">
                             <td class="govuk-table__cell">
                                 <span class="app-task-list__task-name">
@@ -290,7 +291,7 @@
                             <td class="govuk-table__cell">
                                 <span class="app-task-list__task-name">
                                     @switch (location.DeliveryOption())
-                                    {
+                                {
                                         case CourseLocationDeliveryOption.DayAndBlockRelease:
                                             @CourseLocationDeliveryOptionText.DayAndBlockRelease;
                                             break;

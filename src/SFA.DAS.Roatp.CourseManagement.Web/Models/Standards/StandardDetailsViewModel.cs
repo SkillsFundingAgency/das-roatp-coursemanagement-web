@@ -51,10 +51,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 return WhereIsCourseDelivered.ProvidersOnly;
             }
 
-            return NationalCourseLocation != null ? WhereIsCourseDelivered.NationalOnly : WhereIsCourseDelivered.SubregionsOnly;
+            if (NationalCourseLocation != null)
+                return WhereIsCourseDelivered.NationalOnly;
+            
+            if (SubRegionCourseLocations.Any())
+            {
+                return WhereIsCourseDelivered.SubregionsOnly;
+            }
+
+            return WhereIsCourseDelivered.NoneSet;
         }
 
         public string BackUrl { get; set; }
+        public string EditContactDetailsUrl { get; set; }
 
         public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
         {

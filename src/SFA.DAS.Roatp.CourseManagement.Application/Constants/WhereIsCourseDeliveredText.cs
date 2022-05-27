@@ -7,5 +7,6 @@
         public const string NationalOnly = "This standard is only delivered at an employer's address anywhere in England.";
         public const string ProvidersAndNationalOnly = "This standard can be delivered at both training sites and employer addresses anywhere in England.";
         public const string ProvidersAndSubregionsOnly = "This standard can be delivered at both training sites and employer addresses within certain regions.";
+        public const string NoneSet = "This standard has no locations associated with it.";
     }
 }

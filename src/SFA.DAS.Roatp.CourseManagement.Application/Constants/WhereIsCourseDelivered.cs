@@ -6,6 +6,7 @@
         SubregionsOnly,
         NationalOnly,
         ProvidersAndNational,
-        ProvidersAndSubregions
+        ProvidersAndSubregions,
+        NoneSet
     }
 }
