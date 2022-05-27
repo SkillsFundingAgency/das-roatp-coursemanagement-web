@@ -320,11 +320,12 @@
                 <div class="govuk-body">
                     Training can be delivered on site at the employer's address, as long as they are within these regions:
                 </div>
-                @foreach (var region in Model.Regions)
+                @foreach (var region in Model.Regions())
                 {
                     <div class="govuk-table__header"></div>
                     <h3 class="govuk-heading-m">@region</h3>
                     <table class="govuk-table" aria-describedby="providerCourse-locations">
+                        <thead><tr><th></th></tr></thead>
                         <tbody class="govuk-table__body">
                         @{
                             var locations = Model.SubRegionCourseLocations.Where(x => x.RegionName == region).OrderBy(x => x.LocationName).ToArray();
