@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.Constants;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
@@ -115,6 +116,94 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.ProviderCourseLocations.Should().BeEquivalentTo(courseLocations);
             viewModel.SubRegionCourseLocations.Should().BeEquivalentTo(subregionLocations);
             viewModel.NationalCourseLocation.Should().BeEquivalentTo(nationalLocation);
+        }
+
+        [Test]
+        public void ImplicitOperator_NoCourseLocations_ConvertsLocationSummaryToNoneSet()
+        {
+            var providerCourseLocations = new List<ProviderCourseLocation>();
+            var standardDetails = new StandardDetails
+            {
+                ProviderCourseLocations = providerCourseLocations
+            };
+
+            StandardDetailsViewModel viewModel = standardDetails;
+
+            viewModel.LocationSummary().Should().Be(WhereIsCourseDelivered.NoneSet);
+        }
+
+        [TestCase(LocationType.Provider,WhereIsCourseDelivered.ProvidersOnly )]
+        [TestCase(LocationType.Regional, WhereIsCourseDelivered.SubregionsOnly)]
+        [TestCase(LocationType.National, WhereIsCourseDelivered.NationalOnly)]
+        public void ImplicitOperator_OnlyOneTypeOfCourseLocations_LocationSummaryAsExpected(LocationType locationType, WhereIsCourseDelivered whereIsCourseDelivered)
+        {
+            var courseLocations = new List<ProviderCourseLocation>()
+            {
+                new ProviderCourseLocation
+                {
+                    LocationName = "Test",
+                    LocationType = locationType
+                }
+            };
+            var standardDetails = new StandardDetails
+            {
+                ProviderCourseLocations = courseLocations
+            };
+        
+            StandardDetailsViewModel viewModel = standardDetails;
+            viewModel.LocationSummary().Should().Be(whereIsCourseDelivered);
+        }
+
+        [Test]
+        public void ImplicitOperator_ProviderAndSubregionCourseLocations_LocationSummaryAsExpected()
+        {
+            var providerCourseLocations = new List<ProviderCourseLocation>()
+            {
+                new ProviderCourseLocation
+                {
+                    LocationName = "Test",
+                    LocationType = LocationType.Provider
+                },
+                new ProviderCourseLocation
+                {
+                    LocationName = "Test10",
+                    LocationType = LocationType.Regional
+                }
+            };
+
+            var standardDetails = new StandardDetails
+            {
+                ProviderCourseLocations = providerCourseLocations
+            };
+
+            StandardDetailsViewModel viewModel = standardDetails;
+            viewModel.LocationSummary().Should().Be(WhereIsCourseDelivered.ProvidersAndSubregions);
+        }
+
+        [Test]
+        public void ImplicitOperator_ProviderAndNationalCourseLocations_LocationSummaryAsExpected()
+        {
+            var providerCourseLocations = new List<ProviderCourseLocation>()
+            {
+                new ProviderCourseLocation
+                {
+                    LocationName = "Test",
+                    LocationType = LocationType.Provider
+                },
+                new ProviderCourseLocation
+                {
+                    LocationName = "Test10",
+                    LocationType = LocationType.National
+                }
+            };
+
+            var standardDetails = new StandardDetails
+            {
+                ProviderCourseLocations = providerCourseLocations
+            };
+
+            StandardDetailsViewModel viewModel = standardDetails;
+            viewModel.LocationSummary().Should().Be(WhereIsCourseDelivered.ProvidersAndNational);
         }
     }
 }

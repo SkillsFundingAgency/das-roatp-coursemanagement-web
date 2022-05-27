@@ -2,9 +2,7 @@
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using SFA.DAS.Roatp.CourseManagement.Application.Constants;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
