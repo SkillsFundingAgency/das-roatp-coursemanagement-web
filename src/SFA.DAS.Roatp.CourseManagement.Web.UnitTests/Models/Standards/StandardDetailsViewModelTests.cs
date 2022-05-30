@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Constants;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
@@ -135,7 +134,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         [TestCase(LocationType.Provider,WhereIsCourseDelivered.ProvidersOnly )]
         [TestCase(LocationType.Regional, WhereIsCourseDelivered.SubregionsOnly)]
         [TestCase(LocationType.National, WhereIsCourseDelivered.NationalOnly)]
-        public void ImplicitOperator_OnlyOneTypeOfCourseLocations_LocationSummaryAsExpected(LocationType locationType, WhereIsCourseDelivered whereIsCourseDelivered)
+        public void ImplicitOperator_OnlyOneTypeOfCourseLocations_LocationSummaryAsExpected(LocationType locationType, string whereIsCourseDelivered)
         {
             var courseLocations = new List<ProviderCourseLocation>()
             {

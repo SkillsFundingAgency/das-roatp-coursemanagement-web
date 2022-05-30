@@ -1,5 +1,4 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Application.Constants;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
@@ -13,7 +12,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 
         public string RegionName { get; set; }
 
-        public CourseLocationDeliveryOption DeliveryOption()
+        public string DeliveryOption()
         {
             if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) &&
                 (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
@@ -28,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
             {
                 return CourseLocationDeliveryOption.BlockRelease;
             }
-            return CourseLocationDeliveryOption.NotSet;
+            return string.Empty;
         }
         
         public static implicit operator ProviderCourseLocationViewModel(ProviderCourseLocation providerCourseLocation)
@@ -42,5 +41,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
                 RegionName = providerCourseLocation.RegionName
             };
         }
+    }
+
+    public static class CourseLocationDeliveryOption
+    {
+        public const string DayAndBlockRelease = "Day and block release";
+        public const string DayRelease = "Day release";
+        public const string BlockRelease = "Block release";
     }
 }

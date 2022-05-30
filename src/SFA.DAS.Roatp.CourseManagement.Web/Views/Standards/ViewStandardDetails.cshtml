@@ -1,6 +1,4 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@using SFA.DAS.Roatp.CourseManagement.Application.Constants
-@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 @model StandardDetailsViewModel
 @{
     ViewBag.Title = "Standards";
@@ -239,29 +237,7 @@
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
-                            @{
-                                switch (Model.LocationSummary())
-                                {
-                                    case WhereIsCourseDelivered.NationalOnly:
-                                        @WhereIsCourseDeliveredText.NationalOnly
-                                        break;
-                                    case WhereIsCourseDelivered.ProvidersOnly:
-                                        @WhereIsCourseDeliveredText.ProvidersOnly
-                                        break;
-                                    case WhereIsCourseDelivered.SubregionsOnly:
-                                        @WhereIsCourseDeliveredText.SubregionsOnly
-                                        break;
-                                    case WhereIsCourseDelivered.ProvidersAndNational:
-                                        @WhereIsCourseDeliveredText.ProvidersAndNationalOnly
-                                        break;
-                                    case WhereIsCourseDelivered.ProvidersAndSubregions:
-                                        @WhereIsCourseDeliveredText.ProvidersAndSubregionsOnly
-                                            break;
-                                    case WhereIsCourseDelivered.NoneSet:
-                                        @WhereIsCourseDeliveredText.NoneSet
-                                        break;
-                                    }
-                                }
+                            @Model.LocationSummary()
                         </td>
                         <td class="govuk-table__cell">
                             <a href="#" aria-describedby="Change-providerCourse-locations" class="govuk-link">
@@ -291,18 +267,7 @@
                             </td>
                             <td class="govuk-table__cell">
                                 <span class="app-task-list__task-name">
-                                    @switch (location.DeliveryOption())
-                                {
-                                        case CourseLocationDeliveryOption.DayAndBlockRelease:
-                                            @CourseLocationDeliveryOptionText.DayAndBlockRelease;
-                                            break;
-                                        case CourseLocationDeliveryOption.BlockRelease:
-                                            @CourseLocationDeliveryOptionText.BlockRelease;
-                                            break;
-                                        case CourseLocationDeliveryOption.DayRelease:
-                                            @CourseLocationDeliveryOptionText.DayRelease;
-                                            break;
-                                    }
+                                    @location.DeliveryOption()
                                 </span>
                             </td>
                         </tr>

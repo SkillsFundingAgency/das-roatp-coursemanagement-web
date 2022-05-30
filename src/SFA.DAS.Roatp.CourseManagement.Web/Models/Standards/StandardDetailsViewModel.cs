@@ -2,7 +2,6 @@
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Roatp.CourseManagement.Application.Constants;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -37,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         }
 
 
-        public WhereIsCourseDelivered LocationSummary()
+        public string LocationSummary()
         {
             if (ProviderCourseLocations.Any())
             {
@@ -84,5 +83,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault()
             };
         }
+    }
+
+
+    public static class WhereIsCourseDelivered
+    {
+        public const string ProvidersOnly = "This standard is only delivered at your training locations.";
+        public const string SubregionsOnly = "This standard is only delivered at an employer's address.";
+        public const string NationalOnly = "This standard is only delivered at an employer's address anywhere in England.";
+        public const string ProvidersAndNational = "This standard can be delivered at both training sites and employer addresses anywhere in England.";
+        public const string ProvidersAndSubregions = "This standard can be delivered at both training sites and employer addresses within certain regions.";
+        public const string NoneSet = "This standard has no training locations linked to it.";
     }
 }
