@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
                 .WithMessage("Enter an email address in the correct format, like name@example.com");
             RuleFor(p => p.ContactUsPhoneNumber)
                 .NotEmpty()
-                .WithMessage("Enter a telephone number")
+                .WithMessage("Enter a UK telephone number")
                 .MinimumLength(10)
                 .WithMessage(TelephoneLengthErrorMessage)
                 .MaximumLength(50)
