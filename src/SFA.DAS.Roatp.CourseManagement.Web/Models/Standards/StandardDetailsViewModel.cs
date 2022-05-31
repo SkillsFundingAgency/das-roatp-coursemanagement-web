@@ -28,36 +28,42 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
        
         public ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
 
-        public List<string> Regions()
+        public List<string> Regions
         {
-            return SubRegionCourseLocations
-                .OrderBy(x => x.RegionName)
-                .Distinct().Select(region => region.RegionName).Distinct().ToList();
+            get
+            {
+                return SubRegionCourseLocations
+                    .OrderBy(x => x.RegionName)
+                    .Distinct().Select(region => region.RegionName).Distinct().ToList();
+            }
         }
 
 
-        public string LocationSummary()
+        public string LocationSummary
         {
-            if (ProviderCourseLocations.Any())
+            get
             {
+                if (ProviderCourseLocations.Any())
+                {
+                    if (NationalCourseLocation != null)
+                        return WhereIsCourseDelivered.ProvidersAndNational;
+
+                    if (SubRegionCourseLocations.Any())
+                        return WhereIsCourseDelivered.ProvidersAndSubregions;
+
+                    return WhereIsCourseDelivered.ProvidersOnly;
+                }
+
                 if (NationalCourseLocation != null)
-                    return WhereIsCourseDelivered.ProvidersAndNational;
+                    return WhereIsCourseDelivered.NationalOnly;
 
                 if (SubRegionCourseLocations.Any())
-                    return WhereIsCourseDelivered.ProvidersAndSubregions;
+                {
+                    return WhereIsCourseDelivered.SubregionsOnly;
+                }
 
-                return WhereIsCourseDelivered.ProvidersOnly;
+                return WhereIsCourseDelivered.NoneSet;
             }
-
-            if (NationalCourseLocation != null)
-                return WhereIsCourseDelivered.NationalOnly;
-            
-            if (SubRegionCourseLocations.Any())
-            {
-                return WhereIsCourseDelivered.SubregionsOnly;
-            }
-
-            return WhereIsCourseDelivered.NoneSet;
         }
 
         public string BackUrl { get; set; }

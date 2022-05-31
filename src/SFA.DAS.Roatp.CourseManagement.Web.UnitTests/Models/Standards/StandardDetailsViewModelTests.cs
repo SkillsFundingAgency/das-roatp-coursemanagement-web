@@ -128,7 +128,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
             StandardDetailsViewModel viewModel = standardDetails;
 
-            viewModel.LocationSummary().Should().Be(WhereIsCourseDelivered.NoneSet);
+            viewModel.LocationSummary.Should().Be(WhereIsCourseDelivered.NoneSet);
         }
 
         [TestCase(LocationType.Provider,WhereIsCourseDelivered.ProvidersOnly )]
@@ -150,7 +150,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
         
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.LocationSummary().Should().Be(whereIsCourseDelivered);
+            viewModel.LocationSummary.Should().Be(whereIsCourseDelivered);
         }
 
         [Test]
@@ -176,7 +176,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.LocationSummary().Should().Be(WhereIsCourseDelivered.ProvidersAndSubregions);
+            viewModel.LocationSummary.Should().Be(WhereIsCourseDelivered.ProvidersAndSubregions);
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.LocationSummary().Should().Be(WhereIsCourseDelivered.ProvidersAndNational);
+            viewModel.LocationSummary.Should().Be(WhereIsCourseDelivered.ProvidersAndNational);
         }
     }
 }
