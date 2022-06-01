@@ -12,5 +12,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string ViewStandardDetails = "view-standard-details";
         public const string GetCourseContactDetails = "GetCourseContactDetails";
         public const string PostCourseContactDetails = "PostCourseContactDetails";
+        public const string ConfirmRegulatedStandard = "confirm-regulated-standard";
     }
 }

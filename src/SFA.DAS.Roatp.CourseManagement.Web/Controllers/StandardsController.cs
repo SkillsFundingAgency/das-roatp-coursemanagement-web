@@ -80,7 +80,36 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
 
+            model.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode}, Request.Scheme, Request.Host.Value);
+
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
+        }
+
+        [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.ConfirmRegulatedStandard)]
+        [HttpGet]
+        public async Task<IActionResult> ConfirmRegulatedStandard(int larsCode)
+        {
+            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+            _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
+
+            var result = await _mediator.Send(new GetStandardDetailsQuery(int.Parse(ukprn), larsCode));
+
+            if (result == null)
+            {
+                // SHUTTER-PAGE will need redirect back to shutter page
+                return null;
+            }
+
+            var standardDetails = result.StandardDetails;
+
+            var model = (ConfirmRegulatedStandardViewModel)standardDetails;
+            model.BackUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new
+            {
+                ukprn,
+                larsCode 
+            }, Request.Scheme, Request.Host.Value);
+
+            return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
         }
     }
 }

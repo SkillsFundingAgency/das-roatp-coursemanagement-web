@@ -17,8 +17,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
+        public bool? IsApprovedByRegulator { get; set; }
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
+        public string ConfirmRegulatedStandardUrl { get; set; }
 
         public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
         {
@@ -35,6 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
                 ContactUsEmail = standardDetails.ContactUsEmail,
                 ContactUsPageUrl = standardDetails.ContactUsPageUrl,
+                IsApprovedByRegulator = standardDetails.IsApprovedByRegulator
             };
         }
     }
