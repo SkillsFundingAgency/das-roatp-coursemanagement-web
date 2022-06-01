@@ -1,6 +1,5 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using FluentValidation.AspNetCore;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,14 +12,17 @@ using Microsoft.Extensions.Hosting;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.UpdateContactDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
+using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using MediatR;
-using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -73,7 +75,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddProviderUiServiceRegistration(_configuration);
 
             services.AddMediatR(typeof(GetStandardQueryHandler).Assembly);
-            /// services.AddMediatRValidation();
 
             services.AddAuthorizationServicePolicies();
 
@@ -104,8 +105,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             })
             .SetDefaultNavigationSection(NavigationSection.Home)
             /// .EnableGoogleAnalytics()
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
+            .AddFluentValidation(fv =>
+            {
+                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
+                fv.ImplicitlyValidateChildProperties = true;
+            });
 
             if (_configuration.IsDev() || _configuration.IsLocal())
             {
@@ -126,7 +132,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             }
 
             ConfigureHttpClient(services);
-           
+
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);

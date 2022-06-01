@@ -1,7 +1,4 @@
-﻿using System;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +14,11 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Testing.AutoFixture;
+using System;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
 {
@@ -26,12 +28,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private readonly int Ukprn = 10000001;
-        private readonly int LarsCode = 123;
-        private readonly string Version = "1.1";
+        private const int Ukprn = 10000001;
+        private const int LarsCode = 123;
+        private const string Version = "1.1";
         private Mock<IUrlHelper> urlHelper;
-        private readonly string verifyUrl = "http://test";
-        private readonly string Regulator = "Test-Regulator";
+        private const string verifyUrl = "http://test";
+        private const string Regulator = "Test-Regulator";
 
         [SetUp]
         public void Before_each_test()
@@ -159,6 +161,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Should().NotBeNull();
             model.RegulatorName.Should().Be(Regulator);
             model.IsStandardRegulated.Should().Be(true);
+        }
+
+        [Test, MoqAutoData]
+        public async Task ViewStandard_PopulatesEditContactDetailsUrl()
+        {
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.GetCourseContactDetails)
+                )))
+                .Returns(verifyUrl);
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.EditContactDetailsUrl.Should().Be(verifyUrl);
+
         }
     }
 }
