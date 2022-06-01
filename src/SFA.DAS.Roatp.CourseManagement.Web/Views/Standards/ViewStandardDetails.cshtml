@@ -240,10 +240,11 @@
             <ul class="govuk-list govuk-grid-row">
                 @{
                     var locations = Model.SubRegionCourseLocations.Where(x => x.RegionName == region).OrderBy(x => x.LocationName).ToArray();
-                    for (var i = 0; i < locations.Count(); i++)
+
+                    foreach (var location in locations)
                     {
                         <li class="govuk-grid-column-one-half">
-                            @locations[i].LocationName
+                            @location.LocationName
                         </li>
                     }
                 }
