@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
         private readonly List<string> _controllersThatDoNotRequireAuthorize = new List<string>()
         {
-            "PingController", "ProviderAccountController"
+            "PingController", "ProviderAccountController", "ErrorController", "ControllerBase"
         };
 
         [Test]
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         {
             var webAssembly = typeof(ProviderAccountController).GetTypeInfo().Assembly;
 
-            var controllers = webAssembly.DefinedTypes.Where(c => c.BaseType == typeof(Controller)).ToList();
+            var controllers = webAssembly.DefinedTypes.Where(c => c.IsSubclassOf(typeof(Controller))).ToList();
 
             foreach (var controller in controllers.Where(c => !_controllersThatDoNotRequireAuthorize.Contains(c.Name)))
             {

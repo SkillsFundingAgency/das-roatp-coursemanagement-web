@@ -127,9 +127,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 {
                     options.Configuration = configuration.RedisConnectionString;
                 });
-                services.AddHealthChecks();
-                services.AddDataProtection(_configuration);
             }
+
+            services.AddHealthChecks();
+            services.AddDataProtection(_configuration);
 
             ConfigureHttpClient(services);
 
@@ -175,7 +176,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             else
             {
                 app.UseHealthChecks();
-                app.UseExceptionHandler("/Error/500");
+                app.UseStatusCodePagesWithReExecute("/error/{0}");
+                app.UseExceptionHandler("/error");
                 app.UseHsts();
             }
 
