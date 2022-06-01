@@ -121,29 +121,29 @@
         
         <table class="govuk-table" aria-labelledby="table-header-regulation">
             <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header das-table-cell-width-30" scope="row">
-                        Regulator
-                    </th>
-                    <td class="govuk-table__cell das-table-cell-width-50">
-                        @Model.RegulatorName
-                    </td>
-                    <td class="govuk-table__cell das-table-cell-width-20">
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
-                        Approved
-                    </th>
-                    <td class="govuk-table__cell">
-                        Unknown
-                    </td>
-                    <td class="govuk-table__cell govuk-table__cell--numeric">
-                        <a href="#" class="govuk-link govuk-link--no-visited-state">
-                            Change<span class="govuk-visually-hidden"> the status of this standard</span>
-                        </a>
-                    </td>
-                </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                    Regulator
+                </th>
+                <td class="govuk-table__cell das-table-cell-width-50">
+                    @Model.RegulatorName
+                </td>
+                <td class="govuk-table__cell das-table-cell-width-20">
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">
+                    Approved
+                </th>
+                <td class="govuk-table__cell">
+                    Unknown
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a href="#" class="govuk-link govuk-link--no-visited-state">
+                        Change<span class="govuk-visually-hidden"> the status of this standard</span>
+                    </a>
+                </td>
+            </tr>
             </tbody>
         </table>
 
@@ -158,11 +158,14 @@
 
                 <p>Not having the regulator's approval will invalidate the training you give your apprentices. They will also not be accepted for assessment.</p>
                 <p><a href="https://www.instituteforapprenticeships.org/developing-new-apprenticeships/statutory-regulated-occupations/" class="govuk-link" target="_blank" rel="noreferrer noopener">
-                    Read more on the role of the regulator</a>  in certain occupations.
+                        Read more on the role of the regulator</a>  in certain occupations.
                 </p>
             </div>
         </details>
-
+    </div>
+</div>
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-two-thirds">
         <table class="govuk-table" aria-label="Where you deliver this standard">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
@@ -247,6 +250,5 @@
                 </a>
             </p>
         }
-
+        </div>
     </div>
-</div>
