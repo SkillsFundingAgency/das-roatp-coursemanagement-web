@@ -4,7 +4,10 @@
 @{
     ViewBag.Title = "Training locations";
 }
-<a class="govuk-back-link" href ="@Model.BackUrl">Back</a>
+
+@section breadcrumb {
+    <a class="govuk-back-link" href ="@Model.BackUrl">Back</a>
+}
 
 <div class="grid-row">
     <div class="column-two-thirds">

@@ -3,65 +3,67 @@
     ViewBag.Title = "Edit course contact details";
     ViewBag.Description = "";
 }
-<a href="@Model.BackLink" class="govuk-back-link">Back</a>
-<main class="govuk-main-wrapper govuk-main-wrapper--autospacing" id="main_content">
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
-            <div class="govuk-caption-xl">Check your record</div>
-            <h1 class="govuk-heading-xl">Your contact information for this standard</h1>
 
-            <form method="post" asp-route="@RouteNames.PostCourseContactDetails" enctype="multipart/form-data" novalidate>
+@section breadcrumb {
+    <a href="@Model.BackLink" class="govuk-back-link">Back</a>
+}
 
-                <div esfa-validation-marker-for="ContactUsEmail" class="govuk-form-group">
-                    <label class="govuk-label govuk-label--m" asp-for="ContactUsEmail">
-                        Email address
-                    </label>
-                    <div id="ContactUsEmail-hint" class="govuk-hint">
-                        Tell us the email address for a person or team to speak to about this standard.
-                    </div>
-                    <span asp-validation-for="ContactUsEmail" class="govuk-error-message"></span>
-                    <input asp-for="ContactUsEmail" id="ContactUsEmail" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsEmail-hint" maxlength="256">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+        <div class="govuk-caption-xl">Check your record</div>
+        <h1 class="govuk-heading-xl">Your contact information for this standard</h1>
+
+        <form method="post" asp-route="@RouteNames.PostCourseContactDetails" enctype="multipart/form-data" novalidate>
+
+            <div esfa-validation-marker-for="ContactUsEmail" class="govuk-form-group">
+                <label class="govuk-label govuk-label--m" asp-for="ContactUsEmail">
+                    Email address
+                </label>
+                <div id="ContactUsEmail-hint" class="govuk-hint">
+                    Tell us the email address for a person or team to speak to about this standard.
                 </div>
+                <span asp-validation-for="ContactUsEmail" class="govuk-error-message"></span>
+                <input asp-for="ContactUsEmail" id="ContactUsEmail" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsEmail-hint" maxlength="256">
+            </div>
 
-                <div class="govuk-form-group" esfa-validation-marker-for="ContactUsPhoneNumber">
-                    <label class="govuk-label govuk-label--m" asp-for="ContactUsPhoneNumber">
-                        Telephone number
-                    </label>
-                    <div id="ContactUsPhoneNumber-hint" class="govuk-hint">
-                        Provide a telephone number for the person or team to speak to about this standard.
-                    </div>
-                    <span asp-validation-for="ContactUsPhoneNumber" class="govuk-error-message"></span>
-                    <input asp-for="ContactUsPhoneNumber" id="ContactUsPhoneNumber" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPhoneNumber-hint" maxlength="50">
+            <div class="govuk-form-group" esfa-validation-marker-for="ContactUsPhoneNumber">
+                <label class="govuk-label govuk-label--m" asp-for="ContactUsPhoneNumber">
+                    Telephone number
+                </label>
+                <div id="ContactUsPhoneNumber-hint" class="govuk-hint">
+                    Provide a telephone number for the person or team to speak to about this standard.
                 </div>
+                <span asp-validation-for="ContactUsPhoneNumber" class="govuk-error-message"></span>
+                <input asp-for="ContactUsPhoneNumber" id="ContactUsPhoneNumber" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPhoneNumber-hint" maxlength="50">
+            </div>
 
-                <div class="govuk-form-group" esfa-validation-marker-for="ContactUsPageUrl">
-                    <label class="govuk-label govuk-label--m" asp-for="ContactUsPageUrl">
-                        Contact page
-                    </label>
-                    <div id="ContactUsPageUrl-hint" class="govuk-hint">
-                        Add a link to any ‘Contact us’ page you have on your website.
-                    </div>
-                    <span asp-validation-for="ContactUsPageUrl" class="govuk-error-message"></span>
-                    <input asp-for="ContactUsPageUrl" id="ContactUsPageUrl" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPageUrl-hint" maxlength="500">
+            <div class="govuk-form-group" esfa-validation-marker-for="ContactUsPageUrl">
+                <label class="govuk-label govuk-label--m" asp-for="ContactUsPageUrl">
+                    Contact page
+                </label>
+                <div id="ContactUsPageUrl-hint" class="govuk-hint">
+                    Add a link to any ‘Contact us’ page you have on your website.
                 </div>
+                <span asp-validation-for="ContactUsPageUrl" class="govuk-error-message"></span>
+                <input asp-for="ContactUsPageUrl" id="ContactUsPageUrl" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPageUrl-hint" maxlength="500">
+            </div>
 
-                <div class="govuk-form-group" esfa-validation-marker-for="StandardInfoUrl">
-                    <label class="govuk-label govuk-label--m" asp-for="StandardInfoUrl">
-                        Your website page
-                    </label>
-                    <div id="StandardInfoUrl-hint" class="govuk-hint">
-                        If you have a page on your website for this standard, add the link.
-                    </div>
-                    <span asp-validation-for="StandardInfoUrl" class="govuk-error-message"></span>
-                    <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input govuk-input--width-10" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="500">
+            <div class="govuk-form-group" esfa-validation-marker-for="StandardInfoUrl">
+                <label class="govuk-label govuk-label--m" asp-for="StandardInfoUrl">
+                    Your website page
+                </label>
+                <div id="StandardInfoUrl-hint" class="govuk-hint">
+                    If you have a page on your website for this standard, add the link.
                 </div>
+                <span asp-validation-for="StandardInfoUrl" class="govuk-error-message"></span>
+                <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input govuk-input--width-10" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="500">
+            </div>
 
-                <div class="govuk-button-group">
-                    <button id="submit" type="submit" class="govuk-button">Save and continue</button>
-                    <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
-                </div>
-            </form>
-        </div>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Save and continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
     </div>
-</main>
+</div>
