@@ -15,24 +15,31 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col"> Standard</th>
-                    <th class="govuk-table__header" scope="col" style="display: none; visibility: hidden"> </th>
+                    <th class="govuk-table__header" scope="col"> </th>
+                    <th class="govuk-table__header" scope="col"> Version</th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
                 @foreach (var standard in Model.Standards)
                 {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <span class="app-task-list__task-name">
-                                <a class="govuk-link" aria-describedby="standard-name" href="@standard.StandardUrl">
-                                    @standard.CourseDisplayName
-                                </a>
-                            </span>
-                        </td>
-                        <td class="govuk-table__cell" style="display: none; visibility: hidden">
-                            <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
-                        </td>
-                    </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <span class="app-task-list__task-name">
+                            <a class="govuk-link" aria-describedby="standard-name" href="@standard.StandardUrl">
+                                @standard.CourseDisplayName
+                            </a>
+                        </span>
+                    </td>
+                    <td class="govuk-table__cell">
+                        @if (standard.ApprovalRequired)
+                            {
+                                <a class="govuk-link" aria-describedby="approval-status-neeeded" href="">Approval status needed</a>
+                            }
+                    </td>
+                    <td class="govuk-table__cell">
+                        @standard.Version
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>

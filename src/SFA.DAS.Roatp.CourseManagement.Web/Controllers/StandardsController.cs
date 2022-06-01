@@ -50,7 +50,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             foreach (var standard in model.Standards)
             {
-
                 standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, 
                     new
                             {
