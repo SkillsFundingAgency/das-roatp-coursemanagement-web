@@ -8,13 +8,13 @@
     <a class="govuk-back-link" href ="@Model.BackUrl" >Back</a>
 }
 
-<div class="grid-row">
-    <div class="column-two-thirds">
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Check your record</div>
         <h1 class="govuk-heading-xl">Standards you deliver</h1>
         <p class="govuk-body">Check this list of your standards and make sure they stay up to date. This is important as they are used when employers want to find apprenticeship training.</p>
 
-        <table class="govuk-table" aria-describedby="Standards">
+        <table class="govuk-table" aria-label="List of the standards you deliver">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col"> Standard</th>
@@ -26,11 +26,9 @@
                 {
                     <tr class="govuk-table__row">
                         <td class="govuk-table__cell">
-                            <span class="app-task-list__task-name">
-                                <a class="govuk-link" aria-describedby="standard-name" href="@standard.StandardUrl">
-                                    @standard.CourseDisplayName
-                                </a>
-                            </span>
+                            <a class="govuk-link" href="@standard.StandardUrl">
+                                @standard.CourseDisplayName
+                            </a>
                         </td>
                         <td class="govuk-table__cell" style="display: none; visibility: hidden">
                             <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
@@ -39,13 +37,11 @@
                 }
             </tbody>
         </table>
-        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
-            <a href="#" aria-describedby="Add-a-standard" class="govuk-link">
+        <p class="govuk-body" style="display: none; visibility: hidden">
+            <a href="#" class="govuk-link">
                 Add a standard
             </a>
         </span>
-        <br />
-        <br />
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
