@@ -1,5 +1,4 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 @model StandardDetailsViewModel
 @{
     ViewBag.Title = "Standards";
@@ -152,10 +151,8 @@
             </tbody>
         </table>
 
-        <br />
-        <br />
-        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
-            <a href="#" aria-describedby="Update-contact-details" class="govuk-link">
+        <span>
+            <a href="@Model.EditContactDetailsUrl" aria-describedby="Update-contact-details" class="govuk-link">
                 Update these contact details
             </a>
         </span>
