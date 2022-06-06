@@ -42,13 +42,17 @@
                         <div class="govuk-form-group" esfa-validation-marker-for="IsApprovedByRegulator">
                             <span class="govuk-error-message" asp-validation-for="IsApprovedByRegulator"></span>
                             <fieldset class="govuk-fieldset">
-                                <h2 class="govuk-heading-m">Have you been approved by the regulator to deliver this standard?</h2>
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                    <h2 class="govuk-fieldset__heading">
+                                        Have you been approved by the regulator to deliver this standard?
+                                    </h2>
+                                </legend>
                                 <div class="govuk-radios">
 
                                     <div class="govuk-radios__item">
 
                                         <input class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
-                                               name="ConfirmRegulatedStandard" type="radio"  value="true" @(Model.IsApprovedByRegulator.HasValue && Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                               name="ConfirmRegulatedStandard" type="radio" value="true" @(Model.IsApprovedByRegulator.HasValue && Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
                                                asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                                         <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-Yes">
                                             Yes
