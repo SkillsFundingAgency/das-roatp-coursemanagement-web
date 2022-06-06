@@ -28,16 +28,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
        
         public ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
 
-        public List<string> Regions
+        public List<string> Regions()
         {
-            get
-            {
-                return SubRegionCourseLocations
+            return
+                SubRegionCourseLocations
                     .OrderBy(x => x.RegionName)
                     .Distinct().Select(region => region.RegionName).Distinct().ToList();
-            }
         }
-
 
         public string LocationSummary
         {

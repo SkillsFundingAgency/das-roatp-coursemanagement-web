@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Threading;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -253,7 +252,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            var actualRegions = viewModel.Regions;
+            var actualRegions = viewModel.Regions();
             actualRegions.Count.Should().Be(2);
             actualRegions[0].Should().Be(regionName1);
             actualRegions[1].Should().Be(regionName2);
