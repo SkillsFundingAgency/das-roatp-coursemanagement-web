@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         }
         [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.PostConfirmRegulatedStandard)]
         [HttpPost]
-        public async Task<IActionResult> SubmitConfirmRegulatedStandard(ConfirmRegulatedStandardViewModel model)
+        public IActionResult SubmitConfirmRegulatedStandard(ConfirmRegulatedStandardViewModel model)
         {
             if (!ModelState.IsValid)
             {

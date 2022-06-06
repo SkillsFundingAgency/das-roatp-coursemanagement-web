@@ -53,11 +53,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public async Task Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
+        public void Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
         {
             _sut.ModelState.AddModelError("key", "error");
 
-            var result = await _sut.SubmitConfirmRegulatedStandard(model);
+            var result =  _sut.SubmitConfirmRegulatedStandard(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
