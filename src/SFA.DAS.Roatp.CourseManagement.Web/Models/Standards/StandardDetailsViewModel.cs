@@ -46,23 +46,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 if (ProviderCourseLocations.Any())
                 {
                     if (NationalCourseLocation != null)
-                        return WhereIsCourseDelivered.ProvidersAndNational;
+                        return CourseDeliveryMessageFor.ProvidersAndNational;
 
                     if (SubRegionCourseLocations.Any())
-                        return WhereIsCourseDelivered.ProvidersAndSubregions;
+                        return CourseDeliveryMessageFor.ProvidersAndSubregions;
 
-                    return WhereIsCourseDelivered.ProvidersOnly;
+                    return CourseDeliveryMessageFor.ProvidersOnly;
                 }
 
                 if (NationalCourseLocation != null)
-                    return WhereIsCourseDelivered.NationalOnly;
+                    return CourseDeliveryMessageFor.NationalOnly;
 
                 if (SubRegionCourseLocations.Any())
                 {
-                    return WhereIsCourseDelivered.SubregionsOnly;
+                    return CourseDeliveryMessageFor.SubregionsOnly;
                 }
 
-                return WhereIsCourseDelivered.NoneSet;
+                return CourseDeliveryMessageFor.NoneSet;
             }
         }
 
@@ -92,7 +92,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
     }
 
 
-    public static class WhereIsCourseDelivered
+    public static class CourseDeliveryMessageFor
     {
         public const string ProvidersOnly = "This standard is only delivered at your training locations.";
         public const string SubregionsOnly = "This standard is only delivered at an employer's address.";
