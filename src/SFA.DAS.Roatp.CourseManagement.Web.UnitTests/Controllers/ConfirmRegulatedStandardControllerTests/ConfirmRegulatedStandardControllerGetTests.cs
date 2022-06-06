@@ -49,10 +49,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
 
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
-            string detailsUrl,
             GetStandardDetailsQueryResult queryResult,
             int larsCode)
         {
+            string detailsUrl = $"{Ukprn}/standards/{larsCode}/confirm-regulated-standard";
+           
             _urlHelperMock
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ViewStandardDetails))))
                .Returns(detailsUrl);
@@ -60,7 +61,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
-            
+
+
+            _sut.HttpContext.Request.Headers.Add("Referer", detailsUrl);
 
             var result = await _sut.ConfirmRegulatedStandard(larsCode);
 

@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _mediator = mediator;
             _logger = logger;
         }
+
         [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.ConfirmRegulatedStandard)]
         [HttpGet]
         public async Task<IActionResult> ConfirmRegulatedStandard([FromRoute] int larsCode)
@@ -39,10 +40,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             var model = (ConfirmRegulatedStandardViewModel)result.StandardDetails;
-            model.BackLink = model.CancelLink = GetStandardDetailsUrl(ukprn, larsCode);
+            model.BackLink = model.CancelLink = Request.Headers["Referer"].ToString();
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
         }
+
         [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.PostConfirmRegulatedStandard)]
         [HttpPost]
         public IActionResult SubmitConfirmRegulatedStandard(ConfirmRegulatedStandardViewModel model)
