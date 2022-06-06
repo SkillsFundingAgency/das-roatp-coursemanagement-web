@@ -52,7 +52,7 @@
                                     <div class="govuk-radios__item">
 
                                         <input class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
-                                               name="ConfirmRegulatedStandard" type="radio" value="true" @(Model.IsApprovedByRegulator.HasValue && Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                               name="IsApprovedByRegulator" type="radio" value="true" @(Model.IsApprovedByRegulator.HasValue && Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
                                                asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                                         <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-Yes">
                                             Yes
@@ -63,7 +63,7 @@
                                     <div class="govuk-radios__item">
 
                                         <input class="govuk-radios__input" id="ConfirmRegulatedStandard-No"
-                                               name="ConfirmRegulatedStandard" type="radio" value="false" @(Model.IsApprovedByRegulator.HasValue && !Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                               name="IsApprovedByRegulator" type="radio" value="false" @(Model.IsApprovedByRegulator.HasValue && !Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
                                                asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                                         <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-No">
                                             No
