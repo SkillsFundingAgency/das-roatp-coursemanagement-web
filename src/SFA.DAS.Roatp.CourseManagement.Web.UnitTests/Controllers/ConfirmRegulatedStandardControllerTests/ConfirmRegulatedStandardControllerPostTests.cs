@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
@@ -41,6 +42,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
                     HttpContext = httpContext
                 }
             };
+        }
+
+        [Test, AutoData]
+        public void Post_ValidModel_RedirectToRoute(ConfirmRegulatedStandardViewModel model)
+        {
+            var result =  _sut.SubmitConfirmRegulatedStandard(model);
+            var routeResult = result as RedirectToRouteResult;
+            routeResult.Should().NotBeNull();
+            routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
+            routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
+            routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(Ukprn));
+            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(model.LarsCode);
         }
 
         [Test, AutoData]

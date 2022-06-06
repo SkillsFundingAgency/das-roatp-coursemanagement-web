@@ -67,6 +67,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
+        public async Task Get_RefererNull_ReturnsViewDefaultLinks(
+          GetStandardDetailsQueryResult queryResult,
+          int larsCode)
+        {
+            string detailsUrl = "#";
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+
+            var result = await _sut.ConfirmRegulatedStandard(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ConfirmRegulatedStandardViewModel;
+            model.Should().NotBeNull();
+            model.BackLink.Should().Be(detailsUrl);
+            model.CancelLink.Should().Be(detailsUrl);
+        }
+
+        [Test, AutoData]
         public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
         {
             _mediatorMock
