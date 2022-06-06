@@ -210,6 +210,34 @@
             </p>
         }
 
+        @if (Model.ProviderCourseLocations.Any())
+        {
+            <table class="govuk-table" aria-label="List of training locations">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Venue name </th>
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Delivery method</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var location in Model.ProviderCourseLocations)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @location.LocationName
+                            </td>
+                            <td class="govuk-table__cell">
+                                @location.DeliveryOption()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p class="govuk-body govuk-!-margin-bottom-8">
+                <a href="#" class="govuk-link govuk-link--no-visited-state">Edit training locations</a>
+            </p>
+        }
+
         @if (Model.SubRegionCourseLocations.Any())
         {
             <p class="govuk-body">
