@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
@@ -41,13 +42,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             var model = (ConfirmRegulatedStandardViewModel)result.StandardDetails;
-            if (string.IsNullOrEmpty(Request.Headers["Referer"]))
+            if (string.IsNullOrEmpty(Request.GetTypedHeaders().Referer.ToString()))
             {
                 model.BackLink = model.CancelLink = "#";
             }
             else
             {
-                model.BackLink = model.CancelLink = Request.Headers["Referer"].ToString();
+                model.BackLink = model.CancelLink = Request.GetTypedHeaders().Referer.ToString();
             }
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
