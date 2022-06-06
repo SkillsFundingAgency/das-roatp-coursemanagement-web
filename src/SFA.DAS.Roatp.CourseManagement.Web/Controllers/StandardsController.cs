@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using NLog.LayoutRenderers.Wrappers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -51,6 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             foreach (var standard in model.Standards)
             {
                 standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
+                standard.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }, Request.Scheme, Request.Host.Value);
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
@@ -76,7 +78,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 ukprn = Ukprn,
             });
-
+            
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);

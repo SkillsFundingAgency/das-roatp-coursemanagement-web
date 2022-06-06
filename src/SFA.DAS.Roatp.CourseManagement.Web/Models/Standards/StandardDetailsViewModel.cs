@@ -35,6 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
                 ContactUsEmail = standardDetails.ContactUsEmail,
                 ContactUsPageUrl = standardDetails.ContactUsPageUrl,
+                BackUrl = standardDetails.BackUrl
             };
         }
     }

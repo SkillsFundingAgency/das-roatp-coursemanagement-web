@@ -17,6 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         public bool ApprovalRequired => !string.IsNullOrEmpty(ApprovalBody) && IsApprovedByRegulator != true;
         public bool? IsApprovedByRegulator { get; set; }
+        public string ConfirmRegulatedStandardUrl { get; set; }
 
         public static implicit operator StandardViewModel(Standard source)
         {
