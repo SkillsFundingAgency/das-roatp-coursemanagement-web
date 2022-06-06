@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
 
-            model.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode}, Request.Scheme, Request.Host.Value);
+            model.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode }, Request.Scheme, Request.Host.Value);
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }
