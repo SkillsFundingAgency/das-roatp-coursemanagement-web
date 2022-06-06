@@ -8,6 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ConfirmRegulat
     [TestFixture]
     public class ValidateIsApprovedByRegulatorTests
     {
+        private const string IsApprovedByRegulatorErrorMessage = "Select Yes or No";
         [Test]
         public void WhenNull_ProducesValidatonError()
         {
@@ -17,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ConfirmRegulat
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.IsApprovedByRegulator).WithErrorMessage("Select Yes or No");
+            result.ShouldHaveValidationErrorFor(c => c.IsApprovedByRegulator).WithErrorMessage(IsApprovedByRegulatorErrorMessage);
         }
 
         [TestCase(true)]

@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
     public class ConfirmRegulatedStandardControllerGetTests
     {
         private const string Ukprn = "10012002";
-        private Mock<ILogger<EditCourseContactDetailsController>> _loggerMock;
+        private Mock<ILogger<ConfirmRegulatedStandardController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private Mock<IUrlHelper> _urlHelperMock;
         private ConfirmRegulatedStandardController _sut;
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<EditCourseContactDetailsController>>();
+            _loggerMock = new Mock<ILogger<ConfirmRegulatedStandardController>>();
             _mediatorMock = new Mock<IMediator>();
             _urlHelperMock = new Mock<IUrlHelper>();
            

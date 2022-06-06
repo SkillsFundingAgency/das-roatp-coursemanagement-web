@@ -16,9 +16,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     public class ConfirmRegulatedStandardController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<EditCourseContactDetailsController> _logger;
+        private readonly ILogger<ConfirmRegulatedStandardController> _logger;
 
-        public ConfirmRegulatedStandardController(IMediator mediator, ILogger<EditCourseContactDetailsController> logger)
+        public ConfirmRegulatedStandardController(IMediator mediator, ILogger<ConfirmRegulatedStandardController> logger)
         {
             _mediator = mediator;
             _logger = logger;
