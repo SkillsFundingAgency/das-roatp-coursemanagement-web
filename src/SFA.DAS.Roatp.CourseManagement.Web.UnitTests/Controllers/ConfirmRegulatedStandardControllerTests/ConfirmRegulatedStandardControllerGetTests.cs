@@ -47,8 +47,25 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             GetStandardDetailsQueryResult queryResult,
             int larsCode)
         {
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.ConfirmRegulatedStandard(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ConfirmRegulatedStandardViewModel;
+            model.Should().NotBeNull();
+        }
+
+        [Test, AutoData]
+        public async Task Get_ValidRequestWithReferer_ReturnsValidBackAndCancelLinks(
+           GetStandardDetailsQueryResult queryResult,
+           int larsCode)
+        {
             string detailsUrl = $"{Ukprn}/standards/{larsCode}/confirm-regulated-standard";
-           
+
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
@@ -67,7 +84,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public async Task Get_RefererNull_ReturnsViewDefaultLinks(
+        public async Task Get_WhenRefererNull_ReturnsViewWithDefaultLinks(
           GetStandardDetailsQueryResult queryResult,
           int larsCode)
         {
