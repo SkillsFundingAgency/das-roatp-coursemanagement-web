@@ -6,12 +6,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
     public class ConfirmRegulatedStandardViewModelValidator : AbstractValidator<ConfirmRegulatedStandardViewModel>
     {
-        public const string TelephoneLengthErrorMessage = "Telephone number must be between 10 and 50 characters";
+        public const string IsApprovedByRegulatorErrorMessage = "Select Yes or No";
         public ConfirmRegulatedStandardViewModelValidator()
         {
             RuleFor(p => p.IsApprovedByRegulator)
                 .NotEmpty()
-                .WithMessage("Select Yes or No");
+                .WithMessage(IsApprovedByRegulatorErrorMessage);
         }
     }
 }

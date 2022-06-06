@@ -19,5 +19,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ConfirmRegulat
 
             result.ShouldHaveValidationErrorFor(c => c.IsApprovedByRegulator).WithErrorMessage("Select Yes or No");
         }
+
+        [TestCase(true)]
+        [TestCase(false)]
+        public void WhenValidModel_ProducesNoError(bool isApprovedByRegulator)
+        {
+            var sut = new ConfirmRegulatedStandardViewModelValidator();
+
+            var command = new ConfirmRegulatedStandardViewModel()
+            {
+                IsApprovedByRegulator = isApprovedByRegulator
+            };
+
+            var result = sut.TestValidate(command);
+
+            result.ShouldNotHaveAnyValidationErrors();
+        }
     }
 }

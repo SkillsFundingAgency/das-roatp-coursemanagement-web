@@ -33,14 +33,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn, larsCode));
 
-            if (result == null || result?.StandardDetails == null)
+            if (result?.StandardDetails == null)
             {
-                _logger.LogError("Standard details not found for ukprn {ukprn} and larscode {larsCode}", ukprn, larsCode);
-                throw new InvalidOperationException($"Standard details not found for ukprn {ukprn} and larscode {larsCode}");
+                var message = $"Standard details not found for ukprn {ukprn} and larscode {larsCode}";
+                _logger.LogError(message);
+                throw new InvalidOperationException(message);
             }
 
             var model = (ConfirmRegulatedStandardViewModel)result.StandardDetails;
-            model.BackLink = model.CancelLink = Request.Headers["Referer"].ToString();
+            if (string.IsNullOrEmpty(Request.Headers["Referer"]))
+            {
+                model.BackLink = model.CancelLink = "#";
+            }
+            else
+            {
+                model.BackLink = model.CancelLink = Request.Headers["Referer"].ToString();
+            }
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
         }
@@ -51,12 +59,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.BackLink = model.CancelLink = GetStandardDetailsUrl(Ukprn, model.LarsCode);
                 return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
             }
 
             return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
         }
-        private string GetStandardDetailsUrl(int ukprn, int larsCode) => Url.RouteUrl(RouteNames.ViewStandardDetails, new { ukprn, larsCode });
     }
 }

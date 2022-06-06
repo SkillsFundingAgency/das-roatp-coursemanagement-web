@@ -14,6 +14,8 @@
             <h1 class="govuk-heading-xl">This is a regulated standard</h1>
             <form method="post" asp-route="@RouteNames.PostConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
                 <input type="hidden" asp-for="RegulatorName" />
+                <input type="hidden" asp-for="BackLink" />
+                <input type="hidden" asp-for="CancelLink" />
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <table class="govuk-table" aria-describedby="ContactDetails">

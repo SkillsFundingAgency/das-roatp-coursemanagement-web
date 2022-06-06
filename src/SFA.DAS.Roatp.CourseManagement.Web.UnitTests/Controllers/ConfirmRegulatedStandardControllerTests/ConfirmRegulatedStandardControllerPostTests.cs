@@ -42,6 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
                 new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), new Claim(ProviderClaims.UserId, UserId)}, 
                 "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
+
             _sut = new ConfirmRegulatedStandardController(_mediatorMock.Object, _loggerMock.Object)
             {
                 Url = _urlHelperMock.Object,
