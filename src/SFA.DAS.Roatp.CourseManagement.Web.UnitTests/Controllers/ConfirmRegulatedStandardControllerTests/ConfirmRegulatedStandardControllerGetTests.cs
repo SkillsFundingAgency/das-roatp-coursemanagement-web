@@ -3,13 +3,11 @@ using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
@@ -25,7 +23,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         private const string Ukprn = "10012002";
         private Mock<ILogger<ConfirmRegulatedStandardController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
-        private Mock<IUrlHelper> _urlHelperMock;
         private ConfirmRegulatedStandardController _sut;
 
         [SetUp]
@@ -33,13 +30,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         {
             _loggerMock = new Mock<ILogger<ConfirmRegulatedStandardController>>();
             _mediatorMock = new Mock<IMediator>();
-            _urlHelperMock = new Mock<IUrlHelper>();
            
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
             _sut = new ConfirmRegulatedStandardController(_mediatorMock.Object, _loggerMock.Object)
             {
-                Url = _urlHelperMock.Object,
                 ControllerContext = new ControllerContext
                 {
                     HttpContext = httpContext
@@ -54,10 +49,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         {
             string detailsUrl = $"{Ukprn}/standards/{larsCode}/confirm-regulated-standard";
            
-            _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ViewStandardDetails))))
-               .Returns(detailsUrl);
-
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
