@@ -42,13 +42,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             var model = (ConfirmRegulatedStandardViewModel)result.StandardDetails;
-            if (string.IsNullOrEmpty(Request.Headers["Referer"].ToString()))
+            if (Request.GetTypedHeaders().Referer == null)
             {
                 model.BackLink = model.CancelLink = "#";
             }
             else
             {
-                model.BackLink = model.CancelLink = Request.Headers["Referer"].ToString();
+                model.BackLink = model.CancelLink = Request.GetTypedHeaders().Referer.ToString();
             }
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
