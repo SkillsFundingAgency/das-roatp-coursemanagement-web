@@ -1,5 +1,4 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using StructureMap.Query;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
