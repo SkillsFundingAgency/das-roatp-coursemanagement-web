@@ -30,10 +30,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         public List<string> Regions()
         {
-            return
-                SubRegionCourseLocations
-                    .OrderBy(x => x.RegionName)
-                    .Distinct().Select(region => region.RegionName).Distinct().ToList();
+            return SubRegionCourseLocations
+                .Select(region => region.RegionName)
+                .Distinct().OrderBy(x => x).ToList();
         }
 
         public string LocationSummary
