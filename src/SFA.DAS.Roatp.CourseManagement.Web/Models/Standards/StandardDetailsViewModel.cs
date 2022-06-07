@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using System;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,12 +29,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         public ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
 
-        public List<string> Regions()
-        {
-            return SubRegionCourseLocations
-                .Select(region => region.RegionName)
-                .Distinct().OrderBy(x => x).ToList();
-        }
+        public IEnumerable<IGrouping<string,ProviderCourseLocationViewModel>> Regions()
+           {
+           return  SubRegionCourseLocations
+                .GroupBy(x => x.RegionName)
+                .OrderBy(x=>x.Key);
+           }
 
         public string LocationSummary
         {

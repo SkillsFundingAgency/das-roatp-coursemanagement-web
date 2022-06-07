@@ -234,26 +234,23 @@
             <p class="govuk-body">
                 Training can be delivered on site at the employer's address, as long as they are within these regions:
             </p>
-
-            @foreach (var region in Model.Regions())
+            
+            foreach (var region in Model.Regions())
             {
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                <h3 class="govuk-heading-m">@region</h3>
+                <h3 class="govuk-heading-m">@region.Key</h3>
                 <ul class="govuk-list govuk-grid-row">
-                    @{
-                        var locations = Model.SubRegionCourseLocations.Where(x => x.RegionName == region).OrderBy(x => x.LocationName).ToArray();
-
-                        foreach (var location in locations)
-                        {
-                            <li class="govuk-grid-column-one-half">
-                                @location.LocationName
-                            </li>
-                        }
+                    @foreach (var location in region.OrderBy(x=>x.LocationName))
+                    {
+                        <li class="govuk-grid-column-one-half"> 
+                            @location.LocationName 
+                        </li>
                     }
                 </ul>
             }
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             <p class="govuk-body">
+                
                 <a href="#" class="govuk-link govuk-link--no-visited-state">
                     Edit these regions
                 </a>

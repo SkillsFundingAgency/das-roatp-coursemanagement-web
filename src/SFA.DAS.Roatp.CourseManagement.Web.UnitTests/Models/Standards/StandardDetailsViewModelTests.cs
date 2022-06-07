@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -212,6 +213,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             var regionName1 = "region 1";
             var regionName2 = "region 2";
             var regionNameToIgnore = "region name to ignore";
+            var region1_location1 = "region 1 location 1";
+            var region2_location1 = "region 2 location 1";
+            var region2_location2 = "region 2 location 2";
             var providerCourseLocations = new List<ProviderCourseLocation>()
             {
                 new ProviderCourseLocation
@@ -222,19 +226,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 },
                 new ProviderCourseLocation
                 {
-                    LocationName = "Test10",
+                    LocationName = region2_location1,
                     LocationType = LocationType.Regional,
                     RegionName = regionName2
                 },
                 new ProviderCourseLocation
                 {
-                    LocationName = "Test20",
+                    LocationName = region1_location1,
                     LocationType = LocationType.Regional,
                     RegionName = regionName1
                 },
                 new ProviderCourseLocation
                 {
-                    LocationName = "Test21",
+                    LocationName =   region2_location2,
                     LocationType = LocationType.Regional,
                     RegionName = regionName2
                 },
@@ -253,9 +257,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
             StandardDetailsViewModel viewModel = standardDetails;
             var actualRegions = viewModel.Regions();
-            actualRegions.Count.Should().Be(2);
-            actualRegions[0].Should().Be(regionName1);
-            actualRegions[1].Should().Be(regionName2);
+
+             var regions = actualRegions.ToList();
+             regions.Count.Should().Be(2);
+             regions[0].Key.Should().Be(regionName1);
+             regions[1].Key.Should().Be(regionName2);
+             
+             var locationsInRegion1 = regions[0].ToList();
+             var locationsInRegion2 = regions[1].ToList();
+
+             locationsInRegion1[0].LocationName.Should().Be(region1_location1);
+             locationsInRegion2[0].LocationName.Should().Be(region2_location1);
+             locationsInRegion2[1].LocationName.Should().Be(region2_location2);
+
         }
     }
 }
