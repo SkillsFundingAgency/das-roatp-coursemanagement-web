@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateConfirmRegulatedStandard;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -56,13 +57,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.PostConfirmRegulatedStandard)]
         [HttpPost]
-        public IActionResult SubmitConfirmRegulatedStandard(ConfirmRegulatedStandardViewModel model)
+        public async Task<IActionResult> SubmitConfirmRegulatedStandard(ConfirmRegulatedStandardViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
             }
 
+            var command = (UpdateConfirmRegulatedStandardCommand)model;
+            command.Ukprn = Ukprn;
+            command.LarsCode = model.LarsCode;
+
+            await _mediator.Send(command);
+
+            if (!model.IsApprovedByRegulator.Value)
+            {
+                return View("~/Views/ShutterPages/RegulatedStandardSeekApproval.cshtml", model);
+            }
             return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateConfirmRegulatedStandard;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
@@ -19,5 +20,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 IsApprovedByRegulator = source.IsApprovedByRegulator
             };
         }
+        public static implicit operator UpdateConfirmRegulatedStandardCommand(ConfirmRegulatedStandardViewModel model) =>
+            new UpdateConfirmRegulatedStandardCommand
+            {
+                LarsCode = model.LarsCode,
+                IsApprovedByRegulator = model.IsApprovedByRegulator,
+            };
     }
 }

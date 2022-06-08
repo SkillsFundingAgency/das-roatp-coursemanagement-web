@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegulatedStandardControllerTests
 {
@@ -45,9 +46,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public void Post_ValidModel_RedirectToRoute(ConfirmRegulatedStandardViewModel model)
+        public async Task Post_ValidModel_RedirectToRoute(ConfirmRegulatedStandardViewModel model)
         {
-            var result =  _sut.SubmitConfirmRegulatedStandard(model);
+            var result =  await _sut.SubmitConfirmRegulatedStandard(model);
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
             routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
@@ -57,13 +58,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public void Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
+        public async Task Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
         {
             var backLink = model.BackLink;
             var cancelLink = model.CancelLink;
             _sut.ModelState.AddModelError("key", "error");
 
-            var result =  _sut.SubmitConfirmRegulatedStandard(model);
+            var result =  await _sut.SubmitConfirmRegulatedStandard(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
