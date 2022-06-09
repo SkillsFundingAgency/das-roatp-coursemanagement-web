@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 return View("~/Views/ShutterPages/RegulatedStandardSeekApproval.cshtml", model);
             }
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
+            return Redirect(model.BackLink);
         }
     }
 }
