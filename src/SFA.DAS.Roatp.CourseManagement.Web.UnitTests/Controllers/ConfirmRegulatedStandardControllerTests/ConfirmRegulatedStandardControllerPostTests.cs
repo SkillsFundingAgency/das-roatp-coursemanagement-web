@@ -46,15 +46,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public async Task Post_ValidModel_RedirectToRoute(ConfirmRegulatedStandardViewModel model)
+        public async Task Post_ValidModel_SendsUpdateCommand(ConfirmRegulatedStandardViewModel model)
         {
+            model.IsApprovedByRegulator = true;
             var result =  await _sut.SubmitConfirmRegulatedStandard(model);
-            var routeResult = result as RedirectToRouteResult;
-            routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
-            routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
-            routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(Ukprn));
-            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(model.LarsCode);
+            var redirectResult = result as RedirectResult;
+            redirectResult.Should().NotBeNull();
+            redirectResult.Url.Should().Be(model.BackLink);
+        }
+
+        [Test, AutoData]
+        public async Task Post_ValidModelWithIsApprovedByRegulatorFalse_RedirectToShutterPage(ConfirmRegulatedStandardViewModel model)
+        {
+            model.IsApprovedByRegulator = false;
+            var result = await _sut.SubmitConfirmRegulatedStandard(model);
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult.Model.Should().Be(model);
+            viewResult.ViewName.Should().Contain("RegulatedStandardSeekApproval.cshtml");
         }
 
         [Test, AutoData]
