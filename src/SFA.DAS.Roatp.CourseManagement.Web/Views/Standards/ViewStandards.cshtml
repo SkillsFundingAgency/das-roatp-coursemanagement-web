@@ -3,46 +3,51 @@
 @{
     ViewBag.Title = "Standards";
 }
-<a class="govuk-back-link" href ="@Model.BackUrl" >Back</a>
+
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
+}
 
 <div class="grid-row">
     <div class="column-two-thirds">
         <div class="govuk-caption-xl">Check your record</div>
-        <h1 class="govuk-heading-xl">Standards you deliver</h1>
+        <h1 class="govuk-heading-xl" id="header-standards">Standards you deliver</h1>
         <p class="govuk-body">Check this list of your standards and make sure they stay up to date. This is important as they are used when employers want to find apprenticeship training.</p>
-
-        <table class="govuk-table" aria-describedby="Standards">
+        <table class="govuk-table" aria-labelledby="header-standards">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col"> Standard</th>
-                    <th class="govuk-table__header" scope="col" style="display: none; visibility: hidden"> </th>
+                    <th class="govuk-table__header das-table-cell-width-60" scope="col"> Standard</th>
+                    <th class="govuk-table__header das-table-cell-width-30" scope="col"> <span class="govuk-visually-hidden">Approval status</span> </th>
+                    <th class="govuk-table__header govuk-table__header--numeric das-table-cell-width-10" scope="col"> Version</th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
                 @foreach (var standard in Model.Standards)
                 {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <span class="app-task-list__task-name">
-                                <a class="govuk-link" aria-describedby="standard-name" href="@standard.StandardUrl">
-                                    @standard.CourseDisplayName
-                                </a>
-                            </span>
-                        </td>
-                        <td class="govuk-table__cell" style="display: none; visibility: hidden">
-                            <strong class="govuk-tag govuk-tag--grey">TO BE CHECKED</strong>
-                        </td>
-                    </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" href="@standard.StandardUrl">
+                            @standard.CourseDisplayName
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell">
+                    @if (standard.ApprovalRequired)
+                    {
+                        <a class="govuk-link" href="@standard.ConfirmRegulatedStandardUrl">Approval status needed<span class="govuk-visually-hidden"> for @standard.CourseDisplayName</span></a>
+                    }
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        @standard.Version
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
-        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
-            <a href="#" aria-describedby="Add-a-standard" class="govuk-link">
+        <p class="govuk-body" style="display: none; visibility: hidden">
+            <a href="#" class="govuk-link">
                 Add a standard
             </a>
-        </span>
-        <br />
-        <br />
+        </p>
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
