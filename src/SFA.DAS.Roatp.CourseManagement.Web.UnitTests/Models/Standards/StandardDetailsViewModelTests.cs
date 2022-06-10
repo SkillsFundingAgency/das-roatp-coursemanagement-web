@@ -18,6 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string sector = "digital";
             const int larsCode = 133;
             const string version = "3";
+            const string backUrl = "http://backurl";
             var expectedCourseDisplayName = $"{courseName} (Level {level})";
 
             var standardDetails = new StandardDetails
@@ -28,7 +29,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 IFateReferenceNumber = iFateReferenceNumber,
                 Sector = sector,
                 Version = version,
-                RegulatorName = regulatorName
+                RegulatorName = regulatorName,
+                BackUrl = backUrl
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
@@ -41,6 +43,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.RegulatorName.Should().Be(regulatorName);
             viewModel.IsStandardRegulated.Should().Be(isRegulated);
             viewModel.CourseDisplayName.Should().Be(expectedCourseDisplayName);
+            viewModel.BackUrl.Should().Be(backUrl);
+
         }
 
         [TestCase(true, "Yes")]
