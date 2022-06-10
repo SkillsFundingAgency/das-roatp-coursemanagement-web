@@ -207,6 +207,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             app.UseRouting();
 
+            app.UseSession();
+
             app.UseAuthentication();
             app.UseAuthorization();
 
