@@ -163,7 +163,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.IsStandardRegulated.Should().Be(true);
         }
 
-        [Test, MoqAutoData]
+        [Test]
         public async Task ViewStandard_PopulatesEditContactDetailsUrl()
         {
             urlHelper
@@ -176,7 +176,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
             model.EditContactDetailsUrl.Should().Be(verifyUrl);
+        }
 
+        [Test]
+        public async Task ViewStandard_PopulatesEditLocationOptionUrl()
+        {
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.GetLocationOption)
+                )))
+                .Returns(verifyUrl);
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.EditLocationOptionUrl.Should().Be(verifyUrl);
         }
     }
 }
