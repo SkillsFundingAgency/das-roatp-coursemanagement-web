@@ -28,19 +28,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromRoute] int larsCode)
         {
-            var ukprn = Ukprn;
-
-            var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn, larsCode));
+            var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
             if (result == null || result?.StandardDetails == null)
             {
-                _logger.LogError("Standard details not found for ukprn {ukprn} and larscode {larsCode}", ukprn, larsCode);
-                throw new InvalidOperationException($"Standard details not found for ukprn {ukprn} and larscode {larsCode}");
+                _logger.LogError("Standard details not found for ukprn {ukprn} and larscode {larsCode}", Ukprn, larsCode);
+                throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
             }
 
             var model = (EditCourseContactDetailsViewModel)result.StandardDetails;
 
-            model.BackLink = model.CancelLink = GetStandardDetailsUrl(ukprn, larsCode);
+            model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
 
             return View(model);
         }
@@ -51,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
-                model.BackLink = model.CancelLink = GetStandardDetailsUrl(Ukprn, model.LarsCode);
+                model.BackLink = model.CancelLink = GetStandardDetailsUrl(model.LarsCode);
                 return View(model);
             }
 
@@ -63,7 +61,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             return RedirectToRoute(RouteNames.ViewStandardDetails, new {Ukprn, model.LarsCode });
         }
-
-        private string GetStandardDetailsUrl(int ukprn, int larsCode) => Url.RouteUrl(RouteNames.ViewStandardDetails, new { ukprn, larsCode });
     }
 }
