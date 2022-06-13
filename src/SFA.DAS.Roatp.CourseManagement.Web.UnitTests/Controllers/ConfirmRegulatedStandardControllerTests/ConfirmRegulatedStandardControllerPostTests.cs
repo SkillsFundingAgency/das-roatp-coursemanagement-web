@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
@@ -49,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         public async Task Post_ValidModel_SendsUpdateCommand(ConfirmRegulatedStandardViewModel model)
         {
             model.IsApprovedByRegulator = true;
-            var result =  await _sut.SubmitConfirmRegulatedStandard(model);
+            var result =  await _sut.UpdateApprovedByRegulator(model);
             var redirectResult = result as RedirectResult;
             redirectResult.Should().NotBeNull();
             redirectResult.Url.Should().Be(model.BackLink);
@@ -59,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         public async Task Post_ValidModelWithIsApprovedByRegulatorFalse_RedirectToShutterPage(ConfirmRegulatedStandardViewModel model)
         {
             model.IsApprovedByRegulator = false;
-            var result = await _sut.SubmitConfirmRegulatedStandard(model);
+            var result = await _sut.UpdateApprovedByRegulator(model);
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.Model.Should().Be(model);
@@ -73,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             var cancelLink = model.CancelLink;
             _sut.ModelState.AddModelError("key", "error");
 
-            var result =  await _sut.SubmitConfirmRegulatedStandard(model);
+            var result =  await _sut.UpdateApprovedByRegulator(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();

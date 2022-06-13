@@ -3,7 +3,7 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateConfirmRegulatedStandard;
+using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System;
@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 {
     [TestFixture]
-    public class UpdateConfirmRegulatedStandardCommandHandlerTests
+    public class UpdateApprovedByRegulatorCommandHandlerTests
     {
         [Test, MoqAutoData]
         public async Task Handle_OuterApiCallSuccess_ReturnsUnit(
             [Frozen] Mock<IApiClient> apiClientMock,
-            UpdateConfirmRegulatedStandardCommandHandler sut,
-            UpdateConfirmRegulatedStandardCommand command,
+            UpdateApprovedByRegulatorCommandHandler sut,
+            UpdateApprovedByRegulatorCommand command,
             CancellationToken cancellationToken)
         {
             var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator";
@@ -35,8 +35,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test, MoqAutoData]
         public async Task Handle_OuterApiCallFails_ThrowsInvalidOperationException(
             [Frozen] Mock<IApiClient> apiClientMock,
-            UpdateConfirmRegulatedStandardCommandHandler sut,
-            UpdateConfirmRegulatedStandardCommand command,
+            UpdateApprovedByRegulatorCommandHandler sut,
+            UpdateApprovedByRegulatorCommand command,
             CancellationToken cancellationToken)
         {
             var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator";

@@ -5,25 +5,25 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateConfirmRegulatedStandard
+namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator
 {
-    public class UpdateConfirmRegulatedStandardCommandHandler : IRequestHandler<UpdateConfirmRegulatedStandardCommand, Unit>
+    public class UpdateApprovedByRegulatorCommandHandler : IRequestHandler<UpdateApprovedByRegulatorCommand, Unit>
     {
-        private readonly ILogger<UpdateConfirmRegulatedStandardCommandHandler> _logger;
+        private readonly ILogger<UpdateApprovedByRegulatorCommandHandler> _logger;
         private readonly IApiClient _apiClient;
 
-        public UpdateConfirmRegulatedStandardCommandHandler(ILogger<UpdateConfirmRegulatedStandardCommandHandler> logger, IApiClient apiClient)
+        public UpdateApprovedByRegulatorCommandHandler(ILogger<UpdateApprovedByRegulatorCommandHandler> logger, IApiClient apiClient)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
 
 
-        public async Task<Unit> Handle(UpdateConfirmRegulatedStandardCommand command, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateApprovedByRegulatorCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Update confirm regulated standard information request for ukprn:{ukprn} LarsCode:{larscode}", command.Ukprn, command.LarsCode);
 
-            var statusCode = await _apiClient.Post<UpdateConfirmRegulatedStandardCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator", command);
+            var statusCode = await _apiClient.Post<UpdateApprovedByRegulatorCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator", command);
 
             if (statusCode != System.Net.HttpStatusCode.NoContent)
             {
