@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
         }
 
-        [Route("{ukprn}/standards/{larsCode}/update-approved-by-regulator", Name = RouteNames.PostConfirmRegulatedStandard)]
+        [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.PostConfirmRegulatedStandard)]
         [HttpPost]
         public async Task<IActionResult> UpdateApprovedByRegulator(ConfirmRegulatedStandardViewModel model)
         {
