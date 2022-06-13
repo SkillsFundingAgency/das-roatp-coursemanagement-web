@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task ValidRequest_ReturnsValidResponse()
         {
-            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"ProviderCourse/{_query.Ukprn}/Course/{_query.LarsCode}")).ReturnsAsync(() => _standardDetails);
+            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).ReturnsAsync(() => _standardDetails);
             _handler = new GetStandardDetailsQueryHandler(_apiClient.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
@@ -47,20 +47,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task NoStandardDetailsReturned_ReturnsNullResponse()
         {
-            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"ProviderCourse/{_query.Ukprn}/Course/{_query.LarsCode}")).ReturnsAsync(() => null);
+            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).ReturnsAsync(() => null);
 
             _handler = new GetStandardDetailsQueryHandler(_apiClient.Object, _logger.Object);
-        
+
             var result = await _handler.Handle(_query, CancellationToken.None);
-        
+
             Assert.IsNull(result);
             _logger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
         }
-        
+
         [Test]
         public void Returns_Exception()
         {
-            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"ProviderCourse/{_query.Ukprn}/Course/{_query.LarsCode}")).Throws(new Exception());
+            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).Throws(new Exception());
             _handler = new GetStandardDetailsQueryHandler(_apiClient.Object, _logger.Object);
             Assert.ThrowsAsync<Exception>(() => _handler.Handle(_query, CancellationToken.None));
         }
