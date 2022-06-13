@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     public class StandardViewModelTests
     {
         [TestCase(true,"approval body", false)]
-        [TestCase(false, "approval body",true)]
+        [TestCase(false, "approval body", false)]
         [TestCase(true, "", false)]
         [TestCase(false, "", false)]
         public void ImplicitOperator_ConvertsFromStandard(bool approvedByRegulator, string approvalBody, bool expectedApprovalRequired)
