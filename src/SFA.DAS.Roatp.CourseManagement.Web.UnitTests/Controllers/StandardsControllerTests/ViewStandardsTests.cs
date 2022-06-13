@@ -43,15 +43,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             {
                 ProviderCourseId = 1,
                 CourseName = "test1",
-                Level =1,
-                IsImported = true
+                Level = 1,
+                IsImported = true,
+                ApprovalBody = "TestBoby1"
             };
             var standard2 = new Standard
             {
                 ProviderCourseId = 2,
                 CourseName = "test2",
                 Level = 2,
-                IsImported = false
+                IsImported = false,
+                ApprovalBody = "TestBoby1"
             };
             response.Add(standard1);
             response.Add(standard2);

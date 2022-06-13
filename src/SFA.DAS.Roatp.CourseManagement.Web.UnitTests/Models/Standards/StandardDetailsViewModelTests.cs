@@ -20,7 +20,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string sector = "digital";
             const int larsCode = 133;
             const string version = "3";
-            const string backUrl = "http://backurl";
             var expectedCourseDisplayName = $"{courseName} (Level {level})";
             const string standardInfoUrl = "http://test.com";
             const string contactUsPhoneNumber = "12345";
@@ -55,8 +54,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.StandardInfoUrl.Should().Be(standardInfoUrl);
             viewModel.ContactUsEmail.Should().Be(contactUsEmail);
             viewModel.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
-            viewModel.ContactUsPageUrl.Should().Be(contactUsPageUrl);
-            viewModel.BackUrl.Should().Be(backUrl);
         }
 
         [Test]
