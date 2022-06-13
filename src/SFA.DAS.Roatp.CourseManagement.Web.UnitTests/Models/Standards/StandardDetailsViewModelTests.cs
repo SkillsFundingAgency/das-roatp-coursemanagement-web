@@ -40,7 +40,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 ContactUsPageUrl = contactUsPageUrl,
-                 BackUrl = backUrl
             };
 
             StandardDetailsViewModel viewModel = standardDetails;

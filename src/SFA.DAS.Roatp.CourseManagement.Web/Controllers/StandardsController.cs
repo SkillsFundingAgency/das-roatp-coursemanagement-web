@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             foreach (var standard in model.Standards)
             {
                 standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
-                standard.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }, Request.Scheme, Request.Host.Value);
+                standard.ConfirmRegulatedStandardUrl = standard.IsRegulatedStandard ? Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }, Request.Scheme, Request.Host.Value) : string.Empty;
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
