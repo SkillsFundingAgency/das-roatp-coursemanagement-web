@@ -32,10 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = new ProviderLocationListViewModel
             {
-                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
-                {
-                    ukprn = Ukprn,
-                }, Request.Scheme, Request.Host.Value)
+                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new {ukprn = Ukprn})
             };
 
 

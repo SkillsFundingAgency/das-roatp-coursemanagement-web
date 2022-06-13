@@ -36,9 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = new StandardListViewModel
             {
                 BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
-                {
-                    ukprn = Ukprn,
-                }, Request.Scheme, Request.Host.Value)
+                { ukprn = Ukprn })
             };
 
             if (result == null)
@@ -52,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             foreach (var standard in model.Standards)
             {
                 standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
-                standard.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }, Request.Scheme, Request.Host.Value);
+                standard.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, standard.LarsCode });
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
@@ -81,7 +79,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
 
-            model.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode }, Request.Scheme, Request.Host.Value);
+            model.ConfirmRegulatedStandardUrl = Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode });
 
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }

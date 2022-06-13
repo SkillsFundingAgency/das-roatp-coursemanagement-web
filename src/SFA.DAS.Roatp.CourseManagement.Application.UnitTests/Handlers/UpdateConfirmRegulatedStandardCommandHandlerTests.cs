@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             UpdateConfirmRegulatedStandardCommand command,
             CancellationToken cancellationToken)
         {
-            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-confirm-regulated-standard";
+            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator";
             apiClientMock.Setup(c => c.Post(expectedUri, command)).ReturnsAsync(HttpStatusCode.NoContent);
 
             var result = await sut.Handle(command, cancellationToken);
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             UpdateConfirmRegulatedStandardCommand command,
             CancellationToken cancellationToken)
         {
-            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-confirm-regulated-standard";
+            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator";
             apiClientMock.Setup(c => c.Post(expectedUri, command)).ReturnsAsync(HttpStatusCode.BadRequest);
 
             Func<Task> act = () => sut.Handle(command, cancellationToken);

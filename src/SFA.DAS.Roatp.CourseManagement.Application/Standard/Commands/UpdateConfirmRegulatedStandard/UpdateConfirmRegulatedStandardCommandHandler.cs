@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateCon
         {
             _logger.LogInformation("Update confirm regulated standard information request for ukprn:{ukprn} LarsCode:{larscode}", command.Ukprn, command.LarsCode);
 
-            var statusCode = await _apiClient.Post<UpdateConfirmRegulatedStandardCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-confirm-regulated-standard", command);
+            var statusCode = await _apiClient.Post<UpdateConfirmRegulatedStandardCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator", command);
 
             if (statusCode != System.Net.HttpStatusCode.NoContent)
             {

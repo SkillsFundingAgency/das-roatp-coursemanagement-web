@@ -27,9 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             });
 
             var providerLocationsUrl = Url.RouteUrl(RouteNames.ViewProviderLocations, new
-            {
-                ukprn = Ukprn,
-            }, Request.Scheme, Request.Host.Value);
+            { ukprn = Ukprn});
 
             return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
             {
