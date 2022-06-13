@@ -4,16 +4,19 @@
 @{
     ViewBag.Title = "Training locations";
 }
-<a class="govuk-back-link" href ="@Model.BackUrl">Back</a>
 
-<div class="grid-row">
-    <div class="column-two-thirds">
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Check your record</div>
         <h1 class="govuk-heading-xl">Training locations</h1>
         <p class="govuk-body">It is important that we have an up to date list of where you deliver your training.</p>
         <p class="govuk-body">We have pre-filled the list with places that you entered previously in the course directory. Check they are still up to date, and add any new locations that are not present.</p>
 
-        <table class="govuk-table" aria-describedby="training-locations">
+        <table class="govuk-table" aria-label="List of training locations">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col"> Venue name</th>
@@ -25,38 +28,36 @@
             <tbody class="govuk-table__body">
                 @foreach (var location in Model.ProviderLocations)
                 {
-                <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+
                             @location.LocationName
-                        </span>
-                    </td>
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
+
+                        </td>
+                        <td class="govuk-table__cell">
+
                             @location.Email
-                        </span>
-                    </td>
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
+
+                        </td>
+                        <td class="govuk-table__cell">
+
                             @location.Phone
-                        </span>
-                    </td>
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
+
+                        </td>
+                        <td class="govuk-table__cell">
+
                             @location.Postcode
-                        </span>
-                    </td>
-                </tr>
+
+                        </td>
+                    </tr>
                 }
             </tbody>
         </table>
-        <span class="app-task-list__task-name" style="display: none; visibility: hidden">
-            <a href="#" aria-describedby="Add-a-new-training-location" class="govuk-link">
+        <p class="govuk-body" style="display: none; visibility: hidden">
+            <a href="#" class="govuk-link">
                 Add a new training location
             </a>
-        </span>
-        <br />
-        <br />
+        </p>
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
