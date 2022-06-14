@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
 {
-    public class GetProviderLocationQueryHandler : IRequestHandler<GetProviderLocationQuery, GetProviderLocationQueryResult>
+    public class GetAllProviderLocationsQueryHandler : IRequestHandler<GetAllProviderLocationsQuery, GetAllProviderLocationsQueryResult>
     {
-        private readonly ILogger<GetProviderLocationQueryHandler> _logger;
+        private readonly ILogger<GetAllProviderLocationsQueryHandler> _logger;
         private readonly IApiClient _apiClient;
-        public GetProviderLocationQueryHandler(IApiClient apiClient, ILogger<GetProviderLocationQueryHandler> logger)
+        public GetAllProviderLocationsQueryHandler(IApiClient apiClient, ILogger<GetAllProviderLocationsQueryHandler> logger)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
-        public async Task<GetProviderLocationQueryResult> Handle(GetProviderLocationQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllProviderLocationsQueryResult> Handle(GetAllProviderLocationsQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get Provider Locations request received for Ukprn number {ukprn}", request.Ukprn);
             var trainingLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderLocation>>($"providers/{request.Ukprn}/locations");
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
 
             var providerLocations = trainingLocations.FindAll(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
 
-            return new GetProviderLocationQueryResult
+            return new GetAllProviderLocationsQueryResult
             {
                 ProviderLocations = providerLocations
             };

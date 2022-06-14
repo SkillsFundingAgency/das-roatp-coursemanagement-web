@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             _logger.LogInformation("Getting Provider Locations for {ukprn}", Ukprn);
 
-            var result = await _mediator.Send(new GetProviderLocationQuery(Ukprn));
+            var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
 
             var model = new ProviderLocationListViewModel
             {

@@ -2,11 +2,11 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries
 {
-    public class GetProviderLocationQuery : IRequest<GetProviderLocationQueryResult>
+    public class GetAllProviderLocationsQuery : IRequest<GetAllProviderLocationsQueryResult>
     {
         public int Ukprn { get; }
 
-        public GetProviderLocationQuery(int ukprn)
+        public GetAllProviderLocationsQuery(int ukprn)
         {
             Ukprn = ukprn;
         }
