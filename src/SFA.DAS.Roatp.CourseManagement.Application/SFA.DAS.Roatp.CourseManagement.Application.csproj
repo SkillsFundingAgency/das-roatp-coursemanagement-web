@@ -13,8 +13,4 @@
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Domain\SFA.DAS.Roatp.CourseManagement.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Standards\Queries\" />
-  </ItemGroup>
-
 </Project>

@@ -1,10 +1,10 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.UpdateContactDetails
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails
 {
     public class UpdateProviderCourseContactDetailsCommand : IRequest
     {
-        public int Ukprn{ get; set; }
+        public int Ukprn { get; set; }
         public int LarsCode { get; set; }
         public string UserId { get; set; }
         public string ContactUsEmail { get; set; }
