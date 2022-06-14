@@ -5,22 +5,20 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 {
-
     [TestFixture]
     public class StandardViewModelTests
     {
-        [TestCase(true)]
-        [TestCase(false)]
-        public void ImplicitOperater_ConvertsFromStandard(bool approvedByRegulator)
+        [TestCase(true,"approval body", false)]
+        [TestCase(false, "approval body", false)]
+        [TestCase(true, "", false)]
+        [TestCase(false, "", false)]
+        public void ImplicitOperator_ConvertsFromStandard(bool approvedByRegulator, string approvalBody, bool expectedApprovalRequired)
         {
             const int providerCourseId = 1;
             const string courseName = "course name";
             const int level = 1;
             const int larsCode = 133;
             const string version = "1.1";
-            const string approvalBody = "approval body";
-            var isApprovedByRegulator = approvedByRegulator;
-
             var standard = new Standard
             {
                 ProviderCourseId = providerCourseId,
@@ -29,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 Level = level,
                 Version = version,
                 ApprovalBody = approvalBody,
-                IsApprovedByRegulator = isApprovedByRegulator
+                IsApprovedByRegulator = approvedByRegulator
             };
 
             StandardViewModel viewModel = standard;
@@ -40,8 +38,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.Version.Should().Be(version);
             viewModel.ApprovalBody.Should().Be(approvalBody);
             viewModel.LarsCode.Should().Be(larsCode);
-            viewModel.IsApprovedByRegulator.Should().Be(isApprovedByRegulator);
-            viewModel.ApprovalRequired.Should().Be(!isApprovedByRegulator);
+            viewModel.IsApprovedByRegulator.Should().Be(approvedByRegulator);
+            viewModel.ApprovalPending.Should().Be(expectedApprovalRequired);
         }
     }
 }

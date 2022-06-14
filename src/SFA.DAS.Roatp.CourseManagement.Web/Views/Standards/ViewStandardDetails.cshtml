@@ -3,63 +3,45 @@
 @{
     ViewBag.Title = "Standards";
 }
-<a class="govuk-back-link" href="@Model.BackUrl">Back</a>
-<div class="grid-row">
-    <div class="column-two-thirds">
+
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Check your record</div>
         <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
-
-        <table class="govuk-table" aria-describedby="StandardDetails">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
-                </tr>
-            </thead>
+        <table class="govuk-table" aria-label="Coure details">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                IFATE Reference
-                            </strong>
-                        </span>
-                    </td>
-                    <td class="govuk-table__cell">
+                    <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                        IFATE Reference
+                    </th>
+                    <td class="govuk-table__cell das-table-cell-width-70">
                         @Model.IFateReferenceNumber
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Version
-                            </strong>
-                        </span>
-                    </td>
+                    <th class="govuk-table__header" scope="row">
+                        Version
+                    </th>
                     <td class="govuk-table__cell">
                         @Model.Version
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Sector
-                            </strong>
-                        </span>
-                    </td>
+                    <th class="govuk-table__header" scope="row">
+                        Sector
+                    </th>
                     <td class="govuk-table__cell">
                         @Model.Sector
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                LARS code
-                            </strong>
-                        </span>
-                    </td>
+                    <th class="govuk-table__header" scope="row">
+                        LARS code
+                    </th>
                     <td class="govuk-table__cell">
                         @Model.LarsCode
                     </td>
@@ -67,13 +49,9 @@
                 @if (Model.IsStandardRegulated)
                 {
                     <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <span class="app-task-list__task-name">
-                                <strong>
-                                    Regulator
-                                </strong>
-                            </span>
-                        </td>
+                        <th class="govuk-table__header" scope="row">
+                            Regulator
+                        </th>
                         <td class="govuk-table__cell">
                             @Model.RegulatorName
                         </td>
@@ -81,117 +59,88 @@
                 }
             </tbody>
         </table>
-
-        <br />
-        <br />
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
-<div class="grid-row">
-    <div class="column-two-thirds">
-        <h2 class="govuk-heading-l">Information that is specific for this standard</h2>
-        <h3 class="govuk-heading-m">Contact details</h3>
-        <p class="govuk-body">If there is a specific person or team that should be contacted for this standard, update these contact details.</p>
 
-        <table class="govuk-table" aria-describedby="ContactDetails">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
-                </tr>
-            </thead>
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Information that is specific for this standard</h2>
+        <h3 class="govuk-heading-m" id="table-header-contact">Contact details</h3>
+        <p class="govuk-body">If there is a specific person or team that should be contacted for this standard, update these contact details.</p>
+        <table class="govuk-table" aria-labelledby="table-header-contact">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Email address
-                            </strong>
+                    <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                        Email address
+                    </th>
+                    <td class="govuk-table__cell das-table-cell-width-70">
+                        <span class="das-breakable">
+                            @Model.ContactUsEmail
                         </span>
-                    </td>
-                    <td class="govuk-table__cell">
-                        @Model.ContactUsEmail
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Telephone number
-                            </strong>
-                        </span>
-                    </td>
+                    <th class="govuk-table__header" scope="row">
+                        Telephone number
+                    </th>
                     <td class="govuk-table__cell">
                         @Model.ContactUsPhoneNumber
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">
+                        Contact page link
+                    </th>
                     <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Contact page link
-                            </strong>
+                        <span class="das-breakable">
+                            @Model.ContactUsPageUrl
                         </span>
-                    </td>
-                    <td class="govuk-table__cell">
-                        @Model.ContactUsPageUrl
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">
+                        Website page
+                    </th>
                     <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Website page
-                            </strong>
+                        <span class="das-breakable">
+                            @Model.StandardInfoUrl
                         </span>
-                    </td>
-                    <td class="govuk-table__cell">
-                        @Model.StandardInfoUrl
                     </td>
                 </tr>
             </tbody>
         </table>
-
-        <span>
+        <p class="govuk-body">
             <a href="@Model.EditContactDetailsUrl" aria-describedby="Update-contact-details" class="govuk-link">
                 Update these contact details
             </a>
-        </span>
+        </p>
     </div>
 </div>
-<div class="grid-row" style="display:@(Model.IsStandardRegulated ?" display" :"none")">
-    <div class="column-two-thirds">
-        <h3 class="govuk-heading-m">Regulation</h3>
+
+
+<div class="govuk-grid-row govuk-!-margin-top-8" style="display:@(Model.IsStandardRegulated ?" display" :"none")">
+    <div class="govuk-grid-column-two-thirds">
+
+        <h3 class="govuk-heading-m" id="table-header-regulation">Regulation</h3>
         <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
 
-        <table class="govuk-table" aria-describedby="ContactDetails">
-            <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col" colspan="3"> </th>
-                </tr>
-            </thead>
+        <table class="govuk-table" aria-labelledby="table-header-regulation">
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Regulator
-                            </strong>
-                        </span>
-                    </td>
-                    <td class="govuk-table__cell">
+                    <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                        Regulator
+                    </th>
+                    <td class="govuk-table__cell das-table-cell-width-50">
                         @Model.RegulatorName
                     </td>
-                    <td class="govuk-table__cell">
+                    <td class="govuk-table__cell das-table-cell-width-20">
                     </td>
                 </tr>
                 <tr class="govuk-table__row">
-                    <td class="govuk-table__cell">
-                        <span class="app-task-list__task-name">
-                            <strong>
-                                Approved
-                            </strong>
-                        </span>
-                    </td>
+                    <th class="govuk-table__header" scope="row">
+                        Approved
+                    </th>
                     <td class="govuk-table__cell">
                         @Model.ApprovedByRegulatorStatus()
                     </td>
@@ -206,5 +155,90 @@
         <br />
         <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
     </div>
-    </div>
+</div>
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-two-thirds">
+        <table class="govuk-table" aria-label="Where you deliver this standard">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header das-table-cell-width-80" scope="col">
+                        <span class="govuk-heading-m">
+                            Where you deliver this standard
+                        </span>
+                    </th>
+                    <th class="govuk-table__header das-table-cell-width-20" scope="col">
+                        <span class="govuk-visually-hidden">Action</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @Model.LocationSummary
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        <a href="#" class="govuk-link govuk-link--no-visited-state">
+                            Change<span class="govuk-visually-hidden"> where you deliver this standard</span>
+                        </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
+        @if (Model.ProviderCourseLocations.Any())
+        {
+            <table class="govuk-table" aria-label="List of training locations">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Venue name </th>
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Delivery method</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var location in Model.ProviderCourseLocations)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @location.LocationName
+                            </td>
+                            <td class="govuk-table__cell">
+                                @location.DeliveryOption()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p class="govuk-body govuk-!-margin-bottom-8">
+                <a href="#" class="govuk-link govuk-link--no-visited-state">Edit training locations</a>
+            </p>
+        }
+
+        @if (Model.SubRegionCourseLocations.Any())
+        {
+            <p class="govuk-body">
+                Training can be delivered on site at the employer's address, as long as they are within these regions:
+            </p>
+            
+            foreach (var region in Model.Regions())
+            {
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                <h3 class="govuk-heading-m">@region.Key</h3>
+                <ul class="govuk-list govuk-grid-row">
+                    @foreach (var location in region.OrderBy(x=>x.LocationName))
+                    {
+                        <li class="govuk-grid-column-one-half"> 
+                            @location.LocationName 
+                        </li>
+                    }
+                </ul>
+            }
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            <p class="govuk-body">
+                
+                <a href="#" class="govuk-link govuk-link--no-visited-state">
+                    Edit these regions
+                </a>
+            </p>
+        }
+    </div>
+</div>

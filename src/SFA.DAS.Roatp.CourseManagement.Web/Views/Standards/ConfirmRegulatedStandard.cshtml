@@ -4,7 +4,9 @@
 @{
     ViewBag.Title = "Regulated standard";
 }
-<a class="govuk-back-link" href="@Model.BackLink">Back</a>
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackLink">Back</a>
+}
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
