@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.UpdateContactDetails
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails
 {
     public class UpdateProviderCourseContactDetailsCommandHandler : IRequestHandler<UpdateProviderCourseContactDetailsCommand, Unit>
     {
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.UpdateCo
         {
             _logger.LogInformation("Update provider course information request for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", command.Ukprn, command.LarsCode, command.UserId);
 
-            var statusCode = await _apiClient.Post<UpdateProviderCourseContactDetailsCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-contact-details", command);
+            var statusCode = await _apiClient.Post($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-contact-details", command);
 
             if (statusCode != System.Net.HttpStatusCode.NoContent)
             {
