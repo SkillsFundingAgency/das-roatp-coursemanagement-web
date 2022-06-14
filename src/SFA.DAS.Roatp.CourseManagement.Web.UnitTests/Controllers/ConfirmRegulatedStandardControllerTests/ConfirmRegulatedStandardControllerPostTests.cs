@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             var result =  await _sut.UpdateApprovedByRegulator(model);
             var redirectResult = result as RedirectResult;
             redirectResult.Should().NotBeNull();
-            redirectResult.Url.Should().Be(model.BackLink);
+            redirectResult.Url.Should().Be(model.RefererLink);
         }
 
         [Test, AutoData]
