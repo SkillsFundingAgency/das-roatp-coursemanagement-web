@@ -12,6 +12,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool? IsApprovedByRegulator { get; set; }
         public string BackLink { get; set; }
         public string CancelLink { get; set; }
+        public string RefererLink { get; set; }
         public static implicit operator ConfirmRegulatedStandardViewModel(StandardDetails source)
         {
             return new ConfirmRegulatedStandardViewModel

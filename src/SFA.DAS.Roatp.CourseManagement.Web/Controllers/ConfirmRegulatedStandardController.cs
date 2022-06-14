@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
             else
             {
-                model.BackLink = model.CancelLink = Request.GetTypedHeaders().Referer.ToString();
+                model.BackLink = model.CancelLink = model.RefererLink = Request.GetTypedHeaders().Referer.ToString();
             }
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 return View("~/Views/ShutterPages/RegulatedStandardSeekApproval.cshtml", model);
             }
-            return Redirect(model.BackLink);
+            return Redirect(model.RefererLink);
         }
     }
 }
