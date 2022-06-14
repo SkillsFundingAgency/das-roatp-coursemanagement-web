@@ -96,6 +96,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public const string NationalOnly = "This standard is only delivered at an employer's address anywhere in England.";
         public const string ProvidersAndNational = "This standard can be delivered at both training sites and employer addresses anywhere in England.";
         public const string ProvidersAndSubregions = "This standard can be delivered at both training sites and employer addresses within certain regions.";
-        public const string NoneSet = "This standard has no training locations linked to it.";
+        public const string NoneSet = "This standard has no location associated with it.";
     }
 }
