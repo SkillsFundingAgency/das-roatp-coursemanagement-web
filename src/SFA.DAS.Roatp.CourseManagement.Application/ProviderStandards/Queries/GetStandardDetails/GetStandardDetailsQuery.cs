@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails
 {
     public class GetStandardDetailsQuery : IRequest<GetStandardDetailsQueryResult>
     {

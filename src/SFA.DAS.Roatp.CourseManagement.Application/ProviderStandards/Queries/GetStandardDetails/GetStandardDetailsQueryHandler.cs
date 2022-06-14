@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails
 {
     public class GetStandardDetailsQueryHandler : IRequestHandler<GetStandardDetailsQuery, GetStandardDetailsQueryResult>
     {
