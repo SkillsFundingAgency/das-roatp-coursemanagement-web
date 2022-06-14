@@ -1,0 +1,65 @@
+﻿@model EditLocationOptionViewModel
+@{
+    ViewBag.Title = "Where will this standard be delivered";
+    ViewBag.Description = "";
+}
+
+@section breadcrumb {
+    <a href="@Model.BackLink" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+        <div class="govuk-caption-xl">Check your record</div>
+        <h1 class="govuk-heading-xl">Where will this standard be delivered?</h1>
+
+        <form method="post" asp-route="@RouteNames.PostLocationOption" enctype="multipart/form-data" novalidate>
+
+            <div esfa-validation-marker-for="LocationOption" class="govuk-form-group">
+                <span asp-validation-for="LocationOption" class="govuk-error-message"></span>
+                <div class="govuk-radios" data-module="govuk-radios">
+                  <div class="govuk-radios__item">
+                    <input asp-for="LocationOption" id="ProviderLocationOption" class="govuk-radios__input" type="radio" value="ProviderLocation" data-aria-controls="conditional-provider">
+                    <label class="govuk-label govuk-radios__label" for="ProviderLocationOption">
+                      At one of your training locations
+                    </label>
+                  </div>
+                  <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-provider">
+                    <div class="govuk-form-group">
+                      <div id="ProviderLocationOption-hint" class="govuk-hint">
+                        Changing your options here will affect any previously saved data for this standard
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="govuk-radios__item">
+                    <input asp-for="LocationOption" id="EmployerLocationOption" class="govuk-radios__input" type="radio" value="EmployerLocation" data-aria-controls="conditional-employer">
+                    <label class="govuk-label govuk-radios__label" for="EmployerLocationOption">
+                      At an employer’s location
+                    </label>
+                  </div>
+                  <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-employer">
+                    <div class="govuk-form-group">
+                      <div id="EmployerLocationOption-hint" class="govuk-hint">
+                        Changing your options here will affect any previously saved data for this standard
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="govuk-radios__item">
+                    <input asp-for="LocationOption" id="BothLocationOption" class="govuk-radios__input" type="radio" value="Both">
+                    <label class="govuk-label govuk-radios__label" for="BothLocationOption">
+                      Both
+                    </label>
+                  </div>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Save and continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
