@@ -94,7 +94,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 SubRegionCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Regional).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
-                BackUrl = standardDetails.BackUrl,
                 IsApprovedByRegulator = standardDetails.IsApprovedByRegulator
             };
         }
