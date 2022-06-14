@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             new UpdateApprovedByRegulatorCommand
             {
                 LarsCode = model.LarsCode,
-                IsApprovedByRegulator = model.IsApprovedByRegulator,
+                IsApprovedByRegulator = (bool)model.IsApprovedByRegulator,
             };
     }
 }

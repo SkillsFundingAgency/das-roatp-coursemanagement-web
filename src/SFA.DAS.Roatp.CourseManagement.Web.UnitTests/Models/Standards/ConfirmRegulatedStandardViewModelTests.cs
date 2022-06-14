@@ -6,7 +6,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 {
-    class ConfirmRegulatedStandardViewModelTests
+    [TestFixture]
+    public class ConfirmRegulatedStandardViewModelTests
     {
         [Test, AutoData]
         public void ImplicitOperatorForApiModel_ReturnsViewModel(StandardDetails standard)
