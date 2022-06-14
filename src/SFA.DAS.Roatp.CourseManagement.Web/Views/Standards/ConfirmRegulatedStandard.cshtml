@@ -18,6 +18,7 @@
                 <input type="hidden" asp-for="RegulatorName" />
                 <input type="hidden" asp-for="BackLink" />
                 <input type="hidden" asp-for="CancelLink" />
+                <input type="hidden" asp-for="RefererLink" />
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <table class="govuk-table" aria-describedby="ConfirmRegulatedStandard">
@@ -77,7 +78,6 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <br />
                         <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
                     </div>
                 </div>
