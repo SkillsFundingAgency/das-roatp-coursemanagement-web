@@ -1,0 +1,91 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model ConfirmRegulatedStandardViewModel
+
+@{
+    ViewBag.Title = "Regulated standard";
+}
+<a class="govuk-back-link" href="@Model.BackLink">Back</a>
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+            <div class="govuk-caption-xl">Check your record</div>
+            <h1 class="govuk-heading-xl">This is a regulated standard</h1>
+            <form method="post" asp-route="@RouteNames.PostConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
+                <input type="hidden" asp-for="RegulatorName" />
+                <input type="hidden" asp-for="BackLink" />
+                <input type="hidden" asp-for="CancelLink" />
+                <div class="grid-row">
+                    <div class="column-two-thirds">
+                        <table class="govuk-table" aria-describedby="ContactDetails">
+                            <thead class="govuk-table__head">
+                                <tr class="govuk-table__row">
+                                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
+                                </tr>
+                            </thead>
+                            <tbody class="govuk-table__body">
+                                <tr class="govuk-table__row">
+                                    <td class="govuk-table__cell">
+                                        <span class="app-task-list__task-name">
+                                            <strong>
+                                                Regulator
+                                            </strong>
+                                        </span>
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                        @Model.RegulatorName
+                                    </td>
+                                    <td class="govuk-table__cell">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="govuk-form-group" esfa-validation-marker-for="IsApprovedByRegulator">
+                            <span class="govuk-error-message" asp-validation-for="IsApprovedByRegulator"></span>
+                            <fieldset class="govuk-fieldset">
+                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                                    <h2 class="govuk-fieldset__heading">
+                                        Have you been approved by the regulator to deliver this standard?
+                                    </h2>
+                                </legend>
+                                <div class="govuk-radios">
+
+                                    <div class="govuk-radios__item">
+
+                                        <input class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
+                                               name="IsApprovedByRegulator" type="radio" value="true" @(Model.IsApprovedByRegulator.HasValue && Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                               asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
+                                        <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-Yes">
+                                            Yes
+                                        </label>
+
+                                    </div>
+
+                                    <div class="govuk-radios__item">
+
+                                        <input class="govuk-radios__input" id="ConfirmRegulatedStandard-No"
+                                               name="IsApprovedByRegulator" type="radio" value="false" @(Model.IsApprovedByRegulator.HasValue && !Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                               asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
+                                        <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-No">
+                                            No
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <br />
+                        <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
+                    </div>
+                </div>
+                <div class="govuk-button-group">
+                    <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                        Save and continue
+                    </button>
+                    <a id="cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>

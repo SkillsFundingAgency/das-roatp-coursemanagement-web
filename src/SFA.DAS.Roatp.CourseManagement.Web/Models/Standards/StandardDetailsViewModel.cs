@@ -63,8 +63,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             }
         }
 
+        public bool? IsApprovedByRegulator { get; set; }
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
+        public string ConfirmRegulatedStandardUrl { get; set; }
 
         public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
         {
@@ -83,7 +85,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ContactUsPageUrl = standardDetails.ContactUsPageUrl,
                 ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 SubRegionCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Regional).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
-                NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault()
+                NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
+                IsApprovedByRegulator = standardDetails.IsApprovedByRegulator
             };
         }
     }

@@ -16,5 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
         public List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
+        public bool? IsApprovedByRegulator { get; set; }
+        public string BackUrl { get; set; }
     }
 }
