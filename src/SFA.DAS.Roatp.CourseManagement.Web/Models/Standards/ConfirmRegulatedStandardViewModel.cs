@@ -9,6 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         [FromRoute]
         public int LarsCode { get; set; }
         public string RegulatorName { get; set; }
+        public bool IsRegulatedStandard => !string.IsNullOrEmpty(RegulatorName);
         public bool? IsApprovedByRegulator { get; set; }
         public string BackLink { get; set; }
         public string CancelLink { get; set; }

@@ -80,5 +80,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             model.BackLink.Should().Be(backLink);
             model.CancelLink.Should().Be(cancelLink);
         }
+        [Test, AutoData]
+        public async Task Post_ValidModelWithIsRegulatedStandardFalse_RedirectToErrorPage(ConfirmRegulatedStandardViewModel model)
+        {
+            model.RegulatorName = string.Empty;
+            var expectedUrl = "Error/NotFound";
+            var result = await _sut.UpdateApprovedByRegulator(model);
+            var redirectResult = result as RedirectResult;
+            redirectResult.Should().NotBeNull();
+            redirectResult.Url.Should().Be(expectedUrl);
+        }
     }
 }

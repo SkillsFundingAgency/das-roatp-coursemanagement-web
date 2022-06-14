@@ -123,6 +123,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.Should().NotBeNull();
             model.BackUrl.Should().Be(verifyUrl);
             model.Standards.First().StandardUrl.Should().Be(verifyStandardUrl);
+            model.Standards.First().IsRegulatedStandard.Should().BeTrue();
             model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(confirmRegulatedStandardUrl);
         }
 

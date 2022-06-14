@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 
@@ -62,6 +63,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (!ModelState.IsValid)
             {
                 return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
+            }
+
+            if(!model.IsRegulatedStandard)
+            {
+                return Redirect($"Error/{HttpStatusCode.NotFound}");
             }
 
             var command = (UpdateApprovedByRegulatorCommand)model;
