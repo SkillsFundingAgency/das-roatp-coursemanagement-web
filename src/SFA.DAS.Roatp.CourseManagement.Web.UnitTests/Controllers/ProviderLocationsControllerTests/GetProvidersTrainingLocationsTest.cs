@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -57,8 +58,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             response.Add(ProviderLocation2);
 
             _mediator = new Mock<IMediator>();
-            _mediator.Setup(x => x.Send(It.IsAny<GetProviderLocationQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => new GetProviderLocationQueryResult
+            _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new GetAllProviderLocationsQueryResult
                 {
                     ProviderLocations = response
                 });
@@ -104,7 +105,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         [Test]
         public async Task GetProvidersTrainingLocation_ReturnsNoProviderLocationData()
         {
-            _mediator.Setup(x => x.Send(It.IsAny<GetProviderLocationQuery>(), It.IsAny<CancellationToken>()))
+            _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{ new Claim(ProviderClaims.ProviderUkprn,"111"),}, "mock"));
             

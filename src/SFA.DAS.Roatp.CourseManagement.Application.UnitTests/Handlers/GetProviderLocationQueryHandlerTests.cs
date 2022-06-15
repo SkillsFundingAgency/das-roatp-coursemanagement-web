@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using System;
@@ -17,9 +17,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
     [TestFixture]
     public class GetProviderLocationQueryHandlerTests
     {
-        private GetProviderLocationQueryHandler _handler;
+        private GetAllProviderLocationsQueryHandler _handler;
         private Mock<IApiClient> _apiClient;
-        private GetProviderLocationQuery _query;
+        private GetAllProviderLocationsQuery _query;
         private readonly ProviderLocation _regionalLocation = new ProviderLocation() { LocationType = LocationType.Regional };
         private readonly ProviderLocation _nationalLocation = new ProviderLocation() { LocationType = LocationType.National };
         private readonly ProviderLocation _providerLocation = new ProviderLocation() { LocationType = LocationType.Provider };
@@ -29,9 +29,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         {
             var autoFixture = new Fixture();
 
-            _query = autoFixture.Create<GetProviderLocationQuery>();
+            _query = autoFixture.Create<GetAllProviderLocationsQuery>();
             _apiClient = new Mock<IApiClient>();
-            _handler = new GetProviderLocationQueryHandler(_apiClient.Object, Mock.Of<ILogger<GetProviderLocationQueryHandler>>());
+            _handler = new GetAllProviderLocationsQueryHandler(_apiClient.Object, Mock.Of<ILogger<GetAllProviderLocationsQueryHandler>>());
         }
         
         [Test]
