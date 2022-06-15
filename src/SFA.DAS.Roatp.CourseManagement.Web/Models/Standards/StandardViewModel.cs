@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ApprovalBody { get; set; }
         public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
 
-        public bool ApprovalPending => IsRegulatedStandard && !IsApprovedByRegulator.HasValue;
+        public bool IsApprovalPending => IsRegulatedStandard && !IsApprovedByRegulator.HasValue;
         public bool? IsApprovedByRegulator { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
 
