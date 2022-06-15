@@ -7,18 +7,18 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards
 {
-    public class GetStandardQueryHandler : IRequestHandler<GetStandardQuery, GetStandardQueryResult>
+    public class GetAllProviderStandardsQueryHandler : IRequestHandler<GetAllProviderStandardsQuery, GetAllProviderStandardsQueryResult>
     {
-        private readonly ILogger<GetStandardQueryHandler> _logger;
+        private readonly ILogger<GetAllProviderStandardsQueryHandler> _logger;
         private readonly IApiClient _apiClient;
-        public GetStandardQueryHandler(IApiClient apiClient, ILogger<GetStandardQueryHandler> logger)
+        public GetAllProviderStandardsQueryHandler(IApiClient apiClient, ILogger<GetAllProviderStandardsQueryHandler> logger)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
-        public async Task<GetStandardQueryResult> Handle(GetStandardQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllProviderStandardsQueryResult> Handle(GetAllProviderStandardsQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get Standards request received for Ukprn number {ukprn}", request.Ukprn);
             try
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries
                     return null;
                 }
 
-                return new GetStandardQueryResult
+                return new GetAllProviderStandardsQueryResult
                 {
                     Standards = standards
                 };
