@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.ApprovalBody.Should().Be(approvalBody);
             viewModel.LarsCode.Should().Be(larsCode);
             viewModel.IsApprovedByRegulator.Should().Be(approvedByRegulator);
-            viewModel.ApprovalPending.Should().Be(expectedApprovalRequired);
+            viewModel.IsApprovalPending.Should().Be(expectedApprovalRequired);
         }
     }
 }
