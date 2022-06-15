@@ -73,6 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var command = (UpdateApprovedByRegulatorCommand)model;
             command.Ukprn = Ukprn;
             command.LarsCode = model.LarsCode;
+            command.UserId = UserId;
 
             await _mediator.Send(command);
 
