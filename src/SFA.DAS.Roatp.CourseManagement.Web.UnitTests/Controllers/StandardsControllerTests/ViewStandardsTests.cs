@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
         string verifyStandardUrl = "http://test-standard";
-
+        string confirmRegulatedStandardUrl = "http://confirm-regulated-standard";
         [SetUp]
         public void Before_each_test()
         {
@@ -43,15 +43,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             {
                 ProviderCourseId = 1,
                 CourseName = "test1",
-                Level =1,
-                IsImported = true
+                Level = 1,
+                IsImported = true,
+                ApprovalBody = "TestBoby1"
             };
             var standard2 = new Standard
             {
                 ProviderCourseId = 2,
                 CourseName = "test2",
                 Level = 2,
-                IsImported = false
+                IsImported = false,
+                ApprovalBody = "TestBoby1"
             };
             response.Add(standard1);
             response.Add(standard2);
@@ -83,6 +85,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                     verifyRouteValues2 = c;
                 });
 
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ConfirmRegulatedStandard))
+                ))
+                .Returns(confirmRegulatedStandardUrl)
+                .Callback<UrlRouteContext>(c =>
+                {
+                    verifyRouteValues2 = c;
+                });
+
+
             UrlRouteContext verifyRouteValues = null;
             urlHelper
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
@@ -111,6 +123,34 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.Should().NotBeNull();
             model.BackUrl.Should().Be(verifyUrl);
             model.Standards.First().StandardUrl.Should().Be(verifyStandardUrl);
+            model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(confirmRegulatedStandardUrl);
+        }
+
+        [Test]
+        public async Task StandardsController_ViewStandards_ReturnsValidResponse_withNoConfirmedRegulatedStandardUrl()
+        {
+            urlHelper = new Mock<IUrlHelper>();
+            UrlRouteContext verifyRouteValues = null;
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ConfirmRegulatedStandard))
+                ))
+                .Returns((string)null)
+                .Callback<UrlRouteContext>(c =>
+                {
+                    verifyRouteValues = c;
+                });
+
+            _controller.Url = urlHelper.Object;
+            var result = await _controller.ViewStandards();
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult.ViewName.Should().Contain("ViewStandards.cshtml");
+            viewResult.Model.Should().NotBeNull();
+            var model = viewResult.Model as StandardListViewModel;
+            model.Should().NotBeNull();
+            model.Standards.Should().NotBeNull();
+            model.Standards.First().ConfirmRegulatedStandardUrl.Should().BeNull();
         }
 
         [Test]

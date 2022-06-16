@@ -11,6 +11,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string CourseDisplayName { get; set; }
         public int LarsCode { get; set; }
         public string StandardUrl { get; set; }
+        public string Version { get; set; }
+        public string ApprovalBody { get; set; }
+        public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
+
+        public bool IsApprovalPending => IsRegulatedStandard && !IsApprovedByRegulator.HasValue;
+        public bool? IsApprovedByRegulator { get; set; }
+        public string ConfirmRegulatedStandardUrl { get; set; }
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -21,7 +28,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 Level = source.Level,
                 IsImported = source.IsImported,
                 CourseDisplayName = source.CourseName + " (Level " + source.Level + ")",
-                LarsCode = source.LarsCode
+                LarsCode = source.LarsCode,
+                Version = source.Version,
+                ApprovalBody = source.ApprovalBody,
+                IsApprovedByRegulator = source.IsApprovedByRegulator
             };
         }
     }

@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 StandardInfoUrl = standardInfoUrl,
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
-                ContactUsPageUrl = contactUsPageUrl
+                ContactUsPageUrl = contactUsPageUrl,
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
@@ -54,7 +54,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.StandardInfoUrl.Should().Be(standardInfoUrl);
             viewModel.ContactUsEmail.Should().Be(contactUsEmail);
             viewModel.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
-            viewModel.ContactUsPageUrl.Should().Be(contactUsPageUrl);
         }
 
         [Test]
@@ -269,7 +268,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
              locationsInRegion1[0].LocationName.Should().Be(region1_location1);
              locationsInRegion2[0].LocationName.Should().Be(region2_location1);
              locationsInRegion2[1].LocationName.Should().Be(region2_location2);
-
         }
     }
 }
