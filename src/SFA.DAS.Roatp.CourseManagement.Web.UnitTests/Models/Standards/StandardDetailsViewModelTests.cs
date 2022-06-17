@@ -269,5 +269,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
              locationsInRegion2[0].LocationName.Should().Be(region2_location1);
              locationsInRegion2[1].LocationName.Should().Be(region2_location2);
         }
+
+        [TestCase(true, "Yes")]
+        [TestCase(false, "No")]
+        [TestCase(null, "Unknown")]
+        public void ImplicitOperator_ConvertsFromStandardDetails(bool? isApprovedByRegulator, string approvedByRegulatorStatus)
+        {
+            const string regulatorName = "Test regulator";
+            var standardDetails = new StandardDetails
+            {
+                RegulatorName = regulatorName,
+                IsApprovedByRegulator = isApprovedByRegulator
+            };
+
+            StandardDetailsViewModel viewModel = standardDetails;
+            viewModel.RegulatorName.Should().Be(regulatorName);
+            viewModel.IsApprovedByRegulator.Should().Be(isApprovedByRegulator);
+            viewModel.ApprovedByRegulatorStatus().Should().Be(approvedByRegulatorStatus);
+        }
     }
 }

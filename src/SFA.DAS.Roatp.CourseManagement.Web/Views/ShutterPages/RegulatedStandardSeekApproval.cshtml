@@ -1,0 +1,46 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model ConfirmRegulatedStandardViewModel
+
+@{
+    ViewBag.Title = "Seek approval";
+}
+
+<main class="govuk-main-wrapper " id="main-content" role="main">
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-caption-xl">Manage a standard</div>
+            <h1 class="govuk-heading-xl">You must be approved by the regulator to deliver this standard</h1>
+            <table class="govuk-table" aria-describedby="ConfirmRegulatedStandard">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="col" colspan="2"> </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <span class="app-task-list__task-name">
+                                <strong>
+                                    Regulator
+                                </strong>
+                            </span>
+                        </td>
+                        <td class="govuk-table__cell">
+                            @Model.RegulatorName
+                        </td>
+                        <td class="govuk-table__cell">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="govuk-body">
+                If you do not currently have approval to deliver this standard, we urge you to contact the regulatory body above as soon as possible.
+            </p>
+            <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
+            <div class="govuk-button-group">
+                <a id="Continue" href="@Model.CancelLink" class="govuk-button">Continue</a>
+            </div>
+        </div>
+    </div>
+</main>

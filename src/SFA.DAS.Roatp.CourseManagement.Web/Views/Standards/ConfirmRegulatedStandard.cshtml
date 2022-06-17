@@ -4,21 +4,24 @@
 @{
     ViewBag.Title = "Regulated standard";
 }
+@section breadcrumb {
 <a class="govuk-back-link" href="@Model.BackLink">Back</a>
+}
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
-            <div class="govuk-caption-xl">Check your record</div>
+            <div class="govuk-caption-xl">Manage a standard</div>
             <h1 class="govuk-heading-xl">This is a regulated standard</h1>
             <form method="post" asp-route="@RouteNames.PostConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
                 <input type="hidden" asp-for="RegulatorName" />
                 <input type="hidden" asp-for="BackLink" />
                 <input type="hidden" asp-for="CancelLink" />
+                <input type="hidden" asp-for="RefererLink" />
                 <div class="grid-row">
                     <div class="column-two-thirds">
-                        <table class="govuk-table" aria-describedby="ContactDetails">
+                        <table class="govuk-table" aria-describedby="ConfirmRegulatedStandard">
                             <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
                                     <th class="govuk-table__header" scope="col" colspan="2"> </th>
@@ -53,8 +56,8 @@
 
                                     <div class="govuk-radios__item">
 
-                                        <input class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
-                                               name="IsApprovedByRegulator" type="radio" value="true" @(Model.IsApprovedByRegulator.HasValue && Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                        <input id="IsApprovedByRegulator" class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
+                                               name="IsApprovedByRegulator" type="radio" value="true" 
                                                asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                                         <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-Yes">
                                             Yes
@@ -64,8 +67,8 @@
 
                                     <div class="govuk-radios__item">
 
-                                        <input class="govuk-radios__input" id="ConfirmRegulatedStandard-No"
-                                               name="IsApprovedByRegulator" type="radio" value="false" @(Model.IsApprovedByRegulator.HasValue && !Model.IsApprovedByRegulator.Value ? "checked='checked'" : "")
+                                        <input id="IsApprovedByRegulator-No" class="govuk-radios__input" id="ConfirmRegulatedStandard-No"
+                                               name="IsApprovedByRegulator" type="radio" value="false" 
                                                asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                                         <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-No">
                                             No
@@ -75,7 +78,6 @@
                                 </div>
                             </fieldset>
                         </div>
-                        <br />
                         <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
                     </div>
                 </div>
@@ -83,7 +85,7 @@
                     <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                         Save and continue
                     </button>
-                    <a id="cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                    <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
                 </div>
             </form>
         </div>

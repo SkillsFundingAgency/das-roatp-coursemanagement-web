@@ -64,6 +64,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         }
 
         public bool? IsApprovedByRegulator { get; set; }
+        public string ApprovedByRegulatorStatus() => IsApprovedByRegulator switch
+        {
+            true => "Yes",
+            false => "No",
+            _ => "Unknown",
+        };
+
+
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }

@@ -7,11 +7,11 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegulatedStandardControllerTests
 {
@@ -45,31 +45,50 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public void Post_ValidModel_RedirectToRoute(ConfirmRegulatedStandardViewModel model)
+        public async Task Post_ValidModel_SendsUpdateCommand(ConfirmRegulatedStandardViewModel model)
         {
-            var result =  _sut.SubmitConfirmRegulatedStandard(model);
-            var routeResult = result as RedirectToRouteResult;
-            routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
-            routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
-            routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(Ukprn));
-            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(model.LarsCode);
+            model.IsApprovedByRegulator = true;
+            var result =  await _sut.UpdateApprovedByRegulator(model);
+            var redirectResult = result as RedirectResult;
+            redirectResult.Should().NotBeNull();
+            redirectResult.Url.Should().Be(model.RefererLink);
         }
 
         [Test, AutoData]
-        public void Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
+        public async Task Post_ValidModelWithIsApprovedByRegulatorFalse_RedirectToShutterPage(ConfirmRegulatedStandardViewModel model)
+        {
+            model.IsApprovedByRegulator = false;
+            var result = await _sut.UpdateApprovedByRegulator(model);
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult.Model.Should().Be(model);
+            viewResult.ViewName.Should().Contain("RegulatedStandardSeekApproval.cshtml");
+        }
+
+        [Test, AutoData]
+        public async Task Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
         {
             var backLink = model.BackLink;
             var cancelLink = model.CancelLink;
             _sut.ModelState.AddModelError("key", "error");
 
-            var result =  _sut.SubmitConfirmRegulatedStandard(model);
+            var result =  await _sut.UpdateApprovedByRegulator(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.Model.Should().Be(model);
             model.BackLink.Should().Be(backLink);
             model.CancelLink.Should().Be(cancelLink);
+        }
+        [Test, AutoData]
+        public async Task Post_ValidModelWithIsRegulatedStandardFalse_RedirectToErrorPage(ConfirmRegulatedStandardViewModel model)
+        {
+            model.RegulatorName = string.Empty;
+            var expectedUrl = "Error/NotFound";
+            var result = await _sut.UpdateApprovedByRegulator(model);
+            var redirectResult = result as RedirectResult;
+            redirectResult.Should().NotBeNull();
+            redirectResult.Url.Should().Be(expectedUrl);
         }
     }
 }

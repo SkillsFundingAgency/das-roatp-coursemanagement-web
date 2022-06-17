@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-caption-xl">Check your record</div>
+        <div class="govuk-caption-xl">Manage a standard</div>
         <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
         <table class="govuk-table" aria-label="Coure details">
             <tbody class="govuk-table__body">
@@ -117,8 +117,6 @@
         </p>
     </div>
 </div>
-
-
 <div class="govuk-grid-row govuk-!-margin-top-8" style="display:@(Model.IsStandardRegulated ?" display" :"none")">
     <div class="govuk-grid-column-two-thirds">
 
@@ -142,7 +140,7 @@
                         Approved
                     </th>
                     <td class="govuk-table__cell">
-                        Unknown
+                        @Model.ApprovedByRegulatorStatus()
                     </td>
                     <td class="govuk-table__cell">
                         <a href="@Model.ConfirmRegulatedStandardUrl" aria-describedby="change-approved-regulator" class="govuk-link">
@@ -152,7 +150,6 @@
                 </tr>
             </tbody>
         </table>
-        <br />
         <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
     </div>
 </div>

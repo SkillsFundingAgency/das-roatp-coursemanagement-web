@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ConfirmRegulat
     [TestFixture]
     public class ValidateIsApprovedByRegulatorTests
     {
-        private const string IsApprovedByRegulatorErrorMessage = "Select Yes or No";
+        private const string IsApprovedByRegulatorErrorMessage = "Tell us if you have been approved by the regulator";
         [Test]
         public void WhenNull_ProducesValidatonError()
         {

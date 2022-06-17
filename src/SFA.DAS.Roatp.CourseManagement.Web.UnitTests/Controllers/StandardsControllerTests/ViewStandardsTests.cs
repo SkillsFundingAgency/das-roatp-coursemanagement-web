@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 CourseName = "test1",
                 Level = 1,
                 IsImported = true,
-                ApprovalBody = "TestBoby1"
+                ApprovalBody = "TestBody1"
             };
             var standard2 = new Standard
             {
@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 CourseName = "test2",
                 Level = 2,
                 IsImported = false,
-                ApprovalBody = "TestBoby1"
+                ApprovalBody = "TestBody1"
             };
             response.Add(standard1);
             response.Add(standard2);
@@ -123,6 +123,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.Should().NotBeNull();
             model.BackUrl.Should().Be(verifyUrl);
             model.Standards.First().StandardUrl.Should().Be(verifyStandardUrl);
+            model.Standards.First().IsRegulatedStandard.Should().BeTrue();
             model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(confirmRegulatedStandardUrl);
         }
 

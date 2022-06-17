@@ -4,10 +4,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
+using System.Net;
 using System.Threading.Tasks;
 
 
@@ -48,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
             else
             {
-                model.BackLink = model.CancelLink = Request.GetTypedHeaders().Referer.ToString();
+                model.BackLink = model.CancelLink = model.RefererLink = Request.GetTypedHeaders().Referer.ToString();
             }
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
@@ -56,14 +58,30 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.PostConfirmRegulatedStandard)]
         [HttpPost]
-        public IActionResult SubmitConfirmRegulatedStandard(ConfirmRegulatedStandardViewModel model)
+        public async Task<IActionResult> UpdateApprovedByRegulator(ConfirmRegulatedStandardViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
             }
 
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
+            if(!model.IsRegulatedStandard)
+            {
+                return Redirect($"Error/{HttpStatusCode.NotFound}");
+            }
+
+            var command = (UpdateApprovedByRegulatorCommand)model;
+            command.Ukprn = Ukprn;
+            command.LarsCode = model.LarsCode;
+            command.UserId = UserId;
+
+            await _mediator.Send(command);
+
+            if (!model.IsApprovedByRegulator.Value)
+            {
+                return View("~/Views/ShutterPages/RegulatedStandardSeekApproval.cshtml", model);
+            }
+            return Redirect(model.RefererLink);
         }
     }
 }
