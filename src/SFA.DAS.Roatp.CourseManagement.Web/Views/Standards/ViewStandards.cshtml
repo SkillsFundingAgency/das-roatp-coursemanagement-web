@@ -24,22 +24,22 @@
             <tbody class="govuk-table__body">
                 @foreach (var standard in Model.Standards)
                 {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <a class="govuk-link" href="@standard.StandardUrl">
-                                @standard.CourseDisplayName
-                            </a>
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            @if (standard.IsApprovalPending)
-                            {
-                                <a class="govuk-link" href="@standard.ConfirmRegulatedStandardUrl">Regulator's approval needed<span class="govuk-visually-hidden"> for @standard.CourseDisplayName</span></a>
-                            }
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            @standard.Version
-                        </td>
-                    </tr>
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        <a class="govuk-link" href="@standard.StandardUrl">
+                            @standard.CourseDisplayName
+                        </a>
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                    @if (standard.IsApprovalPending)
+                    {
+                        <a class="govuk-link" href="@standard.ConfirmRegulatedStandardUrl">Regulator's approval needed<span class="govuk-visually-hidden"> for @standard.CourseDisplayName</span></a>
+                    }
+                    </td>
+                    <td class="govuk-table__cell govuk-table__cell--numeric">
+                        @standard.Version
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
