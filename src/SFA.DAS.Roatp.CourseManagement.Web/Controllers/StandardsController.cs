@@ -81,6 +81,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model.ConfirmRegulatedStandardUrl = model.IsStandardRegulated ? Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
 
+            model.EditRegionsUrl = Url.RouteUrl(RouteNames.GetRegions, new { Ukprn, larsCode });
+
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }
     }

@@ -1,0 +1,45 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model RegionsViewModel
+@{
+    ViewBag.Title = "Employer locations";
+}
+
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+        <div class="govuk-caption-xl">Add a standard</div>
+        <h1 class="govuk-heading-xl">Where can you deliver this training?</h1>
+        <form method="post" asp-route="" enctype="multipart/form-data" novalidate>
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            @foreach (var region in Model.Regions())
+            {
+                <h3 class="govuk-heading-m">@region.Key</h3>
+                <ul class="govuk-list govuk-grid-row">
+                    @foreach (var location in region.OrderBy(x => x.RegionName))
+                    {
+                        <li class="govuk-grid-column-one-half">
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="region" name="region" type="checkbox" value="carcasses">
+                                <label class="govuk-label govuk-checkboxes__label" for="region">
+                                    @location.SubregionName
+                                </label>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            }
+            <div class="govuk-button-group">
+                <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Save and continue
+                </button>
+                <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+

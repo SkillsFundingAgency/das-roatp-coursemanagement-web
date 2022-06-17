@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System.Collections.Generic;
 using System.Linq;
@@ -75,7 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
-
+        public string EditRegionsUrl { get; set; }
         public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
         {
             return new StandardDetailsViewModel
