@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
@@ -8,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
         public EditLocationOptionViewModelValidator()
         {
             RuleFor(m => m.LocationOption)
-                .NotNull()
+                .NotEqual(LocationOption.None)
                 .WithMessage("Select where you will deliver this standard");
         }
     }

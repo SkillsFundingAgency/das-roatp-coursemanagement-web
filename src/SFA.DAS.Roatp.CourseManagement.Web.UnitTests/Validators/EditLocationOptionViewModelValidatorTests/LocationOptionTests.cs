@@ -6,10 +6,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditLocationOptionViewModelValidatorTests
 {
     [TestFixture]
-    internal class LocationOptionTests
+    public class LocationOptionTests
     {
         [Test]
-        public void WhenNull_ReturnsValidationError()
+        public void WhenNone_ReturnsValidationError()
         {
             var sut = new EditLocationOptionViewModelValidator();
 
