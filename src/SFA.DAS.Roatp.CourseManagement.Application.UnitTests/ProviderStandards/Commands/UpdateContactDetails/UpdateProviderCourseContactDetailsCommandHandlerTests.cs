@@ -11,7 +11,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
+namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Commands.UpdateContactDetails
 {
     [TestFixture]
     public class UpdateProviderCourseContactDetailsCommandHandlerTests
