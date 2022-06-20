@@ -1,6 +1,5 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -22,9 +21,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public bool? IsApprovedByRegulator { get; set; }
         public List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
 
-        public bool HasProviderLocation => ProviderCourseLocations.Any(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
-        public bool HasNationalLocation => ProviderCourseLocations.Any(l => l.LocationType == Domain.ApiModels.LocationType.National);
-        public bool HasRegionalLocation => ProviderCourseLocations.Any(l => l.LocationType == Domain.ApiModels.LocationType.Regional);
+        public bool HasProviderLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Provider);
+        public bool HasNationalLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.National);
+        public bool HasRegionalLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Regional);
 
         public LocationOption LocationOption 
         {
