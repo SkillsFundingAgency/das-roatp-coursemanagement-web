@@ -2,6 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
@@ -26,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string contactUsEmail = "me@test.com";
             const string contactUsPageUrl = "http://test.com/contact-us";
 
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 CourseName = courseName,
                 LarsCode = larsCode,
@@ -105,7 +106,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             providerCourseLocations.AddRange(subregionLocations);
             providerCourseLocations.Add(nationalLocation);
 
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -121,7 +122,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         public void ImplicitOperator_NoCourseLocations_ConvertsLocationSummaryToNoneSet()
         {
             var providerCourseLocations = new List<ProviderCourseLocation>();
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -144,7 +145,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                     LocationType = locationType
                 }
             };
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 ProviderCourseLocations = courseLocations
             };
@@ -170,7 +171,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 }
             };
 
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -196,7 +197,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 }
             };
 
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -249,7 +250,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 }
             };
 
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -276,7 +277,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         public void ImplicitOperator_ConvertsFromStandardDetails(bool? isApprovedByRegulator, string approvedByRegulatorStatus)
         {
             const string regulatorName = "Test regulator";
-            var standardDetails = new StandardDetails
+            var standardDetails = new GetStandardDetailsQueryResult
             {
                 RegulatorName = regulatorName,
                 IsApprovedByRegulator = isApprovedByRegulator

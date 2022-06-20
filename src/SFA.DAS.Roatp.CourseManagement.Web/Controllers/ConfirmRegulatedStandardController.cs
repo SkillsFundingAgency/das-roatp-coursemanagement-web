@@ -36,14 +36,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn, larsCode));
 
-            if (result?.StandardDetails == null)
+            if (result == null)
             {
                 var message = $"Standard details not found for ukprn {ukprn} and larscode {larsCode}";
                 _logger.LogError(message);
                 throw new InvalidOperationException(message);
             }
 
-            var model = (ConfirmRegulatedStandardViewModel)result.StandardDetails;
+            var model = (ConfirmRegulatedStandardViewModel)result;
             if (Request.GetTypedHeaders().Referer == null)
             {
                 model.BackLink = model.CancelLink = "#";

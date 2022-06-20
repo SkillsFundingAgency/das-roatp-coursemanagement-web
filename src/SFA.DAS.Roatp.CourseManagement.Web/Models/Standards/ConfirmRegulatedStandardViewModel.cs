@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
@@ -14,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string BackLink { get; set; }
         public string CancelLink { get; set; }
         public string RefererLink { get; set; }
-        public static implicit operator ConfirmRegulatedStandardViewModel(StandardDetails source)
+        public static implicit operator ConfirmRegulatedStandardViewModel(GetStandardDetailsQueryResult source)
         {
             return new ConfirmRegulatedStandardViewModel
             {

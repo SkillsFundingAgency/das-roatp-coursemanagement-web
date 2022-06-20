@@ -17,7 +17,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         private Mock<IApiClient> _apiClient;
         private Mock<ILogger<GetStandardDetailsQueryHandler>> _logger;
         private GetStandardDetailsQuery _query;
-        private GetStandardDetailsQueryResult _queryResult;
         private Domain.ApiModels.StandardDetails _standardDetails;
 
         [SetUp]
@@ -26,9 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             var autoFixture = new Fixture();
 
             _query = autoFixture.Create<GetStandardDetailsQuery>();
-            _queryResult = autoFixture.Create<GetStandardDetailsQueryResult>();
             _standardDetails = autoFixture.Create<Domain.ApiModels.StandardDetails>();
-            _queryResult.StandardDetails = _standardDetails;
             _apiClient = new Mock<IApiClient>();
             _logger = new Mock<ILogger<GetStandardDetailsQueryHandler>>();
         }
@@ -41,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 
             var result = await _handler.Handle(_query, CancellationToken.None);
             result.Should().NotBeNull();
-            result.StandardDetails.Should().BeEquivalentTo(_queryResult.StandardDetails);
+            result.Should().BeEquivalentTo(_standardDetails);
         }
 
         [Test]

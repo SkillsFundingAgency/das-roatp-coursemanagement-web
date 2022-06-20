@@ -1,8 +1,8 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     public class ConfirmRegulatedStandardViewModelTests
     {
         [Test, AutoData]
-        public void ImplicitOperatorForApiModel_ReturnsViewModel(StandardDetails standard)
+        public void ImplicitOperatorForApiModel_ReturnsViewModel(GetStandardDetailsQueryResult standard)
         {
             var vm = (ConfirmRegulatedStandardViewModel)standard;
 

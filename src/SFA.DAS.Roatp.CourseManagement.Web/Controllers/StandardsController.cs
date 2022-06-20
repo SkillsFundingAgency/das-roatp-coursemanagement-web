@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 throw new InvalidOperationException();
             }
 
-            var standardDetails = result.StandardDetails;
+            var standardDetails = result;
 
             var model = (StandardDetailsViewModel)standardDetails;
             model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new

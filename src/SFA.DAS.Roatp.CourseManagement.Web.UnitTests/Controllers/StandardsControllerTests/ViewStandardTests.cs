@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _logger = new Mock<ILogger<StandardsController>>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn.ToString()), }, "mock"));
 
-            var response = new StandardDetails
+            var response = new GetStandardDetailsQueryResult
             {
                 CourseName = "test1",
                 Level = "1",
@@ -57,10 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             
             _mediator = new Mock<IMediator>();
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => new GetStandardDetailsQueryResult
-                {
-                    StandardDetails = response
-                });
+                .ReturnsAsync(response);
 
             _controller = new StandardsController(_mediator.Object, _logger.Object)
             {
@@ -128,16 +125,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_ResponseIncludesRegulator()
         {
-            var response = new StandardDetails
+            var response = new GetStandardDetailsQueryResult
             {
                 RegulatorName = Regulator,
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(() => new GetStandardDetailsQueryResult
-                {
-                    StandardDetails = response
-                });
+                .ReturnsAsync(response);
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn.ToString()), }, "mock"));
 
             _controller = new StandardsController(_mediator.Object, _logger.Object)
