@@ -9,7 +9,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
+namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Queries.GetStandardDetails
 {
     public class GetStandardDetailsQueryHandlerTests
     {
