@@ -8,7 +8,7 @@ using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
 {
-    public static class AddServiceRegistraionsExtension
+    public static class AddServiceRegistrationsExtension
     {
         public static void AddServiceRegistrations(this IServiceCollection services, IConfiguration configuration)
         {
