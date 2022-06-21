@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
         }
 
         [Test]
-        public void HasProviderAndRegionalLocations_ReturnsEmployer()
+        public void HasProviderAndRegionalLocations_ReturnsBoth()
         {
             _sut.ProviderCourseLocations.Remove(_nationalLocation);
 

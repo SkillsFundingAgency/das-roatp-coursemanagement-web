@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCo
 
         public async Task<Unit> Handle(DeleteCourseLocationsCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Command triggered to delete regional locations for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
+            _logger.LogInformation("Command triggered to delete course locations for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
 
             var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/bulk-delete-course-locations", request);
 
