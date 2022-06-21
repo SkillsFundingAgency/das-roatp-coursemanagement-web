@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards

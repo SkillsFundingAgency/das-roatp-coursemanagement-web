@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator
 {
     public class UpdateApprovedByRegulatorCommandHandler : IRequestHandler<UpdateApprovedByRegulatorCommand, Unit>
     {
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApp
         {
             _logger.LogInformation("Update approved by regulator standard information request for ukprn:{ukprn} LarsCode:{larscode}", command.Ukprn, command.LarsCode);
 
-            var statusCode = await _apiClient.Post<UpdateApprovedByRegulatorCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator", command);
+            var statusCode = await _apiClient.Post($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-approved-by-regulator", command);
 
             if (statusCode != System.Net.HttpStatusCode.NoContent)
             {
