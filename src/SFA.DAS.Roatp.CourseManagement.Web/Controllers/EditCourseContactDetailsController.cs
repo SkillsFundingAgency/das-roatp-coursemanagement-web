@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
-            if (result == null || result == null)
+            if (result == null)
             {
                 _logger.LogError("Standard details not found for ukprn {ukprn} and larscode {larsCode}", Ukprn, larsCode);
                 throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
