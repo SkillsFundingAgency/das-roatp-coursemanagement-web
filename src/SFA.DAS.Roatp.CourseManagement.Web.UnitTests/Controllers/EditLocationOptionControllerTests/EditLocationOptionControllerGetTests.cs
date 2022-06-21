@@ -1,40 +1,19 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests
 {
     [TestFixture]
-    public class EditLocationOptionControllerGetTests
+    public class EditLocationOptionControllerGetTests : EditLocationOptionControllerTestBase
     {
-        private Mock<ILogger<EditLocationOptionController>> _loggerMock;
-        private Mock<IMediator> _mediatorMock;
-        private EditLocationOptionController _sut;
-
-        [SetUp]
-        public void Before_Each_Test()
-        {
-            _loggerMock = new Mock<ILogger<EditLocationOptionController>>();
-            _mediatorMock = new Mock<IMediator>();
-
-            _sut = new EditLocationOptionController(_mediatorMock.Object, _loggerMock.Object);
-            _sut
-                .AddDefaultContextWithUser()
-                .AddDefaultUrlMock(RouteNames.ViewStandardDetails);
-        }
-
         [Test, AutoData]
         public async Task Get_BackLinkIsSetToStandardDetails()
         {
@@ -45,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().BeNull();
+            model.LocationOption.Should().Be(LocationOption.None);
             model.BackLink.Should().Be(TestConstants.DefaultUrl);
         }
 
@@ -59,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().BeNull();
+            model.LocationOption.Should().Be(LocationOption.None);
             model.CancelLink.Should().Be(TestConstants.DefaultUrl);
         }
 
@@ -73,7 +52,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().BeNull();
+            model.LocationOption.Should().Be(LocationOption.None);
+        }
+
+        [Test]
+        public async Task Get_DeletesLocationOptionFromSession()
+        {
+            SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
+
+            await _sut.Index(123);
+
+            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedLocationOption));
         }
 
         [Test]
@@ -158,17 +147,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
             model.LocationOption.Should().Be(LocationOption.EmployerLocation);
-        }
-
-        private void SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations)
-        {
-            var standardDetails = new StandardDetails()
-            {
-                ProviderCourseLocations = providerCourseLocations
-            };
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetStandardDetailsQueryResult { StandardDetails = standardDetails });
         }
     }
 }

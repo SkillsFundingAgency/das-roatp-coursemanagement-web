@@ -3,13 +3,15 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Queries;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System.Collections.Generic;
-using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
@@ -19,12 +21,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<EditLocationOptionController> _logger;
-        private int LarsCode;
+        private readonly ISessionService _sessionService;
 
-        public EditLocationOptionController(IMediator mediator, ILogger<EditLocationOptionController> logger)
+        public EditLocationOptionController(IMediator mediator, ILogger<EditLocationOptionController> logger, ISessionService sessionService)
         {
             _mediator = mediator;
             _logger = logger;
+            _sessionService = sessionService;
         }
 
         [HttpGet]
@@ -32,18 +35,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [ClearSession(SessionKeys.SelectedLocationOption)]
         public async Task<IActionResult> Index([FromRoute] int larsCode)
         {
-            LarsCode = larsCode;
             var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
             var model = new EditLocationOptionViewModel();
-            model.LocationOption = GetLocationOption(result.StandardDetails.ProviderCourseLocations);
+            model.LocationOption = result.LocationOption;
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is set to {locationOption}", Ukprn, larsCode, model.LocationOption);
             model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
+
+            _sessionService.Delete(SessionKeys.SelectedLocationOption);
+
             return View(model);
         }
 
         [HttpPost]
         [Route("{ukprn}/standards/{larsCode}/edit-location-option", Name = RouteNames.PostLocationOption)]
-        public IActionResult Index([FromRoute] int larsCode, EditLocationOptionViewModel model)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, EditLocationOptionViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -51,31 +56,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View(model);
             }
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {locationOption}", Ukprn, larsCode, model.LocationOption);
-            HttpContext.Session.SetString(SessionKeys.SelectedLocationOption, model.LocationOption.ToString());
-            return View(model);
-        }
 
-        private LocationOption? GetLocationOption(List<Domain.ApiModels.ProviderCourseLocation> providerCourseLocations)
-        {
-            if (!providerCourseLocations.Any()) return null;
-
-            var hasProviderLocation = providerCourseLocations.Any(l => l.LocationType == Domain.ApiModels.LocationType.Provider);
-            var hasNationalLocation = providerCourseLocations.Any(l => l.LocationType == Domain.ApiModels.LocationType.National);
-            var hasRegionalLocation = providerCourseLocations.Any(l => l.LocationType == Domain.ApiModels.LocationType.Regional);
-
-            _logger.LogInformation($"Locations for Ukprn:{Ukprn} LarsCode:{LarsCode} HasProviderLocation:{hasProviderLocation} HasNationalLocation:{hasNationalLocation} HasRegionalLocation:{hasRegionalLocation}");
-
-            if (hasNationalLocation && hasRegionalLocation)
+            switch (model.LocationOption)
             {
-                _logger.LogWarning("Ukprn:{Ukprn} LarsCode:{LarsCode} has both National and Regional locations", Ukprn, LarsCode);
+                case LocationOption.ProviderLocation:
+                case LocationOption.EmployerLocation:
+                    var deleteOption = 
+                        model.LocationOption == LocationOption.ProviderLocation ? 
+                        DeleteProviderCourseLocationOption.DeleteEmployerLocations :
+                        DeleteProviderCourseLocationOption.DeleteProviderLocations;
+                    var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, deleteOption);
+                    await _mediator.Send(command);
+                    break;
+                default:
+                    break;
             }
 
-            if (hasProviderLocation && !hasNationalLocation && !hasRegionalLocation)
-                return LocationOption.ProviderLocation;
-            else if (!hasProviderLocation && (hasNationalLocation || hasRegionalLocation))
-                return LocationOption.EmployerLocation;
-            else
-                return LocationOption.Both;
+            _sessionService.Set(SessionKeys.SelectedLocationOption, model.LocationOption.ToString());
+            return View(model);
         }
     }
 }
