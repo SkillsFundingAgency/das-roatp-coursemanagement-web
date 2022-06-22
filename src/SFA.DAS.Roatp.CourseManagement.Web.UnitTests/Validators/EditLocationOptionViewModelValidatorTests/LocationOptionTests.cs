@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditLocationOp
 
             var result = sut.TestValidate(model);
 
-            result.ShouldHaveValidationErrorFor(c => c.LocationOption).WithErrorMessage("Select where you will deliver this standard");
+            result.ShouldHaveValidationErrorFor(c => c.LocationOption).WithErrorMessage(EditLocationOptionViewModelValidator.NoneSelectedErrorMessage);
         }
     }
 }

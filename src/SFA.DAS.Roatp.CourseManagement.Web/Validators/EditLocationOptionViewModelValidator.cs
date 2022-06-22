@@ -6,11 +6,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
     public class EditLocationOptionViewModelValidator : AbstractValidator<EditLocationOptionViewModel>
     {
+        public const string NoneSelectedErrorMessage = "Select where you will deliver this standard";
+
         public EditLocationOptionViewModelValidator()
         {
             RuleFor(m => m.LocationOption)
                 .NotEqual(LocationOption.None)
-                .WithMessage("Select where you will deliver this standard");
+                .WithMessage(NoneSelectedErrorMessage);
         }
     }
 }
