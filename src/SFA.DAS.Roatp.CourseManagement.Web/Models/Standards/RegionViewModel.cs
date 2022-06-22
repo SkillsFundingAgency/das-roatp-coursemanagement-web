@@ -7,8 +7,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public int Id { get; set; }
         public string SubregionName { get; set; }
         public string RegionName { get; set; }
-        public decimal? Latitude { get; set; }
-        public decimal? Longitude { get; set; }
         public bool IsSelected { get; set; }
 
         public static implicit operator RegionViewModel(Region source)
@@ -18,8 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 Id = source.Id,
                 SubregionName = source.SubregionName,
                 RegionName = source.RegionName,
-                Latitude = source.Latitude,
-                Longitude = source.Longitude,
+                IsSelected = source.IsSelected
             };
         }
     }

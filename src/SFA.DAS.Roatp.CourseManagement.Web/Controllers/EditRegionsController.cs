@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using System;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -23,29 +25,54 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _mediator = mediator;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/regions", Name = RouteNames.GetRegions)]
+        [Route("{ukprn}/standards/{larsCode}/regional-locations", Name = RouteNames.GetSubRegions)]
         [HttpGet]
-        public async Task<IActionResult> GetAllRegions()
+        public async Task<IActionResult> GetAllRegions(int larsCode)
         {
-            _logger.LogInformation("Getting All Regions");
-
-            var result = await _mediator.Send(new GetAllRegionsQuery());
-
-            var model = new RegionsViewModel
+            _logger.LogInformation("Getting All Sub Regions");
+            var model = await BuildRegionsViewModel(larsCode);
+            if(model == null)
             {
-                BackUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {ukprn = Ukprn})
-            };
+                _logger.LogError("Sub Regions not found");
+                return Redirect($"Error/{HttpStatusCode.NotFound}");
+            }
+            return View("~/Views/Standards/EditRegions.cshtml", model);
+        }
 
+        private async Task<RegionsViewModel> BuildRegionsViewModel(int larsCode)
+        {
+            var result = await _mediator.Send(new GetAllRegionsQuery(Ukprn, larsCode));
 
             if (result == null)
             {
-                _logger.LogInformation("Regions not found");
-                return Redirect($"Error/{HttpStatusCode.NotFound}");
+                _logger.LogError("Sub Regions not found");
+                return null;
             }
 
-            model.AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList();
+            RegionsViewModel model = new RegionsViewModel();
+            model.BackUrl = model.CancelLink = Url.RouteUrl(RouteNames.ViewStandardDetails, new { Ukprn, larsCode });
 
-            return View("~/Views/Standards/EditRegions.cshtml", model);
+            model.AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList();
+            return model;
+        }
+
+        [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostSubRegions)]
+        [HttpPost]
+        public async Task<IActionResult> UpdateSubRegions(RegionsViewModel model, string[] SubRegions)
+        {
+            if (!SubRegions.Any())
+            {
+                model = await BuildRegionsViewModel(model.LarsCode);
+                return View("~/Views/Standards/EditRegions.cshtml", model);
+            }
+
+            //var command = (UpdateProviderCourseContactDetailsCommand)model;
+            //command.Ukprn = Ukprn;
+            //command.UserId = UserId;
+
+            //await _mediator.Send(command);
+
+            return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
         }
     }
 }

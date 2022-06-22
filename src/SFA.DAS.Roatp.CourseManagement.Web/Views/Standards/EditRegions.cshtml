@@ -13,8 +13,10 @@
         <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
         <div class="govuk-caption-xl">Add a standard</div>
         <h1 class="govuk-heading-xl">Where can you deliver this training?</h1>
-        <form method="post" asp-route="" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.PostSubRegions" enctype="multipart/form-data" novalidate data="@Model">
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+            <input type="hidden" asp-for="BackUrl" />
+            <input type="hidden" asp-for="CancelLink" />
             @foreach (var region in Model.Regions())
             {
                 <h3 class="govuk-heading-m">@region.Key</h3>
@@ -23,8 +25,8 @@
                     {
                         <li class="govuk-grid-column-one-half">
                             <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="region" name="region" type="checkbox" value="carcasses">
-                                <label class="govuk-label govuk-checkboxes__label" for="region">
+                                <input class="govuk-checkboxes__input" id="@location.Id" name="SubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
+                                <label class="govuk-label govuk-checkboxes__label" for="SubRegions" asp-for="@location.SubregionName">
                                     @location.SubregionName
                                 </label>
                             </div>

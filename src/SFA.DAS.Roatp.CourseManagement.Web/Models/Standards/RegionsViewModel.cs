@@ -1,10 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
     public class RegionsViewModel
     {
+        [FromRoute]
+        public int LarsCode { get; set; }
         public List<RegionViewModel> AllRegions { get; set; }
         public IEnumerable<IGrouping<string, RegionViewModel>> Regions()
            {
