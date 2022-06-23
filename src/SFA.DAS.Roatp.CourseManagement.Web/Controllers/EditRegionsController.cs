@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -66,11 +67,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/Standards/EditRegions.cshtml", model);
             }
 
-            //var command = (UpdateProviderCourseContactDetailsCommand)model;
-            //command.Ukprn = Ukprn;
-            //command.UserId = UserId;
+            var command = (UpdateSubRegionsCommand)model;
+            command.Ukprn = Ukprn;
+            command.UserId = UserId;
+            command.SelectedSubRegions = SubRegions;
 
-            //await _mediator.Send(command);
+            await _mediator.Send(command);
 
             return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
         }
