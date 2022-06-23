@@ -18,7 +18,7 @@
 
             <div esfa-validation-marker-for="LocationOption" class="govuk-form-group">
                 <span asp-validation-for="LocationOption" class="govuk-error-message"></span>
-                <div class="govuk-radios" data-module="govuk-radios">
+                <div id="LocationOption" class="govuk-radios" data-module="govuk-radios">
                   <div class="govuk-radios__item">
                     <input asp-for="LocationOption" id="ProviderLocationOption" class="govuk-radios__input" type="radio" value="ProviderLocation" data-aria-controls="conditional-provider">
                     <label class="govuk-label govuk-radios__label" for="ProviderLocationOption">
