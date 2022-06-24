@@ -64,6 +64,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (!SubRegions.Any())
             {
                 model = await BuildRegionsViewModel(model.LarsCode);
+                model.SelectedSubRegions = null;
+                model.AllRegions.ForEach(s => s.IsSelected = false);
                 return View("~/Views/Standards/EditRegions.cshtml", model);
             }
 

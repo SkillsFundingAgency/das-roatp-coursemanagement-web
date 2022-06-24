@@ -17,30 +17,33 @@
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             <input type="hidden" asp-for="BackUrl" />
             <input type="hidden" asp-for="CancelLink" />
-            @foreach (var region in Model.Regions())
-            {
-                <h3 class="govuk-heading-m">@region.Key</h3>
-                <ul class="govuk-list govuk-grid-row">
-                    @foreach (var location in region.OrderBy(x => x.RegionName))
-                    {
-                        <li class="govuk-grid-column-one-half">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="@location.Id" name="SubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
-                                <label class="govuk-label govuk-checkboxes__label" for="SubRegions" asp-for="@location.SubregionName">
-                                    @location.SubregionName
-                                </label>
-                            </div>
-                        </li>
-                    }
-                </ul>
-                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            }
-            <div class="govuk-button-group">
-                <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
-                    Save and continue
-                </button>
-                <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            <div class="govuk-form-group" esfa-validation-marker-for="SelectedSubRegions">
+                <span class="govuk-error-message" asp-validation-for="SelectedSubRegions"></span>
             </div>
+                @foreach (var region in Model.Regions())
+                {
+                    <h3 class="govuk-heading-m">@region.Key</h3>
+                    <ul class="govuk-list govuk-grid-row">
+                        @foreach (var location in region.OrderBy(x => x.RegionName))
+                        {
+                            <li class="govuk-grid-column-one-half">
+                                <div class="govuk-checkboxes__item">
+                                    <input class="govuk-checkboxes__input" id="SelectedSubRegions" name="SubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
+                                    <label class="govuk-label govuk-checkboxes__label" for="SubRegions" asp-for="@location.SubregionName">
+                                        @location.SubregionName
+                                    </label>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                }
+                <div class="govuk-button-group">
+                    <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                        Save and continue
+                    </button>
+                    <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                </div>
         </form>
     </div>
 </div>

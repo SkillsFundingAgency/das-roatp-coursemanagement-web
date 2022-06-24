@@ -16,6 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 .GroupBy(x => x.RegionName)
                 .OrderBy(x=>x.Key);
            }
+        public string[] SelectedSubRegions { get; set; } 
         public string BackUrl { get; set; }
         public string CancelLink { get; set; }
 
