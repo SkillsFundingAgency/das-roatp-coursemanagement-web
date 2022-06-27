@@ -14,8 +14,6 @@ using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
-using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -131,8 +129,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddHealthChecks();
             services.AddDataProtection(_configuration);
 
-            ConfigureHttpClient(services);
-
             services.AddSession(options =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(10);
@@ -144,26 +140,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
             services.AddLogging();
+
+            services.AddServiceRegistrations(_configuration);
+            
 #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 #endif
-        }
-
-        private void ConfigureHttpClient(IServiceCollection services)
-        {
-            var handlerLifeTime = TimeSpan.FromMinutes(5);
-            services.AddHttpClient<IApiClient, ApiClient>(config =>
-            {
-                var configuration = _configuration
-                    .GetSection(nameof(RoatpCourseManagementOuterApi))
-                    .Get<RoatpCourseManagementOuterApi>();
-
-                config.BaseAddress = new Uri(configuration.BaseUrl);
-                config.DefaultRequestHeaders.Add("Accept", "application/json");
-                config.DefaultRequestHeaders.Add("X-Version", "1");
-                config.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", configuration.SubscriptionKey);
-            })
-           .SetHandlerLifetime(handlerLifeTime);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -206,9 +188,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             });
 
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {

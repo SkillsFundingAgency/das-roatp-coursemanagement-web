@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
 
         public async Task<Unit> Handle(UpdateProviderCourseContactDetailsCommand command, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Update provider course information request for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", command.Ukprn, command.LarsCode, command.UserId);
+            _logger.LogInformation("Command triggered to update provider course information for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", command.Ukprn, command.LarsCode, command.UserId);
 
             var statusCode = await _apiClient.Post($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-contact-details", command);
 

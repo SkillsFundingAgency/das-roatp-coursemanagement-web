@@ -1,4 +1,4 @@
-﻿using System;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System.Collections.Generic;
@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
+        public string EditLocationOptionUrl { get; set; }
         public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
 
         public List<ProviderCourseLocationViewModel> SubRegionCourseLocations { get; set; }
@@ -76,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
 
-        public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
+        public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
         {
             return new StandardDetailsViewModel
             {
