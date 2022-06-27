@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
 {
+    [ExcludeFromCodeCoverage]
     public class ApiClient : IApiClient
     {
         protected const string _contentType = "application/json";

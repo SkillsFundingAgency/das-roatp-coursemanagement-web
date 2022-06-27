@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.Standard.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -36,14 +36,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn, larsCode));
 
-            if (result?.StandardDetails == null)
+            if (result == null)
             {
                 var message = $"Standard details not found for ukprn {ukprn} and larscode {larsCode}";
                 _logger.LogError(message);
                 throw new InvalidOperationException(message);
             }
 
-            var model = (ConfirmRegulatedStandardViewModel)result.StandardDetails;
+            var model = (ConfirmRegulatedStandardViewModel)result;
             if (Request.GetTypedHeaders().Referer == null)
             {
                 model.BackLink = model.CancelLink = "#";

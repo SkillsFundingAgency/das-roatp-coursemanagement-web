@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models
@@ -26,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
                 ContactUsPhoneNumber = model.ContactUsPhoneNumber
             };
 
-        public static implicit operator EditCourseContactDetailsViewModel(StandardDetails standardDetails) =>
+        public static implicit operator EditCourseContactDetailsViewModel(GetStandardDetailsQueryResult standardDetails) =>
             new EditCourseContactDetailsViewModel
             {
                 ContactUsEmail = standardDetails.ContactUsEmail,

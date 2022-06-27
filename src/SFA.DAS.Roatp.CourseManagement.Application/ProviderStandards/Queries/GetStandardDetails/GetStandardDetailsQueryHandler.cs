@@ -25,10 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 return null;
             }
 
-            return new GetStandardDetailsQueryResult
-            {
-                StandardDetails = standardDetails
-            };
+            return standardDetails;
         }
     }
 }
