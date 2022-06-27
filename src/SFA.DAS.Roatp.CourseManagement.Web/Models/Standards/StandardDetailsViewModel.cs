@@ -77,9 +77,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
 
-        public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
         public string EditRegionsUrl { get; set; }
-        public static implicit operator StandardDetailsViewModel(StandardDetails standardDetails)
+        public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
         {
             return new StandardDetailsViewModel
             {
