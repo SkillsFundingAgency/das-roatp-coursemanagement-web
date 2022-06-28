@@ -46,8 +46,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             if (result == null)
             {
-                _logger.LogError("Sub Regions not found");
-                return null;
+                var message = $"Sub Regions not found";
+                _logger.LogError(message);
+                throw new InvalidOperationException(message);
             }
 
             RegionsViewModel model = new RegionsViewModel();
