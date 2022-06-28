@@ -59,6 +59,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var roatpCourseManagementConfiguration = _configuration
+                .GetSection(nameof(RoatpCourseManagement))
+                .Get<RoatpCourseManagement>();
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -73,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddMediatR(typeof(GetAllProviderStandardsQueryHandler).Assembly);
 
-            services.AddAuthorizationServicePolicies();
+            services.AddAuthorizationServicePolicies(roatpCourseManagementConfiguration.AllowedUkprns);
 
             if (_configuration["StubProviderAuth"] != null && _configuration["StubProviderAuth"].Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -81,9 +85,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             }
             else
             {
-                var providerConfig = _configuration
-                    .GetSection(nameof(ProviderIdams))
-                    .Get<ProviderIdams>();
+                var providerConfig = _configuration.GetSection(nameof(ProviderIdams)).Get<ProviderIdams>();
                 services.AddAndConfigureProviderAuthentication(providerConfig);
             }
 
@@ -98,7 +100,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 }
-
             })
             .SetDefaultNavigationSection(NavigationSection.Home)
             /// .EnableGoogleAnalytics()
@@ -116,13 +117,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             }
             else
             {
-                var configuration = _configuration
-                    .GetSection(nameof(RoatpCourseManagement))
-                    .Get<RoatpCourseManagement>();
-
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = configuration.RedisConnectionString;
+                    options.Configuration = roatpCourseManagementConfiguration.RedisConnectionString;
                 });
             }
 
