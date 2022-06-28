@@ -26,8 +26,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegio
             var regions = await _apiClient.Get<List<Region>>($"regions");
             if (regions == null)
             {
-                _logger.LogError("All Regions not found");
-                throw new ValidationException("All Regions not found", null);
+                var message = "All Regions not found";
+                _logger.LogError(message);
+                throw new ValidationException(message);
             }
 
             _logger.LogInformation("Get Standards details request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn, request.LarsCode);
