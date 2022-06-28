@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -73,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var command = (UpdateSubRegionsCommand)model;
             command.Ukprn = Ukprn;
             command.UserId = UserId;
-            command.SelectedSubRegions = SubRegions;
+            command.SelectedSubRegions = SubRegions.Select(subregion => int.Parse(subregion)).ToList();
 
             await _mediator.Send(command);
 
