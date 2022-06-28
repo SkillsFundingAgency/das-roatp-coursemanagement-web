@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.Authorization.ProviderFeatures.Configuration;
+using SFA.DAS.Authorization.ProviderFeatures.DependencyResolution.Microsoft;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
@@ -63,6 +68,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 .GetSection(nameof(RoatpCourseManagement))
                 .Get<RoatpCourseManagement>();
 
+            var providerFeaturesConfiguration = _configuration
+                .GetSection(nameof(ProviderFeaturesConfiguration))
+                .Get<ProviderFeaturesConfiguration>();
+
+            services.AddSingleton(providerFeaturesConfiguration);
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -77,7 +88,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddMediatR(typeof(GetAllProviderStandardsQueryHandler).Assembly);
 
-            services.AddAuthorizationServicePolicies(roatpCourseManagementConfiguration.AllowedUkprns);
+            services.AddAuthorizationServicePolicies();
 
             if (_configuration["StubProviderAuth"] != null && _configuration["StubProviderAuth"].Equals("true", StringComparison.CurrentCultureIgnoreCase))
             {
@@ -91,11 +102,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
+            services.AddAuthorization<AuthorizationContextProvider>();
+            services.AddProviderFeaturesAuthorization();
+
             services.Configure<RouteOptions>(options =>
             {
                 options.LowercaseUrls = true;
             }).AddMvc(options =>
             {
+                options.AddAuthorization();
                 if (!_configuration.IsDev())
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
@@ -110,6 +125,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 fv.RegisterValidatorsFromAssemblyContaining<Startup>();
                 fv.ImplicitlyValidateChildProperties = true;
             });
+
+            services.AddHttpContextAccessor();
 
             if (_configuration.IsDev() || _configuration.IsLocal())
             {

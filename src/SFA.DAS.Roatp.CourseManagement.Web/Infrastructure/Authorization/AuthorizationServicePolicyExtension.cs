@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
         private const string ProviderDac = "DAC";
         private const string ProviderDav = "DAV";
 
-        public static void AddAuthorizationServicePolicies(this IServiceCollection services, string[] allowedUkprns)
+        public static void AddAuthorizationServicePolicies(this IServiceCollection services)
         {
             services.AddAuthorization(options =>
             {
@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
                     , policy =>
                     {
                         policy.RequireAuthenticatedUser();
-                        policy.RequireClaim(ProviderClaims.ProviderUkprn, allowedUkprns);
+                        policy.RequireClaim(ProviderClaims.ProviderUkprn);
                         policy.RequireClaim(ProviderClaims.Service, ProviderDaa, ProviderDab, ProviderDac, ProviderDav);
                         policy.Requirements.Add(new ProviderUkPrnRequirement());
                     });
