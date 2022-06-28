@@ -7,6 +7,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.Configuration
     {
         public string RedisConnectionString { get; set; }
         public string DataProtectionKeysDatabase { get; set; }
-        public string[] AllowedUkprns { get; set; }
     }
 }
