@@ -20,11 +20,11 @@
             <div class="govuk-form-group" esfa-validation-marker-for="SelectedSubRegions">
                 <span class="govuk-error-message" asp-validation-for="SelectedSubRegions"></span>
             </div>
-                @foreach (var region in Model.Regions())
+                @foreach (var region in Model.Regions)
                 {
                     <h3 class="govuk-heading-m">@region.Key</h3>
                     <ul class="govuk-list govuk-grid-row">
-                        @foreach (var location in region.OrderBy(x => x.RegionName))
+                        @foreach (var location in region.Value.OrderBy(x => x.RegionName))
                         {
                             <li class="govuk-grid-column-one-half">
                                 <div class="govuk-checkboxes__item">

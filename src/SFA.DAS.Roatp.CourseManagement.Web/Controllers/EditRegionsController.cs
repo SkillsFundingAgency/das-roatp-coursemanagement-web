@@ -55,6 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             model.BackUrl = model.CancelLink = Url.RouteUrl(RouteNames.ViewStandardDetails, new { Ukprn, larsCode });
 
             model.AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList();
+            model.Regions = model.AllRegions.GroupBy(x => x.RegionName).OrderBy(x => x.Key).ToDictionary(a=>a.Key, b=>b.ToList());
             return model;
         }
 

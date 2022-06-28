@@ -10,12 +10,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         [FromRoute]
         public int LarsCode { get; set; }
         public List<RegionViewModel> AllRegions { get; set; }
-        public IEnumerable<IGrouping<string, RegionViewModel>> Regions()
-           {
-           return AllRegions
-                .GroupBy(x => x.RegionName)
-                .OrderBy(x=>x.Key);
-           }
+        public Dictionary<string, List<RegionViewModel>> Regions
+        {
+            get;set;
+        }
+        //{
+        //    return AllRegions
+        //         .GroupBy(x => x.RegionName)
+        //         .OrderBy(x => x.Key);
+        //}
         public string[] SelectedSubRegions { get; set; } 
         public string BackUrl { get; set; }
         public string CancelLink { get; set; }
@@ -24,6 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
           new UpdateSubRegionsCommand
           {
               LarsCode = model.LarsCode,
+
           };
     }
 }
