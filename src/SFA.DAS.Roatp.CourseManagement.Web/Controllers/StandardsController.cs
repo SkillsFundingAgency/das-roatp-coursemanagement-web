@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
@@ -12,7 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NLog.LayoutRenderers.Wrappers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -75,10 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var standardDetails = result;
 
             var model = (StandardDetailsViewModel)standardDetails;
-            model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new
-            {
-                ukprn = Ukprn,
-            });
+            model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn });
             
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
             model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });

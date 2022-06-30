@@ -23,33 +23,40 @@
                     <th class="govuk-table__header" scope="col"> Email address</th>
                     <th class="govuk-table__header" scope="col"> Telephone number</th>
                     <th class="govuk-table__header" scope="col"> Postcode</th>
+                    <th class="govuk-table__header" scope="col"> </th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
                 @foreach (var location in Model.ProviderLocations)
                 {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
 
-                            @location.LocationName
+                        @location.LocationName
 
-                        </td>
-                        <td class="govuk-table__cell">
+                    </td>
+                    <td class="govuk-table__cell">
 
-                            @location.Email
+                        @location.Email
 
-                        </td>
-                        <td class="govuk-table__cell">
+                    </td>
+                    <td class="govuk-table__cell">
 
-                            @location.Phone
+                        @location.Phone
 
-                        </td>
-                        <td class="govuk-table__cell">
+                    </td>
+                    <td class="govuk-table__cell">
 
-                            @location.Postcode
+                        @location.Postcode
 
-                        </td>
-                    </tr>
+                    </td>
+                    <td class="govuk-table__cell">
+
+                        <a href="@location.RemoveUrl" class="govuk-link govuk-link--no-visited-state">
+                            Remove
+                        </a>
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
