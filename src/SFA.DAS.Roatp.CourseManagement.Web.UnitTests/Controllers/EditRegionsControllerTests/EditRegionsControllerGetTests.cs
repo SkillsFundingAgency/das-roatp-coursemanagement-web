@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
+using System.Net;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -86,6 +87,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
             model.Should().NotBeNull();
             model.BackUrl.Should().Be(DetailsUrl);
             model.CancelLink.Should().Be(DetailsUrl);
+        }
+        [Test, AutoData]
+        public async Task Get_ValidRequestNoRegions_RedirectToNotFoundPage(
+           GetAllRegionsQueryResult queryResult,
+           int larsCode)
+        {
+            queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.Region>();
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetAllRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var expectedUrl = $"Error/{HttpStatusCode.NotFound}";
+            var result = await _sut.GetAllRegions(larsCode);
+
+            var redirectResult = result as RedirectResult;
+            redirectResult.Should().NotBeNull();
+            redirectResult.Url.Should().Be(expectedUrl);
         }
 
         [Test, AutoData]

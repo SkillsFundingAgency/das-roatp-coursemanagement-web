@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             _logger.LogInformation("Getting All Sub Regions");
             var model = await BuildRegionsViewModel(larsCode);
-            if(model == null)
+            if(!model.AllRegions.Any())
             {
                 _logger.LogError("Sub Regions not found");
                 return Redirect($"Error/{HttpStatusCode.NotFound}");

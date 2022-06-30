@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
         
         [Test]
-        public async Task Handle_ValidApiRequest_ReturnsValidResponse()
+        public async Task Handle_ValidApiRequest_ReturnsValidResponseNoSelectRegions()
         {
             var regions = new List<Region> { _regionalLocation };
             _apiClient.Setup(x => x.Get<List<Region>>($"regions")).ReturnsAsync(regions);
@@ -44,6 +44,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 
             result.Should().NotBeNull();
             result.Regions.Should().BeEquivalentTo(regions);
+            result.Regions.TrueForAll(a => a.IsSelected).Should().BeFalse();
+        }
+
+        [Test]
+        public async Task Handle_ValidApiRequest_ReturnsValidResponseWithSelectedRegions()
+        {
+            var regions = new List<Region> { _regionalLocation };
+            _apiClient.Setup(x => x.Get<List<Region>>($"regions")).ReturnsAsync(regions);
+            var standardDetails = new StandardDetails { ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { LocationName = regions[0].RegionName, LocationType = LocationType.Regional } } };
+            _apiClient.Setup(x => x.Get<StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).ReturnsAsync(standardDetails);
+
+            var result = await _handler.Handle(_query, CancellationToken.None);
+
+            result.Should().NotBeNull();
+            result.Regions.Should().BeEquivalentTo(regions);
+            result.Regions.FindAll(a => a.IsSelected).Count.Should().Be(1);
         }
 
         [Test]
