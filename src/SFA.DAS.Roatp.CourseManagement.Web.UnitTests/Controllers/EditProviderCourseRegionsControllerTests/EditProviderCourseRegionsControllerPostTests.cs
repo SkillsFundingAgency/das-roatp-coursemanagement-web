@@ -84,7 +84,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
                 .ReturnsAsync(queryResult);
             model.SelectedSubRegions = null;
             var result =  await _sut.UpdateStandardSubRegions(model);
-
+            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("EditProviderCourseRegions.cshtml");
