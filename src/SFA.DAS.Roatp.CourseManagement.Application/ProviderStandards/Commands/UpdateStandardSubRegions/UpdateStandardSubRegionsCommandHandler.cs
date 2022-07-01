@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateStandardSubRegions
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions
 {
     public class UpdateStandardSubRegionsCommandHandler : IRequestHandler<UpdateStandardSubRegionsCommand, Unit>
     {

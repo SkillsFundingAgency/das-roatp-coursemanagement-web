@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateStandardSubRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
 using System.Collections.Generic;
 using System.Linq;
 

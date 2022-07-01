@@ -9,7 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllStandardRegions
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions
 {
     public class GetAllStandardRegionsQueryHandler : IRequestHandler<GetAllStandardRegionsQuery, GetAllStandardRegionsQueryResult>
     {

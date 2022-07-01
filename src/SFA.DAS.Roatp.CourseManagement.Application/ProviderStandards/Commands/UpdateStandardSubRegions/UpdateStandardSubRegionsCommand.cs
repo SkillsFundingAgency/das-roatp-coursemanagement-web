@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateStandardSubRegions
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions
 {
     public class UpdateStandardSubRegionsCommand : IRequest
     {
