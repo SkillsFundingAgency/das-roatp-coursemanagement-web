@@ -59,7 +59,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
         public async Task Post_ValidModel_SendsUpdateCommand(RegionsViewModel model)
         {
             string[] selectedSubRegions = new string[] { "1", "2" };
-            var result =  await _sut.UpdateSubRegions(model, selectedSubRegions);
+            model.SelectedSubRegions = selectedSubRegions;
+
+            var result =  await _sut.UpdateSubRegions(model);
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
             routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
@@ -69,23 +71,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
         }
 
         [Test, AutoData]
-        public async Task Post_InValidData_RedirectToSameView(RegionsViewModel model,
-             GetAllRegionsQueryResult queryResult)
-        {
-            string[] selectedSubRegions = new string[] { };
-
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetAllRegionsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(queryResult);
-
-            var result = await _sut.UpdateSubRegions(model, selectedSubRegions);
-            var viewResult = result as ViewResult;
-            viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("EditRegions.cshtml");
-        }
-
-        [Test, AutoData]
-        public async Task Post_InValidModel_ReturnsView(RegionsViewModel model, GetAllRegionsQueryResult queryResult)
+        public async Task Post_InValidData_RedirectToSameView(RegionsViewModel model, GetAllRegionsQueryResult queryResult)
         {
             var backLink = model.BackUrl;
             var cancelLink = model.CancelLink;
@@ -93,11 +79,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
-            string[] selectedSubRegions = new string[] { };
-            var result =  await _sut.UpdateSubRegions(model, selectedSubRegions);
+            model.SelectedSubRegions = null;
+            var result =  await _sut.UpdateSubRegions(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
+            viewResult.ViewName.Should().Contain("EditRegions.cshtml");
             model.BackUrl.Should().Be(backLink);
             model.CancelLink.Should().Be(cancelLink);
         }

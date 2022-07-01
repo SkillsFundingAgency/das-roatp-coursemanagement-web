@@ -59,12 +59,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostSubRegions)]
         [HttpPost]
-        public async Task<IActionResult> UpdateSubRegions(RegionsViewModel model, string[] SubRegions)
+        public async Task<IActionResult> UpdateSubRegions(RegionsViewModel model)
         {
-            if (!SubRegions.Any())
+            if (!ModelState.IsValid)
             {
                 model = await BuildRegionsViewModel(model.LarsCode);
-                model.SelectedSubRegions = null;
                 model.AllRegions.ForEach(s => s.IsSelected = false);
                 return View("~/Views/Standards/EditRegions.cshtml", model);
             }
@@ -72,7 +71,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var command = (UpdateSubRegionsCommand)model;
             command.Ukprn = Ukprn;
             command.UserId = UserId;
-            command.SelectedSubRegions = SubRegions.Select(subregion => int.Parse(subregion)).ToList();
+            command.SelectedSubRegions = model.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList();
 
             await _mediator.Send(command);
 
