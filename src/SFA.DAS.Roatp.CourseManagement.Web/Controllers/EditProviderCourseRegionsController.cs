@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostStandardSubRegions)]
         [HttpPost]
-        public async Task<IActionResult> UpdateSubRegions(RegionsViewModel model)
+        public async Task<IActionResult> UpdateStandardSubRegions(RegionsViewModel model)
         {
             if (!ModelState.IsValid)
             {

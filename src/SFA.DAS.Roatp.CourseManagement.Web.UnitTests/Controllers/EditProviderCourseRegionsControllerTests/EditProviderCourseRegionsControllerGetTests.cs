@@ -63,6 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
 
             var result = await _sut.GetAllRegions(larsCode);
 
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as RegionsViewModel;

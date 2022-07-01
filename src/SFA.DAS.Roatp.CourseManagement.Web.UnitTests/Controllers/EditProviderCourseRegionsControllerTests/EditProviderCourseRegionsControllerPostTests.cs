@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateStandardSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllStandardRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -61,7 +62,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
             string[] selectedSubRegions = new string[] { "1", "2" };
             model.SelectedSubRegions = selectedSubRegions;
 
-            var result =  await _sut.UpdateSubRegions(model);
+            var result =  await _sut.UpdateStandardSubRegions(model);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
             routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
@@ -80,7 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
                 .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
             model.SelectedSubRegions = null;
-            var result =  await _sut.UpdateSubRegions(model);
+            var result =  await _sut.UpdateStandardSubRegions(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
