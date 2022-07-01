@@ -60,7 +60,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         [Test]
         public void ImplicitOperator_ConvertsCourseLocationsFromStandardDetails()
         {
-
             var courseLocations = new List<ProviderCourseLocation>()
             {
                 new ProviderCourseLocation

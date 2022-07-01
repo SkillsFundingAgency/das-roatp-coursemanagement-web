@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllStandardRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -17,23 +17,23 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderCourseRegionsControllerTests
 {
     [TestFixture]
-    public class EditRegionsControllerPostTests
+    public class EditProviderCourseRegionsControllerPostTests
     {
         private const string Ukprn = "10012002";
         private static string UserId = Guid.NewGuid().ToString();
         private static string DetailsUrl = Guid.NewGuid().ToString();
-        private Mock<ILogger<EditRegionsController>> _loggerMock;
+        private Mock<ILogger<EditProviderCourseRegionsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private Mock<IUrlHelper> _urlHelperMock;
-        private EditRegionsController _sut;
+        private EditProviderCourseRegionsController _sut;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<EditRegionsController>>();
+            _loggerMock = new Mock<ILogger<EditProviderCourseRegionsController>>();
             _mediatorMock = new Mock<IMediator>();
             _urlHelperMock = new Mock<IUrlHelper>();
             _urlHelperMock
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
                 "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
 
-            _sut = new EditRegionsController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object)
             {
                 Url = _urlHelperMock.Object,
                 ControllerContext = new ControllerContext
@@ -71,20 +71,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
         }
 
         [Test, AutoData]
-        public async Task Post_InValidData_RedirectToSameView(RegionsViewModel model, GetAllRegionsQueryResult queryResult)
+        public async Task Post_InValidData_RedirectToSameView(RegionsViewModel model, GetAllStandardRegionsQueryResult queryResult)
         {
             var backLink = model.BackUrl;
             var cancelLink = model.CancelLink;
             _sut.ModelState.AddModelError("key", "error");
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetAllRegionsQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
             model.SelectedSubRegions = null;
             var result =  await _sut.UpdateSubRegions(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("EditRegions.cshtml");
+            viewResult.ViewName.Should().Contain("EditProviderCourseRegions.cshtml");
             model.BackUrl.Should().Be(backLink);
             model.CancelLink.Should().Be(cancelLink);
         }

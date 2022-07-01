@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateSubRegions;
-using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateStandardSubRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllStandardRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -15,17 +15,17 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class EditRegionsController : ControllerBase
+    public class EditProviderCourseRegionsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<EditRegionsController> _logger;
-        public EditRegionsController(IMediator mediator, ILogger<EditRegionsController> logger)
+        private readonly ILogger<EditProviderCourseRegionsController> _logger;
+        public EditProviderCourseRegionsController(IMediator mediator, ILogger<EditProviderCourseRegionsController> logger)
         {
             _logger = logger;
             _mediator = mediator;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/regional-locations", Name = RouteNames.GetSubRegions)]
+        [Route("{ukprn}/standards/{larsCode}/regional-locations", Name = RouteNames.GetStandardSubRegions)]
         [HttpGet]
         public async Task<IActionResult> GetAllRegions(int larsCode)
         {
@@ -36,12 +36,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 _logger.LogError("Sub Regions not found");
                 return Redirect($"Error/{HttpStatusCode.NotFound}");
             }
-            return View("~/Views/Standards/EditRegions.cshtml", model);
+            return View("~/Views/Standards/EditProviderCourseRegions.cshtml", model);
         }
 
         private async Task<RegionsViewModel> BuildRegionsViewModel(int larsCode)
         {
-            var result = await _mediator.Send(new GetAllRegionsQuery(Ukprn, larsCode));
+            var result = await _mediator.Send(new GetAllStandardRegionsQuery(Ukprn, larsCode));
 
             if (result == null)
             {
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return model;
         }
 
-        [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostSubRegions)]
+        [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostStandardSubRegions)]
         [HttpPost]
         public async Task<IActionResult> UpdateSubRegions(RegionsViewModel model)
         {
@@ -65,10 +65,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 model = await BuildRegionsViewModel(model.LarsCode);
                 model.AllRegions.ForEach(s => s.IsSelected = false);
-                return View("~/Views/Standards/EditRegions.cshtml", model);
+                return View("~/Views/Standards/EditProviderCourseRegions.cshtml", model);
             }
 
-            var command = (UpdateSubRegionsCommand)model;
+            var command = (UpdateStandardSubRegionsCommand)model;
             command.Ukprn = Ukprn;
             command.UserId = UserId;
             command.SelectedSubRegions = model.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList();

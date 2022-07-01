@@ -3,7 +3,7 @@ using FluentAssertions;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateSubRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Commands.UpdateStandardSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System;
@@ -11,19 +11,19 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Commands.UpdateSubRegions
+namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Commands.UpdateStandardSubRegions
 {
     [TestFixture]
-    public class UpdateSubRegionsCommandHandlerTests
+    public class UpdateStandardSubRegionsCommandHandlerTests
     {
         [Test, MoqAutoData]
         public async Task Handle_OuterApiCallSuccess_ReturnsUnit(
             [Frozen] Mock<IApiClient> apiClientMock,
-            UpdateSubRegionsCommandHandler sut,
-            UpdateSubRegionsCommand command,
+            UpdateStandardSubRegionsCommandHandler sut,
+            UpdateStandardSubRegionsCommand command,
             CancellationToken cancellationToken)
         {
-            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-subregions";
+            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-standardsubregions";
             apiClientMock.Setup(c => c.Post(expectedUri, command)).ReturnsAsync(HttpStatusCode.NoContent);
 
             var result = await sut.Handle(command, cancellationToken);
@@ -35,11 +35,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
         [Test, MoqAutoData]
         public async Task Handle_OuterApiCallFails_ThrowsInvalidOperationException(
             [Frozen] Mock<IApiClient> apiClientMock,
-            UpdateSubRegionsCommandHandler sut,
-            UpdateSubRegionsCommand command,
+            UpdateStandardSubRegionsCommandHandler sut,
+            UpdateStandardSubRegionsCommand command,
             CancellationToken cancellationToken)
         {
-            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-subregions";
+            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-standardsubregions";
             apiClientMock.Setup(c => c.Post(expectedUri, command)).ReturnsAsync(HttpStatusCode.BadRequest);
 
             Func<Task> act = () => sut.Handle(command, cancellationToken);

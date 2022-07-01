@@ -9,21 +9,21 @@ using System.Threading;
 using System.Threading.Tasks;
 
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions
+namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllStandardRegions
 {
-    public class GetAllRegionsQueryHandler : IRequestHandler<GetAllRegionsQuery, GetAllRegionsQueryResult>
+    public class GetAllStandardRegionsQueryHandler : IRequestHandler<GetAllStandardRegionsQuery, GetAllStandardRegionsQueryResult>
     {
-        private readonly ILogger<GetAllRegionsQueryHandler> _logger;
+        private readonly ILogger<GetAllStandardRegionsQueryHandler> _logger;
         private readonly IApiClient _apiClient;
-        public GetAllRegionsQueryHandler(IApiClient apiClient, ILogger<GetAllRegionsQueryHandler> logger)
+        public GetAllStandardRegionsQueryHandler(IApiClient apiClient, ILogger<GetAllStandardRegionsQueryHandler> logger)
         {
             _logger = logger;
             _apiClient = apiClient;
         }
-        public async Task<GetAllRegionsQueryResult> Handle(GetAllRegionsQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllStandardRegionsQueryResult> Handle(GetAllStandardRegionsQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get All Regions request received");
-            var regions = await _apiClient.Get<List<Region>>($"regions");
+            var regions = await _apiClient.Get<List<Region>>($"lookup/regions");
             if (regions == null)
             {
                 var message = "All Regions not found";
@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegio
                 }
             }
 
-            return new GetAllRegionsQueryResult
+            return new GetAllStandardRegionsQueryResult
             {
                 Regions = regions
             };

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries.GetAllStandardRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -18,22 +18,22 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderCourseRegionsControllerTests
 {
     [TestFixture]
-    public class EditRegionsControllerGetTests
+    public class EditProviderCourseRegionsControllerGetTests
     {
         private const string Ukprn = "10012002";
         private static string DetailsUrl = Guid.NewGuid().ToString();
-        private Mock<ILogger<EditRegionsController>> _loggerMock;
+        private Mock<ILogger<EditProviderCourseRegionsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private Mock<IUrlHelper> _urlHelperMock;
-        private EditRegionsController _sut;
+        private EditProviderCourseRegionsController _sut;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<EditRegionsController>>();
+            _loggerMock = new Mock<ILogger<EditProviderCourseRegionsController>>();
             _mediatorMock = new Mock<IMediator>();
             _urlHelperMock = new Mock<IUrlHelper>();
             _urlHelperMock
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new EditRegionsController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object)
             {
                 Url = _urlHelperMock.Object,
                 ControllerContext = new ControllerContext
@@ -54,11 +54,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
 
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
-            GetAllRegionsQueryResult queryResult,
+            GetAllStandardRegionsQueryResult queryResult,
             int larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetAllRegionsQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
             var result = await _sut.GetAllRegions(larsCode);
@@ -71,11 +71,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
 
         [Test, AutoData]
         public async Task Get_ValidRequestWithReferer_ReturnsValidBackAndCancelLinks(
-           GetAllRegionsQueryResult queryResult,
+           GetAllStandardRegionsQueryResult queryResult,
            int larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetAllRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetAllStandardRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
 
@@ -90,12 +90,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
         }
         [Test, AutoData]
         public async Task Get_ValidRequestNoRegions_RedirectToNotFoundPage(
-           GetAllRegionsQueryResult queryResult,
+           GetAllStandardRegionsQueryResult queryResult,
            int larsCode)
         {
             queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.Region>();
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetAllRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetAllStandardRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
             var expectedUrl = $"Error/{HttpStatusCode.NotFound}";
@@ -110,8 +110,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditRegionsCo
         public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetAllRegionsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetAllRegionsQueryResult)null);
+                .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetAllStandardRegionsQueryResult)null);
 
             Func<Task> action = () => _sut.GetAllRegions(larsCode);
 
