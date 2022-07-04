@@ -50,11 +50,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
 
         private static Task PopulateProviderClaims(HttpContext httpContext, ClaimsPrincipal principal)
         {
-            var providerId = principal.Claims.First(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+            var ukprn = principal.Claims.First(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
             var displayName = principal.Claims.First(c => c.Type.Equals(ProviderClaims.DisplayName)).Value;
-            httpContext.Items.Add(ClaimsIdentity.DefaultNameClaimType, providerId);
+            httpContext.Items.Add(ClaimsIdentity.DefaultNameClaimType, ukprn);
             httpContext.Items.Add(ProviderClaims.DisplayName, displayName);
-            principal.Identities.First().AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, providerId));
+
+            principal.Identities.First().AddClaim(new Claim(ClaimsIdentity.DefaultNameClaimType, ukprn));
             principal.Identities.First().AddClaim(new Claim(ProviderClaims.DisplayName, displayName));
             return Task.CompletedTask;
         }

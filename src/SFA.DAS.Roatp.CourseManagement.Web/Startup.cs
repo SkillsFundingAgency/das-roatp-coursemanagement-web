@@ -9,6 +9,11 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.Authorization.Context;
+using SFA.DAS.Authorization.DependencyResolution.Microsoft;
+using SFA.DAS.Authorization.Mvc.Extensions;
+using SFA.DAS.Authorization.ProviderFeatures.Configuration;
+using SFA.DAS.Authorization.ProviderFeatures.DependencyResolution.Microsoft;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
@@ -59,6 +64,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var roatpCourseManagementConfiguration = _configuration
+                .GetSection(nameof(RoatpCourseManagement))
+                .Get<RoatpCourseManagement>();
+
+            var providerFeaturesConfiguration = _configuration
+                .GetSection(nameof(ProviderFeaturesConfiguration))
+                .Get<ProviderFeaturesConfiguration>();
+
+            services.AddSingleton(providerFeaturesConfiguration);
+
             services.Configure<CookiePolicyOptions>(options =>
             {
                 options.CheckConsentNeeded = context => true;
@@ -81,24 +96,25 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             }
             else
             {
-                var providerConfig = _configuration
-                    .GetSection(nameof(ProviderIdams))
-                    .Get<ProviderIdams>();
+                var providerConfig = _configuration.GetSection(nameof(ProviderIdams)).Get<ProviderIdams>();
                 services.AddAndConfigureProviderAuthentication(providerConfig);
             }
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
+
+            services.AddAuthorization<AuthorizationContextProvider>();
+            services.AddProviderFeaturesAuthorization();
 
             services.Configure<RouteOptions>(options =>
             {
                 options.LowercaseUrls = true;
             }).AddMvc(options =>
             {
+                options.AddAuthorization();
                 if (!_configuration.IsDev())
                 {
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 }
-
             })
             .SetDefaultNavigationSection(NavigationSection.Home)
             /// .EnableGoogleAnalytics()
@@ -110,19 +126,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 fv.ImplicitlyValidateChildProperties = true;
             });
 
+            services.AddHttpContextAccessor();
+
             if (_configuration.IsDev() || _configuration.IsLocal())
             {
                 services.AddDistributedMemoryCache();
             }
             else
             {
-                var configuration = _configuration
-                    .GetSection(nameof(RoatpCourseManagement))
-                    .Get<RoatpCourseManagement>();
-
                 services.AddStackExchangeRedisCache(options =>
                 {
-                    options.Configuration = configuration.RedisConnectionString;
+                    options.Configuration = roatpCourseManagementConfiguration.RedisConnectionString;
                 });
             }
 
