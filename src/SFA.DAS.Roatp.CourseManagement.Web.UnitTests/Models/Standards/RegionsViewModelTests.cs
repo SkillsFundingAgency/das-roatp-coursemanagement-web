@@ -20,5 +20,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 return o;
             });
         }
+
+        [Test, AutoData]
+        public void Model_ReturnsGroupedSubRegions(RegionsViewModel model)
+        {
+            model.AllRegions.Should().NotBeEmpty();
+            model.GetGroupedSubRegions().Should().NotBeEmpty();
+        }
     }
 }
