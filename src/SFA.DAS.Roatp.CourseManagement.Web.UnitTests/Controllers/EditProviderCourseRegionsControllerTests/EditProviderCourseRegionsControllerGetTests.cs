@@ -68,6 +68,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as RegionsViewModel;
             model.Should().NotBeNull();
+            model.AllRegions.Should().NotBeEmpty();
+            model.GetGroupedSubRegions().Should().NotBeEmpty();
         }
 
         [Test, AutoData]
