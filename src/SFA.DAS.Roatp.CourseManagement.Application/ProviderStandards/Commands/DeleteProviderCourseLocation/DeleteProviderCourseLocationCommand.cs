@@ -1,0 +1,20 @@
+﻿using MediatR;
+
+namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations
+{
+    public class DeleteProviderCourseLocationCommand : IRequest
+    {
+        public int Ukprn { get; }
+        public int LarsCode { get; }
+        public int ProviderCourseLocationId { get; set; }
+        public string UserId { get; set; }
+
+        public DeleteProviderCourseLocationCommand(int ukprn, int larsCode, int providerCourseLocationId, string userId)
+        {
+            Ukprn = ukprn;
+            LarsCode = larsCode;
+            ProviderCourseLocationId = providerCourseLocationId;
+            UserId = userId;
+        }
+    }
+}

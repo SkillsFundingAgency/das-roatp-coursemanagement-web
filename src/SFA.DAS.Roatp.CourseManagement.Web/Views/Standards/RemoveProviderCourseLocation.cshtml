@@ -14,7 +14,7 @@
             <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
             <div class="govuk-caption-xl">Training locations</div>
             <h1 class="govuk-heading-xl">Are you sure you want to remove this training option?</h1>
-            <form method="post" asp-route="@RouteNames.PostRemoveTrainingLocation" enctype="multipart/form-data" novalidate>
+            <form method="post" asp-route="@RouteNames.PostRemoveProviderCourseLocation" enctype="multipart/form-data" novalidate>
                 <input type="hidden" asp-for="RegulatorName" />
                 <input type="hidden" asp-for="BackLink" />
                 <input type="hidden" asp-for="CancelLink" />

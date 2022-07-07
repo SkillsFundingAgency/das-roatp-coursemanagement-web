@@ -5,6 +5,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 
     public class ProviderCourseLocationViewModel
     {
+        public int ProviderCourseLocationId { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
@@ -34,6 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         {
             return new ProviderCourseLocationViewModel
             {
+                ProviderCourseLocationId  = providerCourseLocation.ProviderCourseLocationId,
                 LocationName = providerCourseLocation.LocationName,
                 LocationType = providerCourseLocation.LocationType,
                 HasDayReleaseDeliveryOption = providerCourseLocation.HasDayReleaseDeliveryOption,
