@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providercourselocations/{id}/remove-providercourselocation", Name = RouteNames.GetRemoveProviderCourseLocation)]
         [HttpGet]
-        public async Task<IActionResult> RemoveProviderCourseLocation(int larsCode, int id)
+        public async Task<IActionResult> GetProviderCourseLocation(int larsCode, int id)
         {
             _logger.LogInformation("Getting Provider Course Location for ukprn {ukprn} ", Ukprn);
 
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return View("~/Views/Standards/RemoveProviderCourseLocation.cshtml", model);
         }
 
-        [Route("{ukprn}/standards/{larsCode}/providercourselocations/{providerCourseLocationId}/remove-providercourselocation", Name = RouteNames.PostRemoveProviderCourseLocation)]
+        [Route("{ukprn}/standards/{larsCode}/providercourselocations/{id}/remove-providercourselocation", Name = RouteNames.PostRemoveProviderCourseLocation)]
         [HttpPost]
         public async Task<IActionResult> RemoveProviderCourseLocation(RemoveProviderLocationViewModel model)
         {
