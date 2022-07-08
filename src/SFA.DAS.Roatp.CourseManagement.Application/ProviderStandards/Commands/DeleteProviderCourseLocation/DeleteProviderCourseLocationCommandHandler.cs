@@ -21,14 +21,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCo
 
         public async Task<Unit> Handle(DeleteProviderCourseLocationCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Command triggered to delete course locations for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
+            _logger.LogInformation("Command triggered to delete course location for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
 
-            var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/bulk-delete-course-locations", request);
+            var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/delete-providercourselocation/{request.Id}", request);
 
             if (statusCode != HttpStatusCode.NoContent)
             {
-                _logger.LogError("Failed to delete regional locations for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
-                var exception = new InvalidOperationException("Delete regional locations response did not come back with success code");
+                _logger.LogError("Failed to delete regional location for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
+                var exception = new InvalidOperationException("Delete regional location response did not come back with success code");
                 throw exception;
             }
 

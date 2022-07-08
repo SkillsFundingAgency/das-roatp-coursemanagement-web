@@ -25,9 +25,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _logger = logger;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/providercourselocations/{providerCourseLocationId}/remove-providercourselocation", Name = RouteNames.GetRemoveProviderCourseLocation)]
+        [Route("{ukprn}/standards/{larsCode}/providercourselocations/{id}/remove-providercourselocation", Name = RouteNames.GetRemoveProviderCourseLocation)]
         [HttpGet]
-        public async Task<IActionResult> RemoveProviderCourseLocation(int larsCode, int providerCourseLocationId)
+        public async Task<IActionResult> RemoveProviderCourseLocation(int larsCode, int id)
         {
             _logger.LogInformation("Getting Provider Course Location for ukprn {ukprn} ", Ukprn);
 
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 throw new InvalidOperationException(message);
             }
 
-            var model = (RemoveProviderLocationViewModel)result.ProviderCourseLocations.Find(l=>l.ProviderCourseLocationId == providerCourseLocationId);
+            var model = (RemoveProviderLocationViewModel)result.ProviderCourseLocations.Find(l=>l.Id == id);
             model.BackLink = model.CancelLink = GetStandardDetailsUrl(model.LarsCode);
 
             return View("~/Views/Standards/RemoveProviderCourseLocation.cshtml", model);
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 model.BackLink = model.CancelLink = GetStandardDetailsUrl(model.LarsCode);
                 return View("~/Views/Standards/RemoveProviderCourseLocation.cshtml", model);
             }
-            var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.ProviderCourseLocationId, UserId);
+            var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.Id, UserId);
             await _mediator.Send(command);
 
             return Redirect(model.BackLink);

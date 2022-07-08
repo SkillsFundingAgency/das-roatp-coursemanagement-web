@@ -2,7 +2,7 @@
 {
     public class ProviderCourseLocation
     {
-        public int ProviderCourseLocationId { get; set; }
+        public int Id { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
