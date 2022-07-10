@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             _sut
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.ViewStandardDetails);
+                .AddUrlForRoute(RouteNames.GetStandardDetails);
         }
 
         protected void SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations) => 

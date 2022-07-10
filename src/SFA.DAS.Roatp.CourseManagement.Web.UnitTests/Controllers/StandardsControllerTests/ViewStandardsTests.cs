@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             UrlRouteContext verifyRouteValues2 = null;
             urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c=>c.RouteName.Equals(RouteNames.ViewStandardDetails))
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c=>c.RouteName.Equals(RouteNames.GetStandardDetails))
                 ))
                 .Returns(verifyStandardUrl)
                 .Callback<UrlRouteContext>(c =>
@@ -86,7 +86,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 });
 
             urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ConfirmRegulatedStandard))
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetConfirmRegulatedStandard))
                 ))
                 .Returns(confirmRegulatedStandardUrl)
                 .Callback<UrlRouteContext>(c =>
@@ -133,7 +133,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             urlHelper = new Mock<IUrlHelper>();
             UrlRouteContext verifyRouteValues = null;
             urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ConfirmRegulatedStandard))
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetConfirmRegulatedStandard))
                 ))
                 .Returns((string)null)
                 .Callback<UrlRouteContext>(c =>

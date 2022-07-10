@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetLocationOption, BackLinkUrl)
-                .AddUrlForRoute(RouteNames.ViewStandardDetails, CancelLinkUrl);
+                .AddUrlForRoute(RouteNames.GetStandardDetails, CancelLinkUrl);
         }
 
         public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, LarsCode.ToString())).Returns(locationOption.ToString());

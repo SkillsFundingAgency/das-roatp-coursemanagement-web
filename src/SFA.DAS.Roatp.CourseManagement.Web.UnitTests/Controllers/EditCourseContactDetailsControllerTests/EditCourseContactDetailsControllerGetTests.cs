@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
             _sut
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.ViewStandardDetails);
+                .AddUrlForRoute(RouteNames.GetStandardDetails);
         }
 
         [Test, AutoData]

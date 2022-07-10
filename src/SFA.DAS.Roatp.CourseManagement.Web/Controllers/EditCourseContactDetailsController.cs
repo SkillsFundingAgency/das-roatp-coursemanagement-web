@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             await _mediator.Send(command);
 
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new {Ukprn, model.LarsCode });
+            return RedirectToRoute(RouteNames.GetStandardDetails, new {Ukprn, model.LarsCode });
         }
     }
 }

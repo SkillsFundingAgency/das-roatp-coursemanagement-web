@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
 
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
-            actual.RouteName.Should().Be(RouteNames.ViewStandardDetails);
+            actual.RouteName.Should().Be(RouteNames.GetStandardDetails);
             MediatorMock.Verify(m => m.Send(It.IsAny<AddNationalLocationToStandardCommand>(), It.IsAny<CancellationToken>()));
         }
 
@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
 
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
-            actual.RouteName.Should().Be(RouteNames.ViewStandardDetails);
+            actual.RouteName.Should().Be(RouteNames.GetStandardDetails);
             MediatorMock.Verify(m => m.Send(It.IsAny<AddNationalLocationToStandardCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }

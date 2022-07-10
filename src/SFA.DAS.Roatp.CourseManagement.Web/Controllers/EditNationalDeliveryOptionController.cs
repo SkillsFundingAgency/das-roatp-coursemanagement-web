@@ -54,10 +54,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (model.HasNationalDeliveryOption.GetValueOrDefault())
             {
                 await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, model.LarsCode, UserId));
-                return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
+                return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
             }
 
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode }); //TODO redirect to regions after CSP-114
+            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode }); //TODO redirect to regions after CSP-114
         }
 
         private bool IsCorrectLocationOptionSetInSession(int larsCode)
