@@ -6,6 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,12 +15,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
     [TestFixture]
     public class EditLocationOptionControllerGetTests : EditLocationOptionControllerTestBase
     {
+        private const int LarsCode = 123;
         [Test, AutoData]
         public async Task Get_BackLinkIsSetToStandardDetails()
         {
             SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -33,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -47,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -60,9 +62,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
 
-            await _sut.Index(123);
+            await _sut.Index(LarsCode);
 
-            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedLocationOption));
+            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedLocationOption, LarsCode.ToString()));
         }
 
         [Test]
@@ -71,7 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Provider } };
             SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -89,7 +91,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             };
             SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -107,7 +109,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             };
             SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -124,7 +126,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             };
             SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
@@ -141,7 +143,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             };
             SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
-            var actionResult = await _sut.Index(123);
+            var actionResult = await _sut.Index(LarsCode);
 
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);

@@ -1,0 +1,59 @@
+﻿@model EditNationalDeliveryOptionViewModel
+@{
+    ViewBag.Title = "Can you deliver this training anywhere in England";
+    ViewBag.Description = "";
+}
+
+@section breadcrumb {
+    <a href="@Model.BackLink" class="govuk-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+        <div class="govuk-caption-xl">Manage a standard</div>
+        <h1 class="govuk-heading-xl">Can you deliver this training anywhere in England?</h1>
+        <p>If you can, we will show you as a national provider on Find apprenticeship training.</p>
+
+        <nav>
+          <details class="govuk-details" data-module="govuk-details">
+              <summary class="govuk-details__summary">
+                  <span class="govuk-details__summary-text">
+                      Are you a national provider?
+                  </span>
+              </summary>
+              <div class="govuk-details__text">
+                  We expect your organisation to be able to deliver all aspects of the training for this standard at a workplace anywhere in England.
+              </div>
+              <div class="govuk-details__text">
+                  We have included nine regions that cover the entire country. If you cannot deliver this standard in all nine, then you are not a national provider.
+              </div>
+          </details>
+      </nav>
+
+        <form method="post" asp-route="@RouteNames.PostNationalDeliveryOption" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="HasNationalDeliveryOption" class="govuk-form-group">
+                <span asp-validation-for="HasNationalDeliveryOption" class="govuk-error-message"></span>
+                <div id="HasNationalDeliveryOption" class="govuk-radios" data-module="govuk-radios">
+                  <div class="govuk-radios__item">
+                    <input asp-for="HasNationalDeliveryOption" id="Yes" class="govuk-radios__input" type="radio" value="true">
+                    <label class="govuk-label govuk-radios__label" for="Yes">
+                      Yes, I can deliver training for this standard anywhere in England
+                    </label>
+                  </div>
+                  <div class="govuk-radios__item">
+                    <input asp-for="HasNationalDeliveryOption" id="No" class="govuk-radios__input" type="radio" value="false">
+                    <label class="govuk-label govuk-radios__label" for="No">
+                      No, I want to select the regions where I can deliver this
+                    </label>
+                  </div>
+                </div>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Save and continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
