@@ -16,5 +16,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostConfirmRegulatedStandard = "PostConfirmRegulatedStandard";
         public const string GetLocationOption = "GetLocationOption";
         public const string PostLocationOption = "PostLocationOption";
+        public const string GetSubRegions = "GetSubRegions";
+        public const string PostSubRegions = "PostSubRegions";
+        public const string GetProviderCourseLocations = "GetProviderCourseLocations";
+
     }
 }
