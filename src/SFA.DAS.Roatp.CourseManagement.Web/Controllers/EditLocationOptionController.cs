@@ -65,11 +65,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                     var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, deleteOption);
                     await _mediator.Send(command);
                     break;
+                case LocationOption.Both:
                 default:
                     break;
             }
-
             _sessionService.Set(SessionKeys.SelectedLocationOption, model.LocationOption.ToString());
+            if(model.LocationOption == LocationOption.ProviderLocation || model.LocationOption == LocationOption.Both)
+            {
+                return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+            }
             return View(model);
         }
     }

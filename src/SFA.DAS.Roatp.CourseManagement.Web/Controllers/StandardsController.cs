@@ -81,6 +81,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
             model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
+            model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
 
             model.ConfirmRegulatedStandardUrl = model.IsStandardRegulated ? Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
 

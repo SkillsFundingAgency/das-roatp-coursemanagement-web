@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         [FromRoute]
         public int LarsCode { get; set; }
         public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocationViewModel>();
-        public string BackLink { get; set; }
-        public string CancelLink { get; set; }
+        public string BackUrl { get; set; }
+        public string CancelUrl { get; set; }
     }
 }
