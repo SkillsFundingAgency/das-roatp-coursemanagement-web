@@ -69,7 +69,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var validatorResult = validator.Validate(model);
             if (!validatorResult.IsValid)
             {
-                ModelState.AddModelError(model.LarsCode.ToString(), validatorResult.Errors.FirstOrDefault().ErrorMessage);
                 return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
             }
 
