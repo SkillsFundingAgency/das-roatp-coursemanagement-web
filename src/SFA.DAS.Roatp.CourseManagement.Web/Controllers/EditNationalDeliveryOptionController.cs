@@ -33,6 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             if(!IsCorrectLocationOptionSetInSession(larsCode))
             {
+                _logger.LogWarning("Location option is not set in session, navigating back to the question ukprn:{ukprn} larscode: {larscode}", Ukprn, larsCode);
                 return RedirectToRoute(RouteNames.GetLocationOption, new { Ukprn, larsCode });
             }
 
@@ -48,14 +49,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             if (!ModelState.IsValid)
             {
+                _logger.LogInformation("National delivery option was not selected ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
                 return View(model);
             }
 
             if (model.HasNationalDeliveryOption.GetValueOrDefault())
             {
+                _logger.LogInformation("National delivery option selected, adding national location to ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
                 await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, model.LarsCode, UserId));
                 return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
             }
+
+            _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
 
             return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode }); //TODO redirect to regions after CSP-114
         }
