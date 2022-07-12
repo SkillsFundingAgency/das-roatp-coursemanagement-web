@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -64,9 +65,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public async Task <IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
         {
             model = await BuildViewModel(model.LarsCode);
-            if(!model.ProviderCourseLocations.Any())
+            var validator = new ProviderCourseLocationListViewModelValidator();
+            var validatorResult = validator.Validate(model);
+            if (!validatorResult.IsValid)
             {
-                ModelState.AddModelError(model.LarsCode.ToString(), "You must add a training location");
+                ModelState.AddModelError(model.LarsCode.ToString(), validatorResult.Errors.FirstOrDefault().ErrorMessage);
                 return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
             }
 

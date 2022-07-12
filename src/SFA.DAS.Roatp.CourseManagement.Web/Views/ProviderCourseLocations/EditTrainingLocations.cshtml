@@ -36,18 +36,6 @@
                             </td>
                         </tr>
                     }
-                    @*@foreach (var location in Model.ProviderCourseLocations)
-        {
-            <tr class="govuk-table__row">
-                <td class="govuk-table__cell">
-                    @location.LocationName
-                    @Html.HiddenFor(modelItem => location.LocationName)
-                </td>
-                <td class="govuk-table__cell">
-                    @location.DeliveryOption()
-                </td>
-            </tr>
-        }*@
                 </tbody>
             </table>
             <p class="govuk-body govuk-!-margin-bottom-8">
