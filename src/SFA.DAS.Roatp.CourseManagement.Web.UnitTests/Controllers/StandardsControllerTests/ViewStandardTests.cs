@@ -186,5 +186,43 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var model = viewResult.Model as StandardDetailsViewModel;
             model.EditLocationOptionUrl.Should().Be(verifyUrl);
         }
+
+        [Test]
+        public async Task ViewStandard_PopulatesEditTrainingLocationsUrl()
+        {
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.GetProviderCourseLocations)
+                )))
+                .Returns(verifyUrl);
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.EditTrainingLocationsUrl.Should().Be(verifyUrl);
+        }
+
+        [Test]
+        public async Task ViewStandard_PopulatesConfirmRegulatedStandardUrl()
+        {
+            var response = new GetStandardDetailsQueryResult
+            {
+                RegulatorName = Regulator,
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.ConfirmRegulatedStandard)
+                )))
+                .Returns(verifyUrl);
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.ConfirmRegulatedStandardUrl.Should().Be(verifyUrl);
+        }
     }
 }

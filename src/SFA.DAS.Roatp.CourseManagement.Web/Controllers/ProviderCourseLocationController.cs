@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _logger = logger;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/providercourselocations", Name = RouteNames.GetProviderCourseLocations)]
+        [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.GetProviderCourseLocations)]
         [HttpGet]
         public async Task<IActionResult> GetProviderCourseLocations([FromRoute] int larsCode)
         {
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return model;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/providercourselocations", Name = RouteNames.PostProviderCourseLocations)]
+        [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.PostProviderCourseLocations)]
         [HttpPost]
         public async Task <IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
         {
