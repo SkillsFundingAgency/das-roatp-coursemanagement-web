@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         public async Task Handle_ValidApiRequest_ReturnsValidResponse()
         {
             var providerCourseLocations = new GetProviderCourseLocationsQueryResult { ProviderCourseLocations = new List<ProviderCourseLocation> { _providerCourseLocation } };
-            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-course-locations")).ReturnsAsync(providerCourseLocations);
+            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-locations")).ReturnsAsync(providerCourseLocations);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public void Handle_InvalidApiResponse_ThrowsException()
         {
-            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-course-locations")).ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
+            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-locations")).ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
 
             Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_query, CancellationToken.None));
         }
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task Handle_NoProviderTrainingLocations_ReturnsEmptyList()
         {
-            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-course-locations")).ReturnsAsync(() => new GetProviderCourseLocationsQueryResult());
+            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-locations")).ReturnsAsync(() => new GetProviderCourseLocationsQueryResult());
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
@@ -66,7 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         public async Task Handle_NoProviderCourseLocations_ShouldReturnsEmptyList()
         {
             var getProviderCourseLocationsQueryResult = new GetProviderCourseLocationsQueryResult();
-            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-course-locations")).ReturnsAsync(getProviderCourseLocationsQueryResult);
+            _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/provider-locations")).ReturnsAsync(getProviderCourseLocationsQueryResult);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
