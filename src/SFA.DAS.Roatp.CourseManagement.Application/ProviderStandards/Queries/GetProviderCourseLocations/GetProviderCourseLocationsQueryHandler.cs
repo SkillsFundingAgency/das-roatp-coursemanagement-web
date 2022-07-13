@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -20,18 +19,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public async Task<GetProviderCourseLocationsQueryResult> Handle(GetProviderCourseLocationsQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Get provider course locations request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn, request.LarsCode);
-            var providerCourseLocations = await _apiClient.Get<List<Domain.ApiModels.ProviderCourseLocation>>($"providers/{request.Ukprn}/courses/{request.LarsCode}/provider-course-locations");
-            if (providerCourseLocations == null)
+            var providerCourseLocationsResult = await _apiClient.Get<GetProviderCourseLocationsQueryResult>($"providers/{request.Ukprn}/courses/{request.LarsCode}/locations/provider-locations");
+            if (providerCourseLocationsResult == null)
             {
                 var message = $"provider course locations not found for ukprn {request.Ukprn} and LarsCode {request.LarsCode}";
                 _logger.LogError(message);
                 throw new ValidationException(message);
             }
 
-            return new GetProviderCourseLocationsQueryResult
-            {
-                ProviderCourseLocations = providerCourseLocations
-            };
+            return providerCourseLocationsResult;
         }
     }
 }

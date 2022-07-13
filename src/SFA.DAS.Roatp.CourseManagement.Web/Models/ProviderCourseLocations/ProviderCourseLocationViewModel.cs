@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         {
             return new ProviderCourseLocationViewModel
             {
-                Id  = providerCourseLocation.Id,
+                Id = providerCourseLocation.Id,
                 LocationName = providerCourseLocation.LocationName,
                 LocationType = providerCourseLocation.LocationType,
                 HasDayReleaseDeliveryOption = providerCourseLocation.HasDayReleaseDeliveryOption,
