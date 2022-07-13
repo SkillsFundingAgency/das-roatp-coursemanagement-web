@@ -33,6 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private Mock<IUrlHelper> urlHelper;
         private const string verifyUrl = "http://test";
         private const string Regulator = "Test-Regulator";
+        string editProviderCourseRegionsUrl = "http://update-standardSubRegions";
 
         [SetUp]
         public void Before_each_test()
@@ -52,7 +53,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 StandardInfoUrl = "www.test.com",
                 ContactUsEmail = "test@test.com",
                 ContactUsPageUrl = "www.test.com/ContactUs",
-                ContactUsPhoneNumber = "123456789"
+                ContactUsPhoneNumber = "123456789",
+                ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> {new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName="Region1"} }
             };
             
             _mediator = new Mock<IMediator>();
@@ -185,6 +187,49 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
             model.EditLocationOptionUrl.Should().Be(verifyUrl);
+        }
+
+        [Test]
+        public async Task ViewStandard_PopulatesEditProviderCourseRegionsUrl()
+        {
+            var response = new GetStandardDetailsQueryResult
+            {
+                ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } }
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.GetStandardSubRegions)
+                )))
+                .Returns(editProviderCourseRegionsUrl);
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.EditProviderCourseRegionsUrl.Should().Be(editProviderCourseRegionsUrl);
+        }
+
+        [Test]
+        public async Task ViewStandard_PopulatesEditProviderCourseRegionsUrlEmpty()
+        {
+            var response = new GetStandardDetailsQueryResult();
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.GetStandardSubRegions)
+                )))
+                .Returns(editProviderCourseRegionsUrl);
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.EditProviderCourseRegionsUrl.Should().BeEmpty();
         }
 
         [Test]

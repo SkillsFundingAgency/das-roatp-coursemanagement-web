@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             var standardDetails = await _apiClient.Get<Domain.ApiModels.StandardDetails>($"providers/{request.Ukprn}/courses/{request.LarsCode}");
             if (standardDetails == null)
             {
-                _logger.LogError("Standard details not found for ukprn {request.Ukprn} and LarsCode {request.LarsCode}");
+                _logger.LogError($"Standard details not found for ukprn {request.Ukprn} and LarsCode {request.LarsCode}");
                 return null;
             }
 

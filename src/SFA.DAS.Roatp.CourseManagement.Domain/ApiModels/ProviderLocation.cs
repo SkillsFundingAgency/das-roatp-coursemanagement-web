@@ -3,6 +3,7 @@
     public class ProviderLocation
     {
         public int LocationId { get; set; }
+        public int? RegionId { get; set; }
         public string LocationName { get; set; }
         public string Postcode { get; set; }
         public string Email { get; set; }
