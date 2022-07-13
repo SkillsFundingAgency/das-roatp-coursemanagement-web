@@ -17,23 +17,23 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationsControllerTests
 {
     [TestFixture]
-    public class ProviderCourseLocationControllerPostTests
+    public class ProviderCourseLocationsControllerPostTests
     {
         private const string Ukprn = "10012002";
         private static string UserId = Guid.NewGuid().ToString();
-        private Mock<ILogger<ProviderCourseLocationController>> _loggerMock;
+        private Mock<ILogger<ProviderCourseLocationsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
-        private ProviderCourseLocationController _sut;
+        private ProviderCourseLocationsController _sut;
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<ProviderCourseLocationController>>();
+            _loggerMock = new Mock<ILogger<ProviderCourseLocationsController>>();
             _mediatorMock = new Mock<IMediator>();
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
 
-            _sut = new ProviderCourseLocationController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object)
             {
                 ControllerContext = new ControllerContext
                 {

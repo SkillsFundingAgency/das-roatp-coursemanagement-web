@@ -18,12 +18,12 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class ProviderCourseLocationController : ControllerBase
+    public class ProviderCourseLocationsController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<ProviderCourseLocationController> _logger;
+        private readonly ILogger<ProviderCourseLocationsController> _logger;
 
-        public ProviderCourseLocationController(IMediator mediator, ILogger<ProviderCourseLocationController> logger)
+        public ProviderCourseLocationsController(IMediator mediator, ILogger<ProviderCourseLocationsController> logger)
         {
             _mediator = mediator;
             _logger = logger;
