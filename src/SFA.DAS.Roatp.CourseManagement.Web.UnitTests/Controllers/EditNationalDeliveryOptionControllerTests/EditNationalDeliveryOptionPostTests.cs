@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddNationalLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -39,6 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
             actual.RouteName.Should().Be(RouteNames.GetStandardDetails);
+            MediatorMock.Verify(m => m.Send(It.Is<DeleteCourseLocationsCommand>(c => c.DeleteProviderCourseLocationOption == Domain.ApiModels.DeleteProviderCourseLocationOption.DeleteEmployerLocations), It.IsAny<CancellationToken>()));
             MediatorMock.Verify(m => m.Send(It.IsAny<AddNationalLocationToStandardCommand>(), It.IsAny<CancellationToken>()));
         }
 
@@ -52,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
 
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
-            actual.RouteName.Should().Be(RouteNames.GetStandardDetails);
+            actual.RouteName.Should().Be(RouteNames.GetStandardSubRegions);
             MediatorMock.Verify(m => m.Send(It.IsAny<AddNationalLocationToStandardCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }
