@@ -37,20 +37,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return RedirectToRoute(RouteNames.GetLocationOption, new { Ukprn, larsCode });
             }
 
-            var model = new EditNationalDeliveryOptionViewModel();
-            model.BackLink = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
-            model.CancelLink = GetStandardDetailsUrl(larsCode);
-            return View(model);
+            return View(GetModel(larsCode));
         }
 
         [HttpPost]
         [Route("{ukprn}/standards/{LarsCode}/edit-national-delivery-option", Name = RouteNames.PostNationalDeliveryOption)]
-        public async Task<IActionResult> Index(EditNationalDeliveryOptionViewModel model)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, EditNationalDeliveryOptionViewModel model)
         {
             if (!ModelState.IsValid)
             {
                 _logger.LogInformation("National delivery option was not selected ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
-                return View(model);
+                return View(GetModel(larsCode));
             }
 
             if (model.HasNationalDeliveryOption.GetValueOrDefault())
@@ -64,6 +61,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode }); //TODO redirect to regions after CSP-114
         }
+
+        private EditNationalDeliveryOptionViewModel GetModel(int larsCode) => new EditNationalDeliveryOptionViewModel
+        {
+            BackLink = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode }),
+            CancelLink = GetStandardDetailsUrl(larsCode)
+        };
 
         private bool IsCorrectLocationOptionSetInSession(int larsCode)
         {

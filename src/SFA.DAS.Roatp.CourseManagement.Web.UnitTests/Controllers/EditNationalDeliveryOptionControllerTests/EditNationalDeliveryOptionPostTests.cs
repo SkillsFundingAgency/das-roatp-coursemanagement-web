@@ -16,25 +16,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
     public class EditNationalDeliveryOptionPostTests : EditNationalDeliveryOptionControllerTestBase
     {
         [Test, AutoData]
-        public async Task Post_InvalidState_ReturnsView(EditNationalDeliveryOptionViewModel model)
+        public async Task Post_InvalidState_ReturnsView(EditNationalDeliveryOptionViewModel model, int larsCode)
         {
             SetupController();
             Sut.ModelState.AddModelError("key", "error");
 
-            var result = await Sut.Index(model);
+            var result = await Sut.Index(larsCode, model);
 
             var actual = (ViewResult)result;
 
             Assert.NotNull(actual);
+            var resultModel =  (EditNationalDeliveryOptionViewModel)actual.Model;
+
+            resultModel.BackLink.Should().Be(BackLinkUrl);
+            resultModel.CancelLink.Should().Be(CancelLinkUrl);
         }
 
         [Test, AutoData]
-        public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(EditNationalDeliveryOptionViewModel model)
+        public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(EditNationalDeliveryOptionViewModel model, int larsCode)
         {
             SetupController();
             model.HasNationalDeliveryOption = true;
 
-            var result = await Sut.Index(model);
+            var result = await Sut.Index(larsCode, model);
 
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
@@ -43,12 +47,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         }
 
         [Test, AutoData]
-        public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(EditNationalDeliveryOptionViewModel model)
+        public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(EditNationalDeliveryOptionViewModel model, int larsCode)
         {
             SetupController();
             model.HasNationalDeliveryOption = false;
 
-            var result = await Sut.Index(model);
+            var result = await Sut.Index(larsCode, model);
 
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
