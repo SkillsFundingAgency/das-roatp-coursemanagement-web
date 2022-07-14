@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                });
             urlHelper
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.ViewProviderLocations)
+                   c.RouteName.Equals(RouteNames.GetProviderLocations)
                )))
                .Returns(verifyUrl)
                .Callback<UrlRouteContext>(c =>
