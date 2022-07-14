@@ -22,9 +22,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _mediator = mediator;
         }
 
-        [Route("{ukprn}/traininglocations", Name = RouteNames.ViewProviderLocations)]
+        [Route("{ukprn}/manage-training-locations", Name = RouteNames.ViewProviderLocations)]
         [HttpGet]
-        public async Task<IActionResult> GetProvidersTrainingLocation()
+        public async Task<IActionResult> GetProvidersTrainingLocations()
         {
             _logger.LogInformation("Getting Provider Locations for {ukprn}", Ukprn);
 
@@ -32,7 +32,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = new ProviderLocationListViewModel
             {
-                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new {ukprn = Ukprn})
+                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn = Ukprn }),
+                AddTrainingLocationLink = Url.RouteUrl(RouteNames.GetTrainingLocationPostcode, new { ukprn = Ukprn })
             };
 
 
