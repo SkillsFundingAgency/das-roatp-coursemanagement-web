@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string ProviderSignOut = "provider-signout";
         public const string ReviewYourDetails = "review-your-details";
         public const string ViewStandards = "standards";
-        public const string ViewProviderLocations = "traininglocations";
+        public const string GetProviderLocations = "traininglocations";
         public const string GetStandardDetails = "GetStandardDetails";
         public const string GetCourseContactDetails = "GetCourseContactDetails";
         public const string PostCourseContactDetails = "PostCourseContactDetails";
@@ -20,9 +20,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostStandardSubRegions = "PostStandardSubRegions";
         public const string GetNationalDeliveryOption = "GetNationalDeliveryOption";
         public const string PostNationalDeliveryOption = "PostNationalDeliveryOption";
-
         public const string GetProviderCourseLocations = "GetProviderCourseLocations";
         public const string PostProviderCourseLocations = "PostProviderCourseLocations";
-
+        public const string GetTrainingLocationPostcode = "GetTrainingLocationPostcode";
+        public const string PostTrainingLocationPostcode = "PostTrainingLocationPostcode";
     }
 }
