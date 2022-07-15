@@ -1,10 +1,13 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
 
     public class ProviderCourseLocationViewModel
     {
+        [FromRoute]
+        public int LarsCode { get; set; }
         public int Id { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
@@ -31,6 +34,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
             return string.Empty;
         }
         public string RemoveUrl { get; set; }
+        public string BackLink { get; set; }
+        public string CancelLink { get; set; }
         public static implicit operator ProviderCourseLocationViewModel(ProviderCourseLocation providerCourseLocation)
         {
             return new ProviderCourseLocationViewModel

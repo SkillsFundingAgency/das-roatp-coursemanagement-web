@@ -1,11 +1,11 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@model RemoveProviderLocationViewModel
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
+@model ProviderCourseLocationViewModel
 
 @{
     ViewBag.Title = "Confirm removal";
 }
 @section breadcrumb {
-<a class="govuk-back-link" href="@Model.BackLink">Back</a>
+    <a class="govuk-back-link" href="@Model.BackLink">Back</a>
 }
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -17,37 +17,22 @@
             <form method="post" asp-route="@RouteNames.PostRemoveProviderCourseLocation" enctype="multipart/form-data" novalidate>
                 <input type="hidden" asp-for="BackLink" />
                 <input type="hidden" asp-for="CancelLink" />
-                <input type="hidden" asp-for="RefererLink" />
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <table class="govuk-table" aria-describedby="ConfirmRemoveTrainingLocation">
                             <thead class="govuk-table__head">
                                 <tr class="govuk-table__row">
-                                    <th class="govuk-table__header" scope="col" colspan="3"> </th>
+                                    <th class="govuk-table__header das-table-cell-width-50" scope="col"> Venue name </th>
+                                    <th class="govuk-table__header das-table-cell-width-50" scope="col"> Delivery method</th>
                                 </tr>
                             </thead>
                             <tbody class="govuk-table__body">
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Training venue
-                                            </strong>
-                                        </span>
+                                        @Model.LocationName
                                     </td>
                                     <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Delivery method
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Portable Flexi-job Apprenticeship
-                                            </strong>
-                                        </span>
+                                        @Model.DeliveryOption()
                                     </td>
                                 </tr>
                             </tbody>
@@ -67,13 +52,13 @@
                                 </div>
                             </details>
                         </div>
-                </div>
-                <div class="govuk-button-group">
-                    <button id="SaveAndContinue" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
-                        Remove training location
-                    </button>
-                    <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
-                </div>
+                    </div>
+                    <div class="govuk-button-group">
+                        <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                            Save and continue
+                        </button>
+                        <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                    </div>
             </form>
         </div>
     </div>

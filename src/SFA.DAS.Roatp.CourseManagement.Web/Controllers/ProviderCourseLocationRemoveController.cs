@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System;
 using System.Threading.Tasks;
 
@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class RemoveProviderLocationController : ControllerBase
+    public class ProviderCourseLocationRemoveController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<RemoveProviderLocationController> _logger;
+        private readonly ILogger<ProviderCourseLocationRemoveController> _logger;
 
-        public RemoveProviderLocationController(IMediator mediator, ILogger<RemoveProviderLocationController> logger)
+        public ProviderCourseLocationRemoveController(IMediator mediator, ILogger<ProviderCourseLocationRemoveController> logger)
         {
             _mediator = mediator;
             _logger = logger;
@@ -40,21 +40,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 throw new InvalidOperationException(message);
             }
 
-            var model = (RemoveProviderLocationViewModel)result.ProviderCourseLocations.Find(l=>l.Id == id);
-            model.BackLink = model.CancelLink = GetStandardDetailsUrl(model.LarsCode);
+            var model = (ProviderCourseLocationViewModel)result.ProviderCourseLocations.Find(l=>l.Id == id);
+            model.LarsCode = larsCode;
+            model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
 
-            return View("~/Views/Standards/RemoveProviderCourseLocation.cshtml", model);
+            return View("~/Views/ProviderCourseLocations/RemoveProviderCourseLocation.cshtml", model);
         }
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation", Name = RouteNames.PostRemoveProviderCourseLocation)]
         [HttpPost]
-        public async Task<IActionResult> RemoveProviderCourseLocation(RemoveProviderLocationViewModel model)
+        public async Task<IActionResult> RemoveProviderCourseLocation(ProviderCourseLocationViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                model.BackLink = model.CancelLink = GetStandardDetailsUrl(model.LarsCode);
-                return View("~/Views/Standards/RemoveProviderCourseLocation.cshtml", model);
-            }
             var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.Id, UserId);
             await _mediator.Send(command);
 

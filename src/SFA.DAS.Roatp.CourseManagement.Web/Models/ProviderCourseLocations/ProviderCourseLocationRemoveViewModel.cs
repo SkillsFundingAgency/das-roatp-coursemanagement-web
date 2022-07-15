@@ -3,17 +3,18 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class RemoveProviderLocationViewModel
+    public class ProviderCourseLocationRemoveViewModel
     {
         [FromRoute]
         public int LarsCode { get; set; }
         public int Id { get; set; }
         public string LocationName { get; set; }
+        public string DeliveryOption { get; set; }
         public string BackLink { get; set; }
         public string CancelLink { get; set; }
-        public static implicit operator RemoveProviderLocationViewModel(ProviderCourseLocation source)
+        public static implicit operator ProviderCourseLocationRemoveViewModel(ProviderCourseLocation source)
         {
-            return new RemoveProviderLocationViewModel
+            return new ProviderCourseLocationRemoveViewModel
             {
                 Id = source.Id,
                 LocationName = source.LocationName
