@@ -1,11 +1,11 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@model ConfirmRegulatedStandardViewModel
+@model RemoveProviderLocationViewModel
 
 @{
     ViewBag.Title = "Confirm removal";
 }
 @section breadcrumb {
-<a class="govuk-back-link" href="#">Back</a>
+<a class="govuk-back-link" href="@Model.BackLink">Back</a>
 }
 <main class="govuk-main-wrapper " id="main-content" role="main">
 
@@ -15,7 +15,6 @@
             <div class="govuk-caption-xl">Training locations</div>
             <h1 class="govuk-heading-xl">Are you sure you want to remove this training option?</h1>
             <form method="post" asp-route="@RouteNames.PostRemoveProviderCourseLocation" enctype="multipart/form-data" novalidate>
-                <input type="hidden" asp-for="RegulatorName" />
                 <input type="hidden" asp-for="BackLink" />
                 <input type="hidden" asp-for="CancelLink" />
                 <input type="hidden" asp-for="RefererLink" />
@@ -73,7 +72,7 @@
                     <button id="SaveAndContinue" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
                         Remove training location
                     </button>
-                    <a id="Cancel" href="#" class="govuk-link">Cancel</a>
+                    <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
                 </div>
             </form>
         </div>

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
@@ -54,6 +55,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 ProviderCourseLocations = result.ProviderCourseLocations.Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 LarsCode = larsCode
             };
+            model.ProviderCourseLocations.ForEach(r => r.RemoveUrl = Url.RouteUrl(RouteNames.GetRemoveProviderCourseLocation, new
+            { ukprn = Ukprn, larsCode, r.Id }));
             model.BackUrl = model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
             return model;
         }
@@ -72,5 +75,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
         }
+
     }
 }
