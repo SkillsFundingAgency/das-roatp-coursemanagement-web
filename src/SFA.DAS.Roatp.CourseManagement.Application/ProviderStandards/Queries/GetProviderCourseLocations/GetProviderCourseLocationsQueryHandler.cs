@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             {
                 var message = $"provider course locations not found for ukprn {request.Ukprn} and LarsCode {request.LarsCode}";
                 _logger.LogError(message);
-                throw new ValidationException(message);
+                return new GetProviderCourseLocationsQueryResult();
             }
 
             return providerCourseLocationsResult;

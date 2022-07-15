@@ -75,20 +75,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ProviderCourseLocationListViewModel;
             model.Should().NotBeNull();
+            model.ProviderCourseLocations.Should().NotBeEmpty();
             model.BackUrl.Should().NotBeNull();
             model.CancelUrl.Should().NotBeNull();
         }
 
           [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
+        public async Task Get_InvalidRequest_ReturnsEmptyResponse(int larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
 
-            Func<Task> action = () => _sut.GetProviderCourseLocations(larsCode);
+            var result = await _sut.GetProviderCourseLocations(larsCode);
 
-            await action.Should().ThrowAsync<InvalidOperationException>();
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ProviderCourseLocationListViewModel;
+            model.Should().NotBeNull();
+            model.ProviderCourseLocations.Should().BeEmpty();
+            model.BackUrl.Should().NotBeNull();
+            model.CancelUrl.Should().NotBeNull();
         }
     }
 }

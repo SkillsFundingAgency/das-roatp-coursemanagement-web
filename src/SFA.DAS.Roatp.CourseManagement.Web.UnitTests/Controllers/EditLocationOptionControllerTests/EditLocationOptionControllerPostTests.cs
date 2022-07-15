@@ -84,17 +84,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             routeResult.Should().NotBeNull();
             routeResult.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
         }
-
-        [Test, AutoData]
-        public async Task Post_LocationOptionBoth_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
-        {
-            model.LocationOption = LocationOption.Both;
-
-            var result = await _sut.Index(123, model);
-
-            var routeResult = result as RedirectToRouteResult;
-            routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
-        }
     }
 }

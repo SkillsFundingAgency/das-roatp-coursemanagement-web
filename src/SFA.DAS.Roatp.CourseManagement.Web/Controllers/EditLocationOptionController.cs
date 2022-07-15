@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                     break;
             }
             _sessionService.Set(SessionKeys.SelectedLocationOption, model.LocationOption.ToString());
-            if(model.LocationOption == LocationOption.ProviderLocation || model.LocationOption == LocationOption.Both)
+            if(model.LocationOption == LocationOption.ProviderLocation)
             {
                 return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
             }
