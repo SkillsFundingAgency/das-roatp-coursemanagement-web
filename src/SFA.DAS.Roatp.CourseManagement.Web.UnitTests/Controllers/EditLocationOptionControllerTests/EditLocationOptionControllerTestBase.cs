@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -29,7 +30,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             _sut = new EditLocationOptionController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object);
             _sut
                 .AddDefaultContextWithUser()
-                .AddDefaultUrlMock(RouteNames.ViewStandardDetails);
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetStandardDetails);
         }
 
         protected void SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations) => 

@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
             _mediatorMock = new Mock<IMediator>();
             _urlHelperMock = new Mock<IUrlHelper>();
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ViewStandardDetails))))
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetStandardDetails))))
                .Returns(DetailsUrl);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
 
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
+            routeResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
             routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
             routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(Ukprn));
             routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(model.LarsCode);
