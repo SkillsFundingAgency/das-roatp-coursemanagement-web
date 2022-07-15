@@ -80,6 +80,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         [Test, AutoData]
         public async Task Post_InValidModel_ReturnsSameView(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
         {
+            var refererUrl = "http://test-referer-url/";
+            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+
             queryResult.ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation>();
 
             _mediatorMock
@@ -95,7 +98,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Model.Should().NotBeNull();
             var modelResult= viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
-            modelResult.BackUrl.Should().Be(verifyUrl);
+            modelResult.BackUrl.Should().Be(refererUrl);
             modelResult.CancelUrl.Should().Be(verifyUrl);
         }
     }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -8,7 +9,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,7 +54,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 ProviderCourseLocations = result.ProviderCourseLocations.Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 LarsCode = larsCode
             };
-            model.BackUrl = model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
+            if (Request.GetTypedHeaders().Referer == null)
+            {
+                model.BackUrl = "#";
+            }
+            else
+            {
+                model.BackUrl = Request.GetTypedHeaders().Referer.ToString();
+            }
+            model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
+
             return model;
         }
 

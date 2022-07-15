@@ -14,6 +14,7 @@
         <div class="govuk-caption-xl">Manage a standard</div>
         <h1 class="govuk-heading-xl">Training locations</h1>
         <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
+        <p class="govuk-body">If your training location for this standard is not showing below, use the ‘add a training location' link.</p>
         <form method="post" asp-route="@RouteNames.PostProviderCourseLocations" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.BackUrl" />
             <input type="hidden" asp-for="@Model.CancelUrl" />
