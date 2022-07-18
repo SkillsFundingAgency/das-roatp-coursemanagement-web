@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             RegionsViewModel model = new RegionsViewModel();
-            model.BackUrl = model.CancelLink = Url.RouteUrl(RouteNames.ViewStandardDetails, new { Ukprn, larsCode });
+            model.BackUrl = model.CancelLink = Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
 
             model.AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList();
             return model;
@@ -75,7 +75,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             await _mediator.Send(command);
 
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
+            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
         }
     }
 }

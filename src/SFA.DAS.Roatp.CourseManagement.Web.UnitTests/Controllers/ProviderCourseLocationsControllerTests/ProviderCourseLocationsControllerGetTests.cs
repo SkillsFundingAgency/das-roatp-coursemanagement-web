@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System;
 using System.Security.Claims;
 using System.Threading;
@@ -28,16 +29,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         private ProviderCourseLocationsController _sut;
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
+        protected Mock<ISessionService> _sessionServiceMock;
 
         [SetUp]
         public void Before_Each_Test()
         {
             _loggerMock = new Mock<ILogger<ProviderCourseLocationsController>>();
             _mediatorMock = new Mock<IMediator>();
-           
+            _sessionServiceMock = new Mock<ISessionService>();
+
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -50,7 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             UrlRouteContext verifyRouteValues = null;
             urlHelper
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.ViewStandardDetails)
+                   c.RouteName.Equals(RouteNames.GetStandardDetails)
                )))
                .Returns(verifyUrl)
                .Callback<UrlRouteContext>(c =>

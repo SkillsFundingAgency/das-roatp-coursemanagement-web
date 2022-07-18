@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
             _mediatorMock = new Mock<IMediator>();
             _urlHelperMock = new Mock<IUrlHelper>();
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ViewStandardDetails))))
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetStandardDetails))))
                .Returns(DetailsUrl);
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));

@@ -16,13 +16,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
     [TestFixture]
     public class EditLocationOptionControllerPostTests : EditLocationOptionControllerTestBase
     {
+        private const int LarsCode = 123;
+        private const int Ukprn = 10012002;
         [Test]
         public async Task Post_InvalidModel_ReturnsViewWithValidationError()
         {
             var model = new EditLocationOptionViewModel() { LocationOption = LocationOption.None };
             _sut.ModelState.AddModelError("key", "message");
 
-            var response = await _sut.Index(123, model);
+            var response = await _sut.Index(LarsCode, Ukprn, model);
 
             var result = (ViewResult)response;
 
@@ -35,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             model.LocationOption = LocationOption.ProviderLocation;
 
-            await _sut.Index(123, model);
+            await _sut.Index(LarsCode, Ukprn, model);
 
             _mediatorMock.Verify(m => m.Send(
                 It.Is<DeleteCourseLocationsCommand>(d => d.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteEmployerLocations), It.IsAny<CancellationToken>()));
@@ -46,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             model.LocationOption = LocationOption.EmployerLocation;
 
-            await _sut.Index(123, model);
+            await _sut.Index(LarsCode, Ukprn, model);
 
             _mediatorMock.Verify(m => m.Send(
                 It.Is<DeleteCourseLocationsCommand>(d => d.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteProviderLocations), It.IsAny<CancellationToken>()));
@@ -57,20 +59,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             model.LocationOption = LocationOption.Both;
 
-            await _sut.Index(123, model);
+            await _sut.Index(LarsCode, Ukprn, model);
 
             _mediatorMock.Verify(m => m.Send(
                 It.IsAny<DeleteCourseLocationsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, AutoData]
-        public async Task Post_LocationOptionProvider_SetLocationOptionInSession(EditLocationOptionViewModel model)
+        public async Task Post_LocationOptionProvider_SetsLocationOptionInSession(EditLocationOptionViewModel model)
         {
             model.LocationOption = LocationOption.ProviderLocation;
 
-            await _sut.Index(123, model);
+            await _sut.Index(LarsCode, Ukprn, model);
 
-            _sessionServiceMock.Verify(s => s.Set(SessionKeys.SelectedLocationOption, model.LocationOption.ToString()));
+            _sessionServiceMock.Verify(s => s.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption, LarsCode.ToString()));
         }
 
         [Test, AutoData]
@@ -78,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             model.LocationOption = LocationOption.ProviderLocation;
 
-            var result = await _sut.Index(123, model);
+            var result = await _sut.Index(123, Ukprn, model);
 
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();

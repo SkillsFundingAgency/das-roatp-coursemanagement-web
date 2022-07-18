@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
@@ -32,20 +33,30 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [Route("{ukprn}/standards/{larsCode}/edit-location-option", Name = RouteNames.GetLocationOption)]
         public async Task<IActionResult> Index([FromRoute] int larsCode)
         {
-            var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
             var model = new EditLocationOptionViewModel();
-            model.LocationOption = result.LocationOption;
+            var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption, larsCode.ToString());
+            if (string.IsNullOrEmpty(locationOption))
+            {
+                var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+                model.LocationOption = result.LocationOption;
+            }
+            else
+            {
+                Enum.TryParse<LocationOption>(locationOption, out var result);
+                model.LocationOption = result;
+            }
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is set to {locationOption}", Ukprn, larsCode, model.LocationOption);
+
             model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
 
-            _sessionService.Delete(SessionKeys.SelectedLocationOption);
+            _sessionService.Delete(SessionKeys.SelectedLocationOption, larsCode.ToString());
 
             return View(model);
         }
 
         [HttpPost]
         [Route("{ukprn}/standards/{larsCode}/edit-location-option", Name = RouteNames.PostLocationOption)]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, EditLocationOptionViewModel model)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, [FromRoute] int ukprn, EditLocationOptionViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -53,6 +64,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View(model);
             }
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {locationOption}", Ukprn, larsCode, model.LocationOption);
+
+            _sessionService.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption, larsCode.ToString());
 
             switch (model.LocationOption)
             {
@@ -69,12 +82,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 default:
                     break;
             }
-            _sessionService.Set(SessionKeys.SelectedLocationOption, model.LocationOption.ToString());
-            if(model.LocationOption == LocationOption.ProviderLocation)
+            if(model.LocationOption == LocationOption.ProviderLocation || model.LocationOption == LocationOption.Both)
             {
                 return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
             }
-            return View(model);
+            return RedirectToRoute(RouteNames.GetNationalDeliveryOption, new { ukprn, larsCode });
         }
     }
 }

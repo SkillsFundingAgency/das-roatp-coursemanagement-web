@@ -260,7 +260,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             urlHelper
                 .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.ConfirmRegulatedStandard)
+                    c.RouteName.Equals(RouteNames.GetConfirmRegulatedStandard)
                 )))
                 .Returns(verifyUrl);
             var result = await _controller.ViewStandard(LarsCode);

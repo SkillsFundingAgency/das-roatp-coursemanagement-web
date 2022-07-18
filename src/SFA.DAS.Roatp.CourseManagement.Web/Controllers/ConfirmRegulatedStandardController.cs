@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _logger = logger;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.ConfirmRegulatedStandard)]
+        [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.GetConfirmRegulatedStandard)]
         [HttpGet]
         public async Task<IActionResult> ConfirmRegulatedStandard([FromRoute] int larsCode)
         {
