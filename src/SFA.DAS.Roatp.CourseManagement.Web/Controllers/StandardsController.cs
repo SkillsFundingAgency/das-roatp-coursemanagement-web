@@ -50,14 +50,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             foreach (var standard in model.Standards)
             {
-                standard.StandardUrl = Url.RouteUrl(RouteNames.ViewStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
-                standard.ConfirmRegulatedStandardUrl = standard.IsRegulatedStandard ? Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
+                standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
+                standard.ConfirmRegulatedStandardUrl = standard.IsRegulatedStandard ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
         }
 
-        [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.ViewStandardDetails)]
+        [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.GetStandardDetails)]
         [HttpGet]
         [ClearSession(SessionKeys.SelectedLocationOption)]
         public async Task<IActionResult> ViewStandard(int larsCode)
@@ -79,7 +79,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
             model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
 
-            model.ConfirmRegulatedStandardUrl = model.IsStandardRegulated ? Url.RouteUrl(RouteNames.ConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
+            model.ConfirmRegulatedStandardUrl = model.IsStandardRegulated ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
+
+            model.EditProviderCourseRegionsUrl = model.SubRegionCourseLocations.Any() ? Url.RouteUrl(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode }) : string.Empty;
+
             model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
             return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
         }

@@ -2,10 +2,12 @@
 {
     public interface ISessionService
     {
-        void Delete(string key);
-        string Get(string key);
-        T Get<T>();
-        void Set(string key, string value);
-        void Set<T>(T model);
+        void Set(string value, string key, string context);
+        void Set<T>(T model, string context);
+        string Get(string key, string context);
+        T Get<T>(string context);
+        void Delete(string key, string context);
+        void Delete<T>(T model, string context);
+        void Clear();
     }
 }

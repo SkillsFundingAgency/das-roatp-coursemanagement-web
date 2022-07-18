@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             UrlRouteContext verifyRouteValues = null;
             urlHelper
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.ViewStandardDetails)
+                   c.RouteName.Equals(RouteNames.GetStandardDetails)
                )))
                .Returns(verifyUrl)
                .Callback<UrlRouteContext>(c =>
@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             var result =  await _sut.ConfirmedProviderCourseLocations(model);
             var redirectResult = result as RedirectToRouteResult;
             redirectResult.Should().NotBeNull();
-            redirectResult.RouteName.Should().Be(RouteNames.ViewStandardDetails);
+            redirectResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
             redirectResult.RouteValues["ukprn"].Should().Be(int.Parse(Ukprn));
         }
 

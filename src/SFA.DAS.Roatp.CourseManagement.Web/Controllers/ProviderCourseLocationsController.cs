@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
             }
 
-            return RedirectToRoute(RouteNames.ViewStandardDetails, new { Ukprn, model.LarsCode });
+            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
         }
 
     }

@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             UrlRouteContext verifyRouteValues = null;
             urlHelper
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.ViewStandardDetails)
+                   c.RouteName.Equals(RouteNames.GetStandardDetails)
                )))
                .Returns(verifyUrl)
                .Callback<UrlRouteContext>(c =>
