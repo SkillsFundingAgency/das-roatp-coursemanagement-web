@@ -24,5 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostProviderCourseLocations = "PostProviderCourseLocations";
         public const string GetTrainingLocationPostcode = "GetTrainingLocationPostcode";
         public const string PostTrainingLocationPostcode = "PostTrainingLocationPostcode";
+        public const string GetTrainingLocationAddress = "GetTrainingLocationAddress";
+        public const string PostTrainingLocationAddress = "PostTrainingLocationAddress";
     }
 }
