@@ -1,25 +1,25 @@
 ﻿using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations.AddProviderLocation;
-using SFA.DAS.Roatp.CourseManagement.Web.Validators;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddTrainingLocation;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ProviderLocationPostcodeViewModelValidatorTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLocation.PostcodePostModelValidatorTests
 {
     [TestFixture]
-    public class ProviderLocationPostcodeTests
+    public class PostcodeValidationTests
     {
         [TestCase("")]
         [TestCase(null)]
         [TestCase("     ")]
         public void Postcode_NullOrEmpty_IsInValid(string postcode)
         {
-            var sut = new ProviderLocationPostcodeViewModelValidator();
+            var sut = new PostcodePostModelValidator();
 
-            var result = sut.TestValidate(new ProviderLocationPostcodeViewModel() { Postcode = postcode});
+            var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
             result.IsValid.Should().BeFalse();
-            result.ShouldHaveValidationErrorFor(m => m.Postcode).WithErrorMessage(ProviderLocationPostcodeViewModelValidator.PostcodeEmptyMessage);
+            result.ShouldHaveValidationErrorFor(m => m.Postcode).WithErrorMessage(PostcodePostModelValidator.PostcodeEmptyMessage);
         }
 
         [TestCase("q")]
@@ -27,9 +27,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ProviderLocati
         [TestCase("124")]
         public void Postcode_IncorrectFormat_IsInValid(string postcode)
         {
-            var sut = new ProviderLocationPostcodeViewModelValidator();
+            var sut = new PostcodePostModelValidator();
 
-            var result = sut.TestValidate(new ProviderLocationPostcodeViewModel() { Postcode = postcode });
+            var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
             result.IsValid.Should().BeFalse();
             result.ShouldHaveValidationErrorFor(m => m.Postcode);
@@ -43,9 +43,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ProviderLocati
         [TestCase("EC1A 1BB")]
         public void Postcode_CorrectFormat_IsValid(string postcode)
         {
-            var sut = new ProviderLocationPostcodeViewModelValidator();
+            var sut = new PostcodePostModelValidator();
 
-            var result = sut.TestValidate(new ProviderLocationPostcodeViewModel() { Postcode = postcode });
+            var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
             result.IsValid.Should().BeTrue();
             result.ShouldNotHaveValidationErrorFor(m => m.Postcode);
@@ -55,9 +55,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ProviderLocati
         [TestCase("ec1a 1bb")]
         public void Postcode_CorrectFormatInMixCase_IsValid(string postcode)
         {
-            var sut = new ProviderLocationPostcodeViewModelValidator();
+            var sut = new PostcodePostModelValidator();
 
-            var result = sut.TestValidate(new ProviderLocationPostcodeViewModel() { Postcode = postcode });
+            var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
             result.IsValid.Should().BeTrue();
             result.ShouldNotHaveValidationErrorFor(m => m.Postcode);
