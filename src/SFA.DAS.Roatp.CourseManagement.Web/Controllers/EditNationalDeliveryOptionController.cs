@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddNationalLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -53,13 +55,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (model.HasNationalDeliveryOption.GetValueOrDefault())
             {
                 _logger.LogInformation("National delivery option selected, adding national location to ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
+                await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, model.LarsCode, UserId, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
                 await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, model.LarsCode, UserId));
                 return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
             }
 
             _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
 
-            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode }); //TODO redirect to regions after CSP-114
+            return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, model.LarsCode }); 
         }
 
         private EditNationalDeliveryOptionViewModel GetModel(int larsCode) => new EditNationalDeliveryOptionViewModel
