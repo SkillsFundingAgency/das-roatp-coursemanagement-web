@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -92,7 +93,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
 
-
             var result =  await _sut.ConfirmedProviderCourseLocations(model);
 
             var viewResult = result as ViewResult;
@@ -103,6 +103,26 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             modelResult.Should().NotBeNull();
             modelResult.BackUrl.Should().Be(refererUrl);
             modelResult.CancelUrl.Should().Be(verifyUrl);
+        }
+
+        [Test, AutoData]
+        public async Task Post_ValidModel_RedirectToNationalDeliveryOption(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        {
+            var refererUrl = "http://test-referer-url/";
+            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+
+            _mediatorMock
+           .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
+           .ReturnsAsync(queryResult);
+
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, model.LarsCode.ToString())).Returns(LocationOption.Both.ToString());
+            var result = await _sut.ConfirmedProviderCourseLocations(model);
+
+            var redirectResult = result as RedirectToRouteResult;
+
+            redirectResult.Should().NotBeNull();
+            redirectResult.RouteName.Should().Be(RouteNames.GetNationalDeliveryOption);
+            redirectResult.RouteValues["ukprn"].Should().Be(int.Parse(Ukprn));
         }
     }
 }
