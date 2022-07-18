@@ -3,17 +3,26 @@ using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
     public class PostcodeController : ControllerBase
     {
+        private readonly ISessionService _sessionService;
+
+        public PostcodeController(ISessionService sessionService)
+        {
+            _sessionService = sessionService;
+        }
+
         public const string ViewPath = "~/Views/AddTrainingLocation/Postcode.cshtml";
         [Route("{ukprn}/add-training-location/postcode", Name = RouteNames.GetTrainingLocationPostcode)]
         [HttpGet]
         public IActionResult GetPostcode()
         {
+            _sessionService.Delete(SessionKeys.SelectedPostcode, Ukprn.ToString());
             var model = new PostcodeViewModel();
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderLocations, new { Ukprn });
             return View(ViewPath, model);
@@ -28,7 +37,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
                 return GetPostcode();
             }
 
-            return RedirectToRoute(RouteNames.GetTrainingLocationAddress, new { Ukprn, model.Postcode });
+            _sessionService.Set(model.Postcode, SessionKeys.SelectedPostcode, Ukprn.ToString());
+            return RedirectToRoute(RouteNames.GetTrainingLocationAddress, new { Ukprn });
         }
     }
 }
