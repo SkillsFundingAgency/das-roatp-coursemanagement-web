@@ -116,7 +116,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddressController sut)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock();
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(string.Empty);
 
             var response = await sut.SelectAddress();
