@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -28,7 +29,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseLocationsController _sut;
         private Mock<IUrlHelper> urlHelper;
-        string verifyUrl = "http://test";
+        string verifyUrlGetStandardDetails = "http://test-GetStandardDetails";
+
+        string verifyUrlGetLocationOption = "http://test-GetLocationOption";
+
         protected Mock<ISessionService> _sessionServiceMock;
 
         [SetUp]
@@ -55,7 +59,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
                    c.RouteName.Equals(RouteNames.GetStandardDetails)
                )))
-               .Returns(verifyUrl)
+               .Returns(verifyUrlGetStandardDetails)
+               .Callback<UrlRouteContext>(c =>
+               {
+                   verifyRouteValues = c;
+               });
+
+            urlHelper
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                   c.RouteName.Equals(RouteNames.GetLocationOption)
+               )))
+               .Returns(verifyUrlGetLocationOption)
                .Callback<UrlRouteContext>(c =>
                {
                    verifyRouteValues = c;
@@ -64,7 +78,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task Get_ValidRequest_ReturnsView(
+        public async Task GetProviderCourseLocations_ValidRequest_ReturnsView(
             GetProviderCourseLocationsQueryResult queryResult,
             int larsCode)
         {
@@ -83,8 +97,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             model.CancelUrl.Should().NotBeNull();
         }
 
-          [Test, AutoData]
-        public async Task Get_InvalidRequest_ReturnsEmptyResponse(int larsCode)
+        [Test, AutoData]
+        public async Task GetProviderCourseLocations_InvalidRequest_ReturnsEmptyResponse(int larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -99,6 +113,71 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             model.ProviderCourseLocations.Should().BeEmpty();
             model.BackUrl.Should().NotBeNull();
             model.CancelUrl.Should().NotBeNull();
+        }
+
+        [Test, AutoData]
+        public async Task GetProviderCourseLocations_validRequestLocationOptionBoth_ReturnsBackUrlGetLocationOption(int larsCode, ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        {
+            var refererUrl = "http://test-referer-url/";
+            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, larsCode.ToString())).Returns(LocationOption.Both.ToString());
+
+            var result = await _sut.GetProviderCourseLocations(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+            modelResult.Should().NotBeNull();
+            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
+            modelResult.BackUrl.Should().Be(verifyUrlGetLocationOption);
+        }
+
+        [Test, AutoData]
+        public async Task GetProviderCourseLocations_validRequestLocationOptionProviderLocation_ReturnsBackUrlGetLocationOption(int larsCode, ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        {
+            var refererUrl = "http://test-referer-url/";
+            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, larsCode.ToString())).Returns(LocationOption.ProviderLocation.ToString());
+
+            var result = await _sut.GetProviderCourseLocations(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+            modelResult.Should().NotBeNull();
+            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
+            modelResult.BackUrl.Should().Be(verifyUrlGetLocationOption);
+        }
+
+        [Test, AutoData]
+        public async Task GetProviderCourseLocations_validRequest_ReturnsBackUrlGetLocationOption(int larsCode, ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        {
+            var refererUrl = "http://test-referer-url/";
+            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.GetProviderCourseLocations(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+            modelResult.Should().NotBeNull();
+            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
+            modelResult.BackUrl.Should().Be(verifyUrlGetStandardDetails);
         }
     }
 }
