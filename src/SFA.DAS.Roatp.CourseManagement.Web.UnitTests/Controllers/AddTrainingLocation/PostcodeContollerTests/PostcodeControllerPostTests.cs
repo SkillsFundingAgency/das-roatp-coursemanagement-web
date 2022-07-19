@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         {
             var result = (RedirectToRouteResult)_sut.SubmitPostcode(model);
 
-            _sessionServiceMock.Verify(s => s.Set(model.Postcode, SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn));
+            _sessionServiceMock.Verify(s => s.Set(model.Postcode.ToUpper(), SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn));
         }
 
 
