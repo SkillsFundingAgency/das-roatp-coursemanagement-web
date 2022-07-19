@@ -46,11 +46,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitAddress([FromForm] AddressSubmitModel model)
         {
-            if (!ModelState.IsValid) return await SelectAddress();
+            if (!ModelState.IsValid) 
+            {
+                var (isSuccess, viewModel) = await GetAddressViewModel();
+                if (!isSuccess) return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationPostcode);
+                return View(ViewPath, viewModel);
+            }
 
-            var (isSuccess, postcode, result) = await GetAddresses();
+            var (gotAddress, postcode, result) = await GetAddresses();
 
-            if (!isSuccess) return RedirectToRoute(RouteNames.GetTrainingLocationPostcode);
+            if (!gotAddress) return RedirectToRoute(RouteNames.GetTrainingLocationPostcode);
 
             var selectedAddress = result.Addresses.FirstOrDefault(a => a.Uprn == model.SelectedAddressUprn);
             if (selectedAddress == null)
