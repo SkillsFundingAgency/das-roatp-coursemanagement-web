@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostRemoveProviderCourseLocation = "PostRemoveProviderCourseLocation";
         public const string GetTrainingLocationAddress = "GetTrainingLocationAddress";
         public const string PostTrainingLocationAddress = "PostTrainingLocationAddress";
-
+        public const string GetTrainingLocationDetails = "GetTrainingLocationDetails";
 
     }
 }
