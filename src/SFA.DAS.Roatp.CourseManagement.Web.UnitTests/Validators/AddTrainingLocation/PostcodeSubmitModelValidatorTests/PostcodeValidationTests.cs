@@ -4,7 +4,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddTrainingLocation;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLocation.PostcodePostModelValidatorTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLocation.PostcodeSubmitModelValidatorTests
 {
     [TestFixture]
     public class PostcodeValidationTests
@@ -14,12 +14,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLoc
         [TestCase("     ")]
         public void Postcode_NullOrEmpty_IsInValid(string postcode)
         {
-            var sut = new PostcodePostModelValidator();
+            var sut = new PostcodeSubmitModelValidator();
 
             var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
             result.IsValid.Should().BeFalse();
-            result.ShouldHaveValidationErrorFor(m => m.Postcode).WithErrorMessage(PostcodePostModelValidator.PostcodeEmptyMessage);
+            result.ShouldHaveValidationErrorFor(m => m.Postcode).WithErrorMessage(PostcodeSubmitModelValidator.PostcodeEmptyMessage);
         }
 
         [TestCase("q")]
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLoc
         [TestCase("124")]
         public void Postcode_IncorrectFormat_IsInValid(string postcode)
         {
-            var sut = new PostcodePostModelValidator();
+            var sut = new PostcodeSubmitModelValidator();
 
             var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLoc
         [TestCase("EC1A 1BB")]
         public void Postcode_CorrectFormat_IsValid(string postcode)
         {
-            var sut = new PostcodePostModelValidator();
+            var sut = new PostcodeSubmitModelValidator();
 
             var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLoc
         [TestCase("ec1a 1bb")]
         public void Postcode_CorrectFormatInMixCase_IsValid(string postcode)
         {
-            var sut = new PostcodePostModelValidator();
+            var sut = new PostcodeSubmitModelValidator();
 
             var result = sut.TestValidate(new PostcodeSubmitModel() { Postcode = postcode });
 
