@@ -12,5 +12,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         protected int Ukprn => int.Parse(User.FindFirstValue(ProviderClaims.ProviderUkprn));
         protected string UserId => User.FindFirstValue(ProviderClaims.UserId);
         protected string GetStandardDetailsUrl(int larsCode) => Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
+        protected RedirectToRouteResult RedirectToRouteWithUkprn(string routeName) => RedirectToRoute(routeName, new { Ukprn });
     }
 }
