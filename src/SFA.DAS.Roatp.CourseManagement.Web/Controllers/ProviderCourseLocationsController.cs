@@ -1,12 +1,15 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using System;
 using System.Linq;
@@ -20,11 +23,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ProviderCourseLocationsController> _logger;
+        private readonly ISessionService _sessionService;
 
-        public ProviderCourseLocationsController(IMediator mediator, ILogger<ProviderCourseLocationsController> logger)
+        public ProviderCourseLocationsController(IMediator mediator, ILogger<ProviderCourseLocationsController> logger, ISessionService sessionService)
         {
             _mediator = mediator;
             _logger = logger;
+            _sessionService = sessionService;
         }
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.GetProviderCourseLocations)]
@@ -46,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 var message = $"Provider Course Locations not found for ukprn {Ukprn} and larscode {larsCode}";
                 _logger.LogError(message);
-                throw new InvalidOperationException(message);
+                result = new GetProviderCourseLocationsQueryResult();
             }
 
             var model = new ProviderCourseLocationListViewModel
@@ -54,9 +59,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 ProviderCourseLocations = result.ProviderCourseLocations.Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 LarsCode = larsCode
             };
-            model.ProviderCourseLocations.ForEach(r => r.RemoveUrl = Url.RouteUrl(RouteNames.GetRemoveProviderCourseLocation, new
-            { ukprn = Ukprn, larsCode, r.Id }));
-            model.BackUrl = model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
+            if (Request.GetTypedHeaders().Referer == null)
+            {
+                model.BackUrl = "#";
+            }
+            else
+            {
+                model.BackUrl = Request.GetTypedHeaders().Referer.ToString();
+            }
+            model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
+
             return model;
         }
 
@@ -72,8 +84,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
             }
 
-            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
+            var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption, model.LarsCode.ToString());
+            if ((!string.IsNullOrEmpty(sessionValue) &&
+                (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)
+                    && (locationOption == LocationOption.Both))))
+            {
+                return RedirectToRoute(RouteNames.GetNationalDeliveryOption, new { Ukprn, model.LarsCode });
+            }
+            else
+            {
+                return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
+            }
         }
-
     }
 }

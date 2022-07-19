@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using SFA.DAS.Roatp.CourseManagement.Domain;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators

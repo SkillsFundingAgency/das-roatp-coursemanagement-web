@@ -44,11 +44,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public void Handle_InvalidApiResponse_ThrowsException()
+        public async Task Handle_NullApiResponse_ReturnsEmptyResponse()
         {
             _apiClient.Setup(x => x.Get<GetProviderCourseLocationsQueryResult>($"providers/{ _query.Ukprn}/courses/{ _query.LarsCode}/locations/provider-locations")).ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
 
-            Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_query, CancellationToken.None));
+            var result = await _handler.Handle(_query, CancellationToken.None);
+            result.Should().NotBeNull();
+            result.ProviderCourseLocations.Should().BeEmpty();
         }
 
         [Test]

@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string GetProviderCourseLocations = "GetProviderCourseLocations";
         public const string PostProviderCourseLocations = "PostProviderCourseLocations";
+
         public const string GetRemoveProviderCourseLocation = "GetRemoveProviderCourseLocation";
         public const string PostRemoveProviderCourseLocation = "PostRemoveProviderCourseLocation";
 

@@ -14,6 +14,7 @@
         <div class="govuk-caption-xl">Manage a standard</div>
         <h1 class="govuk-heading-xl">Training locations</h1>
         <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
+        <p class="govuk-body">If your training location for this standard is not showing below, use the ‘add a training location' link.</p>
         <form method="post" asp-route="@RouteNames.PostProviderCourseLocations" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.BackUrl" />
             <input type="hidden" asp-for="@Model.CancelUrl" />
@@ -28,22 +29,22 @@
                 <tbody class="govuk-table__body">
                     @for (int i = 0; i < Model.ProviderCourseLocations.Count; i++)
                     {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            @Model.ProviderCourseLocations[i].LocationName
-                        </td>
-                        <td class="govuk-table__cell">
-                            @Model.ProviderCourseLocations[i].DeliveryOption()
-                        </td>
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @Model.ProviderCourseLocations[i].LocationName
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Model.ProviderCourseLocations[i].DeliveryOption()
+                            </td>
                         <td class="govuk-table__cell">
                             <a href="@Model.ProviderCourseLocations[i].RemoveUrl" class="govuk-link govuk-link--no-visited-state">
                                 Remove
                             </a>
                         </td>
-                    </tr>
+                        </tr>
                     }
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
             <p class="govuk-body govuk-!-margin-bottom-8">
                 <a href="#" class="govuk-link govuk-link--no-visited-state">Add training location</a>
             </p>

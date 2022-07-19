@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System;
 using System.Security.Claims;
 using System.Threading;
@@ -28,16 +29,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         private ProviderCourseLocationsController _sut;
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
+        protected Mock<ISessionService> _sessionServiceMock;
 
         [SetUp]
         public void Before_Each_Test()
         {
             _loggerMock = new Mock<ILogger<ProviderCourseLocationsController>>();
             _mediatorMock = new Mock<IMediator>();
-           
+            _sessionServiceMock = new Mock<ISessionService>();
+
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -75,20 +78,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ProviderCourseLocationListViewModel;
             model.Should().NotBeNull();
+            model.ProviderCourseLocations.Should().NotBeEmpty();
             model.BackUrl.Should().NotBeNull();
             model.CancelUrl.Should().NotBeNull();
         }
 
           [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
+        public async Task Get_InvalidRequest_ReturnsEmptyResponse(int larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
 
-            Func<Task> action = () => _sut.GetProviderCourseLocations(larsCode);
+            var result = await _sut.GetProviderCourseLocations(larsCode);
 
-            await action.Should().ThrowAsync<InvalidOperationException>();
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ProviderCourseLocationListViewModel;
+            model.Should().NotBeNull();
+            model.ProviderCourseLocations.Should().BeEmpty();
+            model.BackUrl.Should().NotBeNull();
+            model.CancelUrl.Should().NotBeNull();
         }
     }
 }
