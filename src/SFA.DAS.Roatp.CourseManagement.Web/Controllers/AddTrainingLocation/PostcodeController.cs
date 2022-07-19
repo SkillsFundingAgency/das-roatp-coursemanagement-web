@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
                 return GetPostcode();
             }
 
-            _sessionService.Set(model.Postcode, SessionKeys.SelectedPostcode, Ukprn.ToString());
+            _sessionService.Set(model.Postcode.ToUpper(), SessionKeys.SelectedPostcode, Ukprn.ToString());
             return RedirectToRoute(RouteNames.GetTrainingLocationAddress, new { Ukprn });
         }
     }
