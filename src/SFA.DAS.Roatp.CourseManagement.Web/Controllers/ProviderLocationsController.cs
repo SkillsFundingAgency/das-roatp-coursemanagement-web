@@ -43,10 +43,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             model.ProviderLocations = result.ProviderLocations.Select(c => (ProviderLocationViewModel)c).ToList();
-            foreach(var location in model.ProviderLocations)
-            {
-                location.RemoveUrl = Url.RouteUrl(RouteNames.GetRemoveProviderCourseLocation, new { ukprn = Ukprn, providerLocationId = location.ProviderLocationId });
-            }
             return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
         }
     }

@@ -75,9 +75,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteProviderCourseLocationCommand>(), It.IsAny<CancellationToken>()), Times.Once);
 
-            var redirectResult = result as RedirectResult;
-            redirectResult.Should().NotBeNull();
-            redirectResult.Url.Should().Be(model.BackLink);
+            var actual = (RedirectToRouteResult)result;
+            Assert.NotNull(actual);
+            actual.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
         }
     }
 }

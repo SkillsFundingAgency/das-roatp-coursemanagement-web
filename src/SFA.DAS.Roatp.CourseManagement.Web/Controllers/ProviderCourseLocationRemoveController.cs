@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 
@@ -40,10 +41,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 throw new InvalidOperationException(message);
             }
 
-            var model = (ProviderCourseLocationViewModel)result.ProviderCourseLocations.Find(l=>l.Id == id);
-            model.LarsCode = larsCode;
-            model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+            var model = new ProviderCourseLocationViewModel
+            {
+                LarsCode = larsCode
+            };
 
+            if (result.ProviderCourseLocations.Find(l => l.Id == id) != null)
+            {
+                model = (ProviderCourseLocationViewModel)result.ProviderCourseLocations.Find(l => l.Id == id);
+            }
+            model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
             return View("~/Views/ProviderCourseLocations/RemoveProviderCourseLocation.cshtml", model);
         }
 
@@ -54,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.Id, UserId);
             await _mediator.Send(command);
 
-            return Redirect(model.BackLink);
+            return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode = model.LarsCode });
         }
     }
 }

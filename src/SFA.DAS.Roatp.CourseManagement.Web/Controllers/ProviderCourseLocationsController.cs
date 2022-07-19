@@ -59,6 +59,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 ProviderCourseLocations = result.ProviderCourseLocations.Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 LarsCode = larsCode
             };
+            foreach (var location in model.ProviderCourseLocations)
+            {
+                location.RemoveUrl = Url.RouteUrl(RouteNames.GetRemoveProviderCourseLocation, new { ukprn = Ukprn, larsCode, id = location.Id });
+            }
             if (Request.GetTypedHeaders().Referer == null)
             {
                 model.BackUrl = "#";
