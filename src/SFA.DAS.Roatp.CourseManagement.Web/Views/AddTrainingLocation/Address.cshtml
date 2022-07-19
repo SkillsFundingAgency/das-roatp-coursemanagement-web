@@ -1,0 +1,37 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation
+@model AddressViewModel
+@{
+    ViewBag.Title = "Select an address";
+    ViewBag.Description = "";
+}
+@section breadcrumb {
+    <a href="@Model.BackLink" class="govuk-back-link">Back</a>
+}
+
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+            <div class="govuk-caption-xl">Add a training location</div>
+            <h1 class="govuk-heading-xl">Choose the address of this training location</h1>
+
+            <form method="post" asp-route="@RouteNames.PostTrainingLocationAddress" enctype="multipart/form-data" novalidate>
+                <label class="govuk-label govuk-label--m">
+                    Postcode
+                </label>
+                <div class="govuk-body">
+                  <span>@Model.Postcode</span>
+                  <a href="@Model.ChangeLink" class="govuk-link">Change</a>
+                </div>
+                <div class="govuk-form-group" esfa-validation-marker-for="SelectedAddressUprn">
+                    <span asp-validation-for="SelectedAddressUprn" class="govuk-error-message"></span>
+                    <select asp-for="SelectedAddressUprn" asp-items="@Model.Addresses" class="govuk-select">
+                      <option value="" disabled selected>@Model.AddressesHint</option>
+                    </select> 
+                </div>
+                <div class="govuk-button-group">
+                    <button id="submit" type="submit" class="govuk-button">Continue</button>
+                    <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                </div>
+        </form>
+    </div>
+</div>
