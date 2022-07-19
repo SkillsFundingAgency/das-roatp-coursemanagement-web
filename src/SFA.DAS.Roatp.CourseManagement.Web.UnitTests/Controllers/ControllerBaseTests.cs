@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         public void Before_Each_Test()
         {
             _testController = new TestController();
-            _testController.AddDefaultContextWithUser().AddUrlHelperMock();
+            _testController.AddDefaultContextWithUser();
         }
 
         [Test]
