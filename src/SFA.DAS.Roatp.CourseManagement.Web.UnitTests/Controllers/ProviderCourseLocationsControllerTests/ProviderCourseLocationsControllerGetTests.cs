@@ -14,7 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +32,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         string verifyUrlGetStandardDetails = "http://test-GetStandardDetails";
 
         string verifyUrlGetLocationOption = "http://test-GetLocationOption";
+
+        string verifyRemoveProviderCourseLocationUrlGet = "http://test-RemoveProviderCourseLocation";
 
         protected Mock<ISessionService> _sessionServiceMock;
 
@@ -74,6 +76,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                {
                    verifyRouteValues = c;
                });
+
+            urlHelper
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                    c.RouteName.Equals(RouteNames.GetRemoveProviderCourseLocation)
+                )))
+                .Returns(verifyRemoveProviderCourseLocationUrlGet)
+                .Callback<UrlRouteContext>(c =>
+                {
+                    verifyRouteValues = c;
+                });
+
             _sut.Url = urlHelper.Object;
         }
 
@@ -161,7 +174,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task GetProviderCourseLocations_validRequest_ReturnsBackUrlGetLocationOption(int larsCode, ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        public async Task GetProviderCourseLocations_validRequest_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
@@ -178,6 +191,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             modelResult.Should().NotBeNull();
             modelResult.ProviderCourseLocations.Should().NotBeEmpty();
             modelResult.BackUrl.Should().Be(verifyUrlGetStandardDetails);
+        }
+
+        [Test, AutoData]
+        public async Task GetProviderCourseLocations_validRequest_ReturnLocationHaveRemoveUrl(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
+        {
+            var refererUrl = "http://test-referer-url/";
+            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+
+            queryResult = new GetProviderCourseLocationsQueryResult { ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation> { new Domain.ApiModels.ProviderCourseLocation { LocationType = Domain.ApiModels.LocationType.Provider, Id = 1 } } };
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.GetProviderCourseLocations(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+            modelResult.Should().NotBeNull();
+            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
+            modelResult.ProviderCourseLocations.FirstOrDefault().RemoveUrl.Should().Be(verifyRemoveProviderCourseLocationUrlGet);
         }
     }
 }
