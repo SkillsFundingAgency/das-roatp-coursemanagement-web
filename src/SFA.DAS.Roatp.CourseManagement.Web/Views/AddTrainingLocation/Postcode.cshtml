@@ -11,8 +11,8 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
-            <div class="govuk-caption-xl">Add a training location</div>
-            <h1 class="govuk-heading-xl">What is the postcode of this training location?</h1>
+            <div class="govuk-caption-xl">Add a training venue</div>
+            <h1 class="govuk-heading-xl">What is the postcode of this training venue?</h1>
 
             <form method="post" asp-route="@RouteNames.PostTrainingLocationPostcode" enctype="multipart/form-data" novalidate>
                 <div esfa-validation-marker-for="Postcode" class="govuk-form-group">
