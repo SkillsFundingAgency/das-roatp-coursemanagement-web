@@ -1,12 +1,8 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Security.Claims;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
@@ -45,7 +41,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             result.RouteValues.TryGetValue("Ukprn", out var ukprn);
             ukprn.ToString().Should().Be(TestConstants.DefaultUkprn);
         }
-
     }
 
     public class TestController : ControllerBase
