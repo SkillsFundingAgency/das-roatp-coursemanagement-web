@@ -24,13 +24,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
         public string EditLocationOptionUrl { get; set; }
-        public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
+        public List<ProviderCourseLocations.ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
 
-        public List<ProviderCourseLocationViewModel> SubRegionCourseLocations { get; set; }
+        public List<ProviderCourseLocations.ProviderCourseLocationViewModel> SubRegionCourseLocations { get; set; }
 
-        public ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
+        public ProviderCourseLocations.ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
 
-        public IEnumerable<IGrouping<string,ProviderCourseLocationViewModel>> Regions()
+        public IEnumerable<IGrouping<string, ProviderCourseLocations.ProviderCourseLocationViewModel>> Regions()
            {
            return  SubRegionCourseLocations
                 .GroupBy(x => x.RegionName)
@@ -76,6 +76,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
+        public string EditTrainingLocationsUrl { get; set; }
 
         public string EditProviderCourseRegionsUrl { get; set; }
         public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)

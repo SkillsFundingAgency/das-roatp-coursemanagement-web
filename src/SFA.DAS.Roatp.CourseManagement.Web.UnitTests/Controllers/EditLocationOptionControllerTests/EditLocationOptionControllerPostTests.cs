@@ -74,5 +74,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
 
             _sessionServiceMock.Verify(s => s.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption, LarsCode.ToString()));
         }
+
+        [Test, AutoData]
+        public async Task Post_LocationOptionProvider_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
+        {
+            model.LocationOption = LocationOption.ProviderLocation;
+
+            var result = await _sut.Index(123, Ukprn, model);
+
+            var routeResult = result as RedirectToRouteResult;
+            routeResult.Should().NotBeNull();
+            routeResult.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
+        }
+
+        [Test, AutoData]
+        public async Task Post_LocationOptionBoth_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
+        {
+            model.LocationOption = LocationOption.Both;
+
+            var result = await _sut.Index(123, Ukprn, model);
+
+            var routeResult = result as RedirectToRouteResult;
+            routeResult.Should().NotBeNull();
+            routeResult.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
+        }
     }
 }

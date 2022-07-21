@@ -20,5 +20,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostStandardSubRegions = "PostStandardSubRegions";
         public const string GetNationalDeliveryOption = "GetNationalDeliveryOption";
         public const string PostNationalDeliveryOption = "PostNationalDeliveryOption";
+
+        public const string GetProviderCourseLocations = "GetProviderCourseLocations";
+        public const string PostProviderCourseLocations = "PostProviderCourseLocations";
+
     }
 }
