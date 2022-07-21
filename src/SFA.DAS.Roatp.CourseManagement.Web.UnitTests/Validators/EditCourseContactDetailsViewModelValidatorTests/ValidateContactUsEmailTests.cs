@@ -63,6 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
         [TestCase("q@q.q")]
         [TestCase("2@3.4")]
+        [TestCase("helpdesk@20_apprenticeships.service.gov.uk")]
         public void WhenValid_ShouldNotHaveErrorForEmail(string email)
         {
             var sut = new EditCourseContactDetailsViewModelValidator();

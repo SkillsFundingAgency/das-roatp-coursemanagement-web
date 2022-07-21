@@ -11,6 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.UnitTests.ConstantsTests.Regular
         [TestCase("a.b@c.d")]
         [TestCase("a@c.d")]
         [TestCase("1@2.3")]
+        [TestCase("helpdesk@20_apprenticeships.service.gov.uk")]
         public void EmailRegex_AllowedFormats(string input)
         {
             Regex.Match(input, RegularExpressions.EmailRegex).Success.Should().BeTrue();
