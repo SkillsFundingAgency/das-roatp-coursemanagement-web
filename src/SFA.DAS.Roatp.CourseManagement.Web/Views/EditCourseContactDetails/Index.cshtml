@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+        <partial name="_validationSummary" /> 
         <div class="govuk-caption-xl">Check your record</div>
         <h1 class="govuk-heading-xl">Your contact information for this standard</h1>
 
@@ -24,7 +24,7 @@
                     Tell us the email address for a person or team to speak to about this standard.
                 </div>
                 <span asp-validation-for="ContactUsEmail" class="govuk-error-message"></span>
-                <input asp-for="ContactUsEmail" id="ContactUsEmail" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsEmail-hint" maxlength="256">
+                <input asp-for="ContactUsEmail" id="ContactUsEmail" class="govuk-input" type="text" aria-describedby="ContactUsEmail-hint" maxlength="256">
             </div>
 
             <div class="govuk-form-group" esfa-validation-marker-for="ContactUsPhoneNumber">
@@ -46,7 +46,7 @@
                     Add a link to any ‘Contact us’ page you have on your website.
                 </div>
                 <span asp-validation-for="ContactUsPageUrl" class="govuk-error-message"></span>
-                <input asp-for="ContactUsPageUrl" id="ContactUsPageUrl" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPageUrl-hint" maxlength="500">
+                <input asp-for="ContactUsPageUrl" id="ContactUsPageUrl" class="govuk-input" type="text" aria-describedby="ContactUsPageUrl-hint" maxlength="500">
             </div>
 
             <div class="govuk-form-group" esfa-validation-marker-for="StandardInfoUrl">
@@ -57,7 +57,7 @@
                     If you have a page on your website for this standard, add the link.
                 </div>
                 <span asp-validation-for="StandardInfoUrl" class="govuk-error-message"></span>
-                <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input govuk-input--width-10" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="500">
+                <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="500">
             </div>
 
             <div class="govuk-button-group">

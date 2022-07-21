@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models
 {
@@ -17,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
         public string ContactUsPageUrl { get; set; }
         public string StandardInfoUrl { get; set; }
 
-        public static implicit operator UpdateProviderCourseContactDetailsCommand(EditCourseContactDetailsViewModel model) => 
+        public static implicit operator UpdateProviderCourseContactDetailsCommand(EditCourseContactDetailsViewModel model) =>
             new UpdateProviderCourseContactDetailsCommand
             {
                 LarsCode = model.LarsCode,
