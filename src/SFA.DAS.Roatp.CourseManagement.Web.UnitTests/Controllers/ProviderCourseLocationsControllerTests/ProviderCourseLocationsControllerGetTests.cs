@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading;
@@ -110,7 +111,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             model.CancelUrl.Should().NotBeNull();
         }
 
-        [Test, AutoData]
+          [Test, AutoData]
         public async Task GetProviderCourseLocations_InvalidRequest_ReturnsEmptyResponse(int larsCode)
         {
             _mediatorMock
