@@ -2,9 +2,9 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation
 {
-    public class TrainingLocationDetailsViewModel : TrainingLocationDetailsSubmitModel
+    public class ProviderLocationDetailsViewModel : TrainingLocationDetailsSubmitModel
     {
-        public TrainingLocationDetailsViewModel(AddressItem addressItem)
+        public ProviderLocationDetailsViewModel(AddressItem addressItem)
         {
             AddressLine1 = addressItem.AddressLine1;
             AddressLine2 = addressItem.AddressLine2;

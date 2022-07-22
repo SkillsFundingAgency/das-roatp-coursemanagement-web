@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             TempData.Add(SelectedAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-            return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationDetails);
+            return RedirectToRouteWithUkprn(RouteNames.GetProviderLocationDetails);
         }
 
         private async Task<(bool, AddressViewModel)> GetAddressViewModel()
