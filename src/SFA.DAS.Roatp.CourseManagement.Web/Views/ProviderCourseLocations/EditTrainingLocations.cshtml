@@ -10,7 +10,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <partial name="_validationSummaryPartial" model="ViewData.ModelState" />
+        <partial name="_validationSummary" />
         <div class="govuk-caption-xl">Manage a standard</div>
         <h1 class="govuk-heading-xl">Training locations</h1>
         <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
@@ -50,7 +50,7 @@
             </p>
             <div class="govuk-button-group">
                 <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
-                    continue
+                    Continue
                 </button>
                 <a id="Cancel" href="@Model.CancelUrl" class="govuk-link">Cancel</a>
             </div>
