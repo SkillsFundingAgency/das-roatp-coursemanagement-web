@@ -34,8 +34,4 @@
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Infrastructure\SFA.DAS.Roatp.CourseManagement.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Models\ProviderLocations\AddProviderLocation\" />
-  </ItemGroup>
-
 </Project>
