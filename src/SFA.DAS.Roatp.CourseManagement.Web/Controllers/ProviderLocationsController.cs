@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
@@ -24,6 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/manage-training-locations", Name = RouteNames.GetProviderLocations)]
         [HttpGet]
+        [ClearSession(SessionKeys.SelectedPostcode)]
         public async Task<IActionResult> GetProvidersTrainingLocations()
         {
             _logger.LogInformation("Getting Provider Locations for {ukprn}", Ukprn);
