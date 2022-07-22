@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         }
 
         [Test, AutoData]
-        public void GetRedirectToResultWithUkprn_ShouldGetRedirectToRouteResultWithUkprn(string routeName)
+        public void GetRedirectToResultWithUkprn_ReturnsRedirectToRouteResultWithUkprn(string routeName)
         {
             var result = _testController.GetRedirectToResultWithUkprn(routeName);
             result.Should().NotBeNull();
@@ -41,6 +41,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             result.RouteValues.TryGetValue("Ukprn", out var ukprn);
             ukprn.ToString().Should().Be(TestConstants.DefaultUkprn);
         }
+
+        [Test, AutoData]
+        public void GetUrlWithUkprn_ReturnsUrlWithUkprnInRoute()
+        {
+            var routeName = "RouteName";
+            _testController.AddUrlHelperMock().AddUrlForRoute(routeName);
+            _testController.GetUrl(routeName).Should().Be(TestConstants.DefaultUrl);
+        }
     }
 
     public class TestController : ControllerBase
@@ -48,5 +56,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         public int GetUkprn() => Ukprn;
         public string GetUserId() => UserId;
         public Microsoft.AspNetCore.Mvc.RedirectToRouteResult GetRedirectToResultWithUkprn(string routeName) => RedirectToRouteWithUkprn(routeName);
+        public string GetUrl(string routeName) => base.GetUrlWithUkprn(routeName);
     }
 }
