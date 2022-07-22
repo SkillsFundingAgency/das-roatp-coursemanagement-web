@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var ProviderLocation1 = new ProviderLocation
             {
-                LocationId = 1,
+                ProviderLocationId = 1,
                 LocationName = "test1",
                 Postcode = "IG117WQ",
                 Email = "test1@test.com",
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
             var ProviderLocation2 = new ProviderLocation
             {
-                LocationId = 2,
+                ProviderLocationId = 2,
                 LocationName = "test2",
                 Postcode = "IG117XR",
                 Email = "test2@test.com",

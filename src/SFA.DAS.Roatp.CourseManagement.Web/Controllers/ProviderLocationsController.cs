@@ -43,7 +43,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             model.ProviderLocations = result.ProviderLocations.Select(c => (ProviderLocationViewModel)c).ToList();
-
             return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
         }
     }

@@ -4,7 +4,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
 {
     public class ProviderLocationViewModel 
     {
-        public int LocationId { get; set; }
+        public int ProviderLocationId { get; set; }
         public int? RegionId { get; set; }
         public string LocationName { get; set; }
         public string Postcode { get; set; }
@@ -15,12 +15,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         {
             return new ProviderLocationViewModel
             {
-                LocationId = source.LocationId,
+                ProviderLocationId = source.ProviderLocationId,
                 RegionId = source.RegionId,
                 LocationName = source.LocationName,
                 Postcode = source.Postcode,
                 Email = source.Email,
-                Phone = source.Phone
+                Phone = source.Phone,
             };
         }
     }
