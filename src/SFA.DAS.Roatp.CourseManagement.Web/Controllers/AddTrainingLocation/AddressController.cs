@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -64,7 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return new StatusCodeResult(500);
             }
 
-            TempData.Add(SelectedAddressTempDataKey, selectedAddress);
+            TempData.Add(SelectedAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
             return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationDetails);
         }
