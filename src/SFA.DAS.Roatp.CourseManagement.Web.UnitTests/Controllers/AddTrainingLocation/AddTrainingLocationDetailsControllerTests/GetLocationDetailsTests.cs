@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
             object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
-            tempDataMock.Setup(t => t.TryGetValue(AddressController.SelectedAddressTempDataKey, out serialisedAddressItem));
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out serialisedAddressItem));
 
             var result = sut.GetLocationDetails() as ViewResult;
 
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             object address = null;
             sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
-            tempDataMock.Setup(t => t.TryGetValue(AddressController.SelectedAddressTempDataKey, out address));
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out address));
 
             var result = sut.GetLocationDetails() as RedirectToRouteResult;
 

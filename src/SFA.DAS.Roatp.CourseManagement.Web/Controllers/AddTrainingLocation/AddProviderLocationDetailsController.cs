@@ -6,6 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
@@ -20,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             _logger = logger;
         }
 
-        [Route("{ukprn}/add-training-location/details", Name = RouteNames.GetProviderLocationDetails)]
+        [Route("{ukprn}/add-training-location/details", Name = RouteNames.GetAddProviderLocationDetails)]
         [HttpGet]
         public IActionResult GetLocationDetails()
         {
@@ -29,9 +30,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             return View(ViewPath, model);
         }
 
+        [Route("{ukprn}/add-training-location/details", Name = RouteNames.PostAddProviderLocationDetails)]
+        [HttpPost]
+        public async Task<IActionResult> SubmitLocationDetails()
+        {
+            return View();
+        }
+
         private (bool, ProviderLocationDetailsViewModel) GetViewModel()
         {
-            TempData.TryGetValue(AddressController.SelectedAddressTempDataKey, out var address);
+            TempData.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out var address);
+            TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
             if (address == null)
             {
                 _logger.LogWarning("Selected address not found in the Temp Data, navigating user back to the locations list page");
@@ -42,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 
             var model = new ProviderLocationDetailsViewModel(addressItem);
             model.CancelLink = GetUrlWithUkprn(RouteNames.GetProviderLocations);
-            model.BackLink = GetUrlWithUkprn(RouteNames.GetTrainingLocationAddress);
+            model.BackLink = GetUrlWithUkprn(RouteNames.GetProviderLocationAddress);
 
             return (true, model);
         }
