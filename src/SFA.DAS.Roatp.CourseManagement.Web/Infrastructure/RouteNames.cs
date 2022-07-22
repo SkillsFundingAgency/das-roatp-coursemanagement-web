@@ -24,12 +24,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostProviderCourseLocations = "PostProviderCourseLocations";
         public const string GetTrainingLocationPostcode = "GetTrainingLocationPostcode";
         public const string PostTrainingLocationPostcode = "PostTrainingLocationPostcode";
-        public const string GetProviderLocationDetails = "GetProviderLocationDetails";
-        public const string GetRemoveProviderCourseLocation = "GetRemoveProviderCourseLocation";
-        public const string PostRemoveProviderCourseLocation = "PostRemoveProviderCourseLocation";
-        public const string GetTrainingLocationAddress = "GetTrainingLocationAddress";
-        public const string PostTrainingLocationAddress = "PostTrainingLocationAddress";
-        public const string GetProviderLocationDetails = "GetTrainingLocationDetails";
-        public const string PostTrainingLocationDetails = "PostTrainingLocationDetails";
+        public const string GetProviderLocationAddress = "GetTrainingLocationAddress";
+        public const string PostProviderLocationAddress = "PostTrainingLocationAddress";
+        public const string GetAddProviderLocationDetails = "GetAddProviderLocationDetails";
+        public const string PostAddProviderLocationDetails = "PostAddProviderLocationDetails";
     }
 }

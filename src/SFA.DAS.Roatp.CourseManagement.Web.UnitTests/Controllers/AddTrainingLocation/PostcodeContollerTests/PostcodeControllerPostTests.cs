@@ -56,7 +56,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         {
             var result = (RedirectToRouteResult)_sut.SubmitPostcode(model);
 
-            result.RouteName.Should().Be(RouteNames.GetTrainingLocationAddress);
+            result.RouteName.Should().Be(RouteNames.GetProviderLocationAddress);
         }
     }
 }

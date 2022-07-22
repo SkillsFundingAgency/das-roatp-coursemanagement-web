@@ -20,7 +20,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     public class AddressController : ControllerBase
     {
         public const string ViewPath = "~/Views/AddTrainingLocation/Address.cshtml";
-        public const string SelectedAddressTempDataKey = "SelectedAddressTempDataKey";
         private readonly ISessionService _sessionService;
         private readonly ILogger<AddressController> _logger;
         private readonly IMediator _mediator;
@@ -32,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _sessionService = sessionService;
         }
 
-        [Route("{ukprn}/add-training-location/address", Name = RouteNames.GetTrainingLocationAddress)]
+        [Route("{ukprn}/add-training-location/address", Name = RouteNames.GetProviderLocationAddress)]
         [HttpGet]
         public async Task<IActionResult> SelectAddress()
         {
@@ -43,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return View(ViewPath, model);
         }
 
-        [Route("{ukprn}/add-training-location/address", Name = RouteNames.PostTrainingLocationAddress)]
+        [Route("{ukprn}/add-training-location/address", Name = RouteNames.PostProviderLocationAddress)]
         [HttpPost]
         public async Task<IActionResult> SubmitAddress([FromForm] AddressSubmitModel model)
         {
@@ -65,9 +64,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return new StatusCodeResult(500);
             }
 
-            TempData.Add(SelectedAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
+            TempData.Add(TempDataKeys.SelectedAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-            return RedirectToRouteWithUkprn(RouteNames.GetProviderLocationDetails);
+            return RedirectToRouteWithUkprn(RouteNames.GetAddProviderLocationDetails);
         }
 
         private async Task<(bool, AddressViewModel)> GetAddressViewModel()
