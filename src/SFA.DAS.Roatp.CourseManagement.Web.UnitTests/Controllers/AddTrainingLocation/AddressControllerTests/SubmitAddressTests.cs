@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 using System;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -89,6 +90,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             Mock<ITempDataDictionary> tempDataMock)
         {
             model.SelectedAddressUprn = queryResult.Addresses[0].Uprn;
+            var expectedValueInTempData = JsonSerializer.Serialize(queryResult.Addresses[0]);
             sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
             sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(Guid.NewGuid().ToString());
@@ -99,7 +101,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             var result = response as RedirectToRouteResult;
             Assert.IsNotNull(result);
             result.RouteName.Should().Be(RouteNames.GetTrainingLocationDetails);
-            tempDataMock.Verify(t => t.Add(AddressController.SelectedAddressTempDataKey, queryResult.Addresses[0]));
+            tempDataMock.Verify(t => t.Add(AddressController.SelectedAddressTempDataKey, expectedValueInTempData));
         }
     }
 }
