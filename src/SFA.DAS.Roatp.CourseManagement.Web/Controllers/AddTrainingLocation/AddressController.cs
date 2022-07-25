@@ -11,7 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
 using System.Text.Json;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
@@ -35,9 +34,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> SelectAddress()
         {
-            var (isSuccess, model) = await GetAddressViewModel();
+            var postcode = GetPostcodeFromSession();
+            if (postcode == null) return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationPostcode);
 
-            if (!isSuccess) return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationPostcode);
+            var model = await GetAddressViewModel(postcode);
 
             return View(ViewPath, model);
         }
@@ -46,55 +46,55 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitAddress([FromForm] AddressSubmitModel model)
         {
+            var postcode = GetPostcodeFromSession();
+            if (postcode == null) return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationPostcode);
+
             if (!ModelState.IsValid) 
             {
-                var (isSuccess, viewModel) = await GetAddressViewModel();
-                if (!isSuccess) return RedirectToRouteWithUkprn(RouteNames.GetTrainingLocationPostcode);
+                var viewModel = await GetAddressViewModel(postcode);
                 return View(ViewPath, viewModel);
             }
 
-            var (gotAddress, postcode, result) = await GetAddresses();
+            var addresses = await GetAddresses(postcode);
 
-            if (!gotAddress) return RedirectToRoute(RouteNames.GetTrainingLocationPostcode);
-
-            var selectedAddress = result.Addresses.FirstOrDefault(a => a.Uprn == model.SelectedAddressUprn);
+            var selectedAddress = addresses.Addresses.FirstOrDefault(a => a.Uprn == model.SelectedAddressUprn);
             if (selectedAddress == null)
             {
                 _logger.LogError($"Get address for postcode: {postcode}, did not return selected address with Uprn: {model.SelectedAddressUprn}");
                 return new StatusCodeResult(500);
             }
 
+            TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
             TempData.Add(TempDataKeys.SelectedAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
             return RedirectToRouteWithUkprn(RouteNames.GetAddProviderLocationDetails);
         }
 
-        private async Task<(bool, AddressViewModel)> GetAddressViewModel()
+        private async Task<AddressViewModel> GetAddressViewModel(string postcode)
         {
-            var (isSuccess, postcode, getAddressesQueryResult) = await GetAddresses();
-
-            if(!isSuccess) return (false, null);
+            var getAddressesQueryResult = await GetAddresses(postcode);
 
             var model = new AddressViewModel();
             model.Postcode = postcode;
             model.ChangeLink = model.BackLink = Url.RouteUrl(RouteNames.GetTrainingLocationPostcode, new { Ukprn });
             model.CancelLink = Url.RouteUrl(RouteNames.GetProviderLocations, new { Ukprn });
             model.Addresses = getAddressesQueryResult.Addresses.Select(a => new SelectListItem { Value = a.Uprn, Text = GetDisplayName(a) }).ToList();
-            return (true, model);
+            return model;
         }
 
         private string GetDisplayName(AddressItem address) => $"{address.AddressLine1}, {address.AddressLine2}, {address.Town}";
 
-        private async Task<(bool, string, GetAddressesQueryResult)> GetAddresses()
+        private string GetPostcodeFromSession()
         {
             var postcode = _sessionService.Get(SessionKeys.SelectedPostcode, Ukprn.ToString());
             if (string.IsNullOrEmpty(postcode))
             {
                 _logger.LogInformation("Postcode not found in session, redirecting to select postcode", Ukprn, UserId);
-                return (false, null, null);
+                return null;
             }
-            var queryResult = await _mediator.Send(new GetAddressesQuery(postcode), new CancellationToken());
-            return (true, postcode, queryResult);
+            return postcode;
         }
+
+        private Task<GetAddressesQueryResult> GetAddresses(string postcode) => _mediator.Send(new GetAddressesQuery(postcode));
     }
 }
