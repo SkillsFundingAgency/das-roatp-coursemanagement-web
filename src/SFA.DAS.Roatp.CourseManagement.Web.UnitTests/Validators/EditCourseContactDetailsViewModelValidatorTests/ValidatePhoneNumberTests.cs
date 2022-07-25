@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(EditCourseContactDetailsViewModelValidator.TelephoneLengthErrorMessage);
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(EditCourseContactDetailsViewModelValidator.TelephoneLengthErrorMessage);
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
         }
 
         [TestCase("01234 5678")]
