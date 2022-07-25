@@ -101,6 +101,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             var result = response as RedirectToRouteResult;
             Assert.IsNotNull(result);
             result.RouteName.Should().Be(RouteNames.GetAddProviderLocationDetails);
+            tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedAddressTempDataKey));
             tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedAddressTempDataKey, expectedValueInTempData));
         }
     }
