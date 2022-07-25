@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using System;
+using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -17,6 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
     public class AddProviderLocationDetailsController : ControllerBase
     {
         public const string ViewPath = "~/Views/AddTrainingLocation/AddTrainingLocationDetails.cshtml";
+        public const string LocationNameNotAvailable = "A location with this name already exists";
         private readonly ILogger<AddProviderLocationDetailsController> _logger;
         private readonly IMediator _mediator;
 
@@ -44,6 +47,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         {
             var addressItem = GetAddressFromTempData(true);
             if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
+
+            if(ModelState.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
 
             if (!ModelState.IsValid)
             {
@@ -105,6 +110,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             }
             if(keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
             return JsonSerializer.Deserialize<AddressItem>(address.ToString());
+        }
+
+        private async Task CheckIfNameIsAvailable(string locationName)
+        {
+            var locations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+            if (locations.ProviderLocations.Any(l => l.LocationName.ToLower() == locationName.Trim().ToLower()))
+            {
+                ModelState.AddModelError("LocationName", LocationNameNotAvailable);
+            }
         }
     }
 }

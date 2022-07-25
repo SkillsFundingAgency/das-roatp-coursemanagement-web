@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Linq;
 using System.Text.Json;
 using System.Threading;
 
@@ -82,6 +84,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             string getProviderLocationsUrl,
             string getProviderLocationAddressUrl)
         {
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
             object address = JsonSerializer.Serialize(addressItem);
             sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -110,6 +113,36 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
                 c.Website == submitModel.Website &&
                 c.Phone == submitModel.PhoneNumber
             ), It.IsAny<CancellationToken>()));
+        }
+
+        [Test, MoqAutoData]
+        public void LocationNameIsNotDistinct_ReturnsViewResult(
+            Mock<ITempDataDictionary> tempDataMock,
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] AddProviderLocationDetailsController sut,
+            ProviderLocationDetailsSubmitModel model,
+            AddressItem addressItem,
+            string getProviderLocationsUrl,
+            string getProviderLocationAddressUrl,
+            GetAllProviderLocationsQueryResult allLocations)
+        {
+            allLocations.ProviderLocations.First().LocationName = model.LocationName;
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
+            object address = JsonSerializer.Serialize(addressItem);
+            sut.AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
+                .AddUrlForRoute(RouteNames.GetProviderLocationAddress, getProviderLocationAddressUrl);
+            sut.TempData = tempDataMock.Object;
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out address));
+
+            var result = sut.SubmitLocationDetails(model).Result as ViewResult;
+
+            result.Should().NotBeNull();
+            result.ViewName.Should().Be(AddProviderLocationDetailsController.ViewPath);
+            mediatorMock.Verify(m => m.Send(It.IsAny<CreateProviderLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+            sut.ModelState.ErrorCount.Should().Be(1);
+            sut.ModelState.Keys.Contains("LocationName");
         }
     }
 }
