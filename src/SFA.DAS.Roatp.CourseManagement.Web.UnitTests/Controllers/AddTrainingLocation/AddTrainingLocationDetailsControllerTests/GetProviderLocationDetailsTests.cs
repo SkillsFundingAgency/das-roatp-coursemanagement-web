@@ -17,15 +17,20 @@ using System.Text.Json;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLocation.AddTrainingLocationDetailsControllerTests
 {
     [TestFixture]
-    public class GetLocationDetailsTests
+    public class GetProviderLocationDetailsTests
     {
         [Test, MoqAutoData]
         public void GetLocationDetails_AddressInTempData_ReturnsViewResult(
             Mock<ITempDataDictionary> tempDataMock, 
             [Greedy] AddProviderLocationDetailsController sut,
-            AddressItem addressItem)
+            AddressItem addressItem,
+            string getProviderLocationsUrl,
+            string getProviderLocationAddressUrl)
         {
-            sut.AddDefaultContextWithUser();
+            sut.AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
+                .AddUrlForRoute(RouteNames.GetProviderLocationAddress, getProviderLocationAddressUrl);
             sut.TempData = tempDataMock.Object;
             object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
             tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out serialisedAddressItem));
@@ -36,6 +41,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             result.ViewName.Should().Be(AddProviderLocationDetailsController.ViewPath);
             var model = result.Model as ProviderLocationDetailsViewModel;
             model.AddressLine1.Should().Be(addressItem.AddressLine1);
+            model.CancelLink.Should().Be(getProviderLocationsUrl);
+            model.BackLink.Should().Be(getProviderLocationAddressUrl);
         }
 
         [Test, MoqAutoData]
