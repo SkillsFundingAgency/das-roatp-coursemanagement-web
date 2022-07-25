@@ -1,8 +1,10 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
+﻿using System;
+
+namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
     public class ProviderLocation
     {
-        public int LocationId { get; set; }
+        public Guid NavigationId { get; set; }
         public int? RegionId { get; set; }
         public string LocationName { get; set; }
         public string Postcode { get; set; }
