@@ -11,7 +11,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" /> 
-        <div class="govuk-caption-xl">Add a standard</div>
+        <div class="govuk-caption-xl">Manage a standard</div>
         <h1 class="govuk-heading-xl">Where can you deliver this training?</h1>
         <p class="govuk-body">You have told us you cannot deliver this training at an employer’s address anywhere in England.</p>
         <p class="govuk-body">Choose the regions where you can.</p>
@@ -28,16 +28,19 @@
                 <ul class="govuk-list govuk-grid-row">
                     @foreach (var location in region.OrderBy(x => x.RegionName))
                     {
-                        <li class="govuk-grid-column-one-half">
-                            <div class="govuk-checkboxes__item">
-                                <input class="govuk-checkboxes__input" id="SelectedSubRegions" name="SelectedSubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
-                                <label class="govuk-label govuk-checkboxes__label" for="SubRegions" asp-for="@location.SubregionName">
-                                    @location.SubregionName
-                                </label>
-                            </div>
-                        </li>
-                    }
-                </ul>
+                        
+                    <li class="govuk-grid-column-one-half">
+                        
+                        <div class="govuk-checkboxes__item  govuk-checkboxes--small">
+                            <input class="govuk-checkboxes__input" id="SelectedSubRegions" name="SelectedSubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
+                            <label class="govuk-label govuk-checkboxes__label" for="SubRegions" asp-for="@location.SubregionName">
+                                @location.SubregionName
+                            </label>
+                        </div>
+                        
+                    </li>
+                        }
+                    </ul>
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             }
             <div class="govuk-button-group">
