@@ -1,0 +1,61 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
+@model ProviderCourseLocationViewModel
+@{
+    ViewBag.Title = "Remove option";
+}
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackLink">Back</a>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Manage a standard</div>
+        <h1 class="govuk-heading-xl">Are you sure you want to remove this training venue?</h1>
+        <form method="post" asp-route="@RouteNames.PostRemoveProviderCourseLocation" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="BackLink" />
+            <input type="hidden" asp-for="CancelLink" />
+            <div class="grid-row">
+                <div class="column-two-thirds">
+                    <table class="govuk-table" aria-describedby="ConfirmRemoveTrainingLocation">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header das-table-cell-width-50" scope="col"> Venue name </th>
+                                <th class="govuk-table__header das-table-cell-width-50" scope="col"> Delivery method</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">
+                                    @Model.LocationName
+                                </td>
+                                <td class="govuk-table__cell">
+                                    @Model.DeliveryOption()
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="grid-row">
+                        <details class="govuk-details" data-module="govuk-details">
+                            <summary class="govuk-details__summary">
+                                <span class="govuk-details__summary-text">
+                                    More on removing this training venue?
+                                </span>
+                            </summary>
+                            <div class="govuk-details__text">
+                                This venue and delivery method will no longer be attached to this standard.
+                            </div>
+                            <div class="govuk-details__text">
+                                If you need to re-add this venue, you can do so via the training venue main page.
+                            </div>
+                        </details>
+                    </div>
+                </div>
+                <div class="govuk-button-group">
+                    <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                        Save and continue
+                    </button>
+                    <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+                </div>
+        </form>
+    </div>
+</div>
