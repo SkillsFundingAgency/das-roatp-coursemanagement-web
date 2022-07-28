@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 LocationName = source.LocationName,
                 Postcode = source.Postcode,
                 Email = source.Email,
-                Phone = source.Phone
+                Phone = source.Phone,
             };
         }
     }

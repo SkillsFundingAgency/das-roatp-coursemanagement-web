@@ -7,7 +7,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
