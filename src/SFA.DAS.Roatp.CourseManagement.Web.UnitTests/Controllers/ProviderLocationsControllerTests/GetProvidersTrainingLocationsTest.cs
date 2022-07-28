@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 LocationName = "test1",
                 Postcode = "IG117WQ",
                 Email = "test1@test.com",
-                Phone="1234567891"
+                Phone = "1234567891"
             };
             var ProviderLocation2 = new ProviderLocation
             {
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                     ProviderLocations = response
                 });
 
-            _controller = new ProviderLocationsController(_mediatorMock.Object,  _logger.Object)
+            _controller = new ProviderLocationsController(_mediatorMock.Object, _logger.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
@@ -72,28 +72,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
 
             _urlHelperMock = new Mock<IUrlHelper>();
-            
+
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.ReviewYourDetails)
-               )))
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ReviewYourDetails))))
                .Returns(BackUrl);
 
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetTrainingLocationPostcode)
-               )))
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>c.RouteName.Equals(RouteNames.GetTrainingLocationPostcode))))
                .Returns(AddTrainingLocationUrl);
-               
+
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetProviderLocationDetails)
-              )))
-              .Returns(verifyVenueNameUrl)
-              .Callback<UrlRouteContext>(c =>
-              {
-                  verifyRouteValues = c;
-              });
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetProviderLocationDetails))))
+              .Returns(verifyVenueNameUrl);
 
             _controller.Url = _urlHelperMock.Object;
         }
@@ -133,7 +123,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         [Test]
         public async Task GetProvidersTrainingLocation_ReturnsProviderLocationsDataVenueNameUrl()
         {
-            var result = await _controller.GetProvidersTrainingLocation();
+            var result = await _controller.GetProvidersTrainingLocations();
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
