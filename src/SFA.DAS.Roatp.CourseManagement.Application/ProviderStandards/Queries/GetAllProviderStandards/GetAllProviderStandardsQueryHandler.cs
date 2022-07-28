@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             _logger.LogInformation("Get Standards request received for Ukprn number {ukprn}", request.Ukprn);
             try
             {
-                var standards = await _apiClient.Get<List<Domain.ApiModels.Standard>>($"Standards/{request.Ukprn}");
+                var standards = await _apiClient.Get<List<Domain.ApiModels.Standard>>($"providers/{request.Ukprn}/courses");
                 if (standards == null)
                 {
                     _logger.LogInformation("Courses data not found for {ukprn}", request.Ukprn);
