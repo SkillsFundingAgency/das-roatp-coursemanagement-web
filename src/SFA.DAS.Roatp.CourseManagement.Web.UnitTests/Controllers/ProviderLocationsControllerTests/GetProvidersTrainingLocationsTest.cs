@@ -27,6 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         private Mock<IMediator> _mediator;
         private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
+        string verifyVenueNameUrl = "http://test-VenueNameUrl";
 
         [SetUp]
         public void Before_each_test()
@@ -38,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var ProviderLocation1 = new ProviderLocation
             {
-                ProviderLocationId = 1,
+                NavigationId = System.Guid.NewGuid(),
                 LocationName = "test1",
                 Postcode = "IG117WQ",
                 Email = "test1@test.com",
@@ -46,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             };
             var ProviderLocation2 = new ProviderLocation
             {
-                ProviderLocationId = 2,
+                NavigationId = System.Guid.NewGuid(),
                 LocationName = "test2",
                 Postcode = "IG117XR",
                 Email = "test2@test.com",
@@ -83,6 +84,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                {
                    verifyRouteValues = c;
                });
+            urlHelper
+              .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
+                  c.RouteName.Equals(RouteNames.GetProviderLocationDetails)
+              )))
+              .Returns(verifyVenueNameUrl)
+              .Callback<UrlRouteContext>(c =>
+              {
+                  verifyRouteValues = c;
+              });
             _controller.Url = urlHelper.Object;
         }
 
@@ -125,6 +135,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             model.Should().NotBeNull();
             model.ProviderLocations.Should().BeEmpty();
             model.BackUrl.Should().Be(verifyUrl);
+        }
+
+        [Test]
+        public async Task GetProvidersTrainingLocation_ReturnsProviderLocationsDataVenueNameUrl()
+        {
+            var result = await _controller.GetProvidersTrainingLocation();
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as ProviderLocationListViewModel;
+            model.Should().NotBeNull();
+            model.ProviderLocations.Should().NotBeEmpty();
+            foreach (var location in model.ProviderLocations)
+            {
+                location.VenueNameUrl.Should().Be(verifyVenueNameUrl);
+            }
         }
     }
 }

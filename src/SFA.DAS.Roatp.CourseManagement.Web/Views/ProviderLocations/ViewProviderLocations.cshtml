@@ -2,7 +2,7 @@
 @using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 @model ProviderLocationListViewModel
 @{
-    ViewBag.Title = "Training locations";
+    ViewBag.Title = "Training venues";
 }
 
 @section breadcrumb {
@@ -11,17 +11,13 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-caption-xl">Check your record</div>
-        <h1 class="govuk-heading-xl">Training locations</h1>
-        <p class="govuk-body">It is important that we have an up to date list of where you deliver your training.</p>
-        <p class="govuk-body">We have pre-filled the list with places that you entered previously in the course directory. Check they are still up to date, and add any new locations that are not present.</p>
+        <h1 class="govuk-heading-xl">Training venues</h1>
+        <p class="govuk-body">This is your list of locations where you can train apprentices. You can add or update venues as and when you need to.</p>
 
         <table class="govuk-table" aria-label="List of training locations">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col"> Venue name</th>
-                    <th class="govuk-table__header" scope="col"> Email address</th>
-                    <th class="govuk-table__header" scope="col"> Telephone number</th>
                     <th class="govuk-table__header" scope="col"> Postcode</th>
                 </tr>
             </thead>
@@ -30,32 +26,22 @@
                 {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-
-                        @location.LocationName
-
+                        <a class="govuk-link" href="#">
+                            @location.LocationName
+                        </a>
                     </td>
                     <td class="govuk-table__cell">
 
-                        @location.Email
-
-                    </td>
-                    <td class="govuk-table__cell">
-
-                        @location.Phone
-
-                    </td>
-                    <td class="govuk-table__cell">
-
-                        @location.Postcode
+                            @location.Postcode
 
                     </td>
                 </tr>
                 }
             </tbody>
         </table>
-        <p class="govuk-body" style="display: none; visibility: hidden">
+        <p class="govuk-body">
             <a href="#" class="govuk-link">
-                Add a new training location
+                Add a new training venue
             </a>
         </p>
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
