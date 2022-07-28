@@ -59,6 +59,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 ProviderCourseLocations = result.ProviderCourseLocations.Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 LarsCode = larsCode
             };
+            foreach (var location in model.ProviderCourseLocations)
+            {
+                location.RemoveUrl = Url.RouteUrl(RouteNames.GetRemoveProviderCourseLocation, new { ukprn = Ukprn, larsCode, id = location.Id });
+            }
             if (Request.GetTypedHeaders().Referer == null)
             {
                 model.BackUrl = "#";
@@ -66,6 +70,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             else
             {
                 model.BackUrl = Request.GetTypedHeaders().Referer.ToString();
+                var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption, model.LarsCode.ToString());
+                if ((!string.IsNullOrEmpty(sessionValue) &&
+                    (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)
+                        && (locationOption == LocationOption.Both || locationOption == LocationOption.ProviderLocation))))
+                {
+                    model.BackUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { ukprn = Ukprn, larsCode = model.LarsCode });
+                }
+                else
+                {
+                    model.BackUrl = GetStandardDetailsUrl(model.LarsCode);
+                }
             }
             model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
 
