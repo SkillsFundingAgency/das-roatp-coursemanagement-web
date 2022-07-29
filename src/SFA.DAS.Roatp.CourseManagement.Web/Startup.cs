@@ -116,6 +116,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
                 }
             })
+            .AddSessionStateTempDataProvider()
             .SetDefaultNavigationSection(NavigationSection.Home)
             /// .EnableGoogleAnalytics()
             .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
