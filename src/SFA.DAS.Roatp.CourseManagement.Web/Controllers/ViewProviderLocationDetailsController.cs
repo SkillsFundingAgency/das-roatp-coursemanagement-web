@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = new ProviderLocationViewModel
             {
-                BackUrl = Url.RouteUrl(RouteNames.ViewProviderLocations, new { ukprn = Ukprn })
+                BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn })
             };
 
             if (result == null)
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             model = (ProviderLocationViewModel)result.ProviderLocation;
-            model.BackUrl = Url.RouteUrl(RouteNames.ViewProviderLocations, new { ukprn = Ukprn });
+            model.BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
             return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
         }
     }
