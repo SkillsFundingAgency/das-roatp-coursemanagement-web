@@ -1,0 +1,30 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
+@model SelectAStandardViewModel
+@{
+    ViewBag.Title = "Select a standard";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Add a standard</div>
+        <h1 class="govuk-heading-xl">Select a standard</h1>
+
+        <form method="post" asp-route="@RouteNames.PostAddStandardSelectStandard" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
+                <label class="govuk-label govuk-label--m" asp-for="Standards">
+                    To add a standard, start typing in the box and its name will appear.
+                </label>
+                <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
+                <select asp-for="SelectedLarsCode" asp-items="@Model.Standards" class="govuk-select app-autocomplete">
+                    <option value="" disabled selected>Start typing the name of a standard</option>
+                </select>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
