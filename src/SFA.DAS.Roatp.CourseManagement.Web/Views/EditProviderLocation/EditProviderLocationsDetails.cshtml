@@ -1,0 +1,86 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model ProviderLocationViewModel
+@{
+    ViewBag.Title = "Add venue details";
+    ViewBag.Description = "";
+}
+@section breadcrumb {
+    <a href="@Model.BackUrl" class="govuk-back-link">Back</a>
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Add a training venue</div>
+        <h1 class="govuk-heading-xl">Venue details</h1>
+
+        <form method="post" asp-route="@RouteNames.PostProviderLocationDetailsUpdate" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="@Model.NavigationId" />
+            <div esfa-validation-marker-for="LocationName" class="govuk-form-group">
+                <label class="govuk-label govuk-label--m" asp-for="LocationName">
+                    Venue name
+                </label>
+                <div id="LocationName-hint" class="govuk-hint">
+                    Tell us the name of the venue where you deliver the training.
+                </div>
+                <span asp-validation-for="LocationName" class="govuk-error-message"></span>
+                <input asp-for="LocationName" id="LocationName" class="govuk-input govuk-input--width-10" type="text" maxlength="50">
+            </div>
+
+            <div class="govuk-form-group">
+                <label class="govuk-label govuk-label--m" asp-for="LocationName">
+                    Address
+                </label>
+                <p style="govuk-body">
+                    <span>@Model.AddressLine1</span><br>
+                    <span>@Model.AddressLine2</span><br>
+                    <span>@Model.Town</span><br>
+                    <span>@Model.Postcode</span>
+                </p>
+            </div>
+
+            <fieldset class="govuk-fieldset">
+                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                    Venue contact details
+                </legend>
+                <p class="govuk-body">
+                    Add the contact details for the venue if you think they would be useful for an employer or apprentice to know. If it’s not useful for them, add details of your office instead.
+                </p>
+
+                <div esfa-validation-marker-for="Website" class="govuk-form-group">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label">
+                            Website
+                        </label>
+                        <span asp-validation-for="Website" class="govuk-error-message"></span>
+                        <input asp-for="Website" id="Website" class="govuk-input" type="text" maxlength="500">
+                    </div>
+                </div>
+                <div esfa-validation-marker-for="Email" class="govuk-form-group">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label">
+                            Email address
+                        </label>
+                        <span asp-validation-for="Email" class="govuk-error-message"></span>
+                        <input asp-for="Email" id="EmailAddress" class="govuk-input" type="text" maxlength="300">
+                    </div>
+                </div>
+                <div esfa-validation-marker-for="Phone" class="govuk-form-group">
+                    <div class="govuk-form-group">
+                        <label class="govuk-label">
+                            Telephone number
+                        </label>
+                        <span asp-validation-for="Phone" class="govuk-error-message"></span>
+                        <input asp-for="Phone" id="PhoneNumber" class="govuk-input govuk-input--width-10" type="text" maxlength="50">
+                    </div>
+                </div>
+            </fieldset>
+
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Save and continue</button>
+                <a href="@Model.CancelUrl" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -17,7 +17,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string Email { get; set; }
         public string Website { get; set; }
         public string Phone { get; set; }
+        public string UpdateContactDetailsUrl { get; set; }
         public string BackUrl { get; set; }
+        public string CancelUrl { get; set; }
 
         public static implicit operator ProviderLocationViewModel(ProviderLocation source)
         {
