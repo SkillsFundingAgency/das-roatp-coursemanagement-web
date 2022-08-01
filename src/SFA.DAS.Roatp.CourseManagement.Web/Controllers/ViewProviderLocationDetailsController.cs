@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _mediator = mediator;
         }
 
-        [Route("/providers/{ukprn}/locations/{Id}/view", Name = RouteNames.GetProviderLocationDetails)]
+        [Route("/providers/{ukprn}/locations/{Id}", Name = RouteNames.GetProviderLocationDetails)]
         [HttpGet]
         public async Task<IActionResult> GetProviderLocationDetails([FromRoute] Guid Id)
         {
@@ -43,7 +43,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model = (ProviderLocationViewModel)result.ProviderLocation;
             model.BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
-            model.UpdateContactDetailsUrl = Url.RouteUrl(RouteNames.GetProviderLocationDetailsUpdate, new { ukprn = Ukprn, Id });
             return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
         }
     }
