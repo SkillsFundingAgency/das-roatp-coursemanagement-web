@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.UpdateProviderLocationDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
@@ -38,5 +39,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Phone = source.Phone,
             };
         }
+
+        public static implicit operator UpdateProviderLocationDetailsCommand(ProviderLocationViewModel model) =>
+           new UpdateProviderLocationDetailsCommand
+           {
+               Id = model.NavigationId,
+               LocationName = model.LocationName,
+               Website = model.Website,
+               Email = model.Email,
+               Phone = model.Phone
+           };
     }
 }
