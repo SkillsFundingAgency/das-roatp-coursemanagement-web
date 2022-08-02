@@ -14,8 +14,10 @@
         <div class="govuk-caption-xl">Add a training venue</div>
         <h1 class="govuk-heading-xl">Venue details</h1>
 
-        <form method="post" asp-route="@RouteNames.PostProviderLocationDetailsUpdate" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.PostUpdateProviderLocationDetails" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.NavigationId" />
+            <input type="hidden" asp-for="@Model.BackUrl" />
+            <input type="hidden" asp-for="@Model.CancelUrl" />
             <div esfa-validation-marker-for="LocationName" class="govuk-form-group">
                 <label class="govuk-label govuk-label--m" asp-for="LocationName">
                     Venue name
@@ -56,22 +58,22 @@
                         <input asp-for="Website" id="Website" class="govuk-input" type="text" maxlength="500">
                     </div>
                 </div>
-                <div esfa-validation-marker-for="Email" class="govuk-form-group">
+                <div esfa-validation-marker-for="EmailAddress" class="govuk-form-group">
                     <div class="govuk-form-group">
                         <label class="govuk-label">
                             Email address
                         </label>
-                        <span asp-validation-for="Email" class="govuk-error-message"></span>
-                        <input asp-for="Email" id="EmailAddress" class="govuk-input" type="text" maxlength="300">
+                        <span asp-validation-for="EmailAddress" class="govuk-error-message"></span>
+                        <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" maxlength="300">
                     </div>
                 </div>
-                <div esfa-validation-marker-for="Phone" class="govuk-form-group">
+                <div esfa-validation-marker-for="PhoneNumber" class="govuk-form-group">
                     <div class="govuk-form-group">
                         <label class="govuk-label">
                             Telephone number
                         </label>
-                        <span asp-validation-for="Phone" class="govuk-error-message"></span>
-                        <input asp-for="Phone" id="PhoneNumber" class="govuk-input govuk-input--width-10" type="text" maxlength="50">
+                        <span asp-validation-for="PhoneNumber" class="govuk-error-message"></span>
+                        <input asp-for="PhoneNumber" id="PhoneNumber" class="govuk-input govuk-input--width-10" type="text" maxlength="50">
                     </div>
                 </div>
             </fieldset>
