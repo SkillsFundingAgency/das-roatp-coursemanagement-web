@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage("Enter a website page link");
+            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(CommonValidationErrorMessage.WebsiteMissingMessage);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage("Website address must be 500 characters or fewer");
+            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(CommonValidationErrorMessage.WebsiteLengthMessage);
         }
 
         [TestCase("dfdfsd")]
@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage("Enter an address in the correct format, like www.example.com");
+            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(CommonValidationErrorMessage.WebsiteInvalidMessage);
         }
 
         [TestCase("dfdfsd.sd")]
