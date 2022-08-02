@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage("Enter an email address");
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailMissingMessage);
         }
 
         [Test]
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage("Email address must be 256 characters or fewer");
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailLengthMessage);
         }
 
 
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
 
             var result = sut.TestValidate(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage("Enter an email address in the correct format, like name@example.com");
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailInvalidMessage);
         }
 
         [TestCase("q@q.q")]

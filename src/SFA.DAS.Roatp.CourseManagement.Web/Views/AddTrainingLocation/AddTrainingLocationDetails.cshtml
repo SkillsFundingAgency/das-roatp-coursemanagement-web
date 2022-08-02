@@ -11,7 +11,7 @@
         <div class="govuk-grid-column-two-thirds">
             <partial name="_validationSummary" />
             <div class="govuk-caption-xl">Add a training venue</div>
-            <h1 class="govuk-heading-xl">Venue details</h1>
+            <h1 class="govuk-heading-xl">Add venue details</h1>
 
             <form method="post" asp-route="@RouteNames.PostAddProviderLocationDetails" enctype="multipart/form-data" novalidate>
                 <div esfa-validation-marker-for="LocationName" class="govuk-form-group">
@@ -22,7 +22,7 @@
                         Tell us the name of the venue where you deliver the training.
                     </div>
                     <span asp-validation-for="LocationName" class="govuk-error-message"></span>
-                    <input asp-for="LocationName" id="LocationName" class="govuk-input govuk-input--width-10" type="text" maxlength="50">
+                    <input asp-for="LocationName" id="LocationName" class="govuk-input" type="text" maxlength="50">
                 </div>
 
                 <div class="govuk-form-group">
