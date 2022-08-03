@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.G
             if (providerLocation == null)
             {
                 _logger.LogError($"Provider Location not found for {request.Ukprn} and {request.Id}");
-                return new GetProviderLocationDetailsQueryResult();
+                return null;
             }
 
             return new GetProviderLocationDetailsQueryResult

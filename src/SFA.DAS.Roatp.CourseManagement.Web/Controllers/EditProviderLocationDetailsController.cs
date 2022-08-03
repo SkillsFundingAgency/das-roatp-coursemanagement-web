@@ -40,9 +40,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         private async Task<ProviderLocationViewModel> BuildViewModel(Guid Id)
         {
             var result = await _mediator.Send(new GetProviderLocationDetailsQuery(Ukprn, Id));
-            if (result == null)
+            if (result == null || result.ProviderLocation == null)
             {
                 _logger.LogInformation("Provider Location Details not found for {ukprn} and {id}", Ukprn, Id);
+                return new ProviderLocationViewModel
+                {
+                    BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn }),
+                    CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn })
+                };
             }
             var model = (ProviderLocationViewModel)result.ProviderLocation;
             model.BackUrl = model.CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
