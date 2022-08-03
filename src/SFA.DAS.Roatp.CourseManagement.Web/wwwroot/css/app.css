@@ -16,9 +16,8 @@
 }
 
 @media (min-width: 40.0625em) {
-    .autocomplete__wrapper {
-        width: 75%;
-    }
+    .autocomplete__wrapper {}
+
     .das-search-form__group .autocomplete__wrapper {
         width: 100%;
     }

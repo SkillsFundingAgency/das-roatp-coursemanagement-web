@@ -12,7 +12,7 @@
 
         <form method="post" asp-route="@RouteNames.PostAddStandardSelectStandard" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
-                <label class="govuk-label govuk-label--m" asp-for="Standards">
+                <label class="govuk-label" asp-for="Standards">
                     To add a standard, start typing in the box and its name will appear.
                 </label>
                 <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
