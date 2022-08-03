@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _mediator = mediator;
         }
 
-        [Route("/providers/{ukprn}/locations/{Id}/get-location-details", Name = RouteNames.GetProviderLocationDetails)]
+        [Route("/providers/{ukprn}/locations/{Id}", Name = RouteNames.GetProviderLocationDetails)]
         [HttpGet]
         public async Task<IActionResult> GetProviderLocationDetails([FromRoute] Guid Id)
         {
