@@ -5,7 +5,7 @@
 }
 
 @section breadcrumb {
-    <a class="govuk-back-link" href="#">Back</a>
+    <a class="govuk-back-link" href="@Model.BackLink">Back</a>
 }
 
 <div class="grid-row">
@@ -43,8 +43,8 @@
                 }
             </tbody>
         </table>
-        <p class="govuk-body" style="display: none; visibility: hidden">
-            <a href="#" class="govuk-link">
+        <p class="govuk-body">
+            <a href="@Model.AddAStandardLink" class="govuk-link">
                 Add a standard
             </a>
         </p>

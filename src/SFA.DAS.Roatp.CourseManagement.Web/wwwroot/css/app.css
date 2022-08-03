@@ -1,0 +1,24 @@
+.autocomplete__dropdown-arrow-down-wrapper {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+}
+
+@media (min-width: 40.0625em) {
+    .autocomplete__dropdown-arrow-down-wrapper {
+        top: 9px;
+        right: 9px;
+    }
+}
+
+.das-search-form__group .autocomplete__input {
+    height: 40px;
+}
+
+@media (min-width: 40.0625em) {
+    .autocomplete__wrapper {}
+
+    .das-search-form__group .autocomplete__wrapper {
+        width: 100%;
+    }
+}
