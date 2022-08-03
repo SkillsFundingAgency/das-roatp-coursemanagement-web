@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _mediator = mediator;
         }
 
-        [Route("/providers/{ukprn}/locations/{Id}/view", Name = RouteNames.GetProviderLocationDetails)]
+        [Route("/providers/{ukprn}/locations/{Id}/get-location-details", Name = RouteNames.GetProviderLocationDetails)]
         [HttpGet]
         public async Task<IActionResult> GetProviderLocationDetails([FromRoute] Guid Id)
         {
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn })
             };
 
-            if (result == null)
+            if (result == null || result.ProviderLocation == null)
             {
                 _logger.LogInformation("Provider Location Details not found for {ukprn} and {id}", Ukprn, Id);
                 return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);

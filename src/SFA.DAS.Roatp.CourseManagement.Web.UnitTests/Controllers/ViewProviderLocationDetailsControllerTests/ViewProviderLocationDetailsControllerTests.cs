@@ -1,19 +1,16 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,41 +20,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
     public class ViewProviderLocationDetailsControllerTests
     {
         private const string Ukprn = "10012002";
-        private Mock<ILogger<ViewProviderLocationDetailsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private ViewProviderLocationDetailsController _sut;
-        private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<ViewProviderLocationDetailsController>>();
             _mediatorMock = new Mock<IMediator>();
-
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
-            var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new ViewProviderLocationDetailsController(_mediatorMock.Object, _loggerMock.Object)
-            {
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = httpContext
-                }
-            };
-
-            urlHelper = new Mock<IUrlHelper>();
-
-            UrlRouteContext verifyRouteValues = null;
-            urlHelper
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetProviderLocations)
-               )))
-               .Returns(verifyUrl)
-               .Callback<UrlRouteContext>(c =>
-               {
-                   verifyRouteValues = c;
-               });
-            _sut.Url = urlHelper.Object;
+            _sut = new ViewProviderLocationDetailsController(_mediatorMock.Object, Mock.Of<ILogger<ViewProviderLocationDetailsController>>());
+            _sut.AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetProviderLocations, verifyUrl);
         }
 
         [Test, AutoData]
