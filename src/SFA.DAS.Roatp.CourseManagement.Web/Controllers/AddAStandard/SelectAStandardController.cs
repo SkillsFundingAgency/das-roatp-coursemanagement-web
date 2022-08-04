@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -50,7 +51,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var sessionModel = new StandardSessionModel { LarsCode = submitModel.SelectedLarsCode };
             _sessionService.Set(sessionModel, Ukprn.ToString());
 
-            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmStandard);
+            var standardInformation = await _mediator.Send(new GetStandardInformationQuery(submitModel.SelectedLarsCode));
+
+            if (!standardInformation.IsRegulatedStandard)
+                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
+            else
+                return Ok();
         }
 
         private async Task<SelectAStandardViewModel> GetModel()

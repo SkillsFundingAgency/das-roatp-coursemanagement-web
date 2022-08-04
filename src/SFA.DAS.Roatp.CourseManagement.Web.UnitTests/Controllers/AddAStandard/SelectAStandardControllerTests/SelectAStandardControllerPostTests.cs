@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -45,12 +46,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public async Task SubmitAStandard_ValidState_RedirectsToNextStep(
+        public async Task SubmitAStandard_IfNonRegulatedStandard_RedirectsToRespectiveConfirmationPage(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectAStandardController sut,
-            SelectAStandardSubmitModel submitModel)
+            SelectAStandardSubmitModel submitModel,
+            GetStandardInformationQueryResult standardInformation)
         {
+            standardInformation.ApprovalBody = string.Empty;
+            mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
             sut
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -60,7 +64,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = response as RedirectToRouteResult;
             result.Should().NotBeNull();
-            result.RouteName.Should().Be(RouteNames.GetAddStandardConfirmStandard);
+            result.RouteName.Should().Be(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
             sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode), It.IsAny<string>()));
             mediatorMock.Verify(m => m.Send(It.IsAny<GetAvailableProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
