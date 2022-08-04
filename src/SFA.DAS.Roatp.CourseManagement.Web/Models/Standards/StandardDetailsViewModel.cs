@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 { 
                     CourseName = standardDetails.CourseName,
                     Level = standardDetails.Level,
-                    IFateReferenceNumber = standardDetails.IFateReferenceNumber,
+                    IfateReferenceNumber = standardDetails.IFateReferenceNumber,
                     LarsCode = standardDetails.LarsCode,
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,

@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             StandardDetailsViewModel viewModel = standardDetails;
             viewModel.StandardInformation.CourseName.Should().Be(courseName);
             viewModel.StandardInformation.Level.Should().Be(level);
-            viewModel.StandardInformation.IFateReferenceNumber.Should().Be(iFateReferenceNumber);
+            viewModel.StandardInformation.IfateReferenceNumber.Should().Be(iFateReferenceNumber);
             viewModel.StandardInformation.Sector.Should().Be(sector);
             viewModel.StandardInformation.LarsCode.Should().Be(larsCode);
             viewModel.StandardInformation.Version.Should().Be(version);
