@@ -200,7 +200,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
 
-            queryResult = new GetProviderCourseLocationsQueryResult { ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation> { new Domain.ApiModels.ProviderCourseLocation { LocationType = Domain.ApiModels.LocationType.Provider, Id = 1 } } };
+            queryResult = new GetProviderCourseLocationsQueryResult { ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation> { new Domain.ApiModels.ProviderCourseLocation { LocationType = Domain.ApiModels.LocationType.Provider, Id = Guid.NewGuid() } } };
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
