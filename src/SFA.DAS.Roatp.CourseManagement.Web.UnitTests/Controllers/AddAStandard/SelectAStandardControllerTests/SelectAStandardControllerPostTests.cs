@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             SelectAStandardSubmitModel submitModel,
             GetStandardInformationQueryResult standardInformation)
         {
-            standardInformation.ApprovalBody = string.Empty;
+            standardInformation.RegulatorName = string.Empty;
             mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
             sut
                 .AddDefaultContextWithUser()

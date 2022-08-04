@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 Sector = source.Route,
                 CourseName = source.Title,
                 Level = source.Level,
-                RegulatorName = source.ApprovalBody
+                RegulatorName = source.RegulatorName
             };
     }
 }
