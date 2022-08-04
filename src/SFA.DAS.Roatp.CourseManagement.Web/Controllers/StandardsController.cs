@@ -36,8 +36,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = new StandardListViewModel
             {
-                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new
-                { ukprn = Ukprn })
+                BackLink = Url.RouteUrl(RouteNames.ReviewYourDetails, new { Ukprn }),
+                AddAStandardLink = Url.RouteUrl(RouteNames.GetAddStandardSelectStandard, new { Ukprn })
             };
 
             if (result == null)
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             foreach (var standard in model.Standards)
             {
                 standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
-                standard.ConfirmRegulatedStandardUrl = standard.IsRegulatedStandard ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
+                standard.ConfirmRegulatedStandardUrl = standard.IsApprovalPending ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);
