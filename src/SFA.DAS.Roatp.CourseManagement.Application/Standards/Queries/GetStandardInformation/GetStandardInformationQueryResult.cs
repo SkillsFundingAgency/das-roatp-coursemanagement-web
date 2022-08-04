@@ -10,7 +10,5 @@
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
         public string Route { get; set; }
-        public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
-        public string DisplayName => $"{Title} (Level {Level})";
     }
 }
