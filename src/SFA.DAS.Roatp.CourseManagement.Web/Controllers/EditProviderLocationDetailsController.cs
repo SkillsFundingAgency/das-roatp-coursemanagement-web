@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProviderLocationDetails(ProviderLocationDetailsSubmitModel model, [FromRoute] Guid Id)
         {
-           if (ModelState.IsValid) await CheckIfNameIsAvailable(model.LocationName, Id);
+            if(ModelState.IsValid) await CheckIfNameIsAvailable(model.LocationName, Id);
 
             if (!ModelState.IsValid)
             {

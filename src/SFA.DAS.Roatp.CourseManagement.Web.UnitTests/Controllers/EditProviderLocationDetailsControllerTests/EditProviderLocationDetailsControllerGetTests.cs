@@ -50,7 +50,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
             viewResult.ViewName.Should().Contain("EditProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().NotBeNull();
+            model.BackUrl.Should().Be(verifyUrl);
+            model.CancelUrl.Should().Be(verifyUrl);
         }
 
           [Test, AutoData]
@@ -67,7 +68,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
             viewResult.ViewName.Should().Contain("EditProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().NotBeNull();
+            model.BackUrl.Should().Be(verifyUrl);
+            model.CancelUrl.Should().Be(verifyUrl);
         }
     }
 }
