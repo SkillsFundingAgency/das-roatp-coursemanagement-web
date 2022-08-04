@@ -19,5 +19,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Standards.Queries
 
             sut.IsRegulatedStandard.Should().Be(isValid);
         }
+
+        [Test]
+        public void DisplayName_ReturnsAugmentedName()
+        {
+            var sut = new GetStandardInformationQueryResult()
+            {
+                Title = "Standard name",
+                Level = 1
+            };
+
+            sut.DisplayName.Should().Be($"{sut.Title} (Level {sut.Level})");
+        }
     }
 }
