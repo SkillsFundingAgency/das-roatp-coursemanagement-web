@@ -11,5 +11,6 @@
         public string RegulatorName { get; set; }
         public string Sector { get; set; }
         public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
+        public string DisplayName => $"{Title} (Level {Level})";
     }
 }
