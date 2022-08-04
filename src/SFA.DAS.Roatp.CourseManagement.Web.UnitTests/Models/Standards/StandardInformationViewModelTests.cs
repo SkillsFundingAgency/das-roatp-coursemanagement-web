@@ -16,9 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
             sut.Should().BeEquivalentTo(source, option =>
             {
-                option.WithMapping<StandardInformationViewModel>(r => r.Route, m => m.Sector);
                 option.WithMapping<StandardInformationViewModel>(r => r.Title, m => m.CourseName);
-                option.WithMapping<StandardInformationViewModel>(r => r.RegulatorName, m => m.RegulatorName);
                 option.Excluding(r => r.StandardUId);
                 return option;
             });

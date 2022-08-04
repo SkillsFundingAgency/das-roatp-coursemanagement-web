@@ -9,6 +9,6 @@
         public int Level { get; set; }
         public string Version { get; set; }
         public string RegulatorName { get; set; }
-        public string Route { get; set; }
+        public string Sector { get; set; }
     }
 }

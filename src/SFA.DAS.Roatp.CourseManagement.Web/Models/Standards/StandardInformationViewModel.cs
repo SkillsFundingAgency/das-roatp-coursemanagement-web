@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 LarsCode = source.LarsCode,
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 Version = source.Version,
-                Sector = source.Route,
+                Sector = source.Sector,
                 CourseName = source.Title,
                 Level = source.Level,
                 RegulatorName = source.RegulatorName
