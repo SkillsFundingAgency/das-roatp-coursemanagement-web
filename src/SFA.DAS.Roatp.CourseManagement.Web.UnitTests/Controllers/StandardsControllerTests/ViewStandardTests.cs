@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var response = new GetStandardDetailsQueryResult
             {
                 CourseName = "test1",
-                Level = "1",
+                Level = 1,
                 IFateReferenceNumber = "1234",
                 Sector = "Digital",
                 LarsCode = LarsCode,

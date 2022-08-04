@@ -4,7 +4,7 @@
     {
         public int LarsCode { get; set; }
         public string CourseName { get; set; }
-        public string Level { get; set; }
+        public int Level { get; set; }
         public string IFateReferenceNumber { get; set; }
         public string Sector { get; set; }
         public string RegulatorName { get; set; }

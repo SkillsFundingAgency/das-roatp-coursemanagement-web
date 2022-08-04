@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         public void ImplicitOperator_ConvertsFromStandardDetails(string regulatorName, bool isRegulated)
         {
             const string courseName = "course name";
-            const string level = "2";
+            const int level = 2;
             const string iFateReferenceNumber = "STD_1";
             const string sector = "digital";
             const int larsCode = 133;
