@@ -1,0 +1,55 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model StandardInformationViewModel
+
+<h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
+<table class="govuk-table" aria-label="Coure details">
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+          <th class="govuk-table__header das-table-cell-width-30" scope="row"></th>
+          <td class="govuk-table__cell das-table-cell-width-70"></td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                IFATE Reference
+            </th>
+            <td class="govuk-table__cell das-table-cell-width-70">
+                @Model.IFateReferenceNumber
+            </td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">
+                Version
+            </th>
+            <td class="govuk-table__cell">
+                @Model.Version
+            </td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">
+                Sector
+            </th>
+            <td class="govuk-table__cell">
+                @Model.Sector
+            </td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">
+                LARS code
+            </th>
+            <td class="govuk-table__cell">
+                @Model.LarsCode
+            </td>
+        </tr>
+        @if (Model.IsStandardRegulated)
+        {
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">
+                    Regulator
+                </th>
+                <td class="govuk-table__cell">
+                    @Model.RegulatorName
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

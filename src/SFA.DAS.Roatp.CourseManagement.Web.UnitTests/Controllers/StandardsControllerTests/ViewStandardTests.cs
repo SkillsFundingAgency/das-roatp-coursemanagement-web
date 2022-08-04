@@ -96,8 +96,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as StandardDetailsViewModel;
             model.Should().NotBeNull();
-            model.LarsCode.Should().Be(LarsCode);
-            model.Version.Should().Be(Version);
+            model.StandardInformation.LarsCode.Should().Be(LarsCode);
+            model.StandardInformation.Version.Should().Be(Version);
             model.BackUrl.Should().Be(verifyUrl);
             _logger.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Never);
         }
@@ -155,8 +155,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as StandardDetailsViewModel;
             model.Should().NotBeNull();
-            model.RegulatorName.Should().Be(Regulator);
-            model.IsStandardRegulated.Should().Be(true);
+            model.StandardInformation.RegulatorName.Should().Be(Regulator);
+            model.StandardInformation.IsStandardRegulated.Should().Be(true);
         }
 
         [Test]

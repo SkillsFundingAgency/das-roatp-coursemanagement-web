@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
             model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
 
-            model.ConfirmRegulatedStandardUrl = model.IsStandardRegulated ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
+            model.ConfirmRegulatedStandardUrl = model.StandardInformation.IsStandardRegulated ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
 
             model.EditProviderCourseRegionsUrl = model.SubRegionCourseLocations.Any() ? Url.RouteUrl(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode }) : string.Empty;
 
