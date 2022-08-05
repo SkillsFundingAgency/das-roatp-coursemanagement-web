@@ -37,6 +37,25 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
+        public async Task Get_LarsCodeNotSetInSession_RedirectsToStandardList(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] ConfirmNonRegulatedStandardController sut,
+            StandardSessionModel sessionModel)
+        {
+            sessionModel.LarsCode = 0;
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+
+            var response = await sut.GetConfirmationOfStandard();
+
+            var result = (RedirectToRouteResult)response;
+            result.Should().NotBeNull();
+            result.RouteName.Should().Be(RouteNames.ViewStandards);
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
+
+        [Test, MoqAutoData]
         public async Task Get_ModelInSessionWithLarsCode_ReturnsView(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
