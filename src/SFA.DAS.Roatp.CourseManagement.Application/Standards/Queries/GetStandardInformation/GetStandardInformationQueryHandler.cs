@@ -24,6 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStanda
 
             if (result == null)
             {
+                _logger.LogError("Failed to get standard information for larscode:{larscode}", request.LarsCode);
                 throw new InvalidOperationException($"Standard information not found for larscode: {request.LarsCode}");
             }
 
