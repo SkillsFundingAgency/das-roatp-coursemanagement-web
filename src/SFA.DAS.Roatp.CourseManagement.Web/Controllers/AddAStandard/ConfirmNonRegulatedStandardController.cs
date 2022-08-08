@@ -11,17 +11,17 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
+
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class ConfirmNonRegulatedStandardController : ControllerBase
+    public class ConfirmNonRegulatedStandardController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/ConfirmNonRegulatedStandard.cshtml";
-        private readonly ISessionService _sessionService;
+        
         private readonly IMediator _mediator;
         private readonly ILogger<ConfirmNonRegulatedStandardController> _logger;
 
-        public ConfirmNonRegulatedStandardController(ISessionService sessionService, IMediator mediator, ILogger<ConfirmNonRegulatedStandardController> logger)
+        public ConfirmNonRegulatedStandardController(ISessionService sessionService, IMediator mediator, ILogger<ConfirmNonRegulatedStandardController> logger) : base(sessionService)
         {
-            _sessionService = sessionService;
             _mediator = mediator;
             _logger = logger;
         }
@@ -30,14 +30,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/add/confirm-standard", Name = RouteNames.GetAddStandardConfirmNonRegulatedStandard)]
         public async Task<IActionResult> GetConfirmationOfStandard()
         {
-            var sessionModel = _sessionService.Get<StandardSessionModel>(Ukprn.ToString());
-            if (sessionModel == null || sessionModel.LarsCode == 0)
-            {
-                _logger.LogWarning("Confirm standard: Session model is missing, navigating back.");
-                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
-            }
+            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+            if (sessionModel == null) return redirectResult;
 
-            var model = await GetViewModel(sessionModel);
+            var model = await GetViewModel(sessionModel.LarsCode);
 
             return View(ViewPath, model);
         }
@@ -46,16 +42,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/add/confirm-standard", Name = RouteNames.PostAddStandardConfirmNonRegulatedStandard)]
         public async Task<IActionResult> SubmitConfirmationOfStandard(ConfirmNonRegulatedStandardSubmitModel submitModel)
         {
-            var sessionModel = _sessionService.Get<StandardSessionModel>(Ukprn.ToString());
-            if (sessionModel == null || sessionModel.LarsCode == 0 || sessionModel.LarsCode != submitModel.LarsCode)
-            {
-                _logger.LogWarning("Confirm standard: Session model is missing, navigating back.");
-                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
-            }
+            var (sessionModel, redicrectResult) = GetSessionModelWithEscapeRoute(_logger);
+            if (sessionModel == null) return redicrectResult;
 
             if (!ModelState.IsValid)
             {
-                var model = await GetViewModel(sessionModel);
+                var model = await GetViewModel(sessionModel.LarsCode);
 
                 return View(ViewPath, model);
             }
@@ -65,16 +57,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
             }
 
-            return Ok();
+            sessionModel.IsConfirmed = true;
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 
-        private async Task<ConfirmNonRegulatedStandardViewModel> GetViewModel(StandardSessionModel sessionModel)
+        private async Task<ConfirmNonRegulatedStandardViewModel> GetViewModel(int larsCode)
         {
-            var standardInfo = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
+            var standardInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
             var model = new ConfirmNonRegulatedStandardViewModel()
             {
                 StandardInformation = standardInfo,
-                LarsCode = standardInfo.LarsCode,
                 CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards)
             };
             return model;

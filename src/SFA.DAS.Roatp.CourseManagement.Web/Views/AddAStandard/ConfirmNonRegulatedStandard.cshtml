@@ -11,7 +11,6 @@
         <partial name="_StandardInformation" for="StandardInformation" />
 
         <form method="post" asp-route="@RouteNames.PostAddStandardConfirmNonRegulatedStandard" enctype="multipart/form-data" novalidate>
-            @Html.HiddenFor(m => m.LarsCode)
             <div esfa-validation-marker-for="IsCorrectStandard" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectStandard" class="govuk-error-message"></span>
 
