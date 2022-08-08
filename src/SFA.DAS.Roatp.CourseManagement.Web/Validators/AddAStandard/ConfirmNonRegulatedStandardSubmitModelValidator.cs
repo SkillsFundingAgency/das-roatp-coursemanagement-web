@@ -3,10 +3,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard
 {
-    public class ConfirmStandardSubmitModelValidator : AbstractValidator<ConfirmNonRegulatedStandardSubmitModel>
+    public class ConfirmNonRegulatedStandardSubmitModelValidator : AbstractValidator<ConfirmNonRegulatedStandardSubmitModel>
     {
-        public const string ConfirmationAnswerMissingMessage = "Answer the question by selecting either yes or no";
-        public ConfirmStandardSubmitModelValidator()
+        public const string ConfirmationAnswerMissingMessage = "Tell us if this is the correct standard";
+        public ConfirmNonRegulatedStandardSubmitModelValidator()
         {
             RuleFor(c => c.IsCorrectStandard)
                 .NotEmpty()
