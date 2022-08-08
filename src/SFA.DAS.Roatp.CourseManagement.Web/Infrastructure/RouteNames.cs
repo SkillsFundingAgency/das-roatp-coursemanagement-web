@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 {
@@ -45,5 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string GetUpdateProviderLocationDetails = "GetUpdateProviderLocationDetails";
         public const string PostUpdateProviderLocationDetails = "PostUpdateProviderLocationDetails";
+        public const string ProviderDescription = "provider-description";
     }
 }
