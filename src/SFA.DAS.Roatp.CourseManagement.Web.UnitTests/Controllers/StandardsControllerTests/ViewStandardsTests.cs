@@ -1,23 +1,20 @@
 ﻿using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,6 +68,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 .AddUrlForRoute(RouteNames.GetConfirmRegulatedStandard, GetConfirmRegulatedStandardLink)
                 .AddUrlForRoute(RouteNames.ReviewYourDetails, ReviewYourDetailsLink)
                 .AddUrlForRoute(RouteNames.GetAddStandardSelectStandard, AddAStandardLink);
+        }
+
+        [Test]
+        public void ViewStandards_ClearsStandardSessionModel()
+        {
+            var method = typeof(StandardsController).GetMethod(nameof(StandardsController.ViewStandards));
+            method.Should().BeDecoratedWith<ClearSessionAttribute>();
+            var clearSessionAttribute = method.GetCustomAttributes(false).FirstOrDefault(att => att.GetType().Name == typeof(ClearSessionAttribute).Name);
+            clearSessionAttribute.As<ClearSessionAttribute>().SessionKey.Should().Be(nameof(StandardSessionModel));
         }
 
         [Test]
