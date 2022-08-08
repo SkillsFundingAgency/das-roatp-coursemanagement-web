@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
 
-            var result = sut.SubmitContactDetails(new EditCourseContactDetailsSubmitModel());
+            var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
 
-            var result = sut.SubmitContactDetails(new EditCourseContactDetailsSubmitModel());
+            var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddContactDetailsController.ViewPath);
@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut,
             StandardSessionModel standardSessionModel,
-            EditCourseContactDetailsSubmitModel submitModel)
+            CourseContactDetailsSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
