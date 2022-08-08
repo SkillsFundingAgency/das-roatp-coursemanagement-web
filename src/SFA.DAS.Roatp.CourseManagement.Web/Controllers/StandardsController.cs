@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -8,6 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Linq;
@@ -28,6 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards", Name = RouteNames.ViewStandards)]
         [HttpGet]
+        [ClearSession(nameof(StandardSessionModel))]
         public async Task<IActionResult> ViewStandards()
         {
             _logger.LogInformation("Getting standards for {ukprn}", Ukprn);
