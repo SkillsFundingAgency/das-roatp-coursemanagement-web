@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class ConfirmNonRegulatedStandardControllerGetTests
     {
         [Test, MoqAutoData]
-        public async Task Get_ModelMissingFromSession_RedirectsToStandardList(
+        public async Task Get_ModelMissingFromSession_RedirectsToSelectAStandard(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNonRegulatedStandardController sut)
