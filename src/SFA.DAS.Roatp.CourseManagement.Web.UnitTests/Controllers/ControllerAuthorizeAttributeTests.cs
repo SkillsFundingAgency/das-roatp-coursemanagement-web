@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
         private readonly List<string> _controllersThatDoNotRequireAuthorize = new List<string>()
         {
-            "PingController", "ProviderAccountController", "ErrorController", "ControllerBase"
+            "PingController", "ProviderAccountController", "ErrorController", "ControllerBase", "AddAStandardControllerBase"
         };
 
         [Test]
