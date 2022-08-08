@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         [HttpPost]
         [Route("{ukprn}/standards/add/contact-details", Name = RouteNames.PostAddStandardAddContactDetails)]
-        public IActionResult SubmitContactDetails(EditCourseContactDetailsSubmitModel submitModel)
+        public IActionResult SubmitContactDetails(CourseContactDetailsSubmitModel submitModel)
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
