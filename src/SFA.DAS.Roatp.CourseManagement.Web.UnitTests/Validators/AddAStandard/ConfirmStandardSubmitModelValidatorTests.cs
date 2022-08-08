@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
         public void IsCorrectStandard_Valid_NoErrors(bool value)
         {
             var model = new ConfirmNonRegulatedStandardSubmitModel { IsCorrectStandard = value };
-            var sut = new ConfirmStandardSubmitModelValidator();
+            var sut = new ConfirmNonRegulatedStandardSubmitModelValidator();
 
             var result = sut.TestValidate(model);
 
@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
         public void IsCorrectStandard_Invalid_NoErrors()
         {
             var model = new ConfirmNonRegulatedStandardSubmitModel();
-            var sut = new ConfirmStandardSubmitModelValidator();
+            var sut = new ConfirmNonRegulatedStandardSubmitModelValidator();
 
             var result = sut.TestValidate(model);
 
