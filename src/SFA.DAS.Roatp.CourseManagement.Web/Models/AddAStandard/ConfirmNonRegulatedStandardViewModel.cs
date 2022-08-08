@@ -10,7 +10,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 
     public class ConfirmNonRegulatedStandardSubmitModel
     {
-        public int LarsCode { get; set; }
         public bool? IsCorrectStandard { get; set; }
     }
 }
