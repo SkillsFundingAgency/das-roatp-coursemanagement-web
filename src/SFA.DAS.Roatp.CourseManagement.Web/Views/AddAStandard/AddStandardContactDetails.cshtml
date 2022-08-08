@@ -12,7 +12,6 @@
         <h1 class="govuk-heading-xl">Your contact information for this standard</h1>
 
         <form method="post" asp-route="@RouteNames.PostAddStandardAddContactDetails" enctype="multipart/form-data" novalidate>
-            @Html.HiddenFor(m => m.LarsCode)
             <div esfa-validation-marker-for="ContactUsEmail" class="govuk-form-group">
                 <label class="govuk-label govuk-label--m" asp-for="ContactUsEmail">
                     Email address

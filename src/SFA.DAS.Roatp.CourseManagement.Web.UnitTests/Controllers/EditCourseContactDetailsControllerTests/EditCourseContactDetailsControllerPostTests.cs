@@ -38,28 +38,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Post_ValidModel_SendsUpdateCommand(EditCourseContactDetailsSubmitModel model)
+        public async Task Post_ValidModel_SendsUpdateCommand(EditCourseContactDetailsSubmitModel model, int larsCode)
         {
-            var result = await _sut.Index(model);
+            var result = await _sut.Index(larsCode, model);
 
-            _mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId), It.IsAny<CancellationToken>()));
+            _mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
             routeResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
             routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
             routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(TestConstants.DefaultUkprn));
-            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(model.LarsCode);
+            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(larsCode);
         }
 
         [Test, AutoData]
-        public async Task Post_InvalidModel_ReturnsView(EditCourseContactDetailsSubmitModel model, GetStandardDetailsQueryResult queryResult)
+        public async Task Post_InvalidModel_ReturnsView(EditCourseContactDetailsSubmitModel model, GetStandardDetailsQueryResult queryResult, int larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
             _sut.ModelState.AddModelError("key", "error");
 
-            var result = await _sut.Index(model);
+            var result = await _sut.Index(larsCode, model);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateProviderCourseContactDetailsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
 
@@ -71,14 +71,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Post_InvalidModelAndCourseDetailsNotFound_ThrowsException(EditCourseContactDetailsSubmitModel submitModel)
+        public async Task Post_InvalidModelAndCourseDetailsNotFound_ThrowsException(EditCourseContactDetailsSubmitModel submitModel, int larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == submitModel.LarsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetStandardDetailsQueryResult)null);
             _sut.ModelState.AddModelError("key", "error");
 
-            Func<Task> action = () => _sut.Index(submitModel);
+            Func<Task> action = () => _sut.Index(larsCode, submitModel);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
         }

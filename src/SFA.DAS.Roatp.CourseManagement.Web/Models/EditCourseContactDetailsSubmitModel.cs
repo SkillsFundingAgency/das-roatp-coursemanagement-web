@@ -5,8 +5,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
 {
     public class EditCourseContactDetailsSubmitModel
     {
-        [FromRoute]
-        public int LarsCode { get; set; }
         public string ContactUsEmail { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsPageUrl { get; set; }
@@ -15,7 +13,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
         public static implicit operator UpdateProviderCourseContactDetailsCommand(EditCourseContactDetailsSubmitModel model) =>
             new UpdateProviderCourseContactDetailsCommand
             {
-                LarsCode = model.LarsCode,
                 ContactUsEmail = model.ContactUsEmail,
                 ContactUsPageUrl = model.ContactUsPageUrl,
                 StandardInfoUrl = model.StandardInfoUrl,

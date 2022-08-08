@@ -35,21 +35,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
         [HttpPost]
-        public async Task<IActionResult> Index(EditCourseContactDetailsSubmitModel submitModel)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, EditCourseContactDetailsSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {
-                var viewModel = await GetViewModel(submitModel.LarsCode);
+                var viewModel = await GetViewModel(larsCode);
                 return View(viewModel);
             }
 
             var command = (UpdateProviderCourseContactDetailsCommand)submitModel;
+            command.LarsCode = larsCode;
             command.Ukprn = Ukprn;
             command.UserId = UserId;
 
             await _mediator.Send(command);
 
-            return RedirectToRoute(RouteNames.GetStandardDetails, new {Ukprn, submitModel.LarsCode });
+            return RedirectToRoute(RouteNames.GetStandardDetails, new {Ukprn, larsCode });
         }
 
         private async Task<EditCourseContactDetailsViewModel> GetViewModel(int larsCode)
