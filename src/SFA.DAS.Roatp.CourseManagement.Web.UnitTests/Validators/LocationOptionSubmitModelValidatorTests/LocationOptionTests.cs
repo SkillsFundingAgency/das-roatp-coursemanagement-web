@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditLocationOptionViewModelValidatorTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.LocationOptionSubmitModelValidatorTests
 {
     [TestFixture]
     public class LocationOptionTests
@@ -11,13 +11,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditLocationOp
         [Test]
         public void WhenNone_ReturnsValidationError()
         {
-            var sut = new EditLocationOptionViewModelValidator();
+            var sut = new LocationOptionSubmitModelValidator();
 
             var model = new EditLocationOptionViewModel();
 
             var result = sut.TestValidate(model);
 
-            result.ShouldHaveValidationErrorFor(c => c.LocationOption).WithErrorMessage(EditLocationOptionViewModelValidator.NoneSelectedErrorMessage);
+            result.ShouldHaveValidationErrorFor(c => c.LocationOption).WithErrorMessage(LocationOptionSubmitModelValidator.NoneSelectedErrorMessage);
         }
     }
 }
