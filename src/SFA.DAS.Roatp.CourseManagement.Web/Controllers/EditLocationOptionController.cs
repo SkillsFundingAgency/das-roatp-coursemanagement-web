@@ -56,23 +56,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [HttpPost]
         [Route("{ukprn}/standards/{larsCode}/edit-location-option", Name = RouteNames.PostLocationOption)]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, [FromRoute] int ukprn, EditLocationOptionViewModel model)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, [FromRoute] int ukprn, LocationOptionSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {
+                var model = new EditLocationOptionViewModel();
                 model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
                 return View(model);
             }
-            _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {locationOption}", Ukprn, larsCode, model.LocationOption);
+            _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {locationOption}", Ukprn, larsCode, submitModel.LocationOption);
 
-            _sessionService.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption, larsCode.ToString());
+            _sessionService.Set(submitModel.LocationOption.ToString(), SessionKeys.SelectedLocationOption, larsCode.ToString());
 
-            switch (model.LocationOption)
+            switch (submitModel.LocationOption)
             {
                 case LocationOption.ProviderLocation:
                 case LocationOption.EmployerLocation:
                     var deleteOption = 
-                        model.LocationOption == LocationOption.ProviderLocation ? 
+                        submitModel.LocationOption == LocationOption.ProviderLocation ? 
                         DeleteProviderCourseLocationOption.DeleteEmployerLocations :
                         DeleteProviderCourseLocationOption.DeleteProviderLocations;
                     var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, deleteOption);
@@ -82,7 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 default:
                     break;
             }
-            if(model.LocationOption == LocationOption.ProviderLocation || model.LocationOption == LocationOption.Both)
+            if(submitModel.LocationOption == LocationOption.ProviderLocation || submitModel.LocationOption == LocationOption.Both)
             {
                 return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
             }

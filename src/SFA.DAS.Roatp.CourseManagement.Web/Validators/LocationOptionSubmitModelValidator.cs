@@ -4,11 +4,11 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
-    public class EditLocationOptionViewModelValidator : AbstractValidator<EditLocationOptionViewModel>
+    public class LocationOptionSubmitModelValidator : AbstractValidator<LocationOptionSubmitModel>
     {
         public const string NoneSelectedErrorMessage = "Select where you will deliver this standard";
 
-        public EditLocationOptionViewModelValidator()
+        public LocationOptionSubmitModelValidator()
         {
             RuleFor(m => m.LocationOption)
                 .NotEqual(LocationOption.None)
