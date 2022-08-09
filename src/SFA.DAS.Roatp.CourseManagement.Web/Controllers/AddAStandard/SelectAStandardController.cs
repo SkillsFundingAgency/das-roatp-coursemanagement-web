@@ -56,9 +56,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var standardInformation = await _mediator.Send(new GetStandardInformationQuery(submitModel.SelectedLarsCode));
 
             if (string.IsNullOrEmpty(standardInformation.RegulatorName))
+            {
+                _logger.LogInformation("Add standard: A non-regulated standard larscode:{larscode} is being added for ukprn:{ukprn} by {userid}", Ukprn, sessionModel.LarsCode, UserId);
+
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
+            }
             else
+            {
+                // Handling regulated standard will be covered in a following story
                 return Ok();
+            }
         }
 
         private async Task<SelectAStandardViewModel> GetModel()

@@ -71,5 +71,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
                 TestConstants.DefaultUkprn));
         }
 
+        [Test, MoqAutoData]
+        public void Get_ModelStateIsValid_RedirectToSelectLocationOption(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] AddContactDetailsController sut,
+            StandardSessionModel standardSessionModel,
+            CourseContactDetailsSubmitModel submitModel)
+        {
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
+
+            var result = sut.SubmitContactDetails(submitModel);
+
+            result.As<RedirectToRouteResult>().Should().NotBeNull();
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectLocationOption);
+        }
     }
 }
