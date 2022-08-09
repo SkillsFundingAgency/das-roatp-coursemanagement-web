@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         public void ImplicitOperator_ConvertsFromStandardDetails(string regulatorName, bool isRegulated)
         {
             const string courseName = "course name";
-            const string level = "2";
+            const int level = 2;
             const string iFateReferenceNumber = "STD_1";
             const string sector = "digital";
             const int larsCode = 133;
@@ -43,15 +43,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.CourseName.Should().Be(courseName);
-            viewModel.Level.Should().Be(level);
-            viewModel.IFateReferenceNumber.Should().Be(iFateReferenceNumber);
-            viewModel.Sector.Should().Be(sector);
-            viewModel.LarsCode.Should().Be(larsCode);
-            viewModel.Version.Should().Be(version);
-            viewModel.RegulatorName.Should().Be(regulatorName);
-            viewModel.IsStandardRegulated.Should().Be(isRegulated);
-            viewModel.CourseDisplayName.Should().Be(expectedCourseDisplayName);
+            viewModel.StandardInformation.CourseName.Should().Be(courseName);
+            viewModel.StandardInformation.Level.Should().Be(level);
+            viewModel.StandardInformation.IfateReferenceNumber.Should().Be(iFateReferenceNumber);
+            viewModel.StandardInformation.Sector.Should().Be(sector);
+            viewModel.StandardInformation.LarsCode.Should().Be(larsCode);
+            viewModel.StandardInformation.Version.Should().Be(version);
+            viewModel.StandardInformation.RegulatorName.Should().Be(regulatorName);
+            viewModel.StandardInformation.IsStandardRegulated.Should().Be(isRegulated);
+            viewModel.StandardInformation.CourseDisplayName.Should().Be(expectedCourseDisplayName);
             viewModel.StandardInfoUrl.Should().Be(standardInfoUrl);
             viewModel.ContactUsEmail.Should().Be(contactUsEmail);
             viewModel.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
@@ -283,7 +283,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.RegulatorName.Should().Be(regulatorName);
+            viewModel.StandardInformation.RegulatorName.Should().Be(regulatorName);
             viewModel.IsApprovedByRegulator.Should().Be(isApprovedByRegulator);
             viewModel.ApprovedByRegulatorStatus().Should().Be(approvedByRegulatorStatus);
         }
