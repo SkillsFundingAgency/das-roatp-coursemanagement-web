@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -43,6 +44,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             _logger.LogInformation("Add standard: Location option added to {locationOption} for ukprn:{ukprn} larscode:{larscode}", submitModel.LocationOption, Ukprn, sessionModel.LarsCode);
 
+            if (submitModel.LocationOption == LocationOption.EmployerLocation)
+            {
+                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNationalProvider);
+            }
+            // If the location option is provider or both then we need to navigate to provider location page which is covered in a follow up story
             return Ok();
         }
 
