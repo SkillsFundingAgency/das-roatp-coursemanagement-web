@@ -1,0 +1,45 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
+@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model ProviderLocationViewModel
+@{
+    ViewBag.Title = "View training venue";
+}
+
+@section breadcrumb {
+    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-caption-xl">Training venue</div>
+        <h1 class="govuk-heading-xl">@Model.LocationName</h1>
+
+        <h2 class="govuk-heading-l">Address</h2>
+        <p class="govuk-body">@Model.AddressLine1</p>
+        <p class="govuk-body">@Model.AddressLine2</p>
+        <p class="govuk-body">@Model.Town</p>
+        <p class="govuk-body">@Model.County</p>
+        <p class="govuk-body">@Model.Postcode</p>
+
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <h2 class="govuk-heading-l">Venue contact details</h2>
+        <h3 class="govuk-heading-m" id="table-header-contact">Website</h3>
+        <p class="govuk-body">@Model.Website</p>
+        <h3 class="govuk-heading-m" id="table-header-contact">Email address</h3>
+        <p class="govuk-body">@Model.Email</p>
+        <h3 class="govuk-heading-m" id="table-header-contact">Telephone number</h3>
+        <p class="govuk-body">@Model.Phone</p>
+
+        <p class="govuk-body">
+            <a href="#" class="govuk-link">
+                Update contact details
+            </a>
+        </p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        <p class="govuk-body">
+            <a href="@Model.BackUrl" class="govuk-link">
+                Back to training venues
+            </a>
+        </p>
+    </div>
+</div>
