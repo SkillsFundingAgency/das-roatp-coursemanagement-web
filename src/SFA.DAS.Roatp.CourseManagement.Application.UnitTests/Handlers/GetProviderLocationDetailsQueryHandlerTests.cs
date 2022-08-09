@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -48,8 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
-            result.Should().NotBeNull();
-            result.ProviderLocation.Should().BeNull();
+            result.Should().BeNull();
         }
     }
 }
