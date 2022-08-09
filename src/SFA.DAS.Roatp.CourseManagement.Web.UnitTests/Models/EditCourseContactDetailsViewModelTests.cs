@@ -18,6 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models
 
             command.Should().BeEquivalentTo(sut, o => 
             {
+                o.Excluding(c => c.LarsCode);
                 o.Excluding(c => c.BackLink);
                 o.Excluding(c => c.CancelLink);
                 o.Excluding(c => c.ProviderCourseId);

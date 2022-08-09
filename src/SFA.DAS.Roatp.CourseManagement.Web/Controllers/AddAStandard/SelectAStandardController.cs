@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -31,6 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         [Route("{ukprn}/standards/add/select-standard", Name = RouteNames.GetAddStandardSelectStandard)]
         [HttpGet]
+        [ClearSession(nameof(StandardSessionModel))]
         public async Task<IActionResult> SelectAStandard()
         {
             var model = await GetModel();

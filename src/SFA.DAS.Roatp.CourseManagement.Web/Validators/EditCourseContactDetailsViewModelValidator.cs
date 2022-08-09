@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
-    public class EditCourseContactDetailsViewModelValidator: AbstractValidator<EditCourseContactDetailsViewModel>
+    public class EditCourseContactDetailsViewModelValidator: AbstractValidator<EditCourseContactDetailsSubmitModel>
     {
         public EditCourseContactDetailsViewModelValidator()
         {

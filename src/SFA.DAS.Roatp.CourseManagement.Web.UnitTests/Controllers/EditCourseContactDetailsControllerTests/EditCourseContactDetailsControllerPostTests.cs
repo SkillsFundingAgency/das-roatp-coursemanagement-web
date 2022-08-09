@@ -1,19 +1,17 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,66 +20,67 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
     [TestFixture]
     public class EditCourseContactDetailsControllerPostTests
     {
-        private const string Ukprn = "10012002";
-        private static string UserId = Guid.NewGuid().ToString();
         private static string DetailsUrl = Guid.NewGuid().ToString();
-        private Mock<ILogger<EditCourseContactDetailsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
-        private Mock<IUrlHelper> _urlHelperMock;
         private EditCourseContactDetailsController _sut;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<EditCourseContactDetailsController>>();
             _mediatorMock = new Mock<IMediator>();
-            _urlHelperMock = new Mock<IUrlHelper>();
-            _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetStandardDetails))))
-               .Returns(DetailsUrl);
 
-            var user = new ClaimsPrincipal(new ClaimsIdentity(
-                new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), new Claim(ProviderClaims.UserId, UserId)}, 
-                "mock"));
-            var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new EditCourseContactDetailsController(_mediatorMock.Object, _loggerMock.Object)
-            {
-                Url = _urlHelperMock.Object,
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = httpContext
-                }
-            };
+            _sut = new EditCourseContactDetailsController(_mediatorMock.Object, Mock.Of<ILogger<EditCourseContactDetailsController>>());
+            _sut
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetStandardDetails, DetailsUrl);
+
         }
 
         [Test, AutoData]
-        public async Task Post_ValidModel_SendsUpdateCommand(EditCourseContactDetailsViewModel model)
+        public async Task Post_ValidModel_SendsUpdateCommand(EditCourseContactDetailsSubmitModel model, int larsCode)
         {
-            var result = await _sut.Index(model);
+            var result = await _sut.Index(larsCode, model);
 
-            _mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(Ukprn) && c.UserId == UserId), It.IsAny<CancellationToken>()));
+            _mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
             routeResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
             routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
-            routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(Ukprn));
-            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(model.LarsCode);
+            routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(TestConstants.DefaultUkprn));
+            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(larsCode);
         }
 
         [Test, AutoData]
-        public async Task Post_InValidModel_ReturnsView(EditCourseContactDetailsViewModel model)
+        public async Task Post_InvalidModel_ReturnsView(EditCourseContactDetailsSubmitModel model, GetStandardDetailsQueryResult queryResult, int larsCode)
         {
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
             _sut.ModelState.AddModelError("key", "error");
 
-            var result = await _sut.Index(model);
+            var result = await _sut.Index(larsCode, model);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateProviderCourseContactDetailsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.Model.Should().Be(model);
-            model.BackLink.Should().Be(DetailsUrl);
-            model.CancelLink.Should().Be(DetailsUrl);
+            var viewModel = (EditCourseContactDetailsViewModel) viewResult.Model;
+            viewModel.BackLink.Should().Be(DetailsUrl);
+            viewModel.CancelLink.Should().Be(DetailsUrl);
+        }
+
+        [Test, AutoData]
+        public async Task Post_InvalidModelAndCourseDetailsNotFound_ThrowsException(EditCourseContactDetailsSubmitModel submitModel, int larsCode)
+        {
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetStandardDetailsQueryResult)null);
+            _sut.ModelState.AddModelError("key", "error");
+
+            Func<Task> action = () => _sut.Index(larsCode, submitModel);
+
+            await action.Should().ThrowAsync<InvalidOperationException>();
         }
     }
 }

@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -40,6 +41,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             model.CancelLink.Should().Be(TestConstants.DefaultUrl);
             var expectedNames = queryResult.AvailableCourses.Select(s => $"{s.Title} (Level {s.Level})");
             model.Standards.All(s => expectedNames.Contains(s.Text)).Should().BeTrue();
+        }
+
+        [Test]
+        public void SelectAStandard_ClearsStandardSessionModel()
+        {
+            var method = typeof(SelectAStandardController).GetMethod(nameof(SelectAStandardController.SelectAStandard));
+            method.Should().BeDecoratedWith<ClearSessionAttribute>();
+            var clearSessionAttribute = method.GetCustomAttributes(false).FirstOrDefault(att => att.GetType().Name == typeof(ClearSessionAttribute).Name);
+            clearSessionAttribute.As<ClearSessionAttribute>().SessionKey.Should().Be(nameof(StandardSessionModel));
         }
     }
 }

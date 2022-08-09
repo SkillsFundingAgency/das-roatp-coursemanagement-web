@@ -28,6 +28,33 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Index([FromRoute] int larsCode)
         {
+            EditCourseContactDetailsViewModel model = await GetViewModel(larsCode);
+
+            return View(model);
+        }
+
+        [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
+        [HttpPost]
+        public async Task<IActionResult> Index([FromRoute] int larsCode, EditCourseContactDetailsSubmitModel submitModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                var viewModel = await GetViewModel(larsCode);
+                return View(viewModel);
+            }
+
+            var command = (UpdateProviderCourseContactDetailsCommand)submitModel;
+            command.LarsCode = larsCode;
+            command.Ukprn = Ukprn;
+            command.UserId = UserId;
+
+            await _mediator.Send(command);
+
+            return RedirectToRoute(RouteNames.GetStandardDetails, new {Ukprn, larsCode });
+        }
+
+        private async Task<EditCourseContactDetailsViewModel> GetViewModel(int larsCode)
+        {
             var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
             if (result == null)
@@ -39,27 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = (EditCourseContactDetailsViewModel)result;
 
             model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
-
-            return View(model);
-        }
-
-        [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
-        [HttpPost]
-        public async Task<IActionResult> Index(EditCourseContactDetailsViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                model.BackLink = model.CancelLink = GetStandardDetailsUrl(model.LarsCode);
-                return View(model);
-            }
-
-            var command = (UpdateProviderCourseContactDetailsCommand)model;
-            command.Ukprn = Ukprn;
-            command.UserId = UserId;
-
-            await _mediator.Send(command);
-
-            return RedirectToRoute(RouteNames.GetStandardDetails, new {Ukprn, model.LarsCode });
+            return model;
         }
     }
 }
