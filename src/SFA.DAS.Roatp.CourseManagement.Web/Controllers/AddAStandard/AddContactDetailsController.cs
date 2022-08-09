@@ -28,6 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             if (sessionModel == null) return redirectResult;
 
             var model = new AddStandardContactDetailsViewModel();
+            model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
             return View(ViewPath, model);
         }
 
@@ -47,6 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                     ContactUsPageUrl = submitModel.ContactUsPageUrl,
                     StandardInfoUrl = submitModel.StandardInfoUrl
                 };
+                model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
                 return View(ViewPath, model);
             }
 

@@ -35,9 +35,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public void Get_ModelStateIsInvalid_ReturnsViewResult(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut,
-             StandardSessionModel standardSessionModel)
+             StandardSessionModel standardSessionModel,
+             string cancelLink)
         {
-            sut.AddDefaultContextWithUser();
+            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
 
@@ -45,6 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddContactDetailsController.ViewPath);
+            result.As<ViewResult>().Model.As<AddStandardContactDetailsViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
