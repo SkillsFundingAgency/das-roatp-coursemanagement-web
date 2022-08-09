@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
     public class ProviderCourseLocationAddSubmitModel
     {
         public string TrainingVenue { get; set; }
-        public bool HasDayRelease { get; set; }
-        public bool HasBlockRelease { get; set; }
+        public bool HasDayReleaseDeliveryOption { get; set; }
+        public bool HasBlockReleaseDeliveryOption { get; set; }
     }
 }
