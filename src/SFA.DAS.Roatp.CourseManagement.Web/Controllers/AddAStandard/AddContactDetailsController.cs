@@ -57,7 +57,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             _sessionService.Set(sessionModel, Ukprn.ToString());
 
-            return Ok();
+            _logger.LogInformation("Add standard: Contact details added for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
+
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectLocationOption);
         }
     }
 }
