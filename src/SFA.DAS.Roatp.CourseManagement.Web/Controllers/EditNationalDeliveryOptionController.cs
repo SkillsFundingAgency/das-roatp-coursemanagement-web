@@ -44,25 +44,25 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [HttpPost]
         [Route("{ukprn}/standards/{LarsCode}/edit-national-delivery-option", Name = RouteNames.PostNationalDeliveryOption)]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, EditNationalDeliveryOptionViewModel model)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, ConfirmNationalProviderSubmitModel model)
         {
             if (!ModelState.IsValid)
             {
-                _logger.LogInformation("National delivery option was not selected ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
+                _logger.LogInformation("National delivery option was not selected ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
                 return View(GetModel(larsCode));
             }
 
             if (model.HasNationalDeliveryOption.GetValueOrDefault())
             {
-                _logger.LogInformation("National delivery option selected, adding national location to ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
-                await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, model.LarsCode, UserId, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
-                await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, model.LarsCode, UserId));
-                return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
+                _logger.LogInformation("National delivery option selected, adding national location to ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
+                await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
+                await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId));
+                return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
             }
 
-            _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{ukprn} larscode:{larscode}", Ukprn, model.LarsCode);
+            _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
 
-            return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, model.LarsCode }); 
+            return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode }); 
         }
 
         private EditNationalDeliveryOptionViewModel GetModel(int larsCode) => new EditNationalDeliveryOptionViewModel
