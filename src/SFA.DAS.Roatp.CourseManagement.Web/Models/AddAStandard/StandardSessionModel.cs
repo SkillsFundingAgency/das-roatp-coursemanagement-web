@@ -11,5 +11,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         public string ContactUsPageUrl { get; set; }
         public string StandardInfoUrl { get; set; }
         public LocationOption LocationOption { get; set; }
+        public bool? HasNationalDeliveryOption { get; set; }
     }
 }
