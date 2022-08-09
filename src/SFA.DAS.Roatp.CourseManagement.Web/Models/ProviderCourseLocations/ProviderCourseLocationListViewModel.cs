@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
     public class ProviderCourseLocationListViewModel
     {
@@ -11,6 +10,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         [FromRoute]
         public int Ukprn { get; set; }
         public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocationViewModel>();
+        public string AddTrainingLocationUrl { get; set; }
         public string BackUrl { get; set; }
         public string CancelUrl { get; set; }
     }
