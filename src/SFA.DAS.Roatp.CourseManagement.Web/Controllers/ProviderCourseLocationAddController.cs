@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,14 +46,26 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
             _logger.LogInformation("Begin of jounrey for ukprn: {ukprn} to add standard {larscode}", Ukprn, submitModel.TrainingVenue);
 
-            return Ok();
+            var command = new AddProviderCourseLocationCommand()
+            {
+                Ukprn = base.Ukprn,
+                UserId = base.UserId,
+                LarsCode = larsCode,
+                LocationNavigationId = Guid.Parse(submitModel.TrainingVenue),
+                HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
+                HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption
+            };
+
+            await _mediator.Send(command);
+
+            return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { ukprn = Ukprn, larsCode});
         }
 
         private async Task<ProviderCourseLocationAddViewModel> GetModel(int larsCode)
         {
             var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
             var model = new ProviderCourseLocationAddViewModel();
-            model.TrainingVenues = result.ProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.LocationName));
+            model.TrainingVenues = result.ProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString()));
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { ukprn = Ukprn, larsCode });
             return model;
         }
