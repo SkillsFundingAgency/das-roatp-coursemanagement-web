@@ -1,7 +1,7 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 @model StandardDetailsViewModel
 @{
-    ViewBag.Title = "Standards";
+    ViewBag.Title = "Standard details";
 }
 
 @section breadcrumb {
@@ -12,57 +12,12 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Manage a standard</div>
         <partial name="_StandardInformation" for="StandardInformation" />
-        <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
 
 <div class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">Information that is specific for this standard</h2>
-        <h3 class="govuk-heading-m" id="table-header-contact">Contact details</h3>
-        <p class="govuk-body">If there is a specific person or team that should be contacted for this standard, update these contact details.</p>
-        <table class="govuk-table" aria-labelledby="table-header-contact">
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header das-table-cell-width-30" scope="row">
-                        Email address
-                    </th>
-                    <td class="govuk-table__cell das-table-cell-width-70">
-                        <span class="das-breakable">
-                            @Model.ContactUsEmail
-                        </span>
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
-                        Telephone number
-                    </th>
-                    <td class="govuk-table__cell">
-                        @Model.ContactUsPhoneNumber
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
-                        Contact page link
-                    </th>
-                    <td class="govuk-table__cell">
-                        <span class="das-breakable">
-                            @Model.ContactUsPageUrl
-                        </span>
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
-                        Website page
-                    </th>
-                    <td class="govuk-table__cell">
-                        <span class="das-breakable">
-                            @Model.StandardInfoUrl
-                        </span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <partial name="_StandardContactInformation" for="ContactInformation" />
         <p class="govuk-body">
             <a href="@Model.EditContactDetailsUrl" aria-describedby="Update-contact-details" class="govuk-link">
                 Update these contact details
@@ -70,42 +25,47 @@
         </p>
     </div>
 </div>
-<div class="govuk-grid-row govuk-!-margin-top-8" style="display:@(Model.StandardInformation.IsStandardRegulated ?" display" :"none")">
-    <div class="govuk-grid-column-two-thirds">
 
-        <h3 class="govuk-heading-m" id="table-header-regulation">Regulation</h3>
-        <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
+@if (Model.StandardInformation.IsStandardRegulated)
+{
+    <div class="govuk-grid-row govuk-!-margin-top-8">
+        <div class="govuk-grid-column-two-thirds">
 
-        <table class="govuk-table" aria-labelledby="table-header-regulation">
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header das-table-cell-width-30" scope="row">
-                        Regulator
-                    </th>
-                    <td class="govuk-table__cell das-table-cell-width-50">
-                        @Model.StandardInformation.RegulatorName
-                    </td>
-                    <td class="govuk-table__cell das-table-cell-width-20">
-                    </td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="row">
-                        Approved
-                    </th>
-                    <td class="govuk-table__cell">
-                        @Model.ApprovedByRegulatorStatus()
-                    </td>
-                    <td class="govuk-table__cell">
-                        <a href="@Model.ConfirmRegulatedStandardUrl" aria-describedby="change-approved-regulator" class="govuk-link">
-                            Change
-                        </a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
+            <h3 class="govuk-heading-m" id="table-header-regulation">Regulation</h3>
+            <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
+
+            <table class="govuk-table" aria-labelledby="table-header-regulation">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                            Regulator
+                        </th>
+                        <td class="govuk-table__cell das-table-cell-width-50">
+                            @Model.StandardInformation.RegulatorName
+                        </td>
+                        <td class="govuk-table__cell das-table-cell-width-20">
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">
+                            Approved
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.ApprovedByRegulatorStatus()
+                        </td>
+                        <td class="govuk-table__cell">
+                            <a href="@Model.ConfirmRegulatedStandardUrl" aria-describedby="change-approved-regulator" class="govuk-link">
+                                Change
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
+        </div>
     </div>
-</div>
+}
+
 <div class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
         <table class="govuk-table" aria-label="Where you deliver this standard">

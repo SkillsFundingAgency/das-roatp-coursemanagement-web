@@ -52,9 +52,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.StandardInformation.RegulatorName.Should().Be(regulatorName);
             viewModel.StandardInformation.IsStandardRegulated.Should().Be(isRegulated);
             viewModel.StandardInformation.CourseDisplayName.Should().Be(expectedCourseDisplayName);
-            viewModel.StandardInfoUrl.Should().Be(standardInfoUrl);
-            viewModel.ContactUsEmail.Should().Be(contactUsEmail);
-            viewModel.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
+            viewModel.ContactInformation.StandardInfoUrl.Should().Be(standardInfoUrl);
+            viewModel.ContactInformation.ContactUsEmail.Should().Be(contactUsEmail);
+            viewModel.ContactInformation.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
         }
 
         [Test]

@@ -9,18 +9,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
     public class StandardDetailsViewModel
     {
         public StandardInformationViewModel StandardInformation { get; set; }
-        public string StandardInfoUrl { get; set; }
-        public string ContactUsPhoneNumber { get; set; }
-        public string ContactUsEmail { get; set; }
-        public string ContactUsPageUrl { get; set; }
+
+        public StandardContactInformationViewModel ContactInformation { get; set; }
+
         public string EditLocationOptionUrl { get; set; }
-        public List<ProviderCourseLocations.ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
 
-        public List<ProviderCourseLocations.ProviderCourseLocationViewModel> SubRegionCourseLocations { get; set; }
 
-        public ProviderCourseLocations.ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
+        public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
 
-        public IEnumerable<IGrouping<string, ProviderCourseLocations.ProviderCourseLocationViewModel>> Regions()
+        public List<ProviderCourseLocationViewModel> SubRegionCourseLocations { get; set; }
+
+        public ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
+
+        public IEnumerable<IGrouping<string, ProviderCourseLocationViewModel>> Regions()
            {
            return  SubRegionCourseLocations
                 .GroupBy(x => x.RegionName)
@@ -83,10 +84,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                     Sector = standardDetails.Sector,
                     Version = standardDetails.Version,
                 },
-                StandardInfoUrl = standardDetails.StandardInfoUrl,
-                ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
-                ContactUsEmail = standardDetails.ContactUsEmail,
-                ContactUsPageUrl = standardDetails.ContactUsPageUrl,
+                ContactInformation = new StandardContactInformationViewModel
+                {
+                    StandardInfoUrl = standardDetails.StandardInfoUrl,
+                    ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
+                    ContactUsEmail = standardDetails.ContactUsEmail,
+                    ContactUsPageUrl = standardDetails.ContactUsPageUrl
+                },
                 ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 SubRegionCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Regional).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
