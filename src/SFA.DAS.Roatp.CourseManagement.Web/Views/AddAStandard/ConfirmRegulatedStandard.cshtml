@@ -1,0 +1,47 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
+@model ConfirmNonRegulatedStandardViewModel
+@{
+    ViewBag.Title = "Confirm standard";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Add standard</div>
+        <partial name="_StandardInformation" for="StandardInformation" />
+
+        <form method="post" asp-route="@RouteNames.PostAddStandardConfirmNonRegulatedStandard" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="IsCorrectStandard" class="govuk-form-group">
+                <span asp-validation-for="IsCorrectStandard" class="govuk-error-message"></span>
+
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                        <h1 class="govuk-fieldset__heading">
+                            Is this the correct standard?
+                        </h1>
+                    </legend>
+                    <div id="IsCorrectStandard" class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-correct-standard-yes" type="radio" value="true"
+                                   asp-for="IsCorrectStandard" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-correct-standard-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-correct-standard-no" type="radio" value="false"
+                                   asp-for="IsCorrectStandard" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-correct-standard-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
