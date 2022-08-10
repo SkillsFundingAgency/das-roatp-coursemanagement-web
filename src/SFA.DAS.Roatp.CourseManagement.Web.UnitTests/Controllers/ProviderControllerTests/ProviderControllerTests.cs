@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
         [Test]
         public async Task ProviderController_ViewProviderDescription_ReturnsValidResponse()
         {
-            var result = await _controller.ViewProductDescription(Ukprn);
+            var result = await _controller.ViewProviderDescription(Ukprn);
         
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderDescriptionViewModel;
             model.Should().NotBeNull();
-            model.ProductDescription = MarketingInfo;
+            model.Description = MarketingInfo;
             model.BackUrl.Should().Be(ReviewYourDetailsLink);
         }
 
@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
             _mediator.Setup(m => m.Send(It.IsAny<GetProviderQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetProviderQueryResult)null);
 
-            var result = await _controller.ViewProductDescription(Ukprn);
+            var result = await _controller.ViewProviderDescription(Ukprn);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderDescriptionViewModel;
             model.Should().NotBeNull();
-            model.ProductDescription = null;
+            model.Description = null;
             model.BackUrl.Should().Be(ReviewYourDetailsLink);
         }
     }

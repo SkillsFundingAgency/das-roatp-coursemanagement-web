@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/provider-description", Name = RouteNames.GetProviderDescription)]
         [HttpGet]
-        public async Task<IActionResult> ViewProductDescription(int ukprn)
+        public async Task<IActionResult> ViewProviderDescription(int ukprn)
         {
             _logger.LogInformation("Provider data gathering for {ukprn}", Ukprn);
             var result = await _mediator.Send(new GetProviderQuery(ukprn));
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = new ProviderDescriptionViewModel
             {
                 BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
-                ProductDescription = result?.Provider?.MarketingInfo
+                Description = result?.Provider?.MarketingInfo
             };
 
             if (result == null)
