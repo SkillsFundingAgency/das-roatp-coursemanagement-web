@@ -42,8 +42,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/add/confirm-standard", Name = RouteNames.PostAddStandardConfirmNonRegulatedStandard)]
         public async Task<IActionResult> SubmitConfirmationOfStandard(ConfirmNonRegulatedStandardSubmitModel submitModel)
         {
-            var (sessionModel, redicrectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redicrectResult;
+            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+            if (sessionModel == null) return redirectResult;
 
             if (!ModelState.IsValid)
             {
@@ -58,8 +58,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
 
             sessionModel.IsConfirmed = true;
-
-            _logger.LogInformation("Add standard: Non-regulated standard confirmed for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
+            //MFCMFC added, need to include in coverage
+            _sessionService.Set(_sessionService,Ukprn.ToString());
 
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
