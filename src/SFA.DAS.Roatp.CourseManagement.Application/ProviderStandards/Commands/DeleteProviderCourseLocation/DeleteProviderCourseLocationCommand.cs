@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations
 {
@@ -6,10 +7,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCo
     {
         public int Ukprn { get; }
         public int LarsCode { get; }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string UserId { get; set; }
 
-        public DeleteProviderCourseLocationCommand(int ukprn, int larsCode, int id, string userId)
+        public DeleteProviderCourseLocationCommand(int ukprn, int larsCode, Guid id, string userId)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

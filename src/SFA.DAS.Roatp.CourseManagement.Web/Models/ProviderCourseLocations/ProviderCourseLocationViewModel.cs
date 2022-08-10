@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
@@ -8,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
     {
         [FromRoute]
         public int LarsCode { get; set; }
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
