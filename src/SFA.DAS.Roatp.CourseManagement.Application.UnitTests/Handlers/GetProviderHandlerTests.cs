@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [SetUp]
         public void Setup()
         {
-            _provider.Ukprn = Ukprn;
+//            _provider. = Ukprn;
             _query = new GetProviderQuery(Ukprn);
             _apiClient = new Mock<IApiClient>();
             _handler = new GetProviderQueryHandler(_apiClient.Object, Mock.Of<ILogger<GetProviderQueryHandler>>());

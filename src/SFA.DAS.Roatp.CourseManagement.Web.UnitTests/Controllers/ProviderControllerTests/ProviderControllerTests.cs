@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -11,16 +8,12 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderDescription;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderDescriptionControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderControllerTests
 {
     [TestFixture]
     public class ProviderControllerTests
@@ -40,16 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderDescr
             _logger = new Mock<ILogger<ProviderController>>();
             var provider = new Domain.ApiModels.Provider
             {
-                Ukprn = Ukprn,
-                LegalName = "ZZZ Training",
-                TradingName = "ZZZ",
-                Email = "zzz@test.com",
-                Phone = "1234567890",
-                Website = "http://zzz.com",
-                MarketingInfo = MarketingInfo,
-                EmployerSatisfaction = 8,
-                LearnerSatisfaction = 9,
-                IsImported = true
+                MarketingInfo = MarketingInfo
             };
 
 
