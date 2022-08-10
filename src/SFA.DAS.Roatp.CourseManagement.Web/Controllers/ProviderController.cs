@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 _logger.LogInformation("Provider data not found for {ukprn}", Ukprn);
             }
 
-            return View("~/Views/GetProviderDescription/Index.cshtml", model);
+            return View("~/Views/ProviderDescription/Index.cshtml", model);
         }
     }
 }
