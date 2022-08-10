@@ -26,6 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewProductDescription(int ukprn)
         {
+            _logger.LogInformation("Provider data gathering for {ukprn}", Ukprn);
             var result = await _mediator.Send(new GetProviderQuery(ukprn));
 
             var model = new ProviderDescriptionViewModel

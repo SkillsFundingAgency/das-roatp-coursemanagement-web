@@ -33,31 +33,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderDescr
         public const string MarketingInfo = "Marketing info";
         
         private static string ReviewYourDetailsLink = Guid.NewGuid().ToString();
-        // private static string GetStandardDetailsLink = Guid.NewGuid().ToString();
-        // private static string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
-        // private static string AddAStandardLink = Guid.NewGuid().ToString();
-
+  
         [SetUp]
         public void Before_each_test()
         {
             _logger = new Mock<ILogger<ProviderController>>();
-
-            // var standard1 = new Standard
-            // {
-            //     ProviderCourseId = 1,
-            //     CourseName = "test1",
-            //     Level = 1,
-            //     IsImported = true,
-            //     ApprovalBody = "TestBody1",
-            // };
-            // var standard2 = new Standard
-            // {
-            //     ProviderCourseId = 2,
-            //     CourseName = "test2",
-            //     Level = 2,
-            //     IsImported = false,
-            //     ApprovalBody = null
-            // };
             var provider = new Domain.ApiModels.Provider
             {
                 Ukprn = Ukprn,
