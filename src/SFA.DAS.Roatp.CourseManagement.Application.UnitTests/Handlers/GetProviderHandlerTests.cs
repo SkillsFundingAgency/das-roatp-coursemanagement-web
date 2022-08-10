@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         {
             _apiClient.Setup(x => x.Get<Provider>($"providers/{ _query.Ukprn}")).ReturnsAsync((Provider)null);
 
-            Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_query, CancellationToken.None));
+            Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(_query, CancellationToken.None));
         }
     }
 }

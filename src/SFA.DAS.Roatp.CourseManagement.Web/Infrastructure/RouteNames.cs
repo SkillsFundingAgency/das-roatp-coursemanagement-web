@@ -45,6 +45,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostAddProviderLocationDetails = "PostAddProviderLocationDetails";
         public const string GetUpdateProviderLocationDetails = "GetUpdateProviderLocationDetails";
         public const string PostUpdateProviderLocationDetails = "PostUpdateProviderLocationDetails";
-        public const string ProviderDescription = "provider-description";
+        public const string GetProviderDescription = "provider-description";
     }
 }

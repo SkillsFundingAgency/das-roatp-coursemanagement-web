@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
@@ -11,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using System.Security.Claims;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 {
@@ -21,45 +21,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         public void Index_ReturnsViewWithModel()
         {
             var mockOptions = new Mock<IOptions<ProviderSharedUIConfiguration>>();
-            ProviderSharedUIConfiguration config = new ProviderSharedUIConfiguration() { DashboardUrl = @"https://dashboard.com" };
+            var config = new ProviderSharedUIConfiguration() { DashboardUrl = @"https://dashboard.com" };
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{new Claim(ProviderClaims.ProviderUkprn,"111")}, "mock"));
-            Mock<IUrlHelper> urlHelper = new Mock<IUrlHelper>();
-            string verifyUrl = "http://test";
-            string providerDescriptionUrl = "http://test/provider-description";
-            UrlRouteContext verifyRouteValues = null;
-            urlHelper
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.ViewStandards)
-               )))
-               .Returns(verifyUrl)
-               .Callback<UrlRouteContext>(c =>
-               {
-                   verifyRouteValues = c;
-               });
-            urlHelper
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetProviderLocations)
-               )))
-               .Returns(verifyUrl)
-               .Callback<UrlRouteContext>(c =>
-               {
-                   verifyRouteValues = c;
-               });
-
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.ProviderDescription)
-                )))
-                .Returns(providerDescriptionUrl)
-                .Callback<UrlRouteContext>(c =>
-                {
-                    verifyRouteValues = c;
-                });
+           
+            var  viewStandardsUrl = "http://test/view-standards";
+            var providerLocationsUrl = "http://test/provider-locations";
+            var providerDescriptionUrl = "http://test/provider-description";
+            
             var expectedModel = new ReviewYourDetailsViewModel()
             {
                 BackUrl = config.DashboardUrl,
-                ProviderLocationsUrl = verifyUrl,
-                StandardsUrl = verifyUrl,
+                ProviderLocationsUrl = providerLocationsUrl,
+                StandardsUrl = viewStandardsUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl
             };
             mockOptions.Setup(o => o.Value).Returns(config);
@@ -70,7 +43,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                     HttpContext = new DefaultHttpContext() { User = user },
                 },
             };
-            sut.Url = urlHelper.Object;
+            
+            sut.AddDefaultContextWithUser()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ViewStandards, viewStandardsUrl)
+            .AddUrlForRoute(RouteNames.GetProviderLocations,providerLocationsUrl)
+            .AddUrlForRoute(RouteNames.GetProviderDescription, providerDescriptionUrl);
 
             var result = sut.ReviewYourDetails() as ViewResult;
             result.Should().NotBeNull();

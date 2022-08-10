@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries
             if (provider == null)
             {
                 _logger.LogError("Provider not found for {ukprn}", request.Ukprn);
-                throw new ValidationException($"Provider not found for UKPRN {request.Ukprn}",null);
+                throw new InvalidOperationException($"Provider not found for UKPRN {request.Ukprn}");
             }
 
             return new GetProviderQueryResult

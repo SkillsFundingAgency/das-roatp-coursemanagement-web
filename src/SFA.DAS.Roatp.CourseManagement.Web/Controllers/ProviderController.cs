@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             _logger = logger;
         }
 
-        [Route("{ukprn}/provider-description", Name = RouteNames.ProviderDescription)]
+        [Route("{ukprn}/provider-description", Name = RouteNames.GetProviderDescription)]
         [HttpGet]
         public async Task<IActionResult> ViewProductDescription(int ukprn)
         {
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 _logger.LogInformation("Provider data not found for {ukprn}", Ukprn);
             }
 
-            return View("~/Views/ProviderDescription/Index.cshtml", model);
+            return View("~/Views/GetProviderDescription/Index.cshtml", model);
         }
     }
 }
