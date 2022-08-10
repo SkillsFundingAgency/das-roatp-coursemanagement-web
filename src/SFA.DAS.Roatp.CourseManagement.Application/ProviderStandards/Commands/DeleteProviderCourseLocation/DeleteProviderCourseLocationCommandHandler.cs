@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCo
         {
             _logger.LogInformation("Command triggered to remove course location for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
 
-            var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/location/delete/{request.Id}", request);
+            var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/location/{request.Id}/delete", request);
 
             if (statusCode != HttpStatusCode.NoContent)
             {

@@ -43,6 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model = (ProviderLocationViewModel)result.ProviderLocation;
             model.BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
+            model.UpdateContactDetailsUrl = Url.RouteUrl(RouteNames.GetUpdateProviderLocationDetails, new { ukprn = Ukprn, Id });
             return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
         }
     }

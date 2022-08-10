@@ -14,24 +14,29 @@
         <div class="govuk-caption-xl">Training venue</div>
         <h1 class="govuk-heading-xl">@Model.LocationName</h1>
 
-        <h2 class="govuk-heading-l">Address</h2>
-        <p class="govuk-body">@Model.AddressLine1</p>
-        <p class="govuk-body">@Model.AddressLine2</p>
-        <p class="govuk-body">@Model.Town</p>
-        <p class="govuk-body">@Model.County</p>
-        <p class="govuk-body">@Model.Postcode</p>
+        <div class="govuk-form-group">
+            <label class="govuk-label govuk-label--l" asp-for="LocationName">
+                Address
+            </label>
+            <p style="govuk-body">
+                <span>@Model.AddressLine1</span><br>
+                <span>@Model.AddressLine2</span><br>
+                <span>@Model.Town</span><br>
+                <span>@Model.Postcode</span>
+            </p>
+        </div>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         <h2 class="govuk-heading-l">Venue contact details</h2>
         <h3 class="govuk-heading-m" id="table-header-contact">Website</h3>
         <p class="govuk-body">@Model.Website</p>
         <h3 class="govuk-heading-m" id="table-header-contact">Email address</h3>
-        <p class="govuk-body">@Model.Email</p>
+        <p class="govuk-body">@Model.EmailAddress</p>
         <h3 class="govuk-heading-m" id="table-header-contact">Telephone number</h3>
-        <p class="govuk-body">@Model.Phone</p>
+        <p class="govuk-body">@Model.PhoneNumber</p>
 
         <p class="govuk-body">
-            <a href="#" class="govuk-link">
+            <a href="@Model.UpdateContactDetailsUrl" class="govuk-link">
                 Update contact details
             </a>
         </p>

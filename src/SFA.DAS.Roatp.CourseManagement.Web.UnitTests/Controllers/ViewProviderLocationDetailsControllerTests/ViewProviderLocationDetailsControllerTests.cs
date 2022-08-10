@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
         private Mock<IMediator> _mediatorMock;
         private ViewProviderLocationDetailsController _sut;
         string verifyUrl = "http://test";
+        string verifyUpdateProviderLocationDetailsUrl = "http://test-UpdateProviderLocationDetailsUrl";
 
         [SetUp]
         public void Before_Each_Test()
@@ -31,7 +32,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             _sut = new ViewProviderLocationDetailsController(_mediatorMock.Object, Mock.Of<ILogger<ViewProviderLocationDetailsController>>());
             _sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetProviderLocations, verifyUrl);
+                .AddUrlForRoute(RouteNames.GetProviderLocations, verifyUrl)
+                .AddUrlForRoute(RouteNames.GetUpdateProviderLocationDetails, verifyUpdateProviderLocationDetailsUrl);
         }
 
         [Test, AutoData]
@@ -50,7 +52,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             viewResult.ViewName.Should().Contain("ViewProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().NotBeNull();
+            model.BackUrl.Should().Be(verifyUrl);
+            model.UpdateContactDetailsUrl.Should().Be(verifyUpdateProviderLocationDetailsUrl);
         }
 
           [Test, AutoData]

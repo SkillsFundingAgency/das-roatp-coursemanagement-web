@@ -28,13 +28,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string GetAddStandardSelectStandard = "GetAddStandardSelectStandard";
         public const string PostAddStandardSelectStandard = "PostAddStandardSelectStandard";
+        public const string GetAddStandardConfirmNonRegulatedStandard = "GetAddStandardConfirmNonRegulatedStandard";
+        public const string PostAddStandardConfirmNonRegulatedStandard = "PostAddStandardConfirmNonRegulatedStandard";
+        public const string GetAddStandardAddContactDetails = "GetAddStandardAddContactDetails";
+        public const string PostAddStandardAddContactDetails = "PostAddStandardAddContactDetails";
+
 
         public const string GetTrainingLocationPostcode = "GetTrainingLocationPostcode";
         public const string PostTrainingLocationPostcode = "PostTrainingLocationPostcode";
         public const string GetProviderLocationAddress = "GetTrainingLocationAddress";
         public const string PostProviderLocationAddress = "PostTrainingLocationAddress";
+
         public const string GetAddProviderLocationDetails = "GetAddProviderLocationDetails";
         public const string PostAddProviderLocationDetails = "PostAddProviderLocationDetails";
+
+        public const string GetUpdateProviderLocationDetails = "GetUpdateProviderLocationDetails";
+        public const string PostUpdateProviderLocationDetails = "PostUpdateProviderLocationDetails";
 
         public const string GetAddProviderCourseLocation = "GetAddProviderCourseLocation";
         public const string PostAddProviderCourseLocation = "PostAddProviderCourseLocation";

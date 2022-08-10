@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             DeleteProviderCourseLocationCommand request,
             DeleteProviderCourseLocationCommandHandler sut)
         {
-            var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/location/delete/{request.Id}";
+            var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/location/{request.Id}/delete";
             apiClientMock.Setup(a => a.Post(expectedUrl, request)).ReturnsAsync(HttpStatusCode.NoContent);
 
             await sut.Handle(request, new CancellationToken());
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             DeleteProviderCourseLocationCommand request,
             DeleteProviderCourseLocationCommandHandler sut)
         {
-            var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/location/delete/{request.Id}";
+            var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/location/{request.Id}/delete";
             apiClientMock.Setup(a => a.Post(expectedUrl, request)).ReturnsAsync(HttpStatusCode.BadRequest);
 
             Func<Task<Unit>> action = () => sut.Handle(request, new CancellationToken());

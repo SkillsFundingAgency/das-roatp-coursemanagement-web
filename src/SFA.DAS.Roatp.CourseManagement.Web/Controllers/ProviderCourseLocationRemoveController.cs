@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation", Name = RouteNames.GetRemoveProviderCourseLocation)]
         [HttpGet]
-        public async Task<IActionResult> GetProviderCourseLocation(int larsCode, int id)
+        public async Task<IActionResult> GetProviderCourseLocation(int larsCode, Guid id)
         {
             _logger.LogInformation("Getting Provider Course Location for ukprn {ukprn} ", Ukprn);
 

@@ -47,7 +47,7 @@
 
                     <div esfa-validation-marker-for="Website" class="govuk-form-group">
                         <div class="govuk-form-group">
-                            <label class="govuk-label">
+                            <label class="govuk-label govuk-label--m">
                                 Website
                             </label>
                             <span asp-validation-for="Website" class="govuk-error-message"></span>
@@ -56,16 +56,16 @@
                     </div>
                     <div esfa-validation-marker-for="EmailAddress" class="govuk-form-group">
                         <div class="govuk-form-group">
-                            <label class="govuk-label">
+                            <label class="govuk-label govuk-label--m">
                                 Email address
                             </label>
                             <span asp-validation-for="EmailAddress" class="govuk-error-message"></span>
-                            <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" maxlength="300">
+                            <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" maxlength="256">
                         </div>
                     </div>
                     <div esfa-validation-marker-for="PhoneNumber" class="govuk-form-group">
                         <div class="govuk-form-group">
-                            <label class="govuk-label">
+                            <label class="govuk-label govuk-label--m">
                                 Telephone number
                             </label>
                             <span asp-validation-for="PhoneNumber" class="govuk-error-message"></span>

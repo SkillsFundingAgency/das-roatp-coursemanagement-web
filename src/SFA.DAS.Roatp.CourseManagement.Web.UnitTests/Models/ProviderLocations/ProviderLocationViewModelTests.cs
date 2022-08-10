@@ -15,7 +15,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
 
             ProviderLocationViewModel viewModel = providerLocation;
 
-            viewModel.Should().BeEquivalentTo(providerLocation, o => o.Excluding(p => p.LocationType));
+            viewModel.Should().BeEquivalentTo(providerLocation, o =>
+            {
+                o.Excluding(c => c.LocationType);
+                o.Excluding(c => c.Email);
+                o.Excluding(c => c.Phone);
+                return o;
+            });
         }
     }
 }

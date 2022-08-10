@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
-            int id = queryResult.ProviderCourseLocations.Where(a => a.Id > 0).FirstOrDefault().Id;
+            var id = queryResult.ProviderCourseLocations.FirstOrDefault().Id;
             var result = await _sut.GetProviderCourseLocation(larsCode, id);
             _mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             var viewResult = result as ViewResult;
@@ -81,7 +81,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
           [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode, int id)
+        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode, Guid id)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
