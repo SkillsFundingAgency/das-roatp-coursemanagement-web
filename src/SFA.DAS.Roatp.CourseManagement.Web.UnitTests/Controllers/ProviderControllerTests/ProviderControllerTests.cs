@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
         
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("GetProviderDescription/Index.cshtml");
+            viewResult.ViewName.Should().Contain("ProviderDescription/Index.cshtml");
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderDescriptionViewModel;
             model.Should().NotBeNull();
@@ -76,7 +76,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("GetProviderDescription/Index.cshtml");
+            viewResult.ViewName.Should().Contain("ProviderDescription/Index.cshtml");
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderDescriptionViewModel;
             model.Should().NotBeNull();
