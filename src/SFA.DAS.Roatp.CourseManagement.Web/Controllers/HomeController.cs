@@ -11,7 +11,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public IActionResult Index()
         {
             var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-
             return new RedirectToRouteResult(RouteNames.ReviewYourDetails, new { ukprn });
         }
     }
