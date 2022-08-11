@@ -55,6 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             var standardInformation = await _mediator.Send(new GetStandardInformationQuery(submitModel.SelectedLarsCode));
 
+<<<<<<< HEAD
             if (string.IsNullOrEmpty(standardInformation.RegulatorName))
             {
                 _logger.LogInformation("Add standard: A non-regulated standard larscode:{larscode} is being added for ukprn:{ukprn} by {userid}", Ukprn, sessionModel.LarsCode, UserId);
@@ -66,6 +67,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 // Handling regulated standard will be covered in a following story
                 return Ok();
             }
+=======
+            if (!string.IsNullOrEmpty(standardInformation.RegulatorName))
+                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
+
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
+>>>>>>> CSP-121 fixed naming issue
         }
 
         private async Task<SelectAStandardViewModel> GetModel()
