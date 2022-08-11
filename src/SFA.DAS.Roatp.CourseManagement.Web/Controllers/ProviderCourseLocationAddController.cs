@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderCourseLocationAddController : ControllerBase
     {
-        public const string ViewPath = "~/Views/ProviderCourseLocations/AddTrainingLocation.cshtml";
+        public const string ViewPath = "~/Views/ProviderCourseLocations/AddTrainingCourseLocation.cshtml";
         private readonly ILogger<ProviderCourseLocationAddController> _logger;
         private readonly IMediator _mediator;
 
@@ -44,14 +44,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 var model = await GetModel(larsCode);
                 return View(ViewPath, model);
             }
-            _logger.LogInformation("Begin of jounrey for ukprn: {ukprn} to add standard {larscode}", Ukprn, submitModel.TrainingVenue);
-
             var command = new AddProviderCourseLocationCommand()
             {
                 Ukprn = base.Ukprn,
                 UserId = base.UserId,
                 LarsCode = larsCode,
-                LocationNavigationId = Guid.Parse(submitModel.TrainingVenue),
+                LocationNavigationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
                 HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
                 HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption
             };
