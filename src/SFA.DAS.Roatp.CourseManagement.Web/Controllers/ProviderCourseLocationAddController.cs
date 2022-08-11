@@ -5,10 +5,13 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -61,9 +64,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         private async Task<ProviderCourseLocationAddViewModel> GetModel(int larsCode)
         {
-            var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+            var resultAllProviderLocations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+            var resultProviderCourseLocations = await _mediator.Send(new GetProviderCourseLocationsQuery(Ukprn, larsCode));
             var model = new ProviderCourseLocationAddViewModel();
-            model.TrainingVenues = result.ProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString()));
+            var locationsNotExistsList = new List<ProviderLocation>();
+            foreach (var l in resultAllProviderLocations.ProviderLocations)
+            {
+                if(!resultProviderCourseLocations.ProviderCourseLocations.Exists(a=>a.LocationName == l.LocationName))
+                {
+                    locationsNotExistsList.Add(l);
+                }
+            }
+            model.TrainingVenues = locationsNotExistsList.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString()));
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { ukprn = Ukprn, larsCode });
             return model;
         }
