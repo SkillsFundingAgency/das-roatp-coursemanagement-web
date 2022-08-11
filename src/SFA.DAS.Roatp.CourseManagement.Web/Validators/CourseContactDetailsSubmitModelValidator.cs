@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
-    public class EditCourseContactDetailsViewModelValidator: AbstractValidator<EditCourseContactDetailsSubmitModel>
+    public class CourseContactDetailsSubmitModelValidator: AbstractValidator<CourseContactDetailsSubmitModel>
     {
-        public EditCourseContactDetailsViewModelValidator()
+        public CourseContactDetailsSubmitModelValidator()
         {
             RuleFor(p => p.ContactUsEmail)
                 .NotEmpty()

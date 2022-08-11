@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models
 {
-    public class EditCourseContactDetailsViewModel : EditCourseContactDetailsSubmitModel
+    public class EditCourseContactDetailsViewModel : CourseContactDetailsSubmitModel
     {
         [FromRoute]
         public int LarsCode { get; set; }

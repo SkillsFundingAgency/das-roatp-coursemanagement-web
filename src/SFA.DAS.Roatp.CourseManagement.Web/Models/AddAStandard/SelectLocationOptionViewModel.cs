@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
-    public class AddStandardContactDetailsViewModel : CourseContactDetailsSubmitModel
+    public class SelectLocationOptionViewModel : LocationOptionSubmitModel
     {
         public string CancelLink { get; set; }
     }

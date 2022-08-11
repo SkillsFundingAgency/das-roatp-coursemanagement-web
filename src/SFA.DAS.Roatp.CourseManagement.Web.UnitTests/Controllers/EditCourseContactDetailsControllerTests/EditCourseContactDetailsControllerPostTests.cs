@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Post_ValidModel_SendsUpdateCommand(EditCourseContactDetailsSubmitModel model, int larsCode)
+        public async Task Post_ValidModel_SendsUpdateCommand(CourseContactDetailsSubmitModel model, int larsCode)
         {
             var result = await _sut.Index(larsCode, model);
 
@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Post_InvalidModel_ReturnsView(EditCourseContactDetailsSubmitModel model, GetStandardDetailsQueryResult queryResult, int larsCode)
+        public async Task Post_InvalidModel_ReturnsView(CourseContactDetailsSubmitModel model, GetStandardDetailsQueryResult queryResult, int larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
@@ -71,7 +71,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Post_InvalidModelAndCourseDetailsNotFound_ThrowsException(EditCourseContactDetailsSubmitModel submitModel, int larsCode)
+        public async Task Post_InvalidModelAndCourseDetailsNotFound_ThrowsException(CourseContactDetailsSubmitModel submitModel, int larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
