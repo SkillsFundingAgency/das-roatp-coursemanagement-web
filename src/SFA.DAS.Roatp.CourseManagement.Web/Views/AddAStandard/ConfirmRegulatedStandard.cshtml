@@ -1,7 +1,7 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
-@model ConfirmNonRegulatedStandardViewModel
+@model ConfirmNewRegulatedStandardViewModel
 @{
-    ViewBag.Title = "Confirm standard";
+    ViewBag.Title = "Confirm regulated standard";
     ViewBag.Description = "";
 }
 <div class="govuk-grid-row">
@@ -10,14 +10,14 @@
         <div class="govuk-caption-xl">Add standard</div>
         <partial name="_StandardInformation" for="StandardInformation" />
 
-        <form method="post" asp-route="@RouteNames.PostAddStandardConfirmNonRegulatedStandard" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.PostAddStandardConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsCorrectStandard" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectStandard" class="govuk-error-message"></span>
 
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
-                            Is this the correct standard?
+                            Have you been approved by the regulator to deliver this standard?
                         </h1>
                     </legend>
                     <div id="IsCorrectStandard" class="govuk-radios" data-module="govuk-radios">
@@ -38,6 +38,7 @@
                     </div>
                 </fieldset>
             </div>
+            <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
             <div class="govuk-button-group">
                 <button id="submit" type="submit" class="govuk-button">Continue</button>
                 <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
