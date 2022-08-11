@@ -14,8 +14,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         public LocationType LocationType { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
-
         public string RegionName { get; set; }
+        public string SubregionName { get; set; }
 
         public string DeliveryOption()
         {
@@ -46,7 +46,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
                 LocationType = providerCourseLocation.LocationType,
                 HasDayReleaseDeliveryOption = providerCourseLocation.HasDayReleaseDeliveryOption,
                 HasBlockReleaseDeliveryOption = providerCourseLocation.HasBlockReleaseDeliveryOption,
-                RegionName = providerCourseLocation.RegionName
+                RegionName = providerCourseLocation.RegionName,
+                SubregionName = providerCourseLocation.SubregionName
             };
         }
     }
