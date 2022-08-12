@@ -5,6 +5,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 {
@@ -128,12 +129,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
             StandardDetailsViewModel viewModel = standardDetails;
 
-            viewModel.LocationSummary.Should().Be(CourseDeliveryMessageFor.NoneSet);
+            viewModel.LocationSummary.Should().Be(LocationSummaryCalculator.NoneSet);
         }
 
-        [TestCase(LocationType.Provider, CourseDeliveryMessageFor.ProvidersOnly)]
-        [TestCase(LocationType.Regional, CourseDeliveryMessageFor.SubregionsOnly)]
-        [TestCase(LocationType.National, CourseDeliveryMessageFor.NationalOnly)]
+        [TestCase(LocationType.Provider, LocationSummaryCalculator.ProvidersOnly)]
+        [TestCase(LocationType.Regional, LocationSummaryCalculator.SubregionsOnly)]
+        [TestCase(LocationType.National, LocationSummaryCalculator.NationalOnly)]
         public void ImplicitOperator_OnlyOneTypeOfCourseLocations_LocationSummaryAsExpected(LocationType locationType, string whereIsCourseDelivered)
         {
             var courseLocations = new List<ProviderCourseLocation>()
@@ -176,7 +177,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.LocationSummary.Should().Be(CourseDeliveryMessageFor.ProvidersAndSubregions);
+            viewModel.LocationSummary.Should().Be(LocationSummaryCalculator.ProvidersAndSubregions);
         }
 
         [Test]
@@ -202,7 +203,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.LocationSummary.Should().Be(CourseDeliveryMessageFor.ProvidersAndNational);
+            viewModel.LocationSummary.Should().Be(LocationSummaryCalculator.ProvidersAndNational);
         }
 
 

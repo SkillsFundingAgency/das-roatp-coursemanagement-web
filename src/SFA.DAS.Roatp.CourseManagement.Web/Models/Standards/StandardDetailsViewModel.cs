@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,7 +14,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public StandardContactInformationViewModel ContactInformation { get; set; }
 
         public string EditLocationOptionUrl { get; set; }
-
 
         public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; }
 
@@ -28,32 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 .OrderBy(x=>x.Key);
            }
 
-        public string LocationSummary
-        {
-            get
-            {
-                if (ProviderCourseLocations.Any())
-                {
-                    if (NationalCourseLocation != null)
-                        return CourseDeliveryMessageFor.ProvidersAndNational;
-
-                    if (SubRegionCourseLocations.Any())
-                        return CourseDeliveryMessageFor.ProvidersAndSubregions;
-
-                    return CourseDeliveryMessageFor.ProvidersOnly;
-                }
-
-                if (NationalCourseLocation != null)
-                    return CourseDeliveryMessageFor.NationalOnly;
-
-                if (SubRegionCourseLocations.Any())
-                {
-                    return CourseDeliveryMessageFor.SubregionsOnly;
-                }
-
-                return CourseDeliveryMessageFor.NoneSet;
-            }
-        }
+        public string LocationSummary => LocationSummaryCalculator.GetLocationSummary(NationalCourseLocation != null, ProviderCourseLocations.Any(), SubRegionCourseLocations.Any());
 
         public bool? IsApprovedByRegulator { get; set; }
         public string ApprovedByRegulatorStatus() => IsApprovedByRegulator switch
@@ -98,16 +73,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 IsApprovedByRegulator = standardDetails.IsApprovedByRegulator
             };
         }
-    }
-
-
-    public static class CourseDeliveryMessageFor
-    {
-        public const string ProvidersOnly = "This standard is only delivered at your training locations.";
-        public const string SubregionsOnly = "This standard is only delivered at an employer's address.";
-        public const string NationalOnly = "This standard is only delivered at an employer's address anywhere in England.";
-        public const string ProvidersAndNational = "This standard can be delivered at both training sites and employer addresses anywhere in England.";
-        public const string ProvidersAndSubregions = "This standard can be delivered at both training sites and employer addresses within certain regions.";
-        public const string NoneSet = "This standard has no location associated with it.";
     }
 }
