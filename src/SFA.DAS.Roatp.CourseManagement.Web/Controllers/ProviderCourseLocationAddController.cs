@@ -64,7 +64,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         private async Task<ProviderCourseLocationAddViewModel> GetModel(int larsCode)
         {
+            _logger.LogInformation("Getting Provider Location for ukprn {ukprn} ", Ukprn);
             var resultAllProviderLocations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+
+            _logger.LogInformation("Getting Provider course locations for ukprn {ukprn}  larsCode {larsCode}", Ukprn, larsCode);
             var resultProviderCourseLocations = await _mediator.Send(new GetProviderCourseLocationsQuery(Ukprn, larsCode));
             var model = new ProviderCourseLocationAddViewModel();
             var locationsNotExistsList = new List<ProviderLocation>();

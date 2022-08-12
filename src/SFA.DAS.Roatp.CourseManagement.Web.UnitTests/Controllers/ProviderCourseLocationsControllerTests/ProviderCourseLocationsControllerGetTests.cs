@@ -1,9 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -11,12 +9,11 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,69 +23,32 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     public class ProviderCourseLocationsControllerGetTests
     {
         private const string Ukprn = "10012002";
-        private Mock<ILogger<ProviderCourseLocationsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseLocationsController _sut;
-        private Mock<IUrlHelper> urlHelper;
         string verifyUrlGetStandardDetails = "http://test-GetStandardDetails";
 
         string verifyUrlGetLocationOption = "http://test-GetLocationOption";
 
         string verifyRemoveProviderCourseLocationUrlGet = "http://test-RemoveProviderCourseLocation";
 
+        string verifyAddProviderCourseLocationUrlGet = "http://test-AddProviderCourseLocation";
+
         protected Mock<ISessionService> _sessionServiceMock;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<ProviderCourseLocationsController>>();
             _mediatorMock = new Mock<IMediator>();
             _sessionServiceMock = new Mock<ISessionService>();
 
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
-            var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object)
-            {
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = httpContext
-                }
-            };
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object);
 
-            urlHelper = new Mock<IUrlHelper>();
-
-            UrlRouteContext verifyRouteValues = null;
-            urlHelper
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetStandardDetails)
-               )))
-               .Returns(verifyUrlGetStandardDetails)
-               .Callback<UrlRouteContext>(c =>
-               {
-                   verifyRouteValues = c;
-               });
-
-            urlHelper
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetLocationOption)
-               )))
-               .Returns(verifyUrlGetLocationOption)
-               .Callback<UrlRouteContext>(c =>
-               {
-                   verifyRouteValues = c;
-               });
-
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetRemoveProviderCourseLocation)
-                )))
-                .Returns(verifyRemoveProviderCourseLocationUrlGet)
-                .Callback<UrlRouteContext>(c =>
-                {
-                    verifyRouteValues = c;
-                });
-
-            _sut.Url = urlHelper.Object;
+            _sut.AddDefaultContextWithUser()
+               .AddUrlHelperMock()
+               .AddUrlForRoute(RouteNames.GetStandardDetails, verifyUrlGetStandardDetails)
+               .AddUrlForRoute(RouteNames.GetLocationOption, verifyUrlGetLocationOption)
+               .AddUrlForRoute(RouteNames.GetRemoveProviderCourseLocation, verifyRemoveProviderCourseLocationUrlGet)
+               .AddUrlForRoute(RouteNames.GetAddProviderCourseLocation, verifyAddProviderCourseLocationUrlGet);
         }
 
         [Test, AutoData]
@@ -109,6 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             model.ProviderCourseLocations.Should().NotBeEmpty();
             model.BackUrl.Should().NotBeNull();
             model.CancelUrl.Should().NotBeNull();
+            model.AddTrainingLocationUrl.Should().Be(verifyAddProviderCourseLocationUrlGet);
         }
 
           [Test, AutoData]
