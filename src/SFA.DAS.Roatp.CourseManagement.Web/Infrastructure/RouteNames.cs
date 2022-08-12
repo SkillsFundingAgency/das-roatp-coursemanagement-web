@@ -40,6 +40,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostAddStandardSelectLocationOption = "PostAddStandardSelectLocationOption";
         public const string GetAddStandardConfirmNationalProvider = "GetAddStandardConfirmNationalProvider";
         public const string PostAddStandardConfirmNationalProvider = "PostAddStandardConfirmNationalProvider";
+        public const string GetAddStandardReviewStandard = "GetAddStandardReviewStandard";
+        public const string PostAddStandardReviewStandard = "PostAddStandardReviewStandard";
 
         public const string GetTrainingLocationPostcode = "GetTrainingLocationPostcode";
         public const string PostTrainingLocationPostcode = "PostTrainingLocationPostcode";
