@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
             RuleFor(p => p.TrainingVenueNavigationId).NotEmpty()
                .WithMessage(TrainingVenueErrorMessage);
 
-            RuleFor(x => x.HasDayReleaseDeliveryOption).Equal(true).When(a=> a.HasBlockReleaseDeliveryOption == false)
+            RuleFor(x => x.HasDayReleaseDeliveryOption).Equal(true).When(a=> !a.HasBlockReleaseDeliveryOption)
             .WithMessage(DeliveryMethodErrorMessage);
         }
     }
