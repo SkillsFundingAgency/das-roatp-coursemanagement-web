@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
         [HttpPost]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, EditCourseContactDetailsSubmitModel submitModel)
+        public async Task<IActionResult> Index([FromRoute] int larsCode, CourseContactDetailsSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {

@@ -5,7 +5,6 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddNationalLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using System.Threading;
@@ -17,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
     public class EditNationalDeliveryOptionPostTests : EditNationalDeliveryOptionControllerTestBase
     {
         [Test, AutoData]
-        public async Task Post_InvalidState_ReturnsView(EditNationalDeliveryOptionViewModel model, int larsCode)
+        public async Task Post_InvalidState_ReturnsView(ConfirmNationalProviderSubmitModel model, int larsCode)
         {
             SetupController();
             Sut.ModelState.AddModelError("key", "error");
@@ -34,7 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         }
 
         [Test, AutoData]
-        public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(EditNationalDeliveryOptionViewModel model, int larsCode)
+        public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(ConfirmNationalProviderSubmitModel model, int larsCode)
         {
             SetupController();
             model.HasNationalDeliveryOption = true;
@@ -49,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         }
 
         [Test, AutoData]
-        public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(EditNationalDeliveryOptionViewModel model, int larsCode)
+        public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(ConfirmNationalProviderSubmitModel model, int larsCode)
         {
             SetupController();
             model.HasNationalDeliveryOption = false;

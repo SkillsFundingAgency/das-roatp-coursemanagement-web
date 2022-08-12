@@ -21,14 +21,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test]
         public async Task Post_InvalidModel_ReturnsViewWithValidationError()
         {
-            var model = new EditLocationOptionViewModel() { LocationOption = LocationOption.None };
+            var model = new EditLocationOptionViewModel();
             _sut.ModelState.AddModelError("key", "message");
 
-            var response = await _sut.Index(LarsCode, Ukprn, model);
+            var result = await _sut.Index(LarsCode, Ukprn, model);
 
-            var result = (ViewResult)response;
+            result.As<ViewResult>().Should().NotBeNull();
 
-            result.Model.Should().BeEquivalentTo(model);
+            result.As<ViewResult>().Model.As<EditLocationOptionViewModel>().LocationOption.Should().Be(LocationOption.None);
             _mediatorMock.Verify(m => m.Send(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 

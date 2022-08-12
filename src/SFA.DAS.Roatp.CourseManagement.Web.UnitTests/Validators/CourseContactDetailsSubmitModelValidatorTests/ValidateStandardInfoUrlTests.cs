@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseContactDetailsViewModelValidatorTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactDetailsSubmitModelValidatorTests
 {
     [TestFixture]
     public class ValidateStandardInfoUrlTests
@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
         [TestCase(" ")]
         public void WhenEmpty_ProducesValidatonError(string url)
         {
-            var sut = new EditCourseContactDetailsViewModelValidator();
+            var sut = new CourseContactDetailsSubmitModelValidator();
 
             var command = new EditCourseContactDetailsViewModel()
             {
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
         public void WhenTooLong_ProducesValidatonError()
         {
             string url = new string('q', 501);
-            var sut = new EditCourseContactDetailsViewModelValidator();
+            var sut = new CourseContactDetailsSubmitModelValidator();
 
             var command = new EditCourseContactDetailsViewModel()
             {
@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
         [TestCase("dfdfsd")]
         public void WhenInvalid_ProducesValidatonError(string url)
         {
-            var sut = new EditCourseContactDetailsViewModelValidator();
+            var sut = new CourseContactDetailsSubmitModelValidator();
 
             var command = new EditCourseContactDetailsViewModel()
             {
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditCourseCont
         [TestCase("dfdfsd.sd.sfdg")]
         public void WhenValid_ShouldNotHaveErrorForEmail(string url)
         {
-            var sut = new EditCourseContactDetailsViewModelValidator();
+            var sut = new CourseContactDetailsSubmitModelValidator();
 
             var command = new EditCourseContactDetailsViewModel()
             {
