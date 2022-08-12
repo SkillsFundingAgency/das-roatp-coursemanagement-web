@@ -64,5 +64,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LocationOption == locationOption), It.IsAny<string>()));
         }
+
+        [Test, MoqAutoData]
+        public void SubmitLocationOption_LocationOptionIsEmployer_NavigateToConfirmNationalProvider(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] SelectLocationOptionController sut,
+            StandardSessionModel sessionModel)
+        {
+            var locationOption = LocationOption.EmployerLocation;
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sut.AddDefaultContextWithUser();
+
+            var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardConfirmNationalProvider);
+        }
     }
 }
