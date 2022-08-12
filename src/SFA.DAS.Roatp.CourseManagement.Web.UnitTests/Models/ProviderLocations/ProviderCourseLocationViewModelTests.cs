@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLocations
@@ -32,8 +33,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
             viewModel.LocationName.Should().Be(locationName);
             viewModel.LocationType.Should().Be(_locationType);
-            viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
-            viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+            viewModel.DeliveryMethod.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
+            viewModel.DeliveryMethod.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
         }
 
         [Test]
@@ -46,8 +47,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             };
 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
-            viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
-            viewModel.DeliveryOption().Should().Be(CourseLocationDeliveryOption.DayRelease);
+            viewModel.DeliveryMethod.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+            viewModel.DeliveryMethod.ToSummary().Should().Be(DeliveryMethodModel.DayRelease);
         }
 
         [Test]
@@ -60,8 +61,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             };
 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
-            viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
-            viewModel.DeliveryOption().Should().Be(CourseLocationDeliveryOption.BlockRelease);
+            viewModel.DeliveryMethod.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
+            viewModel.DeliveryMethod.ToSummary().Should().Be(DeliveryMethodModel.BlockRelease);
         }
 
         [Test]
@@ -76,9 +77,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
             };
 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
-            viewModel.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
-            viewModel.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
-            viewModel.DeliveryOption().Should().Be(CourseLocationDeliveryOption.DayAndBlockRelease);
+            viewModel.DeliveryMethod.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
+            viewModel.DeliveryMethod.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+            viewModel.DeliveryMethod.ToSummary().Should().Be(DeliveryMethodModel.DayAndBlockRelease);
         }
 
         [Test]
@@ -86,7 +87,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
         {
             var providerCourseLocation = new ProviderCourseLocation();
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
-            viewModel.DeliveryOption().Should().Be(string.Empty);
+            viewModel.DeliveryMethod.ToSummary().Should().Be(string.Empty);
         }
     }
 }

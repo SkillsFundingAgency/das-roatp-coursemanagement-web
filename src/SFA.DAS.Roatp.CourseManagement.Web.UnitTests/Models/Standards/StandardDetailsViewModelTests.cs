@@ -113,9 +113,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
             StandardDetailsViewModel viewModel = standardDetails;
 
-            viewModel.ProviderCourseLocations.Should().BeEquivalentTo(courseLocations);
-            viewModel.SubRegionCourseLocations.Should().BeEquivalentTo(subregionLocations);
-            viewModel.NationalCourseLocation.Should().BeEquivalentTo(nationalLocation);
+            viewModel.ProviderCourseLocations.Should().BeEquivalentTo(courseLocations, option => option.Excluding(a => a.HasBlockReleaseDeliveryOption).Excluding(a => a.HasDayReleaseDeliveryOption));
+            viewModel.SubRegionCourseLocations.Should().BeEquivalentTo(subregionLocations, option => option.Excluding(a => a.HasBlockReleaseDeliveryOption).Excluding(a => a.HasDayReleaseDeliveryOption));
+            viewModel.NationalCourseLocation.Should().BeEquivalentTo(nationalLocation, option => option.Excluding(a => a.HasBlockReleaseDeliveryOption).Excluding(a => a.HasDayReleaseDeliveryOption));
         }
 
         [Test]
