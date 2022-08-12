@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -30,19 +27,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         [HttpGet]
         [Route("{ukprn}/standards/add/confirm-regulated-standard", Name = RouteNames.GetAddStandardConfirmRegulatedStandard)]
-        public async Task<IActionResult> GetConfirmationOfStandard()
+        public async Task<IActionResult> GetConfirmationOfRegulatedStandard()
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
 
             var model = await GetViewModel(sessionModel.LarsCode);
-
             return View(ViewPath, model);
         }
 
         [HttpPost]
         [Route("{ukprn}/standards/add/confirm-regulated-standard", Name = RouteNames.PostAddStandardConfirmRegulatedStandard)]
-        public async Task<IActionResult> SubmitConfirmationOfStandard(ConfirmNewRegulatedStandardSubmitModel submitModel)
+        public async Task<IActionResult> SubmitConfirmationOfRegulatedStandard(ConfirmNewRegulatedStandardSubmitModel submitModel)
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
@@ -60,14 +56,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
 
             sessionModel.IsConfirmed = true;
-
             _sessionService.Set(sessionModel, Ukprn.ToString());
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 
         [HttpGet]
         [Route("{ukprn}/standards/needs-approval", Name = RouteNames.GetNeedApprovalToDeliverRegulatedStandard)]
-        public async Task<IActionResult> NeedConfirmationOfStandard()
+        public async Task<IActionResult> NeedConfirmationOfRegulatedStandard()
         {
             var model = new NeedApprovalForRegulatedStandardViewModel
             {

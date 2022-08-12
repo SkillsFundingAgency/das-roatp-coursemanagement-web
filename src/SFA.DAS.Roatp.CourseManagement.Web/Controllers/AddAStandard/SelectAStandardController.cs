@@ -61,10 +61,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
             }
-            else
-            {
-                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmRegulatedStandard);
-            }
+           
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmRegulatedStandard);
+            
         }
 
         private async Task<SelectAStandardViewModel> GetModel()
