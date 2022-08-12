@@ -6,8 +6,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
     public class ProviderCourseLocationAddSubmitModelValidator : AbstractValidator<ProviderCourseLocationAddSubmitModel>
     {
-        public const string TrainingVenueErrorMessage = "You must choose a venue";
-        public const string DeliveryMethodErrorMessage = "You must choose a delivery method";
+        public const string TrainingVenueErrorMessage = "You must select a training venue";
+        public const string DeliveryMethodErrorMessage = "You must select a delivery method";
         public ProviderCourseLocationAddSubmitModelValidator()
         {
             RuleFor(p => p.TrainingVenueNavigationId).NotEmpty()
