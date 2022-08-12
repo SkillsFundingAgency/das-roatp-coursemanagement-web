@@ -56,12 +56,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             if (submitModel.IsCorrectStandard == false)
             {
-                //MFCMFC go to shutter page
                 return RedirectToRouteWithUkprn(RouteNames.GetNeedApprovalToDeliverRegulatedStandard);
             }
 
             sessionModel.IsConfirmed = true;
-            //MFCMFC added, need to include in coverage
+
             _sessionService.Set(sessionModel, Ukprn.ToString());
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
@@ -70,10 +69,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/needs-approval", Name = RouteNames.GetNeedApprovalToDeliverRegulatedStandard)]
         public async Task<IActionResult> NeedConfirmationOfStandard()
         {
-            // var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            // if (sessionModel == null) return redirectResult;
-            //
-            // var model = await GetViewModel(sessionModel.LarsCode);
             var model = new NeedApprovalForRegulatedStandardViewModel
             {
                 SelectAStandardLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectStandard)

@@ -58,9 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
 
             sessionModel.IsConfirmed = true;
-            //MFCMFC added, need to include in coverage
-            _sessionService.Set(_sessionService,Ukprn.ToString());
-
+            _sessionService.Set(sessionModel,Ukprn.ToString());
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 

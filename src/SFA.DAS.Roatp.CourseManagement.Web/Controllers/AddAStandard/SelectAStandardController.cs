@@ -63,7 +63,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
             else
             {
-                //MFCMFC
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmRegulatedStandard);
             }
         }
