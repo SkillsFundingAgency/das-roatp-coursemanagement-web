@@ -80,13 +80,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public async Task Get_NeedConfirmationOfStandard_ReturnsView(
+        public void Get_NeedConfirmationOfStandard_ReturnsView(
             [Greedy] AddRegulatedStandardController sut,
             string selectStandardLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectStandard, selectStandardLink);
 
-            var response = await sut.NeedConfirmationOfRegulatedStandard();
+            var response =  sut.NeedConfirmationOfRegulatedStandard();
 
             var result = (ViewResult)response;
             result.Should().NotBeNull();

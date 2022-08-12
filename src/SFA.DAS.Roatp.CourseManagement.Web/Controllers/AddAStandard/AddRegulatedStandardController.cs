@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         [HttpGet]
         [Route("{ukprn}/standards/needs-approval", Name = RouteNames.GetNeedApprovalToDeliverRegulatedStandard)]
-        public async Task<IActionResult> NeedConfirmationOfRegulatedStandard()
+        public ActionResult NeedConfirmationOfRegulatedStandard()
         {
             var model = new NeedApprovalForRegulatedStandardViewModel
             {
