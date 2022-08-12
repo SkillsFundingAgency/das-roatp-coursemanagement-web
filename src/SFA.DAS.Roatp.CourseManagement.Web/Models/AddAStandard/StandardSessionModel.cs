@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
@@ -6,10 +7,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
     {
         public int LarsCode { get; set; }
         public bool IsConfirmed { get; set; }
-        public string ContactUsEmail { get; set; }
-        public string ContactUsPhoneNumber { get; set; }
-        public string ContactUsPageUrl { get; set; }
-        public string StandardInfoUrl { get; set; }
+        public StandardInformationViewModel StandardInformation { get; set; } = new StandardInformationViewModel();
+        public StandardContactInformationViewModel ContactInformation { get; set; } = new StandardContactInformationViewModel();
         public LocationOption LocationOption { get; set; }
         public bool? HasNationalDeliveryOption { get; set; }
     }

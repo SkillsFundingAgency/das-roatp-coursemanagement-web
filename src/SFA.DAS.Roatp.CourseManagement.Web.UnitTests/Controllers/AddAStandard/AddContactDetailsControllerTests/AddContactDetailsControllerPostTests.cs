@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void Get_ModelStateIsValid_UpdatedStandardSessionModel(
+        public void Get_ModelStateIsValid_UpdatesStandardSessionModel(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut,
             StandardSessionModel standardSessionModel,
@@ -61,14 +61,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             sut.SubmitContactDetails(submitModel);
 
-            sessionServiceMock.Verify(s => s.Set(
-                It.Is<StandardSessionModel>(m => 
-                    m.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber &&
-                    m.ContactUsPageUrl == submitModel.ContactUsPageUrl &&
-                    m.ContactUsEmail == submitModel.ContactUsEmail &&
-                    m.StandardInfoUrl == submitModel.StandardInfoUrl
-                ), 
-                TestConstants.DefaultUkprn));
+            sessionServiceMock.Verify(s => s.Set(standardSessionModel, TestConstants.DefaultUkprn));
+
+            standardSessionModel.ContactInformation.ContactUsPhoneNumber.Should().Be(submitModel.ContactUsPhoneNumber);
+            standardSessionModel.ContactInformation.ContactUsPageUrl.Should().Be(submitModel.ContactUsPageUrl);
+            standardSessionModel.ContactInformation.ContactUsEmail.Should().Be(submitModel.ContactUsEmail);
+            standardSessionModel.ContactInformation.StandardInfoUrl.Should().Be(submitModel.StandardInfoUrl);
         }
 
         [Test, MoqAutoData]

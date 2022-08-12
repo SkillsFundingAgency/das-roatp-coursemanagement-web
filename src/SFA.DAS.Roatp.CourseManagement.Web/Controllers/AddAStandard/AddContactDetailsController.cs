@@ -52,10 +52,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return View(ViewPath, model);
             }
 
-            sessionModel.ContactUsEmail = submitModel.ContactUsEmail;
-            sessionModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber;
-            sessionModel.ContactUsPageUrl = submitModel.ContactUsPageUrl;
-            sessionModel.StandardInfoUrl = submitModel.StandardInfoUrl;
+            sessionModel.ContactInformation.ContactUsEmail = submitModel.ContactUsEmail;
+            sessionModel.ContactInformation.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber;
+            sessionModel.ContactInformation.ContactUsPageUrl = submitModel.ContactUsPageUrl;
+            sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl;
 
             _sessionService.Set(sessionModel, Ukprn.ToString());
 
