@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardIn
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -78,8 +79,30 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public async Task Post_IsCorrectStandard_RedirectsToContactDetails(
+        public async Task Post_StandardConfirmed_UpdatesSessionModel(
             [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] ConfirmRegulatedStandardController sut,
+            ConfirmNewRegulatedStandardSubmitModel submitModel,
+            StandardSessionModel sessionModel,
+            GetStandardInformationQueryResult getStandardInformationQueryResult)
+        {
+            mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardInformationQueryResult);
+            submitModel.IsApprovedByRegulator = true;
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+
+            await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
+
+            sessionServiceMock.Verify(m => m.Set(sessionModel, It.IsAny<string>()), Times.Once);
+            sessionModel.IsConfirmed.Should().BeTrue();
+            sessionModel.StandardInformation.Should().BeEquivalentTo(getStandardInformationQueryResult, option => option
+                .Excluding(c => c.StandardUId)
+                .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName));
+        }
+
+        [Test, MoqAutoData]
+        public async Task Post_StandardConfirmed_RedirectsToContactDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
@@ -94,8 +117,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetAddStandardAddContactDetails);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
-            sessionServiceMock.Verify(m => m.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Once);
         }
     }
 }

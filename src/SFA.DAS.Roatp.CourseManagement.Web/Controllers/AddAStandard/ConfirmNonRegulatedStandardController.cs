@@ -58,9 +58,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
 
             sessionModel.IsConfirmed = true;
+            sessionModel.StandardInformation = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
+            _sessionService.Set(sessionModel, Ukprn.ToString());
+
             _logger.LogInformation("Add standard: Non-regulated standard confirmed for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
            
-            _sessionService.Set(sessionModel,Ukprn.ToString());
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 
