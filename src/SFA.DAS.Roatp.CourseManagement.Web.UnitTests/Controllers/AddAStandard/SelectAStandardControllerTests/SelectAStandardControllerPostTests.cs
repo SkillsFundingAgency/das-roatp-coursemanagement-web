@@ -68,5 +68,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode), It.IsAny<string>()));
             mediatorMock.Verify(m => m.Send(It.IsAny<GetAvailableProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
+
+        [Test, MoqAutoData]
+        public async Task SubmitAStandard_IfRegulatedStandard_RedirectsToRespectiveConfirmationPage(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] SelectAStandardController sut,
+            SelectAStandardSubmitModel submitModel,
+            GetStandardInformationQueryResult standardInformation)
+        {
+            standardInformation.RegulatorName = "regulator X";
+            mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
+            sut
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.ViewStandards);
+
+            var response = await sut.SubmitAStandard(submitModel);
+
+            var result = response as RedirectToRouteResult;
+            result.Should().NotBeNull();
+            result.RouteName.Should().Be(RouteNames.GetAddStandardConfirmRegulatedStandard);
+            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode), It.IsAny<string>()));
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetAvailableProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
     }
 }
