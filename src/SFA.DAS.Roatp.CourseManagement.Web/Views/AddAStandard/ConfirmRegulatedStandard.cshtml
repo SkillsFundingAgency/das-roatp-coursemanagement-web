@@ -11,8 +11,8 @@
         <partial name="_StandardInformation" for="StandardInformation" />
 
         <form method="post" asp-route="@RouteNames.PostAddStandardConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
-            <div esfa-validation-marker-for="IsCorrectStandard" class="govuk-form-group">
-                <span asp-validation-for="IsCorrectStandard" class="govuk-error-message"></span>
+            <div esfa-validation-marker-for="IsApprovedByRegulator" class="govuk-form-group">
+                <span asp-validation-for="IsApprovedByRegulator" class="govuk-error-message"></span>
 
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
@@ -23,14 +23,14 @@
                     <div id="IsCorrectStandard" class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="is-correct-standard-yes" type="radio" value="true"
-                                   asp-for="IsCorrectStandard" sfa-validationerror-class="form-control-error">
+                                   asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                             <label class="govuk-label govuk-radios__label" for="is-correct-standard-yes">
                                 Yes
                             </label>
                         </div>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="is-correct-standard-no" type="radio" value="false"
-                                   asp-for="IsCorrectStandard" sfa-validationerror-class="form-control-error">
+                                   asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
                             <label class="govuk-label govuk-radios__label" for="is-correct-standard-no">
                                 No
                             </label>

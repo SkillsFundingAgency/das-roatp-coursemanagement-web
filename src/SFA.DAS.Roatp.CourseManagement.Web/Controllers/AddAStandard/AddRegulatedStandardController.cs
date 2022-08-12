@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return View(ViewPath, model);
             }
 
-            if (submitModel.IsCorrectStandard == false)
+            if (submitModel.IsApprovedByRegulator == false)
             {
                 return RedirectToRouteWithUkprn(RouteNames.GetNeedApprovalToDeliverRegulatedStandard);
             }

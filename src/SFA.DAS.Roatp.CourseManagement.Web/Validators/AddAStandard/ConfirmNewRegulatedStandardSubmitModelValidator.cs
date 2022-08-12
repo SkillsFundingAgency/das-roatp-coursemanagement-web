@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard
         public const string ConfirmationAnswerMissingMessage = "Tell us if you have been approved by the regulator";
         public ConfirmNewRegulatedStandardSubmitModelValidator()
         {
-            RuleFor(c => c.IsCorrectStandard)
+            RuleFor(c => c.IsApprovedByRegulator)
                 .NotEmpty()
                 .WithMessage(ConfirmationAnswerMissingMessage);
         }

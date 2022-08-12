@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
         {
-            submitModel.IsCorrectStandard = false;
+            submitModel.IsApprovedByRegulator = false;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
         
@@ -85,7 +85,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
         {
-            submitModel.IsCorrectStandard = true;
+            submitModel.IsApprovedByRegulator = true;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
         

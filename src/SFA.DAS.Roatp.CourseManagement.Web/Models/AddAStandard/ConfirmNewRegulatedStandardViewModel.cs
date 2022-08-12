@@ -7,4 +7,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         public StandardInformationViewModel StandardInformation { get; set; }
         public string CancelLink { get; set; }
     }
+
+    public class ConfirmNewRegulatedStandardSubmitModel
+    {
+        public bool? IsApprovedByRegulator { get; set; }
+    }
 }

@@ -12,12 +12,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
         [TestCase(false)]
         public void IsCorrectStandard_Valid_NoErrors(bool value)
         {
-            var model = new ConfirmNewRegulatedStandardSubmitModel { IsCorrectStandard = value };
+            var model = new ConfirmNewRegulatedStandardSubmitModel { IsApprovedByRegulator = value };
             var sut = new ConfirmNewRegulatedStandardSubmitModelValidator();
 
             var result = sut.TestValidate(model);
 
-            result.ShouldNotHaveValidationErrorFor(x => x.IsCorrectStandard);
+            result.ShouldNotHaveValidationErrorFor(x => x.IsApprovedByRegulator);
         }
 
         [Test]
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
             var result = sut.TestValidate(model);
 
             result
-                .ShouldHaveValidationErrorFor(a => a.IsCorrectStandard)
+                .ShouldHaveValidationErrorFor(a => a.IsApprovedByRegulator)
                 .WithErrorMessage(ConfirmNewRegulatedStandardSubmitModelValidator.ConfirmationAnswerMissingMessage);
         }
     }
