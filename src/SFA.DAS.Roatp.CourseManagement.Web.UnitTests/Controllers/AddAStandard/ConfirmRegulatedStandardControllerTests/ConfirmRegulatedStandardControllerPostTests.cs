@@ -14,16 +14,16 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddRegulatedStandardControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ConfirmRegulatedStandardControllerTests
 {
     [TestFixture]
-    public class AddRegulatedStandardControllerPostTests
+    public class ConfirmRegulatedStandardControllerPostTests
     {
         [Test, MoqAutoData]
         public async Task Post_ModelMissingFromSession_RedirectsToStandardList(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddRegulatedStandardController sut,
+            [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
@@ -41,56 +41,56 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Post_ModelStateIsInvalid_ReturnsViewResult(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddRegulatedStandardController sut,
+            [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
             sut.ModelState.AddModelError("key", "message");
-        
+
             var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
-        
+
             var result = (ViewResult)response;
             result.Should().NotBeNull();
-            result.ViewName.Should().Be(AddRegulatedStandardController.ViewPath);
+            result.ViewName.Should().Be(ConfirmRegulatedStandardController.ViewPath);
             mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()));
         }
-        
+
         [Test, MoqAutoData]
         public async Task Post_IsNotCorrectStandard_RedirectsToSelectStandard(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddRegulatedStandardController sut,
+            [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
         {
             submitModel.IsApprovedByRegulator = false;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
-        
+
             var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
-        
+
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetNeedApprovalToDeliverRegulatedStandard);
             mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
-        
+
         [Test, MoqAutoData]
         public async Task Post_IsCorrectStandard_RedirectsToContactDetails(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddRegulatedStandardController sut,
+            [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
         {
             submitModel.IsApprovedByRegulator = true;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
-        
+
             var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
-        
+
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetAddStandardAddContactDetails);
