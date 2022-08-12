@@ -3,7 +3,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditNationalDeliveryOptionViewModelValidatorTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ConfirmNationalProviderSubmitModelValidatorTests
 {
     [TestFixture]
     public class HasNationalDeliveryOptionTests
@@ -11,8 +11,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditNationalDe
         [Test]
         public void HasNationalDeliveryOption_Empty_ReturnsInvalid()
         {
-            var sut = new EditNationalDeliveryOptionViewModelValidator();
-            var model = new EditNationalDeliveryOptionViewModel();
+            var sut = new ConfirmNationalProviderSubmitModelValidator();
+            var model = new ConfirmNationalProviderSubmitModel();
 
             var result = sut.Validate(model);
 
@@ -23,8 +23,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.EditNationalDe
         [TestCase(false)]
         public void HasNationalDeliveryOption_Empty_ReturnsInvalid(bool value)
         {
-            var sut = new EditNationalDeliveryOptionViewModelValidator();
-            var model = new EditNationalDeliveryOptionViewModel() { HasNationalDeliveryOption = value};
+            var sut = new ConfirmNationalProviderSubmitModelValidator();
+            var model = new ConfirmNationalProviderSubmitModel() { HasNationalDeliveryOption = value };
 
             var result = sut.Validate(model);
 
