@@ -8,7 +8,7 @@
     <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
 }
 
-@if (Model.StandardInformation.IsStandardRegulated && Model.IsApprovedByRegulator!=true)
+@if (Model.StandardInformation.IsStandardRegulated && !Model.IsApprovedByRegulator.GetValueOrDefault())
 {
     <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardApprovalRequiredBanner.cshtml" />
 }
