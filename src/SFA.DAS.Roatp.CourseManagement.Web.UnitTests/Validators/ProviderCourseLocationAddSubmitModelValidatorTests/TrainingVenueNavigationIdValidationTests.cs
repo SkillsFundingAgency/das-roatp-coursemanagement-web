@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ProviderCourse
         {
             var sut = new ProviderCourseLocationAddSubmitModelValidator();
 
-            var result = sut.TestValidate(new ProviderCourseLocationAddSubmitModel() { TrainingVenueNavigationId = Guid.NewGuid().ToString() });
+            var result = sut.TestValidate(new ProviderCourseLocationAddSubmitModel() { TrainingVenueNavigationId = Guid.NewGuid().ToString(), HasDayReleaseDeliveryOption= true });
 
             result.IsValid.Should().BeTrue();
             result.ShouldNotHaveValidationErrorFor(m => m.TrainingVenueNavigationId);
