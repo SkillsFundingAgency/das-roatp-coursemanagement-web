@@ -2,24 +2,24 @@
 {
     public class DeliveryMethodModel
     {
-        public const string DayAndBlockRelease = "Day and block release";
-        public const string DayRelease = "Day release";
-        public const string BlockRelease = "Block release";
+        public const string DayAndBlockReleaseDescription = "Day and block release";
+        public const string DayReleaseDescription = "Day release";
+        public const string BlockReleaseDescription = "Block release";
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public string ToSummary()
         {
             if (HasDayReleaseDeliveryOption.GetValueOrDefault() && HasBlockReleaseDeliveryOption.GetValueOrDefault())
             {
-                return DayAndBlockRelease;
+                return DayAndBlockReleaseDescription;
             }
             if (HasDayReleaseDeliveryOption.GetValueOrDefault())
             {
-                return DayRelease;
+                return DayReleaseDescription;
             }
             if (HasBlockReleaseDeliveryOption.GetValueOrDefault())
             {
-                return BlockRelease;
+                return BlockReleaseDescription;
             }
             return string.Empty;
         }
