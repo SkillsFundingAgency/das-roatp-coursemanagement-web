@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
         public ProviderCourseLocationAddSubmitModelValidator()
         {
             RuleFor(p => p.TrainingVenueNavigationId).NotEmpty()
-               .WithMessage(TrainingVenueErrorMessage);
+            .WithMessage(TrainingVenueErrorMessage);
 
             RuleFor(x => x.HasDayReleaseDeliveryOption).Equal(true).When(a=> !a.HasBlockReleaseDeliveryOption)
             .WithMessage(DeliveryMethodErrorMessage);
