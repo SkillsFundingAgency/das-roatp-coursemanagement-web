@@ -7,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
-using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("AddTrainingCourseLocation.cshtml");
+            viewResult.ViewName.Should().Contain(ProviderCourseLocationAddController.ViewPath);
             var model = viewResult.Model as ProviderCourseLocationAddViewModel;
             model.Should().NotBeNull();
             model.BackLink.Should().Be(verifyUrl);

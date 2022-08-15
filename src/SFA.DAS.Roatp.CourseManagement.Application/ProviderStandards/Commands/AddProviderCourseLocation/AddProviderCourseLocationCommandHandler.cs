@@ -20,14 +20,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
 
         public async Task<Unit> Handle(AddProviderCourseLocationCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Command triggered to create provider course location: {locationName} for ukprn: {ukprn} larsCode: {larsCode} by user:{userid}", request.LocationName, request.Ukprn, request.LarsCode, request.UserId);
+            _logger.LogInformation("Command triggered to create provider course location: for ukprn: {ukprn} larsCode: {larsCode} locationNavigationId :{locationNavigationId} by user:{userid}", request.Ukprn, request.LarsCode, request.LocationNavigationId, request.UserId);
 
             var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/create-providercourselocation", request);
 
             if (statusCode != HttpStatusCode.Created)
             {
-                _logger.LogError("Failed to create provider course location: {locationName} for ukprn:{ukprn} larsCode: {larsCode} by user:{userid}", request.LocationName, request.Ukprn, request.LarsCode, request.UserId);
-                var exception = new System.InvalidOperationException($"Response to create provider course location {request.LocationName} for ukprn:{request.Ukprn} larsCode: {request.LarsCode} did not come back with success code");
+                _logger.LogError("Failed to create provider course location for ukprn:{ukprn} larsCode: {larsCode} locationNavigationId :{locationNavigationId} by user:{userid}", request.Ukprn, request.LarsCode, request.LocationNavigationId, request.UserId);
+                var exception = new System.InvalidOperationException($"Response to create provider course location for ukprn:{request.Ukprn} larsCode: {request.LarsCode} locationNavigationId {request.LocationNavigationId} did not come back with success code");
                 throw exception;
             }
 

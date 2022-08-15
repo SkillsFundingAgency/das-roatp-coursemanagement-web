@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderCourseLocationAddController : ControllerBase
