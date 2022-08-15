@@ -61,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task Post_InValidModel_RedirectToRoute(GetAllProviderLocationsQueryResult resultAllProviderLocations,
+        public async Task Post_InValidModel_ReturnsSameView(GetAllProviderLocationsQueryResult resultAllProviderLocations,
             GetProviderCourseLocationsQueryResult resultProviderCourseLocations, int larsCode, ProviderCourseLocationAddSubmitModel model)
         {
             _mediatorMock

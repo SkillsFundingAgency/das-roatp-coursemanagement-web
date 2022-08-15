@@ -18,9 +18,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
     {
         [Test, MoqAutoData]
         public async Task Handle_InvokesApiClient(
-                    [Frozen] Mock<IApiClient> apiClientMock,
-                    AddProviderCourseLocationCommand request,
-                    AddProviderCourseLocationCommandHandler sut)
+            [Frozen] Mock<IApiClient> apiClientMock,
+            AddProviderCourseLocationCommand request,
+            AddProviderCourseLocationCommandHandler sut)
         {
             var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/create-providercourselocation";
             apiClientMock.Setup(a => a.Post(expectedUrl, request)).ReturnsAsync(HttpStatusCode.Created);

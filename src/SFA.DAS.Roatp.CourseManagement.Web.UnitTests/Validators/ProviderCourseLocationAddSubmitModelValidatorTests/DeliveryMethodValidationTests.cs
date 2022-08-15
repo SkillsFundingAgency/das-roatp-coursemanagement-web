@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ProviderCourse
         [TestCase(true, false, true)]
         [TestCase(false, true, true)]
         [TestCase(false, false, false)]
-        public void TrainingVenueNavigationId_NullOrEmpty_IsInValid(bool hasDayReleaseDeliveryOption, bool hasBlockReleaseDeliveryOption, bool isvalid)
+        public void Validate_DeliveryMethod_IsInValid(bool hasDayReleaseDeliveryOption, bool hasBlockReleaseDeliveryOption, bool isvalid)
         {
             var sut = new ProviderCourseLocationAddSubmitModelValidator();
 
