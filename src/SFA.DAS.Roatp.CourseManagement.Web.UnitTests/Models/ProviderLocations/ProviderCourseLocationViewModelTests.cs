@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using AutoFixture.NUnit3;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -9,32 +10,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderCourseLoca
     [TestFixture]
     public class ProviderCourseLocationViewModelTests
     {
-        [TestCase(LocationType.Provider, true, true)]
-        [TestCase(LocationType.Regional, true, true)]
-        [TestCase(LocationType.National, true, true)]
-        [TestCase(LocationType.Provider, true, false)]
-        [TestCase(LocationType.Regional, true, false)]
-        [TestCase(LocationType.National, true, false)]
-        [TestCase(LocationType.Provider, true, false)]
-        [TestCase(LocationType.Regional, true, false)]
-        [TestCase(LocationType.National, true, false)]
-        public void ImplicitOperator_ConvertsFromProviderCourseLocation(LocationType locationType, bool hasBlockReleaseDeliveryOption, bool hasDayReleaseDeliveryOption)
-        {
-            const string locationName = "Test location";
-            LocationType _locationType = locationType;
-            var providerCourseLocation = new ProviderCourseLocation
-            {
-                LocationName = locationName,
-                LocationType = _locationType,
-                HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption,
-                HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption
-            };
-
+        [Test, AutoData]
+        public void ImplicitOperator_ConvertsApiModelToViewModel(ProviderCourseLocation providerCourseLocation)
+        { 
             ProviderCourseLocationViewModel viewModel = providerCourseLocation;
-            viewModel.LocationName.Should().Be(locationName);
-            viewModel.LocationType.Should().Be(_locationType);
-            viewModel.DeliveryMethod.HasBlockReleaseDeliveryOption.Should().Be(hasBlockReleaseDeliveryOption);
-            viewModel.DeliveryMethod.HasDayReleaseDeliveryOption.Should().Be(hasDayReleaseDeliveryOption);
+
+            viewModel.LocationName.Should().Be(providerCourseLocation.LocationName);
+            viewModel.LocationType.Should().Be(providerCourseLocation.LocationType);
+            viewModel.DeliveryMethod.HasBlockReleaseDeliveryOption.Should().Be(providerCourseLocation.HasBlockReleaseDeliveryOption);
+            viewModel.DeliveryMethod.HasDayReleaseDeliveryOption.Should().Be(providerCourseLocation.HasDayReleaseDeliveryOption);
+            viewModel.RegionName.Should().Be(providerCourseLocation.RegionName);
+            viewModel.SubregionName.Should().Be(providerCourseLocation.SubregionName);
         }
 
         [Test]
