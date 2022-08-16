@@ -62,5 +62,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.HasNationalDeliveryOption == hasNationalDeliveryOption), It.IsAny<string>()));
         }
+
+        [Test, MoqAutoData]
+        public void Post_ModelStateIsValid_RedirectsToReviewStandard(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] ConfirmNationalProviderController sut,
+            StandardSessionModel sessionModel,
+            bool hasNationalDeliveryOption)
+        {
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sut.AddDefaultContextWithUser();
+
+            var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = hasNationalDeliveryOption });
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardReviewStandard);
+        }
     }
 }

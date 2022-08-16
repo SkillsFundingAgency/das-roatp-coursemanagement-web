@@ -12,14 +12,14 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class AddRegulatedStandardController : AddAStandardControllerBase
+    public class ConfirmRegulatedStandardController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/ConfirmRegulatedStandard.cshtml";
 
         private readonly IMediator _mediator;
-        private readonly ILogger<AddRegulatedStandardController> _logger;
+        private readonly ILogger<ConfirmRegulatedStandardController> _logger;
 
-        public AddRegulatedStandardController(ISessionService sessionService, IMediator mediator, ILogger<AddRegulatedStandardController> logger) : base(sessionService)
+        public ConfirmRegulatedStandardController(ISessionService sessionService, IMediator mediator, ILogger<ConfirmRegulatedStandardController> logger) : base(sessionService)
         {
             _mediator = mediator;
             _logger = logger;
@@ -56,7 +56,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
 
             sessionModel.IsConfirmed = true;
+            sessionModel.StandardInformation = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
             _sessionService.Set(sessionModel, Ukprn.ToString());
+
+            _logger.LogInformation("Add standard: Regulated standard confirmed for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
+
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 

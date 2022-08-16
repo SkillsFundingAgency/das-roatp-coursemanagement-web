@@ -56,7 +56,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             _logger.LogInformation("Add standard: national delivery option set to {nationaldeliveryoption} for ukprn:{ukprn} larscode:{larscode}", submitModel.HasNationalDeliveryOption, Ukprn, sessionModel.LarsCode);
 
-            return Ok();
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
         }
 
         private ConfirmNationalProviderViewModel GetModel() => new ConfirmNationalProviderViewModel
