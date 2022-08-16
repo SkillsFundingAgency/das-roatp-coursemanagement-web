@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -64,21 +65,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         private async Task<ProviderCourseLocationAddViewModel> GetModel(int larsCode)
         {
-            _logger.LogInformation("Getting Provider Location for ukprn {ukprn} ", Ukprn);
-            var resultAllProviderLocations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+            _logger.LogInformation("Getting available provider course locations for ukprn {ukprn}  larsCode {larsCode}", Ukprn, larsCode);
+            var result = await _mediator.Send(new GetAvailableProviderLocationsQuery(Ukprn, larsCode));
 
-            _logger.LogInformation("Getting Provider course locations for ukprn {ukprn}  larsCode {larsCode}", Ukprn, larsCode);
-            var resultProviderCourseLocations = await _mediator.Send(new GetProviderCourseLocationsQuery(Ukprn, larsCode));
-            var model = new ProviderCourseLocationAddViewModel();
-            var locationsNotExistsList = new List<ProviderLocation>();
-            foreach (var l in resultAllProviderLocations.ProviderLocations)
+            var model = new ProviderCourseLocationAddViewModel
             {
-                if(!resultProviderCourseLocations.ProviderCourseLocations.Exists(a=>a.LocationName == l.LocationName))
-                {
-                    locationsNotExistsList.Add(l);
-                }
-            }
-            model.TrainingVenues = locationsNotExistsList.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString()));
+                TrainingVenues = result.AvailableProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString()))
+            };
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { ukprn = Ukprn, larsCode });
             return model;
         }

@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -36,17 +37,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
         [Test, AutoData]
         public async Task SelectAProviderlocation_ValidRequest_ReturnsView(
-            GetAllProviderLocationsQueryResult resultAllProviderLocations,
+            GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult,
             GetProviderCourseLocationsQueryResult resultProviderCourseLocations,
             int larsCode)
         {
             _mediatorMock
-               .Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn)), It.IsAny<CancellationToken>()))
-               .ReturnsAsync(resultAllProviderLocations);
-
-            _mediatorMock
-                .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(resultProviderCourseLocations);
+                .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(availableProviderLocationsQueryResult);
 
             var result = await _sut.SelectAProviderlocation(larsCode);
 

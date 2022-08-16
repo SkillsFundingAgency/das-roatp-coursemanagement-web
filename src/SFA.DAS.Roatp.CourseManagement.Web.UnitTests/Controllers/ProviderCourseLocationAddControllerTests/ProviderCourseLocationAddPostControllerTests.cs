@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -61,16 +62,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task Post_InValidModel_ReturnsSameView(GetAllProviderLocationsQueryResult resultAllProviderLocations,
-            GetProviderCourseLocationsQueryResult resultProviderCourseLocations, int larsCode, ProviderCourseLocationAddSubmitModel model)
+        public async Task Post_InValidModel_ReturnsSameView(GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult, int larsCode, ProviderCourseLocationAddSubmitModel model)
         {
             _mediatorMock
-               .Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn)), It.IsAny<CancellationToken>()))
-               .ReturnsAsync(resultAllProviderLocations);
-
-            _mediatorMock
-                .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(resultProviderCourseLocations);
+            .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(availableProviderLocationsQueryResult);
 
             _sut.ModelState.AddModelError("key", "error");
             var result = await _sut.SubmitAProviderlocation(larsCode, model);
