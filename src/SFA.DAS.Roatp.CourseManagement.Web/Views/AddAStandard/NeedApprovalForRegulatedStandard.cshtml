@@ -1,0 +1,19 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard.NeedApprovalForRegulatedStandardViewModel 
+@{
+    ViewBag.Title = "Need approval for regulated standard";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <fieldset class="govuk-fieldset">
+            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+                <h1 class="govuk-fieldset__heading">
+                    You must be approved by the regulator to deliver this standard
+                </h1>
+            </legend>
+            <div class="govuk-button-group">
+                <a href="@Model.SelectAStandardLink" class="govuk-link">Add a different standard</a>
+            </div>
+        </fieldset>
+    </div>
+</div>

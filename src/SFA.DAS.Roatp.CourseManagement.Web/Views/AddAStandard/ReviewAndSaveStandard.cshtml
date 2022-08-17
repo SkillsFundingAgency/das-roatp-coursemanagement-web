@@ -1,0 +1,96 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
+@model StandardSessionModel
+@{
+    ViewBag.Title = "Review standard";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-caption-xl">Add standard</div>
+        <partial name="_StandardInformation" for="StandardInformation" />
+
+    </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_StandardContactInformation" for="ContactInformation" />
+    </div>
+</div>
+
+<div class="govuk-grid-row govuk-!-margin-top-8">
+    <div class="govuk-grid-column-two-thirds">
+        <table class="govuk-table" aria-label="Where you deliver this standard">
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header das-table-cell-width-80" scope="col">
+                        <span class="govuk-heading-m">
+                            Where you deliver this standard
+                        </span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td class="govuk-table__cell">
+                        @Model.LocationSummary
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @if (Model.ProviderLocations.Any())
+        {
+            <table class="govuk-table" aria-label="List of training locations">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Venue name </th>
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Delivery method</th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @foreach (var location in Model.ProviderLocations)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @location.LocationName
+                            </td>
+                            <td class="govuk-table__cell">
+                                @location.DeliveryMethod.ToSummary()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        @if (Model.RegionalLocations.Any())
+        {
+            <p class="govuk-body">
+                Training can be delivered on site at the employer's address, as long as they are within these regions:
+            </p>
+            
+            foreach (var region in Model.RegionalLocations)
+            {
+                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                <h3 class="govuk-heading-m">@region.Key</h3>
+                <ul class="govuk-list govuk-grid-row">
+                    @foreach (var location in region.OrderBy(x=>x.SubregionName))
+                    {
+                        <li class="govuk-grid-column-one-half"> 
+                            @location.SubregionName 
+                        </li>
+                    }
+                </ul>
+            }
+            <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+        }
+
+        <form method="post" asp-route="@RouteNames.PostAddStandardAddContactDetails" enctype="multipart/form-data" novalidate>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

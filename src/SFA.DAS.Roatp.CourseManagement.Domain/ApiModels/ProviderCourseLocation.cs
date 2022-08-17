@@ -10,5 +10,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public string RegionName { get; set; }
+        public string SubregionName { get; set; }
     }
 }

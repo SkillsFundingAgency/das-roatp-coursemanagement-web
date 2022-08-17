@@ -34,7 +34,7 @@
                                 @Model.ProviderCourseLocations[i].LocationName
                             </td>
                             <td class="govuk-table__cell">
-                                @Model.ProviderCourseLocations[i].DeliveryOption()
+                                @Model.ProviderCourseLocations[i].DeliveryMethod.ToSummary()
                             </td>
                         <td class="govuk-table__cell">
                             <a href="@Model.ProviderCourseLocations[i].RemoveUrl" class="govuk-link govuk-link--no-visited-state">

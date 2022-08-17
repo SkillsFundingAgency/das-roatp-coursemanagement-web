@@ -12,28 +12,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
         public Guid Id { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
-        public bool? HasDayReleaseDeliveryOption { get; set; }
-        public bool? HasBlockReleaseDeliveryOption { get; set; }
-
         public string RegionName { get; set; }
+        public string SubregionName { get; set; }
 
-        public string DeliveryOption()
-        {
-            if ((HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value) &&
-                (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value))
-            {
-                return CourseLocationDeliveryOption.DayAndBlockRelease;
-            }
-            if (HasDayReleaseDeliveryOption.HasValue && HasDayReleaseDeliveryOption.Value)
-            {
-                return CourseLocationDeliveryOption.DayRelease;
-            }
-            if (HasBlockReleaseDeliveryOption.HasValue && HasBlockReleaseDeliveryOption.Value)
-            {
-                return CourseLocationDeliveryOption.BlockRelease;
-            }
-            return string.Empty;
-        }
+        public DeliveryMethodModel DeliveryMethod { get; set; } = new DeliveryMethodModel();
         public string RemoveUrl { get; set; }
         public string BackLink { get; set; }
         public string CancelLink { get; set; }
@@ -44,17 +26,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
                 Id = providerCourseLocation.Id,
                 LocationName = providerCourseLocation.LocationName,
                 LocationType = providerCourseLocation.LocationType,
-                HasDayReleaseDeliveryOption = providerCourseLocation.HasDayReleaseDeliveryOption,
-                HasBlockReleaseDeliveryOption = providerCourseLocation.HasBlockReleaseDeliveryOption,
-                RegionName = providerCourseLocation.RegionName
+                DeliveryMethod = new DeliveryMethodModel 
+                { 
+                    HasDayReleaseDeliveryOption = providerCourseLocation.HasDayReleaseDeliveryOption,
+                    HasBlockReleaseDeliveryOption = providerCourseLocation.HasBlockReleaseDeliveryOption
+                },
+                RegionName = providerCourseLocation.RegionName,
+                SubregionName = providerCourseLocation.SubregionName
             };
         }
-    }
-
-    public static class CourseLocationDeliveryOption
-    {
-        public const string DayAndBlockRelease = "Day and block release";
-        public const string DayRelease = "Day release";
-        public const string BlockRelease = "Block release";
     }
 }
