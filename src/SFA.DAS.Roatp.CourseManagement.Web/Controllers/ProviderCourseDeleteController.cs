@@ -2,12 +2,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Threading.Tasks;

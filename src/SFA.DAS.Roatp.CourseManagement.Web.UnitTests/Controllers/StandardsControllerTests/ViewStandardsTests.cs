@@ -30,6 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private static string GetStandardDetailsLink = Guid.NewGuid().ToString();
         private static string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
         private static string AddAStandardLink = Guid.NewGuid().ToString();
+        private static string deleteStandardReferer = "delete-standard-Referer";
 
         [SetUp]
         public void Before_each_test()
@@ -82,6 +83,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task StandardsController_ViewStandards_ReturnsValidResponse()
         {
+            _controller.HttpContext.Request.Headers.Add("Referer", deleteStandardReferer);
+
             var result = await _controller.ViewStandards();
 
             var viewResult = result as ViewResult;
