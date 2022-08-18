@@ -1,9 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -11,11 +9,10 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,46 +22,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     public class ProviderCourseLocationsControllerPostTests
     {
         private const string Ukprn = "10012002";
-        private static string UserId = Guid.NewGuid().ToString();
-        private Mock<ILogger<ProviderCourseLocationsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseLocationsController _sut;
-        private Mock<IUrlHelper> urlHelper;
         string verifyUrl = "http://test";
         protected Mock<ISessionService> _sessionServiceMock;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _loggerMock = new Mock<ILogger<ProviderCourseLocationsController>>();
             _mediatorMock = new Mock<IMediator>();
             _sessionServiceMock = new Mock<ISessionService>();
 
-            var user = new ClaimsPrincipal(new ClaimsIdentity(
-                new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), new Claim(ProviderClaims.UserId, UserId)}, 
-                "mock"));
-            var httpContext = new DefaultHttpContext() { User = user };
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object);
 
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object)
-            {
-                ControllerContext = new ControllerContext
-                {
-                    HttpContext = httpContext
-                }
-            };
-            urlHelper = new Mock<IUrlHelper>();
+            _sut.AddDefaultContextWithUser()
+               .AddUrlHelperMock()
+               .AddUrlForRoute(RouteNames.GetStandardDetails, verifyUrl);
 
-            UrlRouteContext verifyRouteValues = null;
-            urlHelper
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                   c.RouteName.Equals(RouteNames.GetStandardDetails)
-               )))
-               .Returns(verifyUrl)
-               .Callback<UrlRouteContext>(c =>
-               {
-                   verifyRouteValues = c;
-               });
-            _sut.Url = urlHelper.Object;
         }
 
         [Test, AutoData]

@@ -83,7 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 }
             }
             model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
-
+            model.AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddProviderCourseLocation, new { ukprn = Ukprn, larsCode = model.LarsCode });
             return model;
         }
 

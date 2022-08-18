@@ -8,7 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderLocations.GetAddresses
+namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderLocations.Queries.GetAddresses
 {
     [TestFixture]
     public class GetAddressesQueryHandlerTests
