@@ -11,16 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public static implicit operator ConfirmDeleteStandardViewModel(GetStandardInformationQueryResult source)
             => new ConfirmDeleteStandardViewModel
             {
-                StandardInformation = new StandardInformationViewModel
-                {
-                    CourseName = source.Title,
-                    Level = source.Level,
-                    IfateReferenceNumber = source.IfateReferenceNumber,
-                    LarsCode = source.LarsCode,
-                    RegulatorName = source.RegulatorName,
-                    Sector = source.Sector,
-                    Version = source.Version,
-                }
+                StandardInformation = (StandardInformationViewModel)source
             };
     }
 }
