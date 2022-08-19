@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -20,5 +21,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         public IEnumerable<IGrouping<string, CourseLocationModel>> RegionalLocations => CourseLocations.Where(l => l.LocationType == LocationType.Regional).GroupBy(l => l.RegionName).OrderBy(g => g.Key);
         public string LocationSummary => LocationSummaryCalculator.GetLocationSummary(HasNationalDeliveryOption.GetValueOrDefault(), ProviderLocations.Any(), RegionalLocations.Any());
         public string CancelLink { get; set; }
+
+        public static implicit operator AddProviderCourseCommand(StandardSessionModel source) 
+            => new AddProviderCourseCommand 
+            {
+                LarsCode = source.LarsCode,
+                IsApprovedByRegulator = source.StandardInformation.IsStandardRegulated ? true : (bool?)null,
+                StandardInfoUrl = source.ContactInformation.StandardInfoUrl,
+                ContactUsEmail = source.ContactInformation.ContactUsEmail,
+                ContactUsPageUrl = source.ContactInformation.ContactUsPageUrl,
+                ContactUsPhoneNumber = source.ContactInformation.ContactUsPhoneNumber,
+                HasNationalDeliveryOption = source.HasNationalDeliveryOption.GetValueOrDefault(),
+                SubregionIds = source.CourseLocations.Where(l => l.LocationType == LocationType.Regional).Select(l => l.SubregionId.Value).ToList(),
+                ProviderLocations = source.CourseLocations.Where(l => l.LocationType == LocationType.Provider).Select(l => (ProviderCourseLocationCommandModel)l).ToList()
+            };
     }
 }
