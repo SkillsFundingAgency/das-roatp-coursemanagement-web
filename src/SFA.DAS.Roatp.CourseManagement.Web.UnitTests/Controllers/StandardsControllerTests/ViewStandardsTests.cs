@@ -17,6 +17,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using static System.String;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
 {
@@ -83,7 +85,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task StandardsController_ViewStandards_ReturnsValidResponse()
         {
-            _controller.HttpContext.Request.Headers.Add("Referer", deleteStandardReferer);
+            var tempDataMock = new Mock<ITempDataDictionary>();
+            _controller.TempData = tempDataMock.Object;
 
             var result = await _controller.ViewStandards();
 
@@ -98,7 +101,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.First().StandardUrl.Should().Be(GetStandardDetailsLink);
             model.Standards.First().IsRegulatedStandard.Should().BeTrue();
             model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(GetConfirmRegulatedStandardLink);
-            model.Standards.Last().ConfirmRegulatedStandardUrl.Should().Be(String.Empty);
+            model.Standards.Last().ConfirmRegulatedStandardUrl.Should().Be(Empty);
+            object res = null;
+            tempDataMock.Verify(x=>x.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey,out res),Times.Once);
+
         }
 
         [Test]

@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseDeleteControllerTests
 {
@@ -40,6 +41,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             _mediatorMock
                .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == model.StandardInformation.LarsCode), It.IsAny<CancellationToken>()))
                .ReturnsAsync(queryResult);
+            var tempDataMock = new Mock<ITempDataDictionary>();
+            _sut.TempData = tempDataMock.Object;
 
             var result =  await _sut.DeleteProviderCourse(model);
 
@@ -48,6 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
             actual.RouteName.Should().Be(RouteNames.ViewStandards);
+            tempDataMock.Verify(t=>t.Add(TempDataKeys.DeleteProviderCourseDataKey,true));
         }
     }
 }

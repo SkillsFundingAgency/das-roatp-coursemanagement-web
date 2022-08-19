@@ -75,18 +75,20 @@
                                         @Model.StandardInformation.Sector
                                     </td>
                                 </tr>
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                LARS code
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.StandardInformation.LarsCode
-                                    </td>
-                                </tr>
+                            <tr class="govuk-table__row">
+                                <td class="govuk-table__cell">
+                                    <span class="app-task-list__task-name">
+                                        <strong>
+                                            LARS code
+                                        </strong>
+                                    </span>
+                                </td>
+                                <td class="govuk-table__cell">
+                                    @Model.StandardInformation.LarsCode
+                                </td>
+                            </tr>
+                            @if (!string.IsNullOrEmpty(Model.StandardInformation.RegulatorName))
+                            {
                                 <tr class="govuk-table__row">
                                     <td class="govuk-table__cell">
                                         <span class="app-task-list__task-name">
@@ -99,6 +101,7 @@
                                         @Model.StandardInformation.RegulatorName
                                     </td>
                                 </tr>
+                            }
                             </tbody>
                         </table>
                     </div>
