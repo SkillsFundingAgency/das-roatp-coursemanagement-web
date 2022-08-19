@@ -1,9 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
@@ -12,10 +15,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
     {
         public const string ViewPath = "~/Views/AddAStandard/ReviewAndSaveStandard.cshtml";
         private readonly ILogger<ReviewAndSaveStandardController> _logger;
+        private readonly IMediator _mediator;
 
-        public ReviewAndSaveStandardController(ILogger<ReviewAndSaveStandardController> logger, ISessionService sessionService) : base(sessionService)
+        public ReviewAndSaveStandardController(ILogger<ReviewAndSaveStandardController> logger, IMediator mediator, ISessionService sessionService) : base(sessionService)
         {
             _logger = logger;
+            _mediator = mediator;
         }
 
         [HttpGet]
@@ -30,8 +35,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         [HttpPost]
         [Route("{ukprn}/standards/add/save-standard", Name = RouteNames.PostAddStandardReviewStandard)]
-        public IActionResult SaveStandard()
+        public async Task<IActionResult> SaveStandard()
         {
+            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+            if (sessionModel == null) return redirectResult;
+
+            AddProviderCourseCommand command = sessionModel;
+            command.UserId = UserId;
+            command.Ukprn = Ukprn;
+
+            await _mediator.Send(command);
+
             return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
         }
     }
