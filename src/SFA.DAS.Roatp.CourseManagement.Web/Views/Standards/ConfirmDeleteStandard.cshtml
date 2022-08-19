@@ -17,6 +17,7 @@
             <form method="post" asp-route="@RouteNames.PostConfirmDeleteStandard" enctype="multipart/form-data" novalidate>
                 <input type="hidden" asp-for="BackUrl" />
                 <input type="hidden" asp-for="CancelUrl" />
+                <input type="hidden" asp-for="StandardInformation.LarsCode" />
                 <div class="grid-row">
                     <div class="column-two-thirds">
                         <table class="govuk-table" aria-describedby="ConfirmRegulatedStandard">

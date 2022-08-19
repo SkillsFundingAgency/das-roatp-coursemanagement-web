@@ -56,7 +56,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 standard.ConfirmRegulatedStandardUrl = standard.IsApprovalPending ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
             }
 
-            if(Request.GetTypedHeaders().Referer.ToString() != null && Request.GetTypedHeaders().Referer.ToString().Contains("delete-standard"))
+            TempData.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey, out var showBanner);
+            if (showBanner!=null)
             {
                 model.ShowNotificationBanner = true;
             }
