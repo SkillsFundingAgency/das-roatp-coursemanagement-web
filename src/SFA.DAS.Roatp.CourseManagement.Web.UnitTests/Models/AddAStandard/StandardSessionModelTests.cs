@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddTrainingLocation
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAStandard
 {
     [TestFixture]
     public class StandardSessionModelTests
@@ -78,7 +78,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddTrainingLocatio
 
             AddProviderCourseCommand actual = sut;
 
-            actual.ProviderLocations.Should().BeEquivalentTo(providerTypeLocations.Select(l => (ProviderCourseLocationCommandModel) l));
+            actual.ProviderLocations.Should().BeEquivalentTo(providerTypeLocations.Select(l => (ProviderCourseLocationCommandModel)l));
         }
     }
 }
