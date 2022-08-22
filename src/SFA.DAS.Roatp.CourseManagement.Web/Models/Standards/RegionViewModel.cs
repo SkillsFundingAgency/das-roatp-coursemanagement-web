@@ -19,5 +19,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 IsSelected = source.IsSelected
             };
         }
+
+        public static implicit operator RegionViewModel(RegionModel source)
+            => new RegionViewModel
+            {
+                Id = source.Id,
+                SubregionName = source.SubregionName,
+                RegionName = source.RegionName,
+            };
+
     }
 }
