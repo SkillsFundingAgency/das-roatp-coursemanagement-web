@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
-    public class RegionsViewModelValidator : AbstractValidator<RegionsViewModel>
+    public class RegionsSubmitModelValidator : AbstractValidator<RegionsSubmitModel>
     {
         public const string SelectSubRegionsErrorMessage = "Select the regions where you can deliver this training";
-        public RegionsViewModelValidator()
+        public RegionsSubmitModelValidator()
         {
             RuleFor(p => p.SelectedSubRegions)
                 .NotNull()

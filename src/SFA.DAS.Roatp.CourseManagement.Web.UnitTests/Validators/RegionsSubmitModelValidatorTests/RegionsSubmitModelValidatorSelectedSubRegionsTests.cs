@@ -3,10 +3,10 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ConfirmRegulatedStandardViewModelValidatorTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.RegionsSubmitModelValidatorTests
 {
     [TestFixture]
-    public class RegionsSubmitModelValidatorTests
+    public class RegionsSubmitModelValidatorSelectedSubRegionsTests
     {
         private const string SelectSubRegionsErrorMessage = "Select the regions where you can deliver this training";
         [Test]
