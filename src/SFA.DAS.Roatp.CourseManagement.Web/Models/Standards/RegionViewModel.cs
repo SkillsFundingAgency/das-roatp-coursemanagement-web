@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string RegionName { get; set; }
         public bool IsSelected { get; set; }
 
-        public static implicit operator RegionViewModel(Region source)
+        public static implicit operator RegionViewModel(CourseRegionModel source)
         {
             return new RegionViewModel
             {
