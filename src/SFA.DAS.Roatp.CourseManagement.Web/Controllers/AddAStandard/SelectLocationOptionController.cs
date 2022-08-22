@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -24,7 +26,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/add/select-location-option", Name = RouteNames.GetAddStandardSelectLocationOption)]
         public IActionResult SelectLocationOption()
         {
-            return View(ViewPath, GetModel());
+            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+            var model = GetModel();
+            model.LocationOption = sessionModel.LocationOption;
+            if (sessionModel.CourseLocations != null && sessionModel.CourseLocations.Any())
+            {
+                sessionModel.CourseLocations = new List<CourseLocationModel>();
+                _sessionService.Set(sessionModel, Ukprn.ToString());
+            }
+            return View(ViewPath, model);
         }
 
         [HttpPost]
@@ -49,7 +59,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNationalProvider);
             }
             // If the location option is provider or both then we need to navigate to provider location page which is covered in a follow up story
-            return Ok();
+            return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
         }
 
         private SelectLocationOptionViewModel GetModel() => new SelectLocationOptionViewModel
