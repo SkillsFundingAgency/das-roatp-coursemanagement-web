@@ -32,7 +32,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private static string GetStandardDetailsLink = Guid.NewGuid().ToString();
         private static string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
         private static string AddAStandardLink = Guid.NewGuid().ToString();
-        private static string deleteStandardReferer = "delete-standard-Referer";
 
         [SetUp]
         public void Before_each_test()
