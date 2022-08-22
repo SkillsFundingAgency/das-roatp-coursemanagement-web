@@ -21,5 +21,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
                 HasBlockReleaseDeliveryOption = source.DeliveryMethod.HasBlockReleaseDeliveryOption.GetValueOrDefault(),
                 HasDayReleaseDeliveryOption = source.DeliveryMethod.HasDayReleaseDeliveryOption.GetValueOrDefault()
             };
+
+        public static implicit operator CourseLocationModel(RegionModel source)
+            => new CourseLocationModel 
+            {
+                LocationType = LocationType.Regional,
+                SubregionId = source.Id,
+                RegionName = source.RegionName,
+                SubregionName = source.SubregionName
+            };
     }
 }
