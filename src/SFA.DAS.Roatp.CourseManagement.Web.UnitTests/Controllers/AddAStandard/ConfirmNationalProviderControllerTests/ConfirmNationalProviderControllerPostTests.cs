@@ -64,18 +64,31 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void Post_ModelStateIsValid_RedirectsToReviewStandard(
+        public void Post_HasNationalOption_RedirectsToReviewStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNationalProviderController sut,
-            StandardSessionModel sessionModel,
-            bool hasNationalDeliveryOption)
+            StandardSessionModel sessionModel)
         {
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
             sut.AddDefaultContextWithUser();
 
-            var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = hasNationalDeliveryOption });
+            var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = true });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardReviewStandard);
+        }
+
+        [Test, MoqAutoData]
+        public void Post_DoesNotHaveNationalOption_RedirectsToReviewStandard(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] ConfirmNationalProviderController sut,
+            StandardSessionModel sessionModel)
+        {
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sut.AddDefaultContextWithUser();
+
+            var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = false });
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardAddRegions);
         }
     }
 }
