@@ -11,8 +11,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard
             RuleFor(p => p.FirstLocation)
                 .NotNull()
                 .WithMessage(TrainingLocationErrorMessage);
-            // RuleFor(p => p.ProviderCourseLocations).NotEmpty()
-            //     .WithMessage(TrainingLocationErrorMessage);
         }
     }
 }
