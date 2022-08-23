@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
             => new ProviderCourseLocationCommandModel
             {
                 ProviderLocationId = source.ProviderLocationId.GetValueOrDefault(),
-                HasBlockReleaseDeliveryOption = source.DeliveryMethod.HasDayReleaseDeliveryOption.GetValueOrDefault(),
+                HasBlockReleaseDeliveryOption = source.DeliveryMethod.HasBlockReleaseDeliveryOption.GetValueOrDefault(),
                 HasDayReleaseDeliveryOption = source.DeliveryMethod.HasDayReleaseDeliveryOption.GetValueOrDefault()
             };
     }

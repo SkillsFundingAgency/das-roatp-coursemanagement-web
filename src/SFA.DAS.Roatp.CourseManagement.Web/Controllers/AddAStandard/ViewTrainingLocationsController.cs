@@ -2,18 +2,23 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
+    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+
     public class ViewTrainingLocationsController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/ViewTrainingLocations.cshtml";
         private readonly ILogger<ViewTrainingLocationsController> _logger;
 
+    
         public ViewTrainingLocationsController(
             ISessionService sessionService,
             ILogger<ViewTrainingLocationsController> logger) : base(sessionService)
@@ -28,16 +33,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
 
-            // if (sessionModel.LocationOption != LocationOption.EmployerLocation && sessionModel.LocationOption != LocationOption.Both)
-            // {
-            //     _logger.LogInformation("Add standard national option: location option {locationOption} in session does not allow this question, navigating back to select standard", sessionModel.LocationOption);
-            //     return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
-            // }
             var model = GetModel(sessionModel.LarsCode);
-            model.ProviderCourseLocations = MapProviderLocationstoProviderCourseLocations(sessionModel.ProviderLocations);
+            model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
             model.FirstLocation = model.ProviderCourseLocations.FirstOrDefault()?.LocationName;
 
-            var xn = GetUrlWithUkprn(RouteNames.GetNewStandardAddProviderCourseLocation);
             return View(ViewPath, model);
         }
 
@@ -62,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             CancelUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetNewStandardAddProviderCourseLocation, new { Ukprn, larsCode })
         };
-        private List<ProviderCourseLocationViewModel> MapProviderLocationstoProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
+        private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
         {
             var providerCourseLocations = new List<ProviderCourseLocationViewModel>();
             foreach (var location in sessionModelProviderLocations)
@@ -74,7 +73,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                     LocationName = location.LocationName,
                     LocationType = location.LocationType
                 });
-
             }
 
             return providerCourseLocations;

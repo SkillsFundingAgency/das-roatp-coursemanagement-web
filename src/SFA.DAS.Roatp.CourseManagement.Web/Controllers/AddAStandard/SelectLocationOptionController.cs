@@ -27,7 +27,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         public IActionResult SelectLocationOption()
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+            if (sessionModel == null) return redirectResult;
+           
             var model = GetModel();
+            
             model.LocationOption = sessionModel.LocationOption;
             if (sessionModel.CourseLocations != null && sessionModel.CourseLocations.Any())
             {
