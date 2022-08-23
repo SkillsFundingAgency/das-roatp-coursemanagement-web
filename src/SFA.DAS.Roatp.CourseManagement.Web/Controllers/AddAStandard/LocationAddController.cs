@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddP
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
@@ -46,27 +47,45 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [HttpPost]
         public async Task<IActionResult> SubmitAProviderlocation(CourseLocationAddSubmitModel submitModel, int larsCode)
         {
+            var model = await GetModel(larsCode);
             if (!ModelState.IsValid)
             {
-                var model = await GetModel(larsCode);
+        
                 //MFCMFC if model is null???
 
                 return View(ViewPath, model);
             }
-            var addLocationModel = new CourseLocationAddSubmitModel()
-            {
-                //Ukprn = base.Ukprn,
-                // UserId = base.UserId,
-                // LarsCode = larsCode,
-                TrainingVenueNavigationId = submitModel.TrainingVenueNavigationId,
-                HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
-                HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption
-            };
+            // var addLocationModel = new CourseLocationAddSubmitModel()
+            // {
+            //     //Ukprn = base.Ukprn,
+            //     // UserId = base.UserId,
+            //     // LarsCode = larsCode,
+            //     TrainingVenueNavigationId = submitModel.TrainingVenueNavigationId,
+            //     HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
+            //     HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption
+            // };
 
             //await _mediator.Send(command);
 
             // MFCMFC
             // add choice to session object
+            var sessionModel = _sessionService.Get<StandardSessionModel>(Ukprn.ToString());
+            if (sessionModel.CourseLocations == null)
+                sessionModel.CourseLocations = new List<CourseLocationModel>() ;
+
+           sessionModel.CourseLocations.Add(new CourseLocationModel
+           {
+               LocationType = LocationType.Provider,
+               ProviderLocationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
+               LocationName = model.TrainingVenues.First(x=>x.Value==submitModel.TrainingVenueNavigationId).Text,
+               DeliveryMethod = new DeliveryMethodModel
+               {
+                   HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption,
+                   HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption
+               }
+           });
+
+           _sessionService.Set(sessionModel, Ukprn.ToString());
 
             return RedirectToRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
         }
@@ -92,9 +111,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             var model = new CourseLocationAddViewModel
             {
-                TrainingVenues = availableProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString()))
+                TrainingVenues = availableProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString())),
+                LarsCode = larsCode
             };
-            model.LarsCode = larsCode;
             // MFCMFC  this back link needs to change
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
             return model;

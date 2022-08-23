@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
@@ -31,8 +34,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             //     return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
             // }
             var model = GetModel(sessionModel.LarsCode);
+            model.ProviderCourseLocations = MapProviderLocationstoProviderCourseLocations(sessionModel.ProviderLocations);
+            model.FirstLocation = model.ProviderCourseLocations.FirstOrDefault()?.LocationName;
+
             var xn = GetUrlWithUkprn(RouteNames.GetNewStandardAddProviderCourseLocation);
             return View(ViewPath, model);
+        }
+
+        private List<ProviderCourseLocationViewModel> MapProviderLocationstoProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
+        {
+            var providerCourseLocations = new List<ProviderCourseLocationViewModel>();
+            foreach (var location in sessionModelProviderLocations)
+            {
+                providerCourseLocations.Add(new ProviderCourseLocationViewModel
+                {
+                    DeliveryMethod = location.DeliveryMethod,
+                    // larsCode??
+                    LocationName = location.LocationName,
+                    LocationType = location.LocationType
+                });
+
+            }
+
+            return providerCourseLocations;
         }
 
 

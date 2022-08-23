@@ -67,5 +67,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         //MFCMFC
         public const string GetNewStandardAddProviderCourseLocation = "GetNewStandardAddProviderCourseLocation";
         public const string PostNewStandardAddProviderCourseLocation = "PostNewStandardAddProviderCourseLocation";
+
+
+        public const string GetAddedStandardDetails = "GetAddedStandardDetails";
     }
 }
