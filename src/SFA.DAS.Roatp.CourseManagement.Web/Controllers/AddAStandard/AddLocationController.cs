@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -20,14 +18,14 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class LocationAddController : ControllerBase
+    public class AddLocationController : ControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/AddCourseLocation.cshtml";
-        private readonly ILogger<LocationAddController> _logger;
+        private readonly ILogger<AddLocationController> _logger;
         private readonly IMediator _mediator;
         private readonly ISessionService _sessionService;
 
-        public LocationAddController(IMediator mediator, ISessionService sessionService, ILogger<LocationAddController> logger)
+        public AddLocationController(IMediator mediator, ISessionService sessionService, ILogger<AddLocationController> logger)
         {
 
             _mediator = mediator;
@@ -40,6 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         public async Task<IActionResult> SelectAProviderlocation(int larsCode)
         {
             var model = await GetModel(larsCode);
+            if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
             return View(ViewPath, model);
         }
 
@@ -48,27 +47,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         public async Task<IActionResult> SubmitAProviderlocation(CourseLocationAddSubmitModel submitModel, int larsCode)
         {
             var model = await GetModel(larsCode);
+            if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
             if (!ModelState.IsValid)
             {
-        
-                //MFCMFC if model is null???
-
                 return View(ViewPath, model);
             }
-            // var addLocationModel = new CourseLocationAddSubmitModel()
-            // {
-            //     //Ukprn = base.Ukprn,
-            //     // UserId = base.UserId,
-            //     // LarsCode = larsCode,
-            //     TrainingVenueNavigationId = submitModel.TrainingVenueNavigationId,
-            //     HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
-            //     HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption
-            // };
-
-            //await _mediator.Send(command);
-
-            // MFCMFC
-            // add choice to session object
+   
             var sessionModel = _sessionService.Get<StandardSessionModel>(Ukprn.ToString());
             if (sessionModel.CourseLocations == null)
                 sessionModel.CourseLocations = new List<CourseLocationModel>() ;
@@ -94,7 +78,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             _logger.LogInformation("Getting provider course locations for ukprn {ukprn} for larsCode {larsCode}", Ukprn, larsCode);
 
-
             var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
             var allProviderLocations = result.ProviderLocations;
 
@@ -114,7 +97,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 TrainingVenues = availableProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString())),
                 LarsCode = larsCode
             };
-            // MFCMFC  this back link needs to change
+
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
             return model;
         }
