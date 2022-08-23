@@ -1,9 +1,6 @@
 ﻿using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -11,11 +8,9 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using SFA.DAS.Testing.AutoFixture;
+using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,19 +22,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private const int Ukprn = 10000001;
         private const int LarsCode = 123;
         private const string Version = "1.1";
-        private Mock<IUrlHelper> urlHelper;
         private const string verifyUrl = "http://test";
+        private const string verifyEditContactDetailsUrl = "http://test-verifyEditContactDetailsUrl";
+        private const string verifyEditLocationOptionUrl = "http://test-verifyEditLocationOptionUrl";
         private const string Regulator = "Test-Regulator";
-        string editProviderCourseRegionsUrl = "http://update-standardSubRegions";
+        private const string verifyeditProviderCourseRegionsUrl = "http://update-standardSubRegions";
+        private const string verifyEditTrainingLocationsUrl = "http://test-verifyEditTrainingLocationsUrl";
+        private const string verifyConfirmRegulatedStandardUrl = "http://test-verifyConfirmRegulatedStandardUrl";
+        private const string verifydeleteStandardUrl = "http://test-delete-standard-url";
+
 
         [SetUp]
         public void Before_each_test()
         {
             _logger = new Mock<ILogger<StandardsController>>();
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn.ToString()), }, "mock"));
 
             var response = new GetStandardDetailsQueryResult
             {
@@ -61,28 +59,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = new DefaultHttpContext() { User = user },
-                },
-                TempData = Mock.Of<ITempDataDictionary>()
-            };
-
-            urlHelper = new Mock<IUrlHelper>();
-
-            UrlRouteContext verifyRouteValues = null;
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.ViewStandards)
-                )))
-                .Returns(verifyUrl)
-                .Callback<UrlRouteContext>(c =>
-                {
-                    verifyRouteValues = c;
-                });
-            _controller.Url = urlHelper.Object;
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.ViewStandards, verifyUrl);
         }
 
         [Test]
@@ -107,16 +88,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn.ToString()), }, "mock"));
-        
-            _controller = new StandardsController(_mediator.Object, _logger.Object)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = new DefaultHttpContext() { User = user },
-                },
-                TempData = Mock.Of<ITempDataDictionary>()
-            };
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock();
 
             Func<Task> action = () => _controller.ViewStandard(LarsCode);
 
@@ -134,20 +110,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn.ToString()), }, "mock"));
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object)
-            {
-                ControllerContext = new ControllerContext()
-                {
-                    HttpContext = new DefaultHttpContext() { User = user },
-                },
-                TempData = Mock.Of<ITempDataDictionary>()
-            };
-
-            urlHelper = new Mock<IUrlHelper>();
-
-            _controller.Url = urlHelper.Object;
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock();
 
             var result = await _controller.ViewStandard(LarsCode);
 
@@ -162,31 +129,33 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesEditContactDetailsUrl()
         {
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetCourseContactDetails)
-                )))
-                .Returns(verifyUrl);
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetCourseContactDetails, verifyEditContactDetailsUrl);
+
             var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
-            model.EditContactDetailsUrl.Should().Be(verifyUrl);
+            model.EditContactDetailsUrl.Should().Be(verifyEditContactDetailsUrl);
         }
 
         [Test]
         public async Task ViewStandard_PopulatesEditLocationOptionUrl()
         {
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetLocationOption)
-                )))
-                .Returns(verifyUrl);
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetLocationOption, verifyEditLocationOptionUrl);
+
             var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
-            model.EditLocationOptionUrl.Should().Be(verifyUrl);
+            model.EditLocationOptionUrl.Should().Be(verifyEditLocationOptionUrl);
         }
 
         [Test]
@@ -200,16 +169,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetStandardSubRegions)
-                )))
-                .Returns(editProviderCourseRegionsUrl);
-            var result = await _controller.ViewStandard(LarsCode);
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetStandardSubRegions, verifyeditProviderCourseRegionsUrl);
+
+               var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
-            model.EditProviderCourseRegionsUrl.Should().Be(editProviderCourseRegionsUrl);
+            model.EditProviderCourseRegionsUrl.Should().Be(verifyeditProviderCourseRegionsUrl);
         }
 
         [Test]
@@ -220,11 +190,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetStandardSubRegions)
-                )))
-                .Returns(editProviderCourseRegionsUrl);
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetStandardSubRegions, verifyeditProviderCourseRegionsUrl);
+
             var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
@@ -235,16 +206,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesEditTrainingLocationsUrl()
         {
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetProviderCourseLocations)
-                )))
-                .Returns(verifyUrl);
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetProviderCourseLocations, verifyEditTrainingLocationsUrl);
+
             var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
-            model.EditTrainingLocationsUrl.Should().Be(verifyUrl);
+            model.EditTrainingLocationsUrl.Should().Be(verifyEditTrainingLocationsUrl);
         }
 
         [Test]
@@ -258,16 +230,33 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            urlHelper
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>
-                    c.RouteName.Equals(RouteNames.GetConfirmRegulatedStandard)
-                )))
-                .Returns(verifyUrl);
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetConfirmRegulatedStandard, verifyConfirmRegulatedStandardUrl);
+
             var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
-            model.ConfirmRegulatedStandardUrl.Should().Be(verifyUrl);
+            model.ConfirmRegulatedStandardUrl.Should().Be(verifyConfirmRegulatedStandardUrl);
+        }
+
+        [Test]
+        public async Task ViewStandard_PopulatesDeleteStandardUrl()
+        {
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetConfirmDeleteStandard, verifydeleteStandardUrl);
+
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.DeleteStandardUrl.Should().Be(verifydeleteStandardUrl);
         }
     }
 }

@@ -3,5 +3,6 @@
     public static class TempDataKeys
     {
         public const string SelectedAddressTempDataKey = "SelectedAddressTempDataKey";
+        public const string DeleteProviderCourseDataKey = "DeleteProviderCourseDataKey";
     }
 }

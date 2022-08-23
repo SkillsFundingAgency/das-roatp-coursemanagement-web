@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             _ => "Unknown",
         };
 
-
+        public string DeleteStandardUrl { get; set; }
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
