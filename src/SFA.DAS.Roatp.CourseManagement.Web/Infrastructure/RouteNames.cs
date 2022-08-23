@@ -42,7 +42,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string GetAddStandardReviewStandard = "GetAddStandardReviewStandard";
         public const string PostAddStandardReviewStandard = "PostAddStandardReviewStandard";
 
-        //MFCMFC
         public const string GetNewStandardViewTrainingLocationOptions = "GetNewStandardViewTrainingLocationOptions";
         public const string PostNewStandardConfirmTrainingLocationOptions = "PostNewStandardConfirmTrainingLocationOptions";
 
@@ -63,8 +62,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string GetConfirmDeleteStandard = "GetConfirmDeleteStandard";
         public const string PostConfirmDeleteStandard = "PostConfirmDeleteStandard";
 
-
-        //MFCMFC
         public const string GetNewStandardAddProviderCourseLocation = "GetNewStandardAddProviderCourseLocation";
         public const string PostNewStandardAddProviderCourseLocation = "PostNewStandardAddProviderCourseLocation";
 

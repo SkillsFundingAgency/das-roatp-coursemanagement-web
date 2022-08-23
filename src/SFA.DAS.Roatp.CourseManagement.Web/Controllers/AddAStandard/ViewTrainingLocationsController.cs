@@ -57,8 +57,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         private TrainingLocationListViewModel GetModel(int larsCode) => new TrainingLocationListViewModel
         {
-            BackUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
-            CancelUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
+            BackLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
+            CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetNewStandardAddProviderCourseLocation, new { Ukprn, larsCode })
         };
         private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
@@ -69,7 +69,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 providerCourseLocations.Add(new ProviderCourseLocationViewModel
                 {
                     DeliveryMethod = location.DeliveryMethod,
-                    // larsCode??
                     LocationName = location.LocationName,
                     LocationType = location.LocationType
                 });
