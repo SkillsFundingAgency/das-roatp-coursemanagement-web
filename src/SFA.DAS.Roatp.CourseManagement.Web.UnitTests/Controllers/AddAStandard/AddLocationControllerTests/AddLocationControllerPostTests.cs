@@ -64,7 +64,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddLocationController sut,
-            StandardSessionModel standardSessionModel,
             CourseLocationAddViewModel submitModel,
             string cancelLink)
         {

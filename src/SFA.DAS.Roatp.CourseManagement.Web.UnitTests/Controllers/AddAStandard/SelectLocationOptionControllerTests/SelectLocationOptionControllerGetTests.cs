@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System.Collections.Generic;
+using NUnit.Framework;
 using SFA.DAS.Testing.AutoFixture;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using AutoFixture.NUnit3;
@@ -46,6 +47,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.As<ViewResult>().ViewName.Should().Be(SelectLocationOptionController.ViewPath);
             result.As<ViewResult>().Model.As<SelectLocationOptionViewModel>().Should().NotBeNull();
             result.As<ViewResult>().Model.As<SelectLocationOptionViewModel>().CancelLink.Should().Be(cancelLink);
+        }
+
+        [Test, MoqAutoData]
+        public void SelectLocationOption_ResetCourseLocations(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] SelectLocationOptionController sut,
+            string cancelLink)
+        {
+            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = 1, CourseLocations = new List<CourseLocationModel> {new CourseLocationModel()}});
+
+            sut.SelectLocationOption();
+
+            sessionServiceMock.Verify(m => m.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Once);
         }
     }
 }
