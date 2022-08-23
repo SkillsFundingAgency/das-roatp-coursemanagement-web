@@ -41,6 +41,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             return View(ViewPath, model);
         }
 
+        [HttpPost]
+        [Route("{ukprn}/standards/view-training-locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
+        public IActionResult SubmitTrainingLocations(TrainingLocationListViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(ViewPath, GetModel(model.LarsCode));
+            }
+
+            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+            if (sessionModel == null) return redirectResult;
+
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
+        }
+
+        private TrainingLocationListViewModel GetModel(int larsCode) => new TrainingLocationListViewModel
+        {
+            BackUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
+            CancelUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
+            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetNewStandardAddProviderCourseLocation, new { Ukprn, larsCode })
+        };
         private List<ProviderCourseLocationViewModel> MapProviderLocationstoProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
         {
             var providerCourseLocations = new List<ProviderCourseLocationViewModel>();
@@ -58,37 +79,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             return providerCourseLocations;
         }
-
-
-        [HttpPost]
-        [Route("{ukprn}/standards/view-training-locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
-        public IActionResult SubmitTrainingLocations(TrainingLocationListViewModel model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(ViewPath, GetModel(model.LarsCode));
-            }
-
-            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redirectResult;
-
-            // if (sessionModel.LocationOption != LocationOption.EmployerLocation && sessionModel.LocationOption != LocationOption.Both)
-            // {
-            //     _logger.LogInformation("Add standard national option: location option {locationOption} in session does not allow this question, navigating back to select standard", sessionModel.LocationOption);
-            //     return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
-            // }
-
-            return View(ViewPath, GetModel(model.LarsCode));
-        }
-
-
-
-
-        private TrainingLocationListViewModel GetModel(int larsCode) => new TrainingLocationListViewModel
-        {
-            BackUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
-            CancelUrl = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
-            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetNewStandardAddProviderCourseLocation, new { Ukprn, larsCode })
-        };
     }
 }
