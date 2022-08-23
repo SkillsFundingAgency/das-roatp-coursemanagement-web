@@ -13,8 +13,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         }
 
         public IEnumerable<IGrouping<string, RegionViewModel>> SubregionsGroupedByRegions => AllRegions.GroupBy(x => x.RegionName).OrderBy(x => x.Key);
-
-
         public string CancelLink { get; set; }
     }
 }
