@@ -35,8 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             var model = GetModel(sessionModel.LarsCode);
             model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
-            model.FirstLocation = model.ProviderCourseLocations.FirstOrDefault()?.LocationName;
-
+            
             return View(ViewPath, model);
         }
 

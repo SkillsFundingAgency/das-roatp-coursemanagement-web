@@ -8,8 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard
         public const string TrainingLocationErrorMessage = "You must add a training location";
         public TrainingLocationListViewModelValidator()
         {
-            RuleFor(p => p.FirstLocation)
-                .NotNull()
+            RuleFor(p => p.ProviderCourseLocations).NotEmpty()
                 .WithMessage(TrainingLocationErrorMessage);
         }
     }

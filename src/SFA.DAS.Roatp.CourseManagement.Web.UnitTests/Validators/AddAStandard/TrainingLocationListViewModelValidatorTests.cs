@@ -1,6 +1,8 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Collections.Generic;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
@@ -11,12 +13,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
         [Test]
         public void ValidModel_NoErrors()
         {
-            var model = new TrainingLocationListViewModel { FirstLocation = "location 1" };
+            var model = new TrainingLocationListViewModel { ProviderCourseLocations = new List<ProviderCourseLocationViewModel> {new ProviderCourseLocationViewModel()}};
             var sut = new TrainingLocationListViewModelValidator();
 
             var result = sut.TestValidate(model);
 
-            result.ShouldNotHaveValidationErrorFor(x => x.FirstLocation);
+            result.ShouldNotHaveValidationErrorFor(x => x.ProviderCourseLocations);
         }
 
         [Test]
@@ -27,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
 
             var result = sut.TestValidate(model);
 
-            result.ShouldHaveValidationErrorFor(x => x.FirstLocation)
+            result.ShouldHaveValidationErrorFor(x => x.ProviderCourseLocations)
                 .WithErrorMessage(TrainingLocationListViewModelValidator.TrainingLocationErrorMessage);
         }
     }

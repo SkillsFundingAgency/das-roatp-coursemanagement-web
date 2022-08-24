@@ -14,7 +14,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         [FromRoute]
         public int Ukprn { get; set; }
         public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocationViewModel>();
-        public string FirstLocation { get; set; }
         public string AddTrainingLocationUrl { get; set; }
         public string BackLink { get; set; }
         public string CancelLink { get; set; }
