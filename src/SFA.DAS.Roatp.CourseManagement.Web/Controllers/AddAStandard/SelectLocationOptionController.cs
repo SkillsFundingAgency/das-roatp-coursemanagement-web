@@ -31,7 +31,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
            
             var model = GetModel();
             
-            model.LocationOption = sessionModel.LocationOption;
             if (sessionModel.CourseLocations != null && sessionModel.CourseLocations.Any())
             {
                 sessionModel.CourseLocations = new List<CourseLocationModel>();
