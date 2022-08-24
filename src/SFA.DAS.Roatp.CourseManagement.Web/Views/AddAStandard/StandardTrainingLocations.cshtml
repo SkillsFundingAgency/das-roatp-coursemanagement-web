@@ -14,9 +14,10 @@
         <h1 class="govuk-heading-xl">Training venues</h1>
         <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
         <p class="govuk-body">If your training venue for this standard is not showing below, use the ‘add a training venue' link.</p>
-        <form method="post" asp-route="@RouteNames.PostProviderCourseLocations" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.PostNewStandardConfirmTrainingLocationOptions" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.BackLink" />
             <input type="hidden" asp-for="@Model.CancelLink" />
+            <input type="hidden" asp-for="@Model.AddTrainingLocationUrl" />
             <table class="govuk-table" aria-label="List of training locations">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">

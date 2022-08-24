@@ -34,6 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             if (sessionModel.CourseLocations != null && sessionModel.CourseLocations.Any())
             {
                 sessionModel.CourseLocations = new List<CourseLocationModel>();
+                sessionModel.HasNationalDeliveryOption = null;
                 _sessionService.Set(sessionModel, Ukprn.ToString());
             }
             return View(ViewPath, model);

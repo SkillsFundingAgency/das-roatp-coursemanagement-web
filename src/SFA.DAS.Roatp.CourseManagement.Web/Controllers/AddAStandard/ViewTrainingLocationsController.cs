@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
@@ -15,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
     public class ViewTrainingLocationsController : AddAStandardControllerBase
     {
-        public const string ViewPath = "~/Views/AddAStandard/ViewTrainingLocations.cshtml";
+        public const string ViewPath = "~/Views/AddAStandard/StandardTrainingLocations.cshtml";
         private readonly ILogger<ViewTrainingLocationsController> _logger;
 
     
@@ -43,14 +44,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/add/locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
         public IActionResult SubmitTrainingLocations(TrainingLocationListViewModel model)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(ViewPath, GetModel(model.LarsCode));
-            }
-
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
-
+            model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
+            var validator = new TrainingLocationListViewModelValidator();
+            var validatorResult = validator.Validate(model);
+            if (!validatorResult.IsValid)
+            {
+                return View(ViewPath, model);
+            }
+            
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
         }
 
@@ -58,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             BackLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
-            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn, larsCode })
+            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn })
         };
         private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
         {

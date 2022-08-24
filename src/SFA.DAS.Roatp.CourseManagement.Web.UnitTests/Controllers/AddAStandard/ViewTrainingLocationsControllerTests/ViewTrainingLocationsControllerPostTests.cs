@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -38,11 +39,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel,
             string cancelLink)
         {
+            sessionModel.CourseLocations = new List<CourseLocationModel>();
+
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
-            sut.ModelState.AddModelError("key", "message");
-
-            var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());
+            var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel {CancelLink = cancelLink});
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(ViewTrainingLocationsController.ViewPath);

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -18,7 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddLocationControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddStandardTrainingLocationControllerTests
 {
     [TestFixture]
     public class AddStandardTrainingLocationControllerPostTests
@@ -34,7 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>()))
                 .Returns((StandardSessionModel)null);
 
-            var result = await sut.SubmitAProviderlocation(new CourseLocationAddSubmitModel(), larsCode);
+            var result = await sut.SubmitAProviderlocation(new CourseLocationAddSubmitModel());
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
@@ -52,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
                 .Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
 
-            var result = await sut.SubmitAProviderlocation(new CourseLocationAddSubmitModel(), larsCode);
+            var result = await sut.SubmitAProviderlocation(new CourseLocationAddSubmitModel());
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddStandardTrainingLocationController.ViewPath);
@@ -79,7 +78,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(new StandardSessionModel { LarsCode = larsCode });
 
-            var result = await sut.SubmitAProviderlocation(submitModel,larsCode);
+            var result = await sut.SubmitAProviderlocation(submitModel);
 
             sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), TestConstants.DefaultUkprn));
 

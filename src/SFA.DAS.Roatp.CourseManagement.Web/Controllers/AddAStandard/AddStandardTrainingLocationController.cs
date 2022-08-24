@@ -20,36 +20,35 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
     public class AddStandardTrainingLocationController : AddAStandardControllerBase
     {
-        public const string ViewPath = "~/Views/AddAStandard/AddCourseLocation.cshtml";
+        public const string ViewPath = "~/Views/AddAStandard/AddStandardTrainingLocation.cshtml";
         private readonly ILogger<AddStandardTrainingLocationController> _logger;
         private readonly IMediator _mediator;
-        private readonly ISessionService _sessionService;
 
         public AddStandardTrainingLocationController(IMediator mediator, ISessionService sessionService, ILogger<AddStandardTrainingLocationController> logger) : base(sessionService)
         {
             _mediator = mediator;
-            _sessionService = sessionService;
             _logger = logger;
         }
 
-        [Route("{ukprn}/standards/{larsCode}/locations/add-new", Name = RouteNames.GetAddStandardTrainingLocation)]
+        [Route("{ukprn}/standards/add/locations/add", Name = RouteNames.GetAddStandardTrainingLocation)]
         [HttpGet]
-        public async Task<IActionResult> SelectAProviderlocation(int larsCode)
+        public async Task<IActionResult> SelectAProviderlocation()
+ 
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
-            var model = await GetModel(larsCode);
+            var model = await GetModel(sessionModel.LarsCode);
             if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
             return View(ViewPath, model);
         }
 
-        [Route("{ukprn}/standards/{larscode}/locations/add-new", Name = RouteNames.PostAddStandardTrainingLocation)]
+        [Route("{ukprn}/standards/add/locations/add", Name = RouteNames.PostAddStandardTrainingLocation)]
         [HttpPost]
-        public async Task<IActionResult> SubmitAProviderlocation(CourseLocationAddSubmitModel submitModel, int larsCode)
+        public async Task<IActionResult> SubmitAProviderlocation(CourseLocationAddSubmitModel submitModel)
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
-            var model = await GetModel(larsCode);
+            var model = await GetModel(sessionModel.LarsCode);
             if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
             if (!ModelState.IsValid)
             {
