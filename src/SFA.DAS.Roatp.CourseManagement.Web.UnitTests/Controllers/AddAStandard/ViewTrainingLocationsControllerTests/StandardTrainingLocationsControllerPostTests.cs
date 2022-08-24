@@ -14,12 +14,12 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ViewTrainingLocationsControllerTests
 {
     [TestFixture]
-    public class ViewTrainingLocationsControllerPostTests
+    public class StandardTrainingLocationsControllerPostTests
     {
         [Test, MoqAutoData]
         public void ViewTrainingLocations_SessionNotAvailable_RedirectsToSelectStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] ViewTrainingLocationsController sut,
+            [Greedy] StandardTrainingLocationsController sut,
             TrainingLocationListViewModel model,
             string cancelLink)
         {
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Submit_ModelStateIsInvalid_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] ViewTrainingLocationsController sut,
+            [Greedy] StandardTrainingLocationsController sut,
             StandardSessionModel sessionModel,
             string cancelLink)
         {
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel {CancelLink = cancelLink});
 
             result.As<ViewResult>().Should().NotBeNull();
-            result.As<ViewResult>().ViewName.Should().Be(ViewTrainingLocationsController.ViewPath);
+            result.As<ViewResult>().ViewName.Should().Be(StandardTrainingLocationsController.ViewPath);
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().Should().NotBeNull();
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().CancelLink.Should().Be(cancelLink);
         }
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Submit_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] ViewTrainingLocationsController sut,
+            [Greedy] StandardTrainingLocationsController sut,
             StandardSessionModel sessionModel,
             string cancelLink)
         {

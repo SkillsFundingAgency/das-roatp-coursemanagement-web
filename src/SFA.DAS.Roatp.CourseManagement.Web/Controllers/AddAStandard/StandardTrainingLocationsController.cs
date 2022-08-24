@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -14,15 +13,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
 
-    public class ViewTrainingLocationsController : AddAStandardControllerBase
+    public class StandardTrainingLocationsController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/StandardTrainingLocations.cshtml";
-        private readonly ILogger<ViewTrainingLocationsController> _logger;
+        private readonly ILogger<StandardTrainingLocationsController> _logger;
 
     
-        public ViewTrainingLocationsController(
+        public StandardTrainingLocationsController(
             ISessionService sessionService,
-            ILogger<ViewTrainingLocationsController> logger) : base(sessionService)
+            ILogger<StandardTrainingLocationsController> logger) : base(sessionService)
         {
             _logger = logger;
         }

@@ -20,12 +20,12 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ViewTrainingLocationsControllerTests
 {
     [TestFixture]
-    public class ViewTrainingLocationsControllerGetTests
+    public class StandardTrainingLocationsControllerGetTests
     {
         [Test, MoqAutoData]
         public void ViewTrainingLocations_SessionNotAvailable_RedirectsToSelectStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] ViewTrainingLocationsController sut,
+            [Greedy] StandardTrainingLocationsController sut,
             string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void ViewTrainingLocations_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] ViewTrainingLocationsController sut,
+            [Greedy] StandardTrainingLocationsController sut,
             string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.ViewTrainingLocations();
 
             result.As<ViewResult>().Should().NotBeNull();
-            result.As<ViewResult>().ViewName.Should().Be(ViewTrainingLocationsController.ViewPath);
+            result.As<ViewResult>().ViewName.Should().Be(StandardTrainingLocationsController.ViewPath);
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().Should().NotBeNull();
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().CancelLink.Should().Be(cancelLink);
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().BackLink.Should().Be(cancelLink);
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void ViewTrainingLocations_MapProviderLocations(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] ViewTrainingLocationsController sut,
+            [Greedy] StandardTrainingLocationsController sut,
             DeliveryMethodModel deliveryModel,
             string cancelLink)
         {

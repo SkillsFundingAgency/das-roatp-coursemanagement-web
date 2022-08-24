@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -12,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -64,13 +66,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut,
             CourseLocationAddViewModel submitModel,
+            string locationName,
             string cancelLink)
         {
             var navigationId = Guid.NewGuid();
             var allLocations = new GetAllProviderLocationsQueryResult
             {
                 ProviderLocations = new List<ProviderLocation>
-                    { new ProviderLocation { LocationType = LocationType.Provider, LocationName = "location name",NavigationId = navigationId} }
+                    { new ProviderLocation { LocationType = LocationType.Provider, LocationName = locationName, NavigationId = navigationId} }
             };
 
             submitModel.TrainingVenueNavigationId = navigationId.ToString();
@@ -80,7 +83,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = await sut.SubmitAProviderlocation(submitModel);
 
-            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), TestConstants.DefaultUkprn));
+            sessionServiceMock.Verify(s => 
+                s.Set(It.Is<StandardSessionModel>(x=>x.CourseLocations.Any(
+                    c=>c.ProviderLocationId==navigationId && c.LocationName==locationName)
+                ), TestConstants.DefaultUkprn));
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetNewStandardViewTrainingLocationOptions);

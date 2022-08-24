@@ -63,6 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardConfirmNationalProvider);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()),Times.Never);
         }
 
         [Test, MoqAutoData]
@@ -78,6 +79,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetNewStandardViewTrainingLocationOptions);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Never);
         }
     }
 }
