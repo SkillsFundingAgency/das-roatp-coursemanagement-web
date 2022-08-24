@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
 
-            var model = GetModel(sessionModel.LarsCode);
+            var model = GetModel();
             model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
             
             return View(ViewPath, model);
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
         }
 
-        private TrainingLocationListViewModel GetModel(int larsCode) => new TrainingLocationListViewModel
+        private TrainingLocationListViewModel GetModel() => new TrainingLocationListViewModel
         {
             BackLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
