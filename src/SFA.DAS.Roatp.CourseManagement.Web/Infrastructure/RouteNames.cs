@@ -41,7 +41,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostAddStandardConfirmNationalProvider = "PostAddStandardConfirmNationalProvider";
         public const string GetAddStandardReviewStandard = "GetAddStandardReviewStandard";
         public const string PostAddStandardReviewStandard = "PostAddStandardReviewStandard";
-
+        public const string GetAddStandardTrainingLocation = "GetAddStandardTrainingLocation";
+        public const string PostAddStandardTrainingLocation = "PostAddStandardTrainingLocation";
         public const string GetNewStandardViewTrainingLocationOptions = "GetNewStandardViewTrainingLocationOptions";
         public const string PostNewStandardConfirmTrainingLocationOptions = "PostNewStandardConfirmTrainingLocationOptions";
 
@@ -61,11 +62,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         
         public const string GetConfirmDeleteStandard = "GetConfirmDeleteStandard";
         public const string PostConfirmDeleteStandard = "PostConfirmDeleteStandard";
-
-        public const string GetNewStandardAddProviderCourseLocation = "GetNewStandardAddProviderCourseLocation";
-        public const string PostNewStandardAddProviderCourseLocation = "PostNewStandardAddProviderCourseLocation";
-
-
-        public const string GetAddedStandardDetails = "GetAddedStandardDetails";
     }
 }

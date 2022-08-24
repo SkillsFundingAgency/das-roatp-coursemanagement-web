@@ -21,14 +21,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddLocationControllerTests
 {
     [TestFixture]
-    public class AddLocationControllerPostTests
+    public class AddStandardTrainingLocationControllerPostTests
     {
         private int larsCode = 1;
 
         [Test, MoqAutoData]
         public async Task Post_ModelMissingFromSession_RedirectsToSelectAStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddLocationController sut)
+            [Greedy] AddStandardTrainingLocationController sut)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>()))
@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public async Task Get_ModelStateIsInvalid_ReturnsViewResult(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddLocationController sut,
+            [Greedy] AddStandardTrainingLocationController sut,
             StandardSessionModel standardSessionModel,
             string cancelLink)
         {
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = await sut.SubmitAProviderlocation(new CourseLocationAddSubmitModel(), larsCode);
 
             result.As<ViewResult>().Should().NotBeNull();
-            result.As<ViewResult>().ViewName.Should().Be(AddLocationController.ViewPath);
+            result.As<ViewResult>().ViewName.Should().Be(AddStandardTrainingLocationController.ViewPath);
             result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Get_ModelStateIsValid_UpdatesStandardSessionModel(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddLocationController sut,
+            [Greedy] AddStandardTrainingLocationController sut,
             CourseLocationAddViewModel submitModel,
             string cancelLink)
         {

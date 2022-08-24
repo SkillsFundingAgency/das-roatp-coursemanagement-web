@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         }
 
         [HttpGet]
-        [Route("{ukprn}/standards/view-training-locations", Name = RouteNames.GetNewStandardViewTrainingLocationOptions)]
+        [Route("{ukprn}/standards/add/locations", Name = RouteNames.GetNewStandardViewTrainingLocationOptions)]
         public IActionResult ViewTrainingLocations()
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         }
 
         [HttpPost]
-        [Route("{ukprn}/standards/view-training-locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
+        [Route("{ukprn}/standards/add/locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
         public IActionResult SubmitTrainingLocations(TrainingLocationListViewModel model)
         {
             if (!ModelState.IsValid)
@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             BackLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
-            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetNewStandardAddProviderCourseLocation, new { Ukprn, larsCode })
+            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn, larsCode })
         };
         private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
         {

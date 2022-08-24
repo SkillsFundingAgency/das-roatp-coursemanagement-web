@@ -17,13 +17,13 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddLocationControllerTests
 {
     [TestFixture]
-    public class AddLocationControllerGetTests
+    public class AddStandardTrainingLocationControllerGetTests
     {
         private int larsCode = 1;
         [Test, MoqAutoData]
         public async Task Get_ModelMissingFromSession_RedirectsToSelectAStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] AddLocationController sut)
+            [Greedy] AddStandardTrainingLocationController sut)
         {
              sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Get_Model_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] AddLocationController sut,
+            [Greedy] AddStandardTrainingLocationController sut,
             GetAllProviderLocationsQueryResult allLocations,
             string cancelLink)
         {
@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = await sut.SelectAProviderlocation(larsCode);
         
             result.As<ViewResult>().Should().NotBeNull();
-            result.As<ViewResult>().ViewName.Should().Be(AddLocationController.ViewPath);
+            result.As<ViewResult>().ViewName.Should().Be(AddStandardTrainingLocationController.ViewPath);
             result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().CancelLink.Should().Be(cancelLink);
             result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().BackLink.Should().Be(cancelLink);
         }

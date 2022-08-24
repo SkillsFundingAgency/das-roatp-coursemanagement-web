@@ -52,9 +52,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return View(ViewPath, GetModel());
             }
 
-            sessionModel.LocationOption = submitModel.LocationOption;
-            _sessionService.Set(sessionModel, Ukprn.ToString());
-
             _logger.LogInformation("Add standard: Location option added to {locationOption} for ukprn:{ukprn} larscode:{larscode}", submitModel.LocationOption, Ukprn, sessionModel.LarsCode);
 
             if (submitModel.LocationOption == LocationOption.EmployerLocation)
