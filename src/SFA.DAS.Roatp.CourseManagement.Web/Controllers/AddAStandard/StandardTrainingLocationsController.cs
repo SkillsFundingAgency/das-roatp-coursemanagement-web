@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             //this is protective code as well as allows post method to avoid this check
             if (sessionModel.LocationOption == LocationOption.EmployerLocation)
             {
-                _logger.LogWarning($"User: {UserId} unexpectedly landed on provider location page when location option is set to employers, restarting add journey");
+                _logger.LogWarning($"User: {UserId} unexpectedly landed on provider location page when location option is set to employers.");
                 return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
             }
 

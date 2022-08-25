@@ -30,10 +30,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
 
-            if (sessionModel.LocationOption != LocationOption.EmployerLocation && sessionModel.LocationOption != LocationOption.Both)
+            if (sessionModel.LocationOption == LocationOption.ProviderLocation)
             {
-                _logger.LogInformation("Add standard national option: location option {locationOption} in session does not allow this question, navigating back to select standard", sessionModel.LocationOption);
-                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
+                _logger.LogWarning($"User: {UserId} unexpectedly landed on national delivery confirmation page when location option is set to providers.");
+                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
             }
 
             return View(ViewPath, GetModel());
