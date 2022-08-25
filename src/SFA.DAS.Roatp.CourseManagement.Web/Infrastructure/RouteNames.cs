@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 {
@@ -42,6 +41,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostAddStandardConfirmNationalProvider = "PostAddStandardConfirmNationalProvider";
         public const string GetAddStandardReviewStandard = "GetAddStandardReviewStandard";
         public const string PostAddStandardReviewStandard = "PostAddStandardReviewStandard";
+        public const string GetAddStandardTrainingLocation = "GetAddStandardTrainingLocation";
+        public const string PostAddStandardTrainingLocation = "PostAddStandardTrainingLocation";
+        public const string GetNewStandardViewTrainingLocationOptions = "GetNewStandardViewTrainingLocationOptions";
+        public const string PostNewStandardConfirmTrainingLocationOptions = "PostNewStandardConfirmTrainingLocationOptions";
 
         public const string GetTrainingLocationPostcode = "GetTrainingLocationPostcode";
         public const string PostTrainingLocationPostcode = "PostTrainingLocationPostcode";
@@ -59,6 +62,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         
         public const string GetConfirmDeleteStandard = "GetConfirmDeleteStandard";
         public const string PostConfirmDeleteStandard = "PostConfirmDeleteStandard";
-
     }
 }

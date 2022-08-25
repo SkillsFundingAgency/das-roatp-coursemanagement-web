@@ -1,0 +1,49 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard.TrainingLocationListViewModel
+@{
+    ViewBag.Title = "Training locations";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Manage a standard</div>
+        <h1 class="govuk-heading-xl">Training venues</h1>
+        <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
+        <p class="govuk-body">If your training venue for this standard is not showing below, use the ‘add a training venue' link.</p>
+        <form method="post" asp-route="@RouteNames.PostNewStandardConfirmTrainingLocationOptions" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="@Model.CancelLink" />
+            <input type="hidden" asp-for="@Model.AddTrainingLocationUrl" />
+            <table class="govuk-table" aria-label="List of training locations">
+                <thead class="govuk-table__head">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Venue name </th>
+                        <th class="govuk-table__header das-table-cell-width-50" scope="col"> Delivery method</th>
+                        <th class="govuk-table__header" scope="col"> </th>
+                    </tr>
+                </thead>
+                <tbody class="govuk-table__body">
+                    @for (int i = 0; i < Model.ProviderCourseLocations.Count; i++)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">
+                                @Model.ProviderCourseLocations[i].LocationName
+                            </td>
+                            <td class="govuk-table__cell">
+                                @Model.ProviderCourseLocations[i].DeliveryMethod.ToSummary()
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <p class="govuk-body govuk-!-margin-bottom-8">
+                <a href="@Model.AddTrainingLocationUrl" class="govuk-link govuk-link--no-visited-state">Add a training venue</a>
+            </p>
+            <div class="govuk-button-group">
+                <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Continue
+                </button>
+                <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -5,6 +5,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
+
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
@@ -17,9 +19,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         public LocationOption LocationOption { get; set; }
         public bool? HasNationalDeliveryOption { get; set; }
         public List<CourseLocationModel> CourseLocations { get; set; } = new List<CourseLocationModel>();
+
+        [JsonIgnore]
         public IEnumerable<CourseLocationModel> ProviderLocations => CourseLocations.Where(l => l.LocationType == LocationType.Provider);
+
+        [JsonIgnore]
         public IEnumerable<IGrouping<string, CourseLocationModel>> RegionalLocations => CourseLocations.Where(l => l.LocationType == LocationType.Regional).GroupBy(l => l.RegionName).OrderBy(g => g.Key);
+
+        [JsonIgnore] 
         public string LocationSummary => LocationSummaryCalculator.GetLocationSummary(HasNationalDeliveryOption.GetValueOrDefault(), ProviderLocations.Any(), RegionalLocations.Any());
+
+        [JsonIgnore] 
         public string CancelLink { get; set; }
 
         public static implicit operator AddProviderCourseCommand(StandardSessionModel source) 

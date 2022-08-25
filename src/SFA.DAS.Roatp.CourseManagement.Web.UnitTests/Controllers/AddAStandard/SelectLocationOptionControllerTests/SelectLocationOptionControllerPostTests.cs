@@ -51,21 +51,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void SubmitLocationOption_ModelStateIsValid_UpdatesSessionModel(
-            [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] SelectLocationOptionController sut,
-            StandardSessionModel sessionModel)
-        {
-            var locationOption = LocationOption.ProviderLocation;
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
-            sut.AddDefaultContextWithUser();
-
-            sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption});
-
-            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LocationOption == locationOption), It.IsAny<string>()));
-        }
-
-        [Test, MoqAutoData]
         public void SubmitLocationOption_LocationOptionIsEmployer_NavigateToConfirmNationalProvider(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectLocationOptionController sut,
@@ -78,6 +63,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardConfirmNationalProvider);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()),Times.Once);
+        }
+
+        [Test, MoqAutoData]
+        public void SubmitLocationOption_LocationOptionIsProvider_NavigateToViewTrainingLocations(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] SelectLocationOptionController sut,
+            StandardSessionModel sessionModel)
+        {
+            var locationOption = LocationOption.ProviderLocation;
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sut.AddDefaultContextWithUser();
+
+            var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetNewStandardViewTrainingLocationOptions);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Once);
         }
     }
 }
