@@ -52,7 +52,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.As<ViewResult>().ViewName.Should().Be(StandardTrainingLocationsController.ViewPath);
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().Should().NotBeNull();
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().CancelLink.Should().Be(cancelLink);
-            result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().BackLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]

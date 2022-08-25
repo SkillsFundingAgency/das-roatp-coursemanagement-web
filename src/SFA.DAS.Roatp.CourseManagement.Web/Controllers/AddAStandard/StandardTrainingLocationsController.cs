@@ -58,7 +58,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         private TrainingLocationListViewModel GetModel() => new TrainingLocationListViewModel
         {
-            BackLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn })
         };
