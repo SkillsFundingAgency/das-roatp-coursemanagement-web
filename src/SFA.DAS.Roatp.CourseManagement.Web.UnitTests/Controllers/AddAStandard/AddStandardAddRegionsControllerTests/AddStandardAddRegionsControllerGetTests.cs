@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -30,6 +31,38 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = await sut.SelectRegions();
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+        }
+
+        [Test, MoqAutoData]
+        public async Task SelectRegions_LocationOptionIsProvider_RedirectsToViewStandard(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] AddStandardAddRegionsController sut,
+            StandardSessionModel standardSessionModel)
+        {
+            standardSessionModel.LocationOption = LocationOption.ProviderLocation;
+            standardSessionModel.HasNationalDeliveryOption = false;
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+
+            var result = await sut.SelectRegions();
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
+        }
+
+        [Test, MoqAutoData]
+        public async Task SelectRegions_NationalDeliveryOptionIsTrue_RedirectsToViewStandard(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] AddStandardAddRegionsController sut,
+            StandardSessionModel standardSessionModel)
+        {
+            standardSessionModel.LocationOption = LocationOption.EmployerLocation;
+            standardSessionModel.HasNationalDeliveryOption = true;
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+
+            var result = await sut.SelectRegions();
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
         }
 
         [Test, MoqAutoData]
