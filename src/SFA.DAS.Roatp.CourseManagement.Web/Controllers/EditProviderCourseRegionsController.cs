@@ -6,6 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.Upda
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
     public class EditProviderCourseRegionsController : ControllerBase
     {
+        public const string ViewPath = "~/Views/Standards/EditProviderCourseRegions.cshtml";
         private readonly IMediator _mediator;
         private readonly ILogger<EditProviderCourseRegionsController> _logger;
         public EditProviderCourseRegionsController(IMediator mediator, ILogger<EditProviderCourseRegionsController> logger)
@@ -36,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 _logger.LogError("Sub Regions not found");
                 return Redirect($"Error/{HttpStatusCode.NotFound}");
             }
-            return View("~/Views/Standards/EditProviderCourseRegions.cshtml", model);
+            return View(ViewPath, model);
         }
 
         private async Task<RegionsViewModel> BuildRegionsViewModel(int larsCode)
@@ -59,23 +61,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostStandardSubRegions)]
         [HttpPost]
-        public async Task<IActionResult> UpdateStandardSubRegions(RegionsViewModel model)
+        public async Task<IActionResult> UpdateStandardSubRegions([FromRoute] int larsCode, RegionsSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {
-                model = await BuildRegionsViewModel(model.LarsCode);
+                var model = await BuildRegionsViewModel(larsCode);
                 model.AllRegions.ForEach(s => s.IsSelected = false);
-                return View("~/Views/Standards/EditProviderCourseRegions.cshtml", model);
+                return View(ViewPath, model);
             }
 
-            var command = (UpdateStandardSubRegionsCommand)model;
+            var command = new UpdateStandardSubRegionsCommand();
+            command.LarsCode = larsCode;
             command.Ukprn = Ukprn;
             command.UserId = UserId;
-            command.SelectedSubRegions = model.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList();
+            command.SelectedSubRegions = submitModel.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList();
 
             await _mediator.Send(command);
 
-            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
+            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
         }
     }
 }

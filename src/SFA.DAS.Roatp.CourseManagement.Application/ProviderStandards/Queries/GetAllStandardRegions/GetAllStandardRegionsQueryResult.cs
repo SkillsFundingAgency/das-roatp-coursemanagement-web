@@ -4,6 +4,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
 {
     public class GetAllStandardRegionsQueryResult
     {
-        public List<Domain.ApiModels.Region> Regions { get; set; } = new List<Domain.ApiModels.Region>();
+        public List<Domain.ApiModels.CourseRegionModel> Regions { get; set; } = new List<Domain.ApiModels.CourseRegionModel>();
     }
 }

@@ -1,28 +1,22 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
-@model RegionsViewModel
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
+@model AddStandardAddRegionsViewModel
 @{
     ViewBag.Title = "Select regions for course delivery";
-}
-
-@section breadcrumb {
-    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" /> 
-        <div class="govuk-caption-xl">Manage a standard</div>
+        <div class="govuk-caption-xl">Add standard</div>
         <h1 class="govuk-heading-xl">Where can you deliver this training?</h1>
         <p class="govuk-body">You have told us you cannot deliver this training at an employer’s address anywhere in England.</p>
         <p class="govuk-body">Choose the regions where you can.</p>
-        <form method="post" asp-route="@RouteNames.PostStandardSubRegions" enctype="multipart/form-data" novalidate data="@Model">
+        <form method="post" asp-route="@RouteNames.PostAddStandardAddRegions" enctype="multipart/form-data" novalidate data="@Model">
             <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-            <input type="hidden" asp-for="BackUrl" />
-            <input type="hidden" asp-for="CancelLink" />
             <div class="govuk-form-group" esfa-validation-marker-for="SelectedSubRegions">
                 <span class="govuk-error-message" asp-validation-for="SelectedSubRegions"></span>
             </div>
-            @foreach (var region in Model.GetGroupedSubRegions())
+            @foreach (var region in Model.SubregionsGroupedByRegions)
             {
                 <h3 class="govuk-heading-m">@region.Key</h3>
                 <ul class="govuk-list govuk-grid-row">
@@ -41,12 +35,11 @@
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
             }
             <div class="govuk-button-group">
-                <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
-                    Save and continue
+                <button id="Continue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Continue
                 </button>
                 <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
             </div>
         </form>
     </div>
 </div>
-

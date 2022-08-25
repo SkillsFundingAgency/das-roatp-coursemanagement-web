@@ -96,7 +96,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
            GetAllStandardRegionsQueryResult queryResult,
            int larsCode)
         {
-            queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.Region>();
+            queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.CourseRegionModel>();
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetAllStandardRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);

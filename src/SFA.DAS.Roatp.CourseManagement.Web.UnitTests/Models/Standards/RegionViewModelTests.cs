@@ -10,7 +10,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     public class RegionViewModelTests
     {
         [Test, AutoData]
-        public void ImplicitOperatorForApiModel_ReturnsViewModel(Region source)
+        public void CourseRegionModelOperator_ReturnsViewModel(CourseRegionModel source)
+        {
+            var vm = (RegionViewModel)source;
+
+            vm.Should().BeEquivalentTo(source);
+        }
+
+        [Test, AutoData]
+        public void RegionModelOperator_ReturnsViewModel(RegionModel source)
         {
             var vm = (RegionViewModel)source;
 

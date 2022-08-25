@@ -139,10 +139,10 @@
                 <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
                 <h3 class="govuk-heading-m">@region.Key</h3>
                 <ul class="govuk-list govuk-grid-row">
-                    @foreach (var location in region.OrderBy(x => x.LocationName))
+                    @foreach (var location in region.OrderBy(x => x.SubregionName))
                     {
                         <li class="govuk-grid-column-one-half">
-                            @location.LocationName
+                            @location.SubregionName
                         </li>
                     }
                 </ul>
