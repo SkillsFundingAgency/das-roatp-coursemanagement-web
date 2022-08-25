@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             {
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNationalProvider);
             }
-            // If the location option is provider or both then we need to navigate to provider location page which is covered in a follow up story
+
             return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
         }
 

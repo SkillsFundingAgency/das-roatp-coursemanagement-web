@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -52,19 +53,35 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void Submit_ReturnsView(
+        public void Submit_LocationOptionSetToProviders_RedirectsToReviewPage(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] StandardTrainingLocationsController sut,
             StandardSessionModel sessionModel,
             string cancelLink)
         {
+            sessionModel.LocationOption = LocationOption.ProviderLocation;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
            
             var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());
 
-            result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardReviewStandard);
+        }
+
+        [Test, MoqAutoData]
+        public void Submit_LocationOptionSetToBoth_RedirectsToNationalQuestionPage(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] StandardTrainingLocationsController sut,
+            StandardSessionModel sessionModel,
+            string cancelLink)
+        {
+            sessionModel.LocationOption = LocationOption.Both;
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
+
+            var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardConfirmNationalProvider);
         }
     }
 }

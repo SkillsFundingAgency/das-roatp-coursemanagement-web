@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -33,6 +34,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
 
+            //this is protective code as well as allows post method to avoid this check
+            if (sessionModel.LocationOption == LocationOption.EmployerLocation)
+            {
+                _logger.LogWarning($"User: {UserId} unexpectedly landed on provider location page when location option is set to employers, restarting add journey");
+                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
+            }
+
             var model = GetModel();
             model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
             
@@ -45,15 +53,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
+
             model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
+
             var validator = new TrainingLocationListViewModelValidator();
             var validatorResult = validator.Validate(model);
             if (!validatorResult.IsValid)
             {
                 return View(ViewPath, model);
             }
-            
-            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
+
+            if(sessionModel.LocationOption == LocationOption.ProviderLocation)
+            {
+                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
+            }
+            //if location option is set to both
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNationalProvider);
         }
 
         private TrainingLocationListViewModel GetModel() => new TrainingLocationListViewModel
@@ -61,6 +76,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn })
         };
+
         private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
         {
             var providerCourseLocations = new List<ProviderCourseLocationViewModel>();
