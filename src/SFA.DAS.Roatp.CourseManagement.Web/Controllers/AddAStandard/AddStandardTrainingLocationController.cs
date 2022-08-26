@@ -36,8 +36,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
+
             var model = await GetModel(sessionModel);
-            if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
+
             return View(ViewPath, model);
         }
 

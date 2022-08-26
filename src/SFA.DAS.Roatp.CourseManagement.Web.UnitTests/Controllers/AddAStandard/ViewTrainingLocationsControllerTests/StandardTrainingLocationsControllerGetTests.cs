@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -16,6 +12,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ViewTrainingLocationsControllerTests
 {
@@ -28,13 +26,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] StandardTrainingLocationsController sut,
             string cancelLink)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
 
             var result = sut.ViewTrainingLocations();
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+        }
+
+        [Test, MoqAutoData]
+        public void ViewTrainingLocations_IncorrectLocationOptionInSession_RedirectsToStandardsListPage(
+           [Frozen] Mock<ISessionService> sessionServiceMock,
+           [Greedy] StandardTrainingLocationsController sut,
+           StandardSessionModel standardSessionModel)
+        {
+            standardSessionModel.LocationOption = LocationOption.EmployerLocation;
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
+
+            var result = sut.ViewTrainingLocations();
+
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
         }
 
         [Test, MoqAutoData]

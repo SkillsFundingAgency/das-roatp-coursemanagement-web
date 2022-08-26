@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void Get_LocationOptionIsProviderLocation_RedirectsToSelectAStandard(
+        public void Get_LocationOptionIsProviderLocation_RedirectsToManageStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNationalProviderController sut,
             StandardSessionModel sessionModel)
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = sut.ConfirmNationalDeliveryOption();
 
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
         }
 
         [Test, MoqAutoData]

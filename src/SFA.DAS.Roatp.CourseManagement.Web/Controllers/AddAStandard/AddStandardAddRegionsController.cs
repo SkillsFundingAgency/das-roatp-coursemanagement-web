@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -33,6 +34,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
+
+            if (sessionModel.LocationOption == LocationOption.ProviderLocation || sessionModel.HasNationalDeliveryOption.GetValueOrDefault())
+            {
+                _logger.LogWarning($"User: {UserId} unexpectedly landed on regions page when location option is {sessionModel.LocationOption} and national delivery option is {sessionModel.HasNationalDeliveryOption}");
+                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
+            }
 
             AddStandardAddRegionsViewModel model = await GetViewModel();
             return View(ViewPath, model);
