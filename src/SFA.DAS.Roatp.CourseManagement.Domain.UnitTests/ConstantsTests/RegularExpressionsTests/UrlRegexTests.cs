@@ -13,6 +13,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.UnitTests.ConstantsTests.Regular
         [TestCase("http://goal.com")]
         [TestCase("https://goal.com")]
         [TestCase("http://www.goal.com")]
+        [TestCase("Http://www.goal.com")]
+        [TestCase("HTTP://www.goal.com")]
+        [TestCase("HTTPS://www.goal.com")]
+        [TestCase("www.contactus.service.co.uk")]
         public void UrlRegex_AllowedFormats(string input)
         {
             Regex.Match(input, Constants.RegularExpressions.UrlRegex).Success.Should().BeTrue();
