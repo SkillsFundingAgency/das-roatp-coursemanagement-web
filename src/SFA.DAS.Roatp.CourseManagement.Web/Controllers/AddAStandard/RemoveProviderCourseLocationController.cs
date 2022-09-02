@@ -35,6 +35,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
         }
-        
     }
 }
