@@ -86,7 +86,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 {
                     DeliveryMethod = location.DeliveryMethod,
                     LocationName = location.LocationName,
-                    LocationType = location.LocationType
+                    LocationType = location.LocationType,
+                    RemoveUrl = Url.RouteUrl(RouteNames.GetAddStandardRemoveProviderCourseLocation, new {ukprn= Ukprn, providerLocationId = location.ProviderLocationId})
                 });
             }
 
