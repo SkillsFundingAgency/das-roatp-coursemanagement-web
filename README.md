@@ -4,10 +4,13 @@
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 
+[![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status/SkillsFundingAgency_das-roatp-coursemanagement-web?branchName=master)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=SkillsFundingAgency_das-roatp-coursemanagement-web&branchName=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-roatp-coursemanagement-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=SkillsFundingAgency_das-roatp-coursemanagement-web)
+
 
 ## About
 
-The front end for main providers to view and administer the courses they offer, and the venues or subregions where the courses are offered, and the provider description.
+The front end for providers to view and administer the courses they offer, and the venues or subregions where the courses are offered, and the provider description.
 
 It interacts with an outer api (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement), which in turn interacts with several other sources of data, but most significantly the inner api for roatp data (https://github.com/SkillsFundingAgency/das-roatp-api)
 
@@ -21,7 +24,6 @@ It interacts with an outer api (https://github.com/SkillsFundingAgency/das-apim-
     - Azure development
 - Install [Azure Storage Emulator]
 - Install [Azure Storage Explorer](http://storageexplorer.com/)
-- Administrator Access
 
 #### Setup
 
