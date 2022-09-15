@@ -22,12 +22,14 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.4.70
+    ##TO DO: revert to latest tag
+    ref: refs/heads/DASD-8817-MigrateGenerateConfigTask
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/tags/5.0.6
+    ##TO DO: revert to latest tag
+    ref: refs/heads/DASD-8817-MigrateGenerateConfigTask
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
@@ -42,7 +44,7 @@ stages:
     parameters:
       SolutionBaseName: $(SolutionBaseName)
       BuildConfiguration: $(BuildConfiguration)
-    
+
 - stage: Deploy_AT
   dependsOn: Build
   displayName: Deploy to AT
