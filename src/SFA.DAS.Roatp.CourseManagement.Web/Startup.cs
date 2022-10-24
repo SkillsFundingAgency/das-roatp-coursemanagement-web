@@ -120,7 +120,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             .SetDefaultNavigationSection(NavigationSection.Home)
             .ShowBetaPhaseBanner()
             /// .EnableGoogleAnalytics()
-            .SetCompatibilityVersion(CompatibilityVersion.Version_3_0)
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
             .AddFluentValidation(fv =>
             {
@@ -153,7 +152,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 options.Cookie.IsEssential = true;
             });
 
-            services.AddApplicationInsightsTelemetry(_configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry();
 
             services.AddLogging();
 
