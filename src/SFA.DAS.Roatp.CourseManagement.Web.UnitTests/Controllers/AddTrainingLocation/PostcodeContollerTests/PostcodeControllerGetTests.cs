@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         {
             _sut.GetPostcode();
 
-            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn));
+            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedPostcode));
         }
 
         [Test]

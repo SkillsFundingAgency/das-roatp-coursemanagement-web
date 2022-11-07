@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
         public void GetSessionModelWithEscapeRoute_SessionModelIsMissing_ReturnsEscapeRoute()
         {
             var sessionServiceMock = new Mock<ISessionService>();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
             var ctrl = new TestController(sessionServiceMock.Object, Mock.Of<ILogger<TestController>>());
             ctrl.AddDefaultContextWithUser();
 
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
         public void GetSessionModelWithEscapeRoute_LarsCodeNotSetInSessionModel_ReturnsEscapeRoute()
         {
             var sessionServiceMock = new Mock<ISessionService>();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(new StandardSessionModel());
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel());
             var ctrl = new TestController(sessionServiceMock.Object, Mock.Of<ILogger<TestController>>());
             ctrl.AddDefaultContextWithUser();
 
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
         {
             var larsCode = 1;
             var sessionServiceMock = new Mock<ISessionService>();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(new StandardSessionModel() { LarsCode = larsCode });
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel() { LarsCode = larsCode });
             var ctrl = new TestController(sessionServiceMock.Object, Mock.Of<ILogger<TestController>>());
             ctrl.AddDefaultContextWithUser();
 

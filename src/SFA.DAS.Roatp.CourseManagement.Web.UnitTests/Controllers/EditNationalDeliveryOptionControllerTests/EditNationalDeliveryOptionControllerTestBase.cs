@@ -33,6 +33,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
                 .AddUrlForRoute(RouteNames.GetStandardDetails, CancelLinkUrl);
         }
 
-        public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, LarsCode.ToString())).Returns(locationOption.ToString());
+        public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(locationOption.ToString());
     }
 }

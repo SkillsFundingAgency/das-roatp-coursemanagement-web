@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             RegionsSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(default(StandardSessionModel));
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(default(StandardSessionModel));
 
             var result = await sut.SubmitRegions(submitModel);
 
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             GetAllRegionsAndSubRegionsQueryResult queryResult)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
             sut.ModelState.AddModelError("key", "message");
 
@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             GetAllRegionsAndSubRegionsQueryResult queryResult)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
             standardSessionModel.CourseLocations.Clear();
             var submitModel = new RegionsSubmitModel();
@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             await sut.SubmitRegions(submitModel);
 
             standardSessionModel.CourseLocations.Count.Should().Be(submitModel.SelectedSubRegions.Length);
-            sessionServiceMock.Verify(s => s.Set(standardSessionModel, TestConstants.DefaultUkprn));
+            sessionServiceMock.Verify(s => s.Set(standardSessionModel));
         }
 
         [Test, MoqAutoData]
@@ -87,7 +87,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             GetAllRegionsAndSubRegionsQueryResult queryResult)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
             var result = await sut.SubmitRegions(submitModel);

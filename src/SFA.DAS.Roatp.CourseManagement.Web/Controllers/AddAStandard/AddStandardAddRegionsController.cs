@@ -61,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var result = await _mediator.Send(new GetAllRegionsAndSubRegionsQuery());
             var selectedRegions = result.Regions.Where(r => submitModel.SelectedSubRegions.Contains(r.Id.ToString())).Select(r => (CourseLocationModel)r);
             sessionModel.CourseLocations.AddRange(selectedRegions);
-            _sessionService.Set(sessionModel, Ukprn.ToString());
+            _sessionService.Set(sessionModel);
 
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
         }

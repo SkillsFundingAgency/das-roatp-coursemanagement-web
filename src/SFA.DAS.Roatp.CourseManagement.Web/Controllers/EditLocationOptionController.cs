@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         public async Task<IActionResult> Index([FromRoute] int larsCode)
         {
             var model = new EditLocationOptionViewModel();
-            var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption, larsCode.ToString());
+            var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption);
             if (string.IsNullOrEmpty(locationOption))
             {
                 var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
 
-            _sessionService.Delete(SessionKeys.SelectedLocationOption, larsCode.ToString());
+            _sessionService.Delete(SessionKeys.SelectedLocationOption);
 
             return View(model);
         }
@@ -66,7 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {locationOption}", Ukprn, larsCode, submitModel.LocationOption);
 
-            _sessionService.Set(submitModel.LocationOption.ToString(), SessionKeys.SelectedLocationOption, larsCode.ToString());
+            _sessionService.Set(submitModel.LocationOption.ToString(), SessionKeys.SelectedLocationOption);
 
             switch (submitModel.LocationOption)
             {

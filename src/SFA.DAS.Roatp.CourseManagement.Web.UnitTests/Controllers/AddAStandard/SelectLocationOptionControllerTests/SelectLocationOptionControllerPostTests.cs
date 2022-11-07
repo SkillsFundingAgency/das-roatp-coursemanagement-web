@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectLocationOptionController sut)
         {
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel());
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel,
             string cancelLink)
         {
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
             sut.ModelState.AddModelError("key", "message");
 
@@ -57,13 +57,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel)
         {
             var locationOption = LocationOption.EmployerLocation;
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardConfirmNationalProvider);
-            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()),Times.Once);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>()),Times.Once);
         }
 
         [Test, MoqAutoData]
@@ -73,13 +73,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel)
         {
             var locationOption = LocationOption.ProviderLocation;
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetNewStandardViewTrainingLocationOptions);
-            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Once);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>()), Times.Once);
         }
     }
 }

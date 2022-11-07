@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             sessionModel.ContactInformation.ContactUsPageUrl = submitModel.ContactUsPageUrl;
             sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl;
 
-            _sessionService.Set(sessionModel, Ukprn.ToString());
+            _sessionService.Set(sessionModel);
 
             _logger.LogInformation("Add standard: Contact details added for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
 

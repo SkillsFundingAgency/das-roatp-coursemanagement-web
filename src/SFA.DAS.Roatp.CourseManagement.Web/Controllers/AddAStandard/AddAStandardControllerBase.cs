@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         protected (StandardSessionModel, IActionResult) GetSessionModelWithEscapeRoute(ILogger logger)
         {
-            var sessionModel = _sessionService.Get<StandardSessionModel>(Ukprn.ToString());
+            var sessionModel = _sessionService.Get<StandardSessionModel>();
             if (sessionModel == null || sessionModel.LarsCode <= 0)
             {
                 logger.LogInformation("Session model or larscode is missing, escape route set to standards list.");

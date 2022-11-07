@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] AddContactDetailsController sut)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
              string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
 
             var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
@@ -57,11 +57,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             CourseContactDetailsSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
             sut.SubmitContactDetails(submitModel);
 
-            sessionServiceMock.Verify(s => s.Set(standardSessionModel, TestConstants.DefaultUkprn));
+            sessionServiceMock.Verify(s => s.Set(standardSessionModel));
 
             standardSessionModel.ContactInformation.ContactUsPhoneNumber.Should().Be(submitModel.ContactUsPhoneNumber);
             standardSessionModel.ContactInformation.ContactUsPageUrl.Should().Be(submitModel.ContactUsPageUrl);
@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             CourseContactDetailsSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
             var result = sut.SubmitContactDetails(submitModel);
 

@@ -14,37 +14,31 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public void Set(string value, string key, string context)
+        public void Set(string value, string key)
         {
-            _httpContextAccessor.HttpContext.Session.SetString(ContextKey, context);
             _httpContextAccessor.HttpContext.Session.SetString(key, value);
         }
-        public void Set<T>(T model, string context) => Set(JsonSerializer.Serialize(model), typeof(T).Name, context);
+        public void Set<T>(T model) => Set(JsonSerializer.Serialize(model), typeof(T).Name);
 
-        public string Get(string key, string context)
+        public string Get(string key)
         {
-            var contextValue = _httpContextAccessor.HttpContext.Session.GetString(ContextKey);
-            if (contextValue == context)
-                return _httpContextAccessor.HttpContext.Session.GetString(key);
-            else
-                return default;
+            return _httpContextAccessor.HttpContext.Session.GetString(key);
         }
 
-        public T Get<T>(string context)
+        public T Get<T>()
         {
-            var json = Get(typeof(T).Name, context);
+            var json = Get(typeof(T).Name);
             if (string.IsNullOrEmpty(json)) return default;
             return JsonSerializer.Deserialize<T>(json);
         }
 
-        public void Delete(string key, string context)
+        public void Delete(string key)
         {
-            var contextValue = _httpContextAccessor.HttpContext.Session.GetString(ContextKey);
-            if (contextValue == context && _httpContextAccessor.HttpContext.Session.Keys.Any(k => k == key))
+            if (_httpContextAccessor.HttpContext.Session.Keys.Any(k => k == key))
                 _httpContextAccessor.HttpContext.Session.Remove(key);
         }
 
-        public void Delete<T>(T model, string context) => Delete(typeof(T).Name, context);
+        public void Delete<T>(T model) => Delete(typeof(T).Name);
 
         public void Clear() => _httpContextAccessor.HttpContext.Session.Clear();
 

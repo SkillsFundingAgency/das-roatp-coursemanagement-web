@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             else
             {
                 model.BackUrl = Request.GetTypedHeaders().Referer.ToString();
-                var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption, model.LarsCode.ToString());
+                var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption);
                 if ((!string.IsNullOrEmpty(sessionValue) &&
                     (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)
                         && (locationOption == LocationOption.Both || locationOption == LocationOption.ProviderLocation))))
@@ -99,7 +99,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
             }
 
-            var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption, model.LarsCode.ToString());
+            var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption);
             if ((!string.IsNullOrEmpty(sessionValue) &&
                 (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)
                     && (locationOption == LocationOption.Both))))

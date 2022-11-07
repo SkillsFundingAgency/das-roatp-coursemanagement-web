@@ -64,7 +64,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
 
             await _sut.Index(LarsCode);
 
-            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedLocationOption, LarsCode.ToString()));
+            _sessionServiceMock.Verify(s => s.Delete(SessionKeys.SelectedLocationOption));
         }
 
         [Test]
