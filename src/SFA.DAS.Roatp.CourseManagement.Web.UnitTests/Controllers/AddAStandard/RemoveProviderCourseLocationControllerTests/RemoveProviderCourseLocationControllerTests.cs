@@ -58,7 +58,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test]
         public void ProviderLocationIdInCourseLocations_SessionUpdatedToRemoveProviderCourseLocation()
         {
-            var ukprn = "10012002";
             var providerLocationId = Guid.NewGuid();
             var standardSessionModel = new StandardSessionModel
             {
