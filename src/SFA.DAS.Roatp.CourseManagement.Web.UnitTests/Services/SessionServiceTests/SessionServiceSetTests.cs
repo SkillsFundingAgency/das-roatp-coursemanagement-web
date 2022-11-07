@@ -40,11 +40,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
             var json = JsonSerializer.Serialize(value);
 
             _sut.Set(value);
+
             _sessionMock.Verify(s => s.Set(nameof(Person), Encoding.UTF8.GetBytes(json)));
         }
 
         [Test, AutoData]
-        public void Get_MatchingContext_GetsValueForGivenKey(string key, string value)
+        public void Get_GetsValueForGivenKey(string key, string value)
         {
             var keyValue = Encoding.UTF8.GetBytes(value);
             _sessionMock.Setup(s => s.TryGetValue(key, out keyValue)).Returns(true);
@@ -55,10 +56,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void Get_ContextNotMatching_ReturnsNull(string key)
+        public void Get_ReturnsNull(string key)
         {
             byte[] contextValue;
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(false);
+            _sessionMock.Setup(s => s.TryGetValue(key, out contextValue)).Returns(false);
 
             var actual = _sut.Get(key);
 
@@ -68,7 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void GetOfT_MatchingContext_GetsValueForGivenKey(string key, Person value)
+        public void GetOfT_GetsValueForGivenKey(string key, Person value)
         {
             var json = JsonSerializer.Serialize(value);
     
@@ -81,7 +82,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void Delete_MatchingContext_RemovesKey(string key)
+        public void GetOfT_GetsValueForGivenType(Person value)
+        {
+            var json = JsonSerializer.Serialize(value);
+            var key = typeof(Person).Name;
+
+            var keyValue = Encoding.UTF8.GetBytes(json);
+            _sessionMock.Setup(s => s.TryGetValue(key, out keyValue)).Returns(true);
+
+            var actual = _sut.Get<Person>();
+
+            actual.Should().BeEquivalentTo(value);
+        }
+
+        [Test, AutoData]
+        public void Delete_RemovesKey(string key)
         {
             _sessionMock.Setup(s => s.Keys).Returns(new [] { key });
 
@@ -91,7 +106,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void Delete_ContextNotMatching_RemovesKey(string key)
+        public void Delete_NotRemovesKey(string key)
         {
             _sut.Delete(key);
 
@@ -99,12 +114,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void DeleteOfT_MatchingContext_RemovesKey(Person value)
+        public void DeleteOfT_RemovesKey()
         {
             var key = typeof(Person).Name;
             _sessionMock.Setup(s => s.Keys).Returns(new[] { key });
 
             _sut.Delete(key);
+
+            _sessionMock.Verify(s => s.Remove(key));
+        }
+
+        [Test, AutoData]
+        public void DeleteOfT_RemovesKeyByType()
+        {
+            var key = typeof(Person).Name;
+            _sessionMock.Setup(s => s.Keys).Returns(new[] { key });
+
+            _sut.Delete<Person>(new Person());
 
             _sessionMock.Verify(s => s.Remove(key));
         }

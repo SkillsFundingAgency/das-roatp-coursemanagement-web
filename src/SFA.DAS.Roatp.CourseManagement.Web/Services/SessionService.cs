@@ -7,7 +7,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Services
     public class SessionService : ISessionService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
-        public const string ContextKey = "ContextKey";
 
         public SessionService(IHttpContextAccessor httpContextAccessor)
         {
@@ -41,6 +40,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Services
         public void Delete<T>(T model) => Delete(typeof(T).Name);
 
         public void Clear() => _httpContextAccessor.HttpContext.Session.Clear();
-
     }
 }
