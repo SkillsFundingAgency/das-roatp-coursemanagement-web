@@ -106,7 +106,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void Delete_NotRemovesKey(string key)
+        public void Delete_KeyDoesNotExist_ReturnsWithoutError(string key)
         {
             _sut.Delete(key);
 
