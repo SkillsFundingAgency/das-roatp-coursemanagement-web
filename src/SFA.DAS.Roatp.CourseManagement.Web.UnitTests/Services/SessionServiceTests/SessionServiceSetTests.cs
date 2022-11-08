@@ -35,6 +35,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
+        public void Set_AddsValueToSessionAndOverridesAnyExistingValue(string key, string value, string newValue)
+        {
+            _sut.Set(value, key);
+
+            _sut.Set(newValue, key);
+
+            _sessionMock.Verify(s => s.Set(key, Encoding.UTF8.GetBytes(value)), Times.Once);
+            _sessionMock.Verify(s => s.Set(key, Encoding.UTF8.GetBytes(newValue)), Times.Once);
+        }
+
+        [Test, AutoData]
         public void SetOfT_AddsSerialisedValueToSession(string context, Person value)
         {
             var json = JsonSerializer.Serialize(value);
@@ -93,6 +104,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
             var actual = _sut.Get<Person>();
 
             actual.Should().BeEquivalentTo(value);
+        }
+
+        [Test, AutoData]
+        public void GetOfT_ObjectKeyNotFoundInSession_ReturnsNull(Person value)
+        {
+            var actual = _sut.Get<Person>();
+
+            actual.Should().BeNull();
         }
 
         [Test, AutoData]
