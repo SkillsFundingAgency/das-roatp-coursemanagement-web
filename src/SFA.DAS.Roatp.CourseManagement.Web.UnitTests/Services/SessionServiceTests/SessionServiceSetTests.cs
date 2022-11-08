@@ -56,7 +56,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void Get_ReturnsNull(string key)
+        public void Get_ContextNotMatching_ReturnsNull(string key)
         {
             byte[] contextValue;
             _sessionMock.Setup(s => s.TryGetValue(key, out contextValue)).Returns(false);
@@ -114,7 +114,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void DeleteOfT_RemovesKey()
+        public void DeleteOfT_ObjectFound_RemovesObjectFromSession()
         {
             var key = typeof(Person).Name;
             _sessionMock.Setup(s => s.Keys).Returns(new[] { key });
