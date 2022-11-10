@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             }
 
             sessionModel.HasNationalDeliveryOption = submitModel.HasNationalDeliveryOption;
-            _sessionService.Set(sessionModel, Ukprn.ToString());
+            _sessionService.Set(sessionModel);
 
             _logger.LogInformation("Add standard: national delivery option set to {nationaldeliveryoption} for ukprn:{ukprn} larscode:{larscode}", submitModel.HasNationalDeliveryOption, Ukprn, sessionModel.LarsCode);
 

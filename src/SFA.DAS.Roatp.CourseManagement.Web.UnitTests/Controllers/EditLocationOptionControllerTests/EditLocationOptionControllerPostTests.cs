@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
 
             await _sut.Index(LarsCode, Ukprn, model);
 
-            _sessionServiceMock.Verify(s => s.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption, LarsCode.ToString()));
+            _sessionServiceMock.Verify(s => s.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption));
         }
 
         [Test, AutoData]

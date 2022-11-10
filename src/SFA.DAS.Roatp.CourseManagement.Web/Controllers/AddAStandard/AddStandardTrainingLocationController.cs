@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                }
             });
 
-           _sessionService.Set(sessionModel, Ukprn.ToString());
+           _sessionService.Set(sessionModel);
 
             return RedirectToRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
         }

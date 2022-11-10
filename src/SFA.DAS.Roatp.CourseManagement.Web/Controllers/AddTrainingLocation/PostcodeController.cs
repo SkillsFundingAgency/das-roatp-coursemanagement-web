@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         [HttpGet]
         public IActionResult GetPostcode()
         {
-            _sessionService.Delete(SessionKeys.SelectedPostcode, Ukprn.ToString());
+            _sessionService.Delete(SessionKeys.SelectedPostcode);
             var model = new PostcodeViewModel();
             model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderLocations, new { Ukprn });
             return View(ViewPath, model);
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
                 return GetPostcode();
             }
 
-            _sessionService.Set(model.Postcode.ToUpper(), SessionKeys.SelectedPostcode, Ukprn.ToString());
+            _sessionService.Set(model.Postcode.ToUpper(), SessionKeys.SelectedPostcode);
             return RedirectToRouteWithUkprn(RouteNames.GetProviderLocationAddress);
         }
     }

@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
            ConfirmNationalProviderSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var result = sut.SubmitConfirmationOnNationalProvider(submitModel);
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
            string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.ModelState.AddModelError("key", "message");
 
             var result = sut.SubmitConfirmationOnNationalProvider(submitModel);
@@ -55,12 +55,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel,
             bool hasNationalDeliveryOption)
         {
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser();
 
             sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = hasNationalDeliveryOption });
 
-            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.HasNationalDeliveryOption == hasNationalDeliveryOption), It.IsAny<string>()));
+            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.HasNationalDeliveryOption == hasNationalDeliveryOption)));
         }
 
         [Test, MoqAutoData]
@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ConfirmNationalProviderController sut,
             StandardSessionModel sessionModel)
         {
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = true });
@@ -83,7 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ConfirmNationalProviderController sut,
             StandardSessionModel sessionModel)
         {
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = false });

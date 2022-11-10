@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             ConfirmNonRegulatedStandardSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var response = await sut.SubmitConfirmationOfStandard(submitModel);
 
@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.ModelState.AddModelError("key", "message");
 
             var response = await sut.SubmitConfirmationOfStandard(submitModel);
@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         {
             submitModel.IsCorrectStandard = false;
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 
             var response = await sut.SubmitConfirmationOfStandard(submitModel);
 
@@ -90,11 +90,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardInformationQueryResult);
             submitModel.IsCorrectStandard = true;
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 
             await sut.SubmitConfirmationOfStandard(submitModel);
 
-            sessionServiceMock.Verify(m => m.Set(sessionModel, It.IsAny<string>()), Times.Once);
+            sessionServiceMock.Verify(m => m.Set(sessionModel), Times.Once);
             sessionModel.IsConfirmed.Should().BeTrue();
             sessionModel.StandardInformation.Should().BeEquivalentTo(getStandardInformationQueryResult, option => option
                 .Excluding(c => c.StandardUId)
@@ -111,14 +111,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         {
             submitModel.IsCorrectStandard = true;
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 
             var response = await sut.SubmitConfirmationOfStandard(submitModel);
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetAddStandardAddContactDetails);
-            sessionServiceMock.Verify(m => m.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Once);
+            sessionServiceMock.Verify(m => m.Set(It.IsAny<StandardSessionModel>()), Times.Once);
         }
     }
 }

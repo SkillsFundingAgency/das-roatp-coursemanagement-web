@@ -27,12 +27,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         }
 
         [Test, AutoData]
-        public void Set_AddsValueToSession(string key, string context, string value)
+        public void Set_AddsValueToSession(string key, string value)
         {
-            _sut.Set(value, key, context);
+            _sut.Set(value, key);
 
             _sessionMock.Verify(s => s.Set(key, Encoding.UTF8.GetBytes(value)));
-            _sessionMock.Verify(s => s.Set(SessionService.ContextKey, Encoding.UTF8.GetBytes(context)));
+        }
+
+        [Test, AutoData]
+        public void Set_AddsValueToSessionAndOverridesAnyExistingValue(string key, string value, string newValue)
+        {
+            _sut.Set(value, key);
+
+            _sut.Set(newValue, key);
+
+            _sessionMock.Verify(s => s.Set(key, Encoding.UTF8.GetBytes(value)), Times.Once);
+            _sessionMock.Verify(s => s.Set(key, Encoding.UTF8.GetBytes(newValue)), Times.Once);
         }
 
         [Test, AutoData]
@@ -40,84 +50,106 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Services.SessionServiceTe
         {
             var json = JsonSerializer.Serialize(value);
 
-            _sut.Set(value, context);
+            _sut.Set(value);
 
             _sessionMock.Verify(s => s.Set(nameof(Person), Encoding.UTF8.GetBytes(json)));
-            _sessionMock.Verify(s => s.Set(SessionService.ContextKey, Encoding.UTF8.GetBytes(context)));
         }
 
         [Test, AutoData]
-        public void Get_MatchingContext_GetsValueForGivenKey(string key, string value, string context)
+        public void Get_GetsValueForGivenKey(string key, string value)
         {
-            var contextValue = Encoding.UTF8.GetBytes(context);
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(true);
             var keyValue = Encoding.UTF8.GetBytes(value);
             _sessionMock.Setup(s => s.TryGetValue(key, out keyValue)).Returns(true);
 
-            var actual = _sut.Get(key, context);
+            var actual = _sut.Get(key);
 
             actual.Should().Be(value);
         }
 
         [Test, AutoData]
-        public void Get_ContextNotMatching_ReturnsNull(string key, string value, string context)
+        public void Get_ContextNotMatching_ReturnsNull(string key)
         {
             byte[] contextValue;
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(false);
+            _sessionMock.Setup(s => s.TryGetValue(key, out contextValue)).Returns(false);
 
-            var actual = _sut.Get(key, context);
+            var actual = _sut.Get(key);
 
-            _sessionMock.Verify(s => s.TryGetValue(key, out It.Ref<byte[]>.IsAny), Times.Never);
+            _sessionMock.Verify(s => s.TryGetValue(key, out It.Ref<byte[]>.IsAny), Times.Once);
 
             actual.Should().BeNull();
         }
 
         [Test, AutoData]
-        public void GetOfT_MatchingContext_GetsValueForGivenKey(string key, Person value, string context)
+        public void GetOfT_GetsValueForGivenKey(string key, Person value)
         {
             var json = JsonSerializer.Serialize(value);
-            var contextValue = Encoding.UTF8.GetBytes(context);
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(true);
+    
             var keyValue = Encoding.UTF8.GetBytes(json);
             _sessionMock.Setup(s => s.TryGetValue(key, out keyValue)).Returns(true);
 
-            var actual = _sut.Get(key, context);
+            var actual = _sut.Get(key);
 
             actual.Should().Be(json);
         }
 
         [Test, AutoData]
-        public void Delete_MatchingContext_RemovesKey(string key, string context)
+        public void GetOfT_GetsValueForGivenType(Person value)
         {
-            var contextValue = Encoding.UTF8.GetBytes(context);
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(true);
+            var json = JsonSerializer.Serialize(value);
+            var key = typeof(Person).Name;
+
+            var keyValue = Encoding.UTF8.GetBytes(json);
+            _sessionMock.Setup(s => s.TryGetValue(key, out keyValue)).Returns(true);
+
+            var actual = _sut.Get<Person>();
+
+            actual.Should().BeEquivalentTo(value);
+        }
+
+        [Test, AutoData]
+        public void GetOfT_ObjectKeyNotFoundInSession_ReturnsNull(Person value)
+        {
+            var actual = _sut.Get<Person>();
+
+            actual.Should().BeNull();
+        }
+
+        [Test, AutoData]
+        public void Delete_RemovesKey(string key)
+        {
             _sessionMock.Setup(s => s.Keys).Returns(new [] { key });
 
-            _sut.Delete(key, context);
+            _sut.Delete(key);
 
             _sessionMock.Verify(s => s.Remove(key));
         }
 
         [Test, AutoData]
-        public void Delete_ContextNotMatching_RemovesKey(string key, string context)
+        public void Delete_KeyDoesNotExist_ReturnsWithoutError(string key)
         {
-            byte[] contextValue;
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(false);
-
-            _sut.Delete(key, context);
+            _sut.Delete(key);
 
             _sessionMock.Verify(s => s.Remove(It.IsAny<string>()), Times.Never);
         }
 
         [Test, AutoData]
-        public void DeleteOfT_MatchingContext_RemovesKey(Person value, string context)
+        public void DeleteOfT_ObjectFound_RemovesObjectFromSession()
         {
             var key = typeof(Person).Name;
-            var contextValue = Encoding.UTF8.GetBytes(context);
-            _sessionMock.Setup(s => s.TryGetValue(SessionService.ContextKey, out contextValue)).Returns(true);
             _sessionMock.Setup(s => s.Keys).Returns(new[] { key });
 
-            _sut.Delete(key, context);
+            _sut.Delete(key);
+
+            _sessionMock.Verify(s => s.Remove(key));
+        }
+
+        [Test, AutoData]
+        public void DeleteOfT_RemovesKeyByType()
+        {
+            var key = typeof(Person).Name;
+            _sessionMock.Setup(s => s.Keys).Returns(new[] { key });
+
+            _sut.Delete<Person>(new Person());
 
             _sessionMock.Verify(s => s.Remove(key));
         }

@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             AddressSubmitModel model)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(Guid.NewGuid().ToString());
+            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode)).Returns(Guid.NewGuid().ToString());
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAddressesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
             sut.ModelState.AddModelError("key", "errorMessage");
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             AddressSubmitModel model)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(string.Empty);
+            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode)).Returns(string.Empty);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAddressesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
             var response = await sut.SubmitAddress(model);
@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             AddressSubmitModel model)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(Guid.NewGuid().ToString());
+            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode)).Returns(Guid.NewGuid().ToString());
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAddressesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
             var response = await sut.SubmitAddress(model);
@@ -93,7 +93,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             var expectedValueInTempData = JsonSerializer.Serialize(queryResult.Addresses[0]);
             sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
-            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(Guid.NewGuid().ToString());
+            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode)).Returns(Guid.NewGuid().ToString());
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAddressesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
             var response = await sut.SubmitAddress(model);

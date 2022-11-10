@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ReviewAndSaveStandardController sut)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var result = sut.ReviewStandard();
 
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(sessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 
             var result = sut.ReviewStandard();
 
