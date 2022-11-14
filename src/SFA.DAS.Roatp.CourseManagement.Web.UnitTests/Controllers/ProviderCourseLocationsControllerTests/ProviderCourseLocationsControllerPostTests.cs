@@ -90,7 +90,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
 
-            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, model.LarsCode.ToString())).Returns(LocationOption.Both.ToString());
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(LocationOption.Both.ToString());
             var result = await _sut.ConfirmedProviderCourseLocations(model);
 
             var redirectResult = result as RedirectToRouteResult;

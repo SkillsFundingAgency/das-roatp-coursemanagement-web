@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         {
             var providerLocationId = Guid.NewGuid();
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>()))
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>())
                 .Returns((StandardSessionModel)null);
 
             var result =  sut.RemoveProviderCourseLocation(providerLocationId);
@@ -45,11 +45,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             ctrl.AddDefaultContextWithUser();
 
             var providerLocationId = Guid.NewGuid();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             var result = ctrl.RemoveProviderCourseLocation(providerLocationId);
 
             sessionServiceMock.Verify(s =>
-                s.Set(It.IsAny<StandardSessionModel>(), It.IsAny<string>()), Times.Never);
+                s.Set(It.IsAny<StandardSessionModel>()), Times.Never);
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetNewStandardViewTrainingLocationOptions);
@@ -58,7 +58,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test]
         public void ProviderLocationIdInCourseLocations_SessionUpdatedToRemoveProviderCourseLocation()
         {
-            var ukprn = "10012002";
             var providerLocationId = Guid.NewGuid();
             var standardSessionModel = new StandardSessionModel
             {
@@ -80,13 +79,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             };
 
             var sessionServiceMock = new Mock<ISessionService>();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(ukprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             var ctrl = new RemoveProviderCourseLocationController(sessionServiceMock.Object, Mock.Of<ILogger<RemoveProviderCourseLocationController>>());
             ctrl.AddDefaultContextWithUser();
 
             var result = ctrl.RemoveProviderCourseLocation(providerLocationId);
 
-            sessionServiceMock.Verify(s => s.Set(standardSessionModel, ukprn), Times.Once);
+            sessionServiceMock.Verify(s => s.Set(standardSessionModel), Times.Once);
 
             standardSessionModel.CourseLocations.Count.Should().Be(1);
             standardSessionModel.CourseLocations.Any(x => x.ProviderLocationId == providerLocationId).Should()

@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] AddStandardAddRegionsController sut)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(default(StandardSessionModel));
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(default(StandardSessionModel));
 
             var result = await sut.SelectRegions();
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             standardSessionModel.LocationOption = LocationOption.ProviderLocation;
             standardSessionModel.HasNationalDeliveryOption = false;
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
             var result = await sut.SelectRegions();
 
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             standardSessionModel.LocationOption = LocationOption.EmployerLocation;
             standardSessionModel.HasNationalDeliveryOption = true;
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
             var result = await sut.SelectRegions();
 
@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             GetAllRegionsAndSubRegionsQueryResult queryResult)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(TestConstants.DefaultUkprn)).Returns(standardSessionModel);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
             var result = await sut.SelectRegions();

@@ -101,7 +101,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, larsCode.ToString())).Returns(LocationOption.Both.ToString());
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(LocationOption.Both.ToString());
 
             var result = await _sut.GetProviderCourseLocations(larsCode);
 
@@ -123,7 +123,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
-            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption, larsCode.ToString())).Returns(LocationOption.ProviderLocation.ToString());
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(LocationOption.ProviderLocation.ToString());
 
             var result = await _sut.GetProviderCourseLocations(larsCode);
 

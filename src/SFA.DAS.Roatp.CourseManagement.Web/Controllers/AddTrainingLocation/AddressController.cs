@@ -86,7 +86,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         private string GetPostcodeFromSession()
         {
-            var postcode = _sessionService.Get(SessionKeys.SelectedPostcode, Ukprn.ToString());
+            var postcode = _sessionService.Get(SessionKeys.SelectedPostcode);
             if (string.IsNullOrEmpty(postcode))
             {
                 _logger.LogInformation("Postcode not found in session, redirecting to select postcode", Ukprn, UserId);

@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [Route("{ukprn}/standards/{larsCode}/edit-national-delivery-option", Name = RouteNames.GetNationalDeliveryOption)]
         public IActionResult Index([FromRoute] int larsCode)
         {
-            if(!IsCorrectLocationOptionSetInSession(larsCode))
+            if(!IsCorrectLocationOptionSetInSession())
             {
                 _logger.LogWarning("Location option is not set in session, navigating back to the question ukprn:{ukprn} larscode: {larscode}", Ukprn, larsCode);
                 return RedirectToRoute(RouteNames.GetLocationOption, new { Ukprn, larsCode });
@@ -70,9 +70,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             CancelLink = GetStandardDetailsUrl(larsCode)
         };
 
-        private bool IsCorrectLocationOptionSetInSession(int larsCode)
+        private bool IsCorrectLocationOptionSetInSession()
         {
-            var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption, larsCode.ToString());
+            var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption);
             return
                 (!string.IsNullOrEmpty(sessionValue) &&
                 (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)

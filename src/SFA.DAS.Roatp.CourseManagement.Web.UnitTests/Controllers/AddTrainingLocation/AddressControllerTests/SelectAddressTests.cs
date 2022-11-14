@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             _mediatorMock.Setup(m => m.Send(It.Is<GetAddressesQuery>(q => q.Postcode == Postcode), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAddressesQueryResult { Addresses = _addresses });
 
             _sessionServiceMock = new Mock<ISessionService>();
-            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(Postcode);
+            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode)).Returns(Postcode);
             _sut = new AddressController(_mediatorMock.Object, Mock.Of<ILogger<AddressController>>(), _sessionServiceMock.Object);
             _sut
                 .AddDefaultContextWithUser()
@@ -61,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         [Test]
         public void GetPostcodeFromSession()
         {
-            _sessionServiceMock.Verify(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn));
+            _sessionServiceMock.Verify(s => s.Get(SessionKeys.SelectedPostcode));
         }
 
         [Test]
@@ -117,7 +117,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             [Greedy] AddressController sut)
         {
             sut.AddDefaultContextWithUser();
-            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode, TestConstants.DefaultUkprn)).Returns(string.Empty);
+            sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedPostcode)).Returns(string.Empty);
 
             var response = await sut.SelectAddress();
 

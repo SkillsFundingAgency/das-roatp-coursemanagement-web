@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 var courseLocationToRemove =
                     sessionModel.CourseLocations.First(x => x.ProviderLocationId == providerLocationId);
                 sessionModel.CourseLocations.Remove(courseLocationToRemove);
-                _sessionService.Set(sessionModel, Ukprn.ToString());
+                _sessionService.Set(sessionModel);
             }
 
             return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);

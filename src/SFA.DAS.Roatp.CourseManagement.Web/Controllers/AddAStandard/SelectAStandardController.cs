@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             _logger.LogInformation("Begin of journey for ukprn: {ukprn} to add standard {larscode}", Ukprn, submitModel.SelectedLarsCode);
 
             var sessionModel = new StandardSessionModel { LarsCode = submitModel.SelectedLarsCode };
-            _sessionService.Set(sessionModel, Ukprn.ToString());
+            _sessionService.Set(sessionModel);
 
             var standardInformation = await _mediator.Send(new GetStandardInformationQuery(submitModel.SelectedLarsCode));
 

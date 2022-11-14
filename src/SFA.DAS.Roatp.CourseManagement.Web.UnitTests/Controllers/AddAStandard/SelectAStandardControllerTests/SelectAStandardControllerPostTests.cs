@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = response as RedirectToRouteResult;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
-            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode), It.IsAny<string>()));
+            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode)));
             mediatorMock.Verify(m => m.Send(It.IsAny<GetAvailableProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = response as RedirectToRouteResult;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetAddStandardConfirmRegulatedStandard);
-            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode), It.IsAny<string>()));
+            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode)));
             mediatorMock.Verify(m => m.Send(It.IsAny<GetAvailableProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
     }

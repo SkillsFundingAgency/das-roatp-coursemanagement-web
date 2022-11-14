@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns((StandardSessionModel)null);
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var result = sut.SelectLocationOption();
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(new StandardSessionModel {LocationOption = LocationOption.ProviderLocation, LarsCode = 1});
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel {LocationOption = LocationOption.ProviderLocation, LarsCode = 1});
         
             var result = sut.SelectLocationOption();
         
@@ -57,13 +57,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             string cancelLink)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>(It.IsAny<string>())).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = larsCode, CourseLocations = new List<CourseLocationModel> {new CourseLocationModel()}});
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = larsCode, CourseLocations = new List<CourseLocationModel> {new CourseLocationModel()}});
 
             sut.SelectLocationOption();
 
             sessionServiceMock.Verify(m => 
-                m.Set(It.Is<StandardSessionModel>(x=>x.LocationOption==LocationOption.ProviderLocation && x.LarsCode==larsCode && x.CourseLocations.Count==0),
-                It.IsAny<string>()), Times.Once);
+                m.Set(It.Is<StandardSessionModel>(x=>x.LocationOption==LocationOption.ProviderLocation && x.LarsCode==larsCode && x.CourseLocations.Count==0)
+                ), Times.Once);
         }
     }
 }
