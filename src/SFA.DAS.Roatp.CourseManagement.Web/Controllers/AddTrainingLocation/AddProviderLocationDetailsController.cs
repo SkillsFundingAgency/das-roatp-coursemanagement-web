@@ -77,6 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             {
                 Ukprn = base.Ukprn,
                 UserId = base.UserId,
+                UserDisplayName = base.UserDisplayName,
                 LocationName = submitModel.LocationName,
                 AddressLine1 = addressItem.AddressLine1,
                 AddressLine2 = addressItem.AddressLine2,
