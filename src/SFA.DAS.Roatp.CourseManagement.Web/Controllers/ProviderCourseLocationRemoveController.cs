@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveProviderCourseLocation(ProviderCourseLocationViewModel model)
         {
-            var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.Id, UserId);
+            var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.Id, UserId, UserDisplayName);
             await _mediator.Send(command);
 
             return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode = model.LarsCode });
