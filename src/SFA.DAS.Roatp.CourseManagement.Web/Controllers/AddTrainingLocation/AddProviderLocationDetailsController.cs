@@ -8,7 +8,6 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
