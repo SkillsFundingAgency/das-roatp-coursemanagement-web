@@ -4,6 +4,7 @@ using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System;
@@ -27,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
 
             await sut.Handle(request, new CancellationToken());
 
-            apiClientMock.Verify(a => a.Post(expectedUrl, request));
+            apiClientMock.Verify(a => a.Post(expectedUrl, It.Is<AddProviderCourseLocationCommand>(r => r.Ukprn == request.Ukprn && r.LarsCode == request.LarsCode && r.UserId == request.UserId && r.UserDisplayName == request.UserDisplayName && r.LocationNavigationId == request.LocationNavigationId && r.HasDayReleaseDeliveryOption == request.HasDayReleaseDeliveryOption && r.HasBlockReleaseDeliveryOption == request.HasBlockReleaseDeliveryOption)));
         }
 
         [Test, MoqAutoData]
