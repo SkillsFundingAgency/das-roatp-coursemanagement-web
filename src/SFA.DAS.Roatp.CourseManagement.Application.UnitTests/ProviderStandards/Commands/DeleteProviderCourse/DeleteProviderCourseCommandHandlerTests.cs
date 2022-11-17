@@ -23,11 +23,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             DeleteProviderCourseCommandHandler sut)
         {
             var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/delete";
-            apiClientMock.Setup(a => a.Post(expectedUrl, request)).ReturnsAsync(HttpStatusCode.NoContent);
+            apiClientMock.Setup(a => a.Post(expectedUrl, It.Is<DeleteProviderCourseCommand>(r => r.Ukprn == request.Ukprn && r.LarsCode == request.LarsCode && r.UserId == request.UserId && r.UserDisplayName == request.UserDisplayName))).ReturnsAsync(HttpStatusCode.NoContent);
 
             await sut.Handle(request, new CancellationToken());
 
-            apiClientMock.Verify(a => a.Post(expectedUrl, request));
+            apiClientMock.Verify(a => a.Post(expectedUrl, It.Is<DeleteProviderCourseCommand>(r => r.Ukprn == request.Ukprn && r.LarsCode == request.LarsCode && r.UserId == request.UserId && r.UserDisplayName == request.UserDisplayName)));
         }
 
         [Test, MoqAutoData]

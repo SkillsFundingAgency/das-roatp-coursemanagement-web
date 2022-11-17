@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteProviderCourse(ConfirmDeleteStandardViewModel model)
         {
-            var command = new DeleteProviderCourseCommand(Ukprn, model.StandardInformation.LarsCode, UserId);
+            var command = new DeleteProviderCourseCommand(Ukprn, model.StandardInformation.LarsCode, UserId, UserDisplayName);
             await _mediator.Send(command);
             TempData.Add(TempDataKeys.DeleteProviderCourseDataKey, true);
 
