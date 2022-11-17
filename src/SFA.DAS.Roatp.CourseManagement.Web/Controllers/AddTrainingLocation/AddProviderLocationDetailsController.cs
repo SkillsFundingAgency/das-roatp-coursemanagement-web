@@ -8,7 +8,6 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
-using System;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -77,6 +76,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             {
                 Ukprn = base.Ukprn,
                 UserId = base.UserId,
+                UserDisplayName = base.UserDisplayName,
                 LocationName = submitModel.LocationName,
                 AddressLine1 = addressItem.AddressLine1,
                 AddressLine2 = addressItem.AddressLine2,

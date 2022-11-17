@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 _logger.LogInformation("National delivery option selected, adding national location to ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
                 await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
-                await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId));
+                await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId, UserDisplayName));
                 return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
             }
 
