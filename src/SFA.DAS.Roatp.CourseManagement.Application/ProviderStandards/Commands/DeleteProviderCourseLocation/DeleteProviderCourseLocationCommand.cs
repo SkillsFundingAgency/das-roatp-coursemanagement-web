@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCo
         public int LarsCode { get; }
         public Guid Id { get; set; }
         public string UserId { get; set; }
-        public string UserDisplayName { get; }
+        public string UserDisplayName { get; set; }
         public DeleteProviderCourseLocationCommand(int ukprn, int larsCode, Guid id, string userId, string userDisplayName)
         {
             Ukprn = ukprn;
