@@ -76,7 +76,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                         submitModel.LocationOption == LocationOption.ProviderLocation ? 
                         DeleteProviderCourseLocationOption.DeleteEmployerLocations :
                         DeleteProviderCourseLocationOption.DeleteProviderLocations;
-                    var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, deleteOption);
+                    var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName ,deleteOption);
                     await _mediator.Send(command);
                     break;
                 case LocationOption.Both:
