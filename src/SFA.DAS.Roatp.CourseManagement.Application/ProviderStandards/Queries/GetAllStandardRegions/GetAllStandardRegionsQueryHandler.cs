@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         {
             _logger.LogInformation("Get All Standard Regions request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn, request.LarsCode);
 
-            var allStandardRegions = await _apiClient.Get<GetAllStandardRegionsQueryResult>($"providers/{request.Ukprn}/courses/{request.LarsCode}/standardsubregions");
+            var allStandardRegions = await _apiClient.Get<GetAllStandardRegionsQueryResult>($"providers/{request.Ukprn}/courses/{request.LarsCode}/locations/regions");
             if (allStandardRegions == null)
             {
                 var message = $"All Standard Regions not found for ukprn {request.Ukprn} and larsCode {request.LarsCode}";

@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public async Task Handle_ValidApiRequest_ReturnsValidResponseNoSelectRegions()
         {
-            _apiClient.Setup(x => x.Get<GetAllStandardRegionsQueryResult>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}/standardsubregions")).ReturnsAsync(_result);
+            _apiClient.Setup(x => x.Get<GetAllStandardRegionsQueryResult>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}/locations/regions")).ReturnsAsync(_result);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [Test]
         public void Handle_NoRegionsData_ThrowsException()
         {
-            _apiClient.Setup(x => x.Get<GetAllStandardRegionsQueryResult>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}/standardsubregions")).ReturnsAsync((GetAllStandardRegionsQueryResult)null);
+            _apiClient.Setup(x => x.Get<GetAllStandardRegionsQueryResult>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}/locations/regions")).ReturnsAsync((GetAllStandardRegionsQueryResult)null);
 
             Assert.ThrowsAsync<ValidationException>(() => _handler.Handle(_query, CancellationToken.None));
         }

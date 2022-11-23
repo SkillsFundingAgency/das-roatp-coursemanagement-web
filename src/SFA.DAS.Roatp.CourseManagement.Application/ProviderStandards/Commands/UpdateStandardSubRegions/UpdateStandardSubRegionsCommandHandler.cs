@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
         {
             _logger.LogInformation("Update SubRegions information request for ukprn:{ukprn} LarsCode:{larscode}", command.Ukprn, command.LarsCode);
 
-            var statusCode = await _apiClient.Post<UpdateStandardSubRegionsCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/update-standardsubregions", command);
+            var statusCode = await _apiClient.Post<UpdateStandardSubRegionsCommand>($"providers/{command.Ukprn}/courses/{command.LarsCode}/locations/regions", command);
 
             if (statusCode != System.Net.HttpStatusCode.NoContent)
             {

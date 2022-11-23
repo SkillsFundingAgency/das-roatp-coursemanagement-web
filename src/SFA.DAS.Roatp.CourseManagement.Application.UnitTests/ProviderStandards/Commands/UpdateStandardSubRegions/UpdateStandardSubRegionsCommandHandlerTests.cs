@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             UpdateStandardSubRegionsCommand command,
             CancellationToken cancellationToken)
         {
-            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-standardsubregions";
+            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/locations/regions";
             apiClientMock.Setup(c => c.Post(expectedUri, command)).ReturnsAsync(HttpStatusCode.NoContent);
 
             var result = await sut.Handle(command, cancellationToken);
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             UpdateStandardSubRegionsCommand command,
             CancellationToken cancellationToken)
         {
-            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/update-standardsubregions";
+            var expectedUri = $"providers/{command.Ukprn}/courses/{command.LarsCode}/locations/regions";
             apiClientMock.Setup(c => c.Post(expectedUri, command)).ReturnsAsync(HttpStatusCode.BadRequest);
 
             Func<Task> act = () => sut.Handle(command, cancellationToken);
