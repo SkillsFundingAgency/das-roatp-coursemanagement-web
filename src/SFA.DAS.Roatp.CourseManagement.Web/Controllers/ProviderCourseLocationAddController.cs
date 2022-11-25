@@ -52,6 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 Ukprn = base.Ukprn,
                 UserId = base.UserId,
+                UserDisplayName = base.UserDisplayName,
                 LarsCode = larsCode,
                 LocationNavigationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
                 HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
