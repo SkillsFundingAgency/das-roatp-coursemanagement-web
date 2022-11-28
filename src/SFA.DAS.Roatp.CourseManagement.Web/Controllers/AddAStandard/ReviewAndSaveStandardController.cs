@@ -42,6 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             AddProviderCourseCommand command = sessionModel;
             command.UserId = UserId;
+            command.UserDisplayName = UserDisplayName;
             command.Ukprn = Ukprn;
 
             await _mediator.Send(command);
