@@ -47,6 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             command.LarsCode = larsCode;
             command.Ukprn = Ukprn;
             command.UserId = UserId;
+            command.UserDisplayName = UserDisplayName;
 
             await _mediator.Send(command);
 
