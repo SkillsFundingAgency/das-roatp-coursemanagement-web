@@ -70,11 +70,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View(ViewPath, model);
             }
 
-            var command = new UpdateStandardSubRegionsCommand();
-            command.LarsCode = larsCode;
-            command.Ukprn = Ukprn;
-            command.UserId = UserId;
-            command.SelectedSubRegions = submitModel.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList();
+            var command = new UpdateStandardSubRegionsCommand
+            {
+                LarsCode = larsCode,
+                Ukprn = Ukprn,
+                UserId = UserId,
+                UserDisplayName = UserDisplayName,
+                SelectedSubRegions = submitModel.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList()
+            };
 
             await _mediator.Send(command);
 
