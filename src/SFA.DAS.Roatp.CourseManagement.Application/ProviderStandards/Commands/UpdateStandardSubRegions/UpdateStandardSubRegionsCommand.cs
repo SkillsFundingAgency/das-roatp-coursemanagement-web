@@ -8,6 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
         public int Ukprn{ get; set; }
         public int LarsCode { get; set; }
         public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
         public List<int> SelectedSubRegions { get; set; }
     }
 }

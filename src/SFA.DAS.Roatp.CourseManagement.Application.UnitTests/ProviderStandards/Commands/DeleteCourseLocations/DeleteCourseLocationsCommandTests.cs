@@ -10,12 +10,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
     public class DeleteCourseLocationsCommandTests
     {
         [Test, AutoData]
-        public void Constructor_BuildsCommand(int ukprn, int larsCode, string userId, DeleteProviderCourseLocationOption option)
+        public void Constructor_BuildsCommand(int ukprn, int larsCode, string userId, string userDisplayName, DeleteProviderCourseLocationOption option)
         {
-            var sut = new DeleteCourseLocationsCommand(ukprn, larsCode, userId, option);
+            var sut = new DeleteCourseLocationsCommand(ukprn, larsCode, userId, userDisplayName, option);
             sut.Ukprn.Should().Be(ukprn);
             sut.LarsCode.Should().Be(larsCode);
             sut.UserId.Should().Be(userId);
+            sut.UserDisplayName.Should().Be(userDisplayName);
             sut.DeleteProviderCourseLocationOption.Should().Be(option);
         }
     }

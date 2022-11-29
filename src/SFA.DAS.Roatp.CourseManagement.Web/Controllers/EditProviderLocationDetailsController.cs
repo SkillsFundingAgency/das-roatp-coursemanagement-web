@@ -74,6 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 Ukprn = Ukprn,
                 Id = Id,
                 UserId = UserId,
+                UserDisplayName = UserDisplayName,
                 LocationName = model.LocationName,
                 Website = model.Website,
                 Email = model.EmailAddress,
