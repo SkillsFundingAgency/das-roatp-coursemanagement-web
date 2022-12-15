@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
         {
             _logger.LogInformation("Command triggered to create national locations for ukprn:{ukprn} LarsCode:{larscode} from user:{userid}", request.Ukprn, request.LarsCode, request.UserId);
 
-            var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/add-national-location", request);
+            var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/locations/national", request);
 
             if (statusCode != HttpStatusCode.NoContent)
             {

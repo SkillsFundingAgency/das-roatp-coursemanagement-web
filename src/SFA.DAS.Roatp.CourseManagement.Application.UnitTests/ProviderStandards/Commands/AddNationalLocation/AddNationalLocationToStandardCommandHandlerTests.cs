@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
                     AddNationalLocationToStandardCommand request,
                     AddNationalLocationToStandardCommandHandler sut)
         {
-            var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/add-national-location";
+            var expectedUrl = $"providers/{request.Ukprn}/courses/{request.LarsCode}/locations/national";
             apiClientMock.Setup(a => a.Post(expectedUrl, request)).ReturnsAsync(HttpStatusCode.NoContent);
 
             await sut.Handle(request, new CancellationToken());
