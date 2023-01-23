@@ -52,6 +52,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
         }
 
         /// <summary>
+        /// HTTP GET to the specified URI
+        /// </summary>
+        /// <typeparam name="T">The type of the object to read.</typeparam>
+        /// <param name="uri">The URI to the end point you wish to interact with.</param>
+        /// <returns>A Task yielding the result (of type T).</returns>
+        /// <exception cref="HttpRequestException">Thrown if something unexpected occurred when sending the request.</exception>
+        public async Task<HttpStatusCode> Get(string uri)
+        {
+            try
+            {
+                using (var response = await _httpClient.GetAsync(new Uri(uri, UriKind.Relative)))
+                {
+                    return response.StatusCode;
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+                throw;
+            }
+        }
+
+        /// <summary>
         /// HTTP POST to the specified URI
         /// </summary>
         /// <param name="uri">The URI to the end point you wish to interact with.</param>
