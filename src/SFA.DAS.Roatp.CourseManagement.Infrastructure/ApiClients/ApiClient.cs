@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
         {
             try
             {
-                _logger.LogInformation("processing request: {baseAddress} - {uri}", _httpClient.BaseAddress, uri);
+                _logger.LogInformation("processing request: {baseAddress}{uri}", _httpClient.BaseAddress, uri);
                 using (var response = await _httpClient.GetAsync(new Uri(uri, UriKind.Relative)))
                 {
                     return response.StatusCode;
