@@ -14,7 +14,7 @@
         <div class="govuk-caption-xl">Manage a standard</div>
         <h1 class="govuk-heading-xl">Training venues</h1>
         <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
-        <p class="govuk-body">If your training venue for this standard is not showing below, use the ‘add a training venue' link.</p>
+        <p class="govuk-body">If your training venue for this standard is not showing below, use the ‘See training venues' link.</p>
         <form method="post" asp-route="@RouteNames.PostProviderCourseLocations" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.BackUrl" />
             <input type="hidden" asp-for="@Model.CancelUrl" />
@@ -46,7 +46,7 @@
                 </tbody>
             </table>
             <p class="govuk-body govuk-!-margin-bottom-8">
-                <a href="@Model.AddTrainingLocationUrl" class="govuk-link govuk-link--no-visited-state">Add training venue</a>
+                <a href="@Model.AddTrainingLocationUrl" class="govuk-link govuk-link--no-visited-state">See training venues</a>
             </p>
             <div class="govuk-button-group">
                 <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
