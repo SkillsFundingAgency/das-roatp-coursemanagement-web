@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.HealthCheck
                 return HealthCheckResult.Healthy(HealthCheckResultDescription);
             }
 
-            _logger.LogError($"CourseManagement Outer API ping failed : [Code: {response}]");
+            _logger.LogError("CourseManagement Outer API ping failed : [Code: {response}]", response);
             return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
         }
     }
