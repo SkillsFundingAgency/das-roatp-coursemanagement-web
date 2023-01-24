@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+                _logger.LogError(ex, "Error when processing request: {HttpMethod} - {uri}", HttpMethod.Get, uri);
                 throw;
             }
         }
@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+                _logger.LogError(ex, "Error when processing request: {HttpMethod} - {uri}", HttpMethod.Get, uri);
                 throw;
             }
         }
@@ -95,7 +95,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
             }
             catch (HttpRequestException ex)
             {
-                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Post} - {uri}");
+                _logger.LogError(ex, "Error when processing request: {HttpMethod} - {uri}", HttpMethod.Post, uri);
                 throw;
             }
         }
@@ -115,7 +115,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
                 var responseContent = await response.Content.ReadAsStringAsync();
                 var apiErrorMessage = responseContent;
 
-                _logger.LogError($"Method: {callingMethod} || HTTP {statusCode} {reasonPhrase} || {httpMethod}: {requestUri} || Message: {apiErrorMessage}");
+                _logger.LogError("Method: {callingMethod} || HTTP {statusCode} {reasonPhrase} || {httpMethod}: {requestUri} || Message: {apiErrorMessage}", callingMethod, statusCode, reasonPhrase, httpMethod, requestUri, apiErrorMessage);
             }
         }
     }
