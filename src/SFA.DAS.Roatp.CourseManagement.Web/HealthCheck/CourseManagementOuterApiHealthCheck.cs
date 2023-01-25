@@ -28,16 +28,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.HealthCheck
             try
             {
                 var allRegionsAndSubRegions = await _mediator.Send(new GetAllRegionsAndSubRegionsQuery(), cancellationToken);
-                if (allRegionsAndSubRegions != null && allRegionsAndSubRegions.Regions != null && allRegionsAndSubRegions.Regions.Count() > 0)
+                if (allRegionsAndSubRegions != null && allRegionsAndSubRegions.Regions != null && allRegionsAndSubRegions.Regions.Count > 0)
                 {
                     return HealthCheckResult.Healthy(HealthCheckResultDescription);
                 }
                 _logger.LogError("CourseManagement Outer API ping failed");
                 return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
             }
-            catch(Exception e)
+            catch (Exception)
             {
-                _logger.LogError(e.Message, "CourseManagement Outer API ping failed");
+                _logger.LogError("CourseManagement Outer API ping failed");
                 return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
             }
         }
