@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
+﻿using MediatR;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using System.Net;
+using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries;
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,26 +13,33 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.HealthCheck
     {
         public const string HealthCheckResultDescription = "CourseManagement Outer API Health Check";
 
-        private readonly IApiClient _apiClient;
+        private readonly IMediator _mediator;
         private readonly ILogger<CourseManagementOuterApiHealthCheck> _logger;
 
-        public CourseManagementOuterApiHealthCheck(IApiClient apiClient, ILogger<CourseManagementOuterApiHealthCheck> logger)
+        public CourseManagementOuterApiHealthCheck(ILogger<CourseManagementOuterApiHealthCheck> logger, IMediator mediator)
         {
-            _apiClient = apiClient;
             _logger = logger;
+            _mediator = mediator;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
-            var response = await _apiClient.Get("ping");
-
-            if (response == HttpStatusCode.OK)
+            _logger.LogInformation("CourseManagement Outer API pinging call");
+            try
             {
-                return HealthCheckResult.Healthy(HealthCheckResultDescription);
+                var allRegionsAndSubRegions = await _mediator.Send(new GetAllRegionsAndSubRegionsQuery(), cancellationToken);
+                if (allRegionsAndSubRegions != null && allRegionsAndSubRegions.Regions != null && allRegionsAndSubRegions.Regions.Count() > 0)
+                {
+                    return HealthCheckResult.Healthy(HealthCheckResultDescription);
+                }
+                _logger.LogError("CourseManagement Outer API ping failed");
+                return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
             }
-
-            _logger.LogError("CourseManagement Outer API ping failed : [Code: {response}]", response);
-            return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
+            catch(Exception e)
+            {
+                _logger.LogError(e.Message, "CourseManagement Outer API ping failed");
+                return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
+            }
         }
     }
 }
