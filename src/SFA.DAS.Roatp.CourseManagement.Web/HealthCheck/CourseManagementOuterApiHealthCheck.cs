@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.HealthCheck
             try
             {
                 var allRegionsAndSubRegions = await _mediator.Send(new GetAllRegionsAndSubRegionsQuery(), cancellationToken);
-                if (allRegionsAndSubRegions != null && allRegionsAndSubRegions.Regions != null && allRegionsAndSubRegions.Regions.Count > 0)
+                if (allRegionsAndSubRegions != null && allRegionsAndSubRegions.Regions != null)
                 {
                     return HealthCheckResult.Healthy(HealthCheckResultDescription);
                 }
