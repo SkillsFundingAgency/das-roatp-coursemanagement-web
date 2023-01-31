@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderLocations
             
             var actualResult = await sut.Handle(request, new CancellationToken());
 
-            apiClientMock.VerifyAll();
+            apiClientMock.Verify(x => x.Get<GetAvailableProviderLocationsQueryResult>($"providers/{request.Ukprn}/locations/{request.LarsCode}/available-providerlocations"), Times.Once);
             expectedResult.Should().BeEquivalentTo(actualResult);
         }
     }

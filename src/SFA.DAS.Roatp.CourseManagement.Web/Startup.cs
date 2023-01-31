@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
@@ -20,6 +21,7 @@ using SFA.DAS.Provider.Shared.UI.Startup;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
+using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using System;
@@ -141,7 +143,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                 });
             }
 
-            services.AddHealthChecks();
+            services.AddHealthChecks()
+                    .AddCheck<CourseManagementOuterApiHealthCheck>(CourseManagementOuterApiHealthCheck.HealthCheckResultDescription,
+                        failureStatus: HealthStatus.Unhealthy,
+                        tags: new[] { "ready" });
             services.AddDataProtection(_configuration);
 
             services.AddSession(options =>
@@ -171,7 +176,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             }
             else
             {
-                app.UseHealthChecks();
                 app.UseStatusCodePagesWithReExecute("/error/{0}");
                 app.UseExceptionHandler("/error");
                 app.UseHsts();
@@ -206,6 +210,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();
+            app.UseHealthChecks();
 
             app.UseEndpoints(endpoints =>
             {

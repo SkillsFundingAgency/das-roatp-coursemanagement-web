@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             
             var actualResult = await sut.Handle(request, new CancellationToken());
 
-            apiClientMock.VerifyAll();
+            apiClientMock.Verify(x => x.Get<GetAvailableProviderStandardsQueryResult>($"providers/{request.Ukprn}/available-courses"), Times.Once);
             expectedResult.Should().BeEquivalentTo(actualResult);
         }
     }
