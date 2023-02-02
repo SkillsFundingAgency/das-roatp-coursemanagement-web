@@ -4,5 +4,6 @@
     {
         public const string SelectedAddressTempDataKey = "SelectedAddressTempDataKey";
         public const string DeleteProviderCourseDataKey = "DeleteProviderCourseDataKey";
+        public const string AddProviderCourseDataKey    = "AddProviderCourseDataKey";
     }
 }

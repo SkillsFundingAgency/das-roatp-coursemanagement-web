@@ -7,9 +7,13 @@
 @section breadcrumb {
     <a class="govuk-back-link" href="@Model.BackLink">Back</a>
 }
-@if (Model.ShowNotificationBanner)
+@if (Model.ShowNotificationBannerDeleteStandard)
 {
     <partial name="~/Views/Standards/StandardsPartials/_StandardDeleteNotificationBanner.cshtml" />
+}
+@if (Model.ShowNotificationBannerAddStandard)
+{
+    <partial name="~/Views/Standards/StandardsPartials/_StandardAddNotificationBanner.cshtml" />
 }
 
 <div class="grid-row">

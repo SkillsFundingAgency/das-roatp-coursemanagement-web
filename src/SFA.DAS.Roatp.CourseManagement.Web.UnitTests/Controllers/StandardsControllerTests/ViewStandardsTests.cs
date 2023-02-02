@@ -86,6 +86,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             var tempDataMock = new Mock<ITempDataDictionary>();
             _controller.TempData = tempDataMock.Object;
+            object isStandardDeleted = true;
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey, out isStandardDeleted));
+
+            object isStandardAdded = true;
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.AddProviderCourseDataKey, out isStandardAdded));
 
             var result = await _controller.ViewStandards();
 
@@ -101,9 +106,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.First().IsRegulatedStandard.Should().BeTrue();
             model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(GetConfirmRegulatedStandardLink);
             model.Standards.Last().ConfirmRegulatedStandardUrl.Should().Be(Empty);
-            object res = null;
-            tempDataMock.Verify(x=>x.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey,out res),Times.Once);
-
+            model.ShowNotificationBannerDeleteStandard.Should().Be((bool)isStandardDeleted);
+            model.ShowNotificationBannerAddStandard.Should().Be((bool)isStandardAdded);
+            object resposeDeleteTempDataValue = null;
+            tempDataMock.Verify(x=>x.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey,out resposeDeleteTempDataValue),Times.Once);
+            object resposeAddTempDataValue = null;
+            tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.AddProviderCourseDataKey, out resposeAddTempDataValue), Times.Once);
         }
 
         [Test]
