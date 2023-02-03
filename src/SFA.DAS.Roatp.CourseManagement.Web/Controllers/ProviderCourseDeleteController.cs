@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var command = new DeleteProviderCourseCommand(Ukprn, model.StandardInformation.LarsCode, UserId, UserDisplayName);
             await _mediator.Send(command);
-            TempData.Add(TempDataKeys.DeleteProviderCourseTempDataKey, true);
+            TempData.Add(TempDataKeys.ShowStandardDeletedBannerTempDataKey, true);
 
             return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
         }

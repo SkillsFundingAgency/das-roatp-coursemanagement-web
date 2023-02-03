@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             mediatorMock.Verify(m => m.Send(It.Is<AddProviderCourseCommand>(c => c.Ukprn.ToString() == TestConstants.DefaultUkprn && c.LarsCode == standardSessionModel.LarsCode && c.UserId == TestConstants.DefaultUserId), It.IsAny<CancellationToken>()));
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
-            tempDataMock.Verify(t => t.Add(TempDataKeys.AddProviderCourseTempDataKey, true));
+            tempDataMock.Verify(t => t.Add(TempDataKeys.ShowStandardAddBannerTempDataKey, true));
         }
     }
 }
