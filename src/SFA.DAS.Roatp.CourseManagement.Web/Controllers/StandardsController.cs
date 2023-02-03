@@ -55,14 +55,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 standard.ConfirmRegulatedStandardUrl = standard.IsApprovalPending ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
             }
 
-            TempData.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey, out var showBannerDeleteStandard);
-            if (showBannerDeleteStandard != null)
+            TempData.TryGetValue(TempDataKeys.DeleteProviderCourseTempDataKey, out var showStandardDeleteBanner);
+            if (showStandardDeleteBanner != null)
             {
                 model.ShowNotificationBannerDeleteStandard = true;
             }
 
-            TempData.TryGetValue(TempDataKeys.AddProviderCourseDataKey, out var showBannerAddStandard);
-            if (showBannerAddStandard != null)
+            TempData.TryGetValue(TempDataKeys.AddProviderCourseTempDataKey, out var showStandardAddBanner);
+            if (showStandardAddBanner != null)
             {
                 model.ShowNotificationBannerAddStandard = true;
             }

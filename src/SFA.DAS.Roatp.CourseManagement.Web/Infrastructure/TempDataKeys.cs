@@ -3,7 +3,7 @@
     public static class TempDataKeys
     {
         public const string SelectedAddressTempDataKey = "SelectedAddressTempDataKey";
-        public const string DeleteProviderCourseDataKey = "DeleteProviderCourseDataKey";
-        public const string AddProviderCourseDataKey    = "AddProviderCourseDataKey";
+        public const string DeleteProviderCourseTempDataKey = "DeleteProviderCourseTempDataKey";
+        public const string AddProviderCourseTempDataKey    = "AddProviderCourseTempDataKey";
     }
 }
