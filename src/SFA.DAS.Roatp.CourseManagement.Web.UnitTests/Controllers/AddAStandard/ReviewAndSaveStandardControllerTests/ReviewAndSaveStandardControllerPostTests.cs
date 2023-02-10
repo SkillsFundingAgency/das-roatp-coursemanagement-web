@@ -2,6 +2,7 @@
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
@@ -43,11 +44,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+            var tempDataMock = new Mock<ITempDataDictionary>();
+            sut.TempData = tempDataMock.Object;
 
             var result = await sut.SaveStandard();
 
             mediatorMock.Verify(m => m.Send(It.Is<AddProviderCourseCommand>(c => c.Ukprn.ToString() == TestConstants.DefaultUkprn && c.LarsCode == standardSessionModel.LarsCode && c.UserId == TestConstants.DefaultUserId), It.IsAny<CancellationToken>()));
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
+            tempDataMock.Verify(t => t.Add(TempDataKeys.ShowStandardAddBannerTempDataKey, true));
         }
     }
 }

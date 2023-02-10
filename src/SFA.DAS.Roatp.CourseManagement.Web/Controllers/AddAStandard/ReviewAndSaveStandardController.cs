@@ -46,6 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             command.Ukprn = Ukprn;
 
             await _mediator.Send(command);
+            TempData.Add(TempDataKeys.ShowStandardAddBannerTempDataKey, true);
 
             return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
         }

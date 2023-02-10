@@ -7,6 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public List<StandardViewModel> Standards { get; set; } = new List<StandardViewModel>();
         public string BackLink { get; set; }
         public string AddAStandardLink { get; set; }
-        public bool ShowNotificationBanner { get; set; }
+        public bool ShowNotificationBannerDeleteStandard { get; set; }
+        public bool ShowNotificationBannerAddStandard { get; set; }
     }
 }

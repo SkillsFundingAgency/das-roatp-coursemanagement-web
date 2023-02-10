@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Authorization.Mvc.Attributes;
@@ -56,10 +55,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 standard.ConfirmRegulatedStandardUrl = standard.IsApprovalPending ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
             }
 
-            TempData.TryGetValue(TempDataKeys.DeleteProviderCourseDataKey, out var showBanner);
-            if (showBanner!=null)
+            TempData.TryGetValue(TempDataKeys.ShowStandardDeletedBannerTempDataKey, out var showStandardDeleteBanner);
+            if (showStandardDeleteBanner != null)
             {
-                model.ShowNotificationBanner = true;
+                model.ShowNotificationBannerDeleteStandard = true;
+            }
+
+            TempData.TryGetValue(TempDataKeys.ShowStandardAddBannerTempDataKey, out var showStandardAddBanner);
+            if (showStandardAddBanner != null)
+            {
+                model.ShowNotificationBannerAddStandard = true;
             }
 
             return View("~/Views/Standards/ViewStandards.cshtml", model);

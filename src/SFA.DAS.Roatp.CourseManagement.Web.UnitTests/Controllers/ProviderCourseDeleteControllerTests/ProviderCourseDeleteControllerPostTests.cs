@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
             actual.RouteName.Should().Be(RouteNames.ViewStandards);
-            tempDataMock.Verify(t=>t.Add(TempDataKeys.DeleteProviderCourseDataKey,true));
+            tempDataMock.Verify(t=>t.Add(TempDataKeys.ShowStandardDeletedBannerTempDataKey, true));
         }
     }
 }
