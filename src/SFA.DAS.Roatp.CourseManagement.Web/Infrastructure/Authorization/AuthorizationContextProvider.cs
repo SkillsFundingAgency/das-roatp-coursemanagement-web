@@ -17,12 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
 
         public IAuthorizationContext GetAuthorizationContext()
         {
-            var context = new AuthorizationContext();
-
-            var principal = _httpContextAssessor.HttpContext.User;
-            var ukprn = principal.Claims.First(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            var email = principal.Claims.First(c => c.Type.Equals(ProviderClaims.Email)).Value;
-            return context;
+            return new AuthorizationContext();
         }
     }
 }

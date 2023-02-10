@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using SFA.DAS.Authorization.Context;
 using SFA.DAS.Authorization.DependencyResolution.Microsoft;
 using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Authorization.ProviderFeatures.Configuration;
@@ -97,7 +98,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddAuthorization<AuthorizationContextProvider>();
-            
             services.Configure<RouteOptions>(options =>
             {
                 options.LowercaseUrls = true;
