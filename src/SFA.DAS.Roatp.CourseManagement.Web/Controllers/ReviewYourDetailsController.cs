@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [DasAuthorize( Policy = nameof(PolicyNames.HasProviderAccount) )]
     public class ReviewYourDetailsController : ControllerBase
     {
         private readonly ProviderSharedUIConfiguration _pasSharedConfiguration;

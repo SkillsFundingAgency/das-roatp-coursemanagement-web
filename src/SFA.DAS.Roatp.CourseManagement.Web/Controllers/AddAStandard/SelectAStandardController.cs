@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [DasAuthorize( Policy = nameof(PolicyNames.HasProviderAccount))]
     public class SelectAStandardController : ControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/SelectAStandard.cshtml";

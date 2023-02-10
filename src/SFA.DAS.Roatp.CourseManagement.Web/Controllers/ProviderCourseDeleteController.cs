@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [DasAuthorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderCourseDeleteController : ControllerBase
     {
         public const string ViewPath = "~/Views/Standards/ConfirmDeleteStandard.cshtml";

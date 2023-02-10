@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [DasAuthorize( Policy = nameof(PolicyNames.HasProviderAccount))]
     public class PostcodeController : ControllerBase
     {
         private readonly ISessionService _sessionService;

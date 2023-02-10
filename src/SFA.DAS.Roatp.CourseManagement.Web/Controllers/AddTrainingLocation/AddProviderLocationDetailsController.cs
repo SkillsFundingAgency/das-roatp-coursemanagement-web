@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [DasAuthorize( Policy = nameof(PolicyNames.HasProviderAccount))]
     public class AddProviderLocationDetailsController : ControllerBase
     {
         public const string ViewPath = "~/Views/AddTrainingLocation/AddTrainingLocationDetails.cshtml";

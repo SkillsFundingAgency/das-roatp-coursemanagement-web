@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SFA.DAS.Authorization.Context;
-using SFA.DAS.Authorization.ProviderFeatures.Context;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
@@ -23,7 +22,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
             var principal = _httpContextAssessor.HttpContext.User;
             var ukprn = principal.Claims.First(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
             var email = principal.Claims.First(c => c.Type.Equals(ProviderClaims.Email)).Value;
-            context.AddProviderFeatureValues(long.Parse(ukprn.ToString()), email.ToString());
             return context;
         }
     }

@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [DasAuthorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class RemoveProviderCourseLocationController : AddAStandardControllerBase
     {
         private readonly ILogger<RemoveProviderCourseLocationController> _logger;

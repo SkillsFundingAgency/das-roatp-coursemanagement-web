@@ -12,7 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [DasAuthorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 
     public class StandardTrainingLocationsController : AddAStandardControllerBase
     {
