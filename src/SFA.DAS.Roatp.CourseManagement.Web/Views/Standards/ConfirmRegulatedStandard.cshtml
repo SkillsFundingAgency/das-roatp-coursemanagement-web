@@ -19,68 +19,58 @@
                 <input type="hidden" asp-for="BackLink" />
                 <input type="hidden" asp-for="CancelLink" />
                 <input type="hidden" asp-for="RefererLink" />
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <table class="govuk-table" aria-describedby="ConfirmRegulatedStandard">
-                            <thead class="govuk-table__head">
-                                <tr class="govuk-table__row">
-                                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
-                                </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Regulator
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.RegulatorName
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <div class="govuk-form-group" esfa-validation-marker-for="IsApprovedByRegulator">
-                            <span class="govuk-error-message" asp-validation-for="IsApprovedByRegulator"></span>
-                            <fieldset class="govuk-fieldset">
-                                <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-                                    <h2 class="govuk-fieldset__heading">
-                                        Have you been approved by the regulator to deliver this standard?
-                                    </h2>
-                                </legend>
-                                <div class="govuk-radios">
+               
+                <table class="govuk-table">
+                    <caption class="govuk-visually-hidden">Displays the regulator information</caption>
+                    <tbody class="govuk-table__body">
+                        <tr class="govuk-table__row">
+                            <th scope="row" class="govuk-table__header">
+                                Regulator
+                            </th>
+                            <td class="govuk-table__cell">
+                                @Model.RegulatorName
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-                                    <div class="govuk-radios__item">
+                <div class="govuk-form-group" esfa-validation-marker-for="IsApprovedByRegulator">
+                    <span class="govuk-error-message" asp-validation-for="IsApprovedByRegulator"></span>
+                    <fieldset class="govuk-fieldset">
+                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+                            <h2 class="govuk-fieldset__heading">
+                                Have you been approved by the regulator to deliver this standard?
+                            </h2>
+                        </legend>
+                        <div class="govuk-radios">
 
-                                        <input id="IsApprovedByRegulator" class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
-                                               name="IsApprovedByRegulator" type="radio" value="true" 
-                                               asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
-                                        <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-Yes">
-                                            Yes
-                                        </label>
+                            <div class="govuk-radios__item">
 
-                                    </div>
+                                <input class="govuk-radios__input" id="ConfirmRegulatedStandard-Yes"
+                                        name="IsApprovedByRegulator" type="radio" value="true" 
+                                        asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
+                                <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-Yes">
+                                    Yes
+                                </label>
 
-                                    <div class="govuk-radios__item">
+                            </div>
 
-                                        <input id="IsApprovedByRegulator-No" class="govuk-radios__input" id="ConfirmRegulatedStandard-No"
-                                               name="IsApprovedByRegulator" type="radio" value="false" 
-                                               asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
-                                        <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-No">
-                                            No
-                                        </label>
+                            <div class="govuk-radios__item">
 
-                                    </div>
-                                </div>
-                            </fieldset>
+                                <input class="govuk-radios__input" id="ConfirmRegulatedStandard-No"
+                                        name="IsApprovedByRegulator" type="radio" value="false" 
+                                        asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
+                                <label class="govuk-label govuk-radios__label" for="ConfirmRegulatedStandard-No">
+                                    No
+                                </label>
+
+                            </div>
                         </div>
-                        <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
-                    </div>
+                    </fieldset>
                 </div>
+
+                <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
+             
                 <div class="govuk-button-group">
                     <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                         Save and continue
