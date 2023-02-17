@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Authorization.Mvc.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderDescription;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [DasAuthorize(new[] { "ProviderFeature.CourseManagement" }, Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderController : ControllerBase
     {
         private readonly IMediator _mediator;
