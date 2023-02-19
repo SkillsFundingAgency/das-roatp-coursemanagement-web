@@ -25,17 +25,17 @@
                     <input asp-for="LocationName" id="LocationName" class="govuk-input" type="text" maxlength="50">
                 </div>
 
-                <div class="govuk-form-group">
-                    <label class="govuk-label govuk-label--m" asp-for="LocationName">
-                        Address
-                    </label>
-                    <p style="govuk-body">
-                        <span>@Model.AddressLine1</span><br>
-                        <span>@Model.AddressLine2</span><br>
-                        <span>@Model.Town</span><br>
-                        <span>@Model.Postcode</span>
-                    </p>
-                </div>
+                
+                <h2 class="govuk-heading-m">
+                    Address
+                </h2>
+                <p class="govuk-body">
+                    <span>@Model.AddressLine1</span><br>
+                    <span>@Model.AddressLine2</span><br>
+                    <span>@Model.Town</span><br>
+                    <span>@Model.Postcode</span>
+                </p>
+       
 
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
