@@ -30,8 +30,8 @@
                     {
                         <li class="govuk-grid-column-one-half">
                             <div class="govuk-checkboxes__item  govuk-checkboxes--small">
-                                <input class="govuk-checkboxes__input" id="SelectedSubRegions" name="SelectedSubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
-                                <label class="govuk-label govuk-checkboxes__label" for="SubRegions" asp-for="@location.SubregionName">
+                                <input class="govuk-checkboxes__input" id="SelectedSubRegions-@location.Id" name="SelectedSubRegions" type="checkbox" value="@location.Id" asp-for="@location.IsSelected">
+                                <label class="govuk-label govuk-checkboxes__label" for="SelectedSubRegions-@location.Id">
                                     @location.SubregionName
                                 </label>
                             </div>

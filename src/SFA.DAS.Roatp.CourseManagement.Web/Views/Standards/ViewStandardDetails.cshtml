@@ -24,7 +24,7 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_StandardContactInformation" for="ContactInformation" />
         <p class="govuk-body">
-            <a href="@Model.EditContactDetailsUrl" aria-describedby="Update-contact-details" class="govuk-link">
+            <a href="@Model.EditContactDetailsUrl" class="govuk-link">
                 Update these contact details
             </a>
         </p>
@@ -58,9 +58,9 @@
                         <td class="govuk-table__cell">
                             @Model.ApprovedByRegulatorStatus()
                         </td>
-                        <td class="govuk-table__cell">
-                            <a href="@Model.ConfirmRegulatedStandardUrl" aria-describedby="change-approved-regulator" class="govuk-link">
-                                Change
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a href="@Model.ConfirmRegulatedStandardUrl" class="govuk-link">
+                                Change<span class="govuk-visually-hidden"> the regulated information</span>
                             </a>
                         </td>
                     </tr>
