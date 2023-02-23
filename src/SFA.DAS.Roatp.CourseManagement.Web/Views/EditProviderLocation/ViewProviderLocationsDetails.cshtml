@@ -13,18 +13,15 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Training venue</div>
         <h1 class="govuk-heading-xl">@Model.LocationName</h1>
-
-        <div class="govuk-form-group">
-            <label class="govuk-label govuk-label--l" asp-for="LocationName">
+            <h2 class="govuk-heading-m">
                 Address
-            </label>
-            <p style="govuk-body">
+            </h2>
+            <p class="govuk-body">
                 <span>@Model.AddressLine1</span><br>
                 <span>@Model.AddressLine2</span><br>
                 <span>@Model.Town</span><br>
                 <span>@Model.Postcode</span>
             </p>
-        </div>
 
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         <h2 class="govuk-heading-l">Venue contact details</h2>

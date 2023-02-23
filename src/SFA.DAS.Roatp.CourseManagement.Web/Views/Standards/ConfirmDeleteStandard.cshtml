@@ -4,115 +4,88 @@
 @{
     ViewBag.Title = "Confirm deletion";
 }
+
 @section breadcrumb {
-<a class="govuk-back-link" href="@Model.BackUrl">Back</a>
+    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
 }
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <partial name="_validationSummary" /> 
-            <div class="govuk-caption-xl">Manage a standard</div>
-            <h1 class="govuk-heading-xl">Are you sure you want to delete this standard?</h1>
-            <form method="post" asp-route="@RouteNames.PostConfirmDeleteStandard" enctype="multipart/form-data" novalidate>
-                <input type="hidden" asp-for="BackUrl" />
-                <input type="hidden" asp-for="CancelUrl" />
-                <input type="hidden" asp-for="StandardInformation.LarsCode" />
-                <div class="grid-row">
-                    <div class="column-two-thirds">
-                        <table class="govuk-table" aria-describedby="ConfirmRegulatedStandard">
-                            <thead class="govuk-table__head">
-                                <tr class="govuk-table__row">
-                                    <th class="govuk-table__header" scope="col" colspan="2"> </th>
-                                </tr>
-                            </thead>
-                            <tbody class="govuk-table__body">
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Standard
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.StandardInformation.CourseDisplayName
-                                    </td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                IFATE reference
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.StandardInformation.IfateReferenceNumber
-                                    </td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Version
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.StandardInformation.Version
-                                    </td>
-                                </tr>
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Sector
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.StandardInformation.Sector
-                                    </td>
-                                </tr>
-                            <tr class="govuk-table__row">
-                                <td class="govuk-table__cell">
-                                    <span class="app-task-list__task-name">
-                                        <strong>
-                                            LARS code
-                                        </strong>
-                                    </span>
-                                </td>
-                                <td class="govuk-table__cell">
-                                    @Model.StandardInformation.LarsCode
-                                </td>
-                            </tr>
-                            @if (!string.IsNullOrEmpty(Model.StandardInformation.RegulatorName))
-                            {
-                                <tr class="govuk-table__row">
-                                    <td class="govuk-table__cell">
-                                        <span class="app-task-list__task-name">
-                                            <strong>
-                                                Regulator
-                                            </strong>
-                                        </span>
-                                    </td>
-                                    <td class="govuk-table__cell">
-                                        @Model.StandardInformation.RegulatorName
-                                    </td>
-                                </tr>
-                            }
-                            </tbody>
-                        </table>
-                    </div>
 
-                    <p class='govuk-body'>This standard will be removed from your record. It will no longer show as training that you deliver.</p>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" /> 
+        <span class="govuk-caption-xl">Manage a standard</span>
+        <h1 class="govuk-heading-xl">Are you sure you want to delete this standard?</h1>
+        <form method="post" asp-route="@RouteNames.PostConfirmDeleteStandard" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="BackUrl" />
+            <input type="hidden" asp-for="CancelUrl" />
+            <input type="hidden" asp-for="StandardInformation.LarsCode" />
 
-                </div>
-                <div class="govuk-button-group">
-                    <button id="DeleteStandard" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
-                        Delete standard
-                    </button>
-                    <a id="Cancel" href="@Model.CancelUrl" class="govuk-link">Cancel</a>
-                </div>
-            </form>
-        </div>
+            <table class="govuk-table">
+                <caption class="govuk-visually-hidden">Details of the standard</caption>
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            Standard
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.StandardInformation.CourseDisplayName
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            IFATE reference
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.StandardInformation.IfateReferenceNumber
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            Version
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.StandardInformation.Version
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            Sector
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.StandardInformation.Sector
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            LARS code
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.StandardInformation.LarsCode
+                        </td>
+                    </tr>
+                @if (!string.IsNullOrEmpty(Model.StandardInformation.RegulatorName))
+                {
+                    <tr class="govuk-table__row">
+                        <th scope="row" class="govuk-table__header">
+                            Regulator
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.StandardInformation.RegulatorName
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+            
+
+            <p>This standard will be removed from your record. It will no longer show as training that you deliver.</p>
+
+
+            <div class="govuk-button-group">
+                <button id="DeleteStandard" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
+                    Delete standard
+                </button>
+                <a id="Cancel" href="@Model.CancelUrl" class="govuk-link">Cancel</a>
+            </div>
+        </form>
     </div>
+</div>
