@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +24,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -110,7 +110,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             .AddSessionStateTempDataProvider()
             .SetDefaultNavigationSection(NavigationSection.Home)
             .ShowBetaPhaseBanner()
-            /// .EnableGoogleAnalytics()
+            .EnableGoogleAnalytics()
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
             .AddFluentValidation(fv =>
             {
@@ -151,7 +151,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddLogging();
 
             services.AddServiceRegistrations(_configuration);
-            
+
 #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 #endif
