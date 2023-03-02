@@ -116,7 +116,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             {
                 fv.RegisterValidatorsFromAssemblyContaining<Startup>();
                 fv.ImplicitlyValidateChildProperties = true;
-            });
+            })
+            .SetDfESignInConfiguration(roatpCourseManagementConfiguration.UseDfESignIn);
 
             services.AddHttpContextAccessor();
 
