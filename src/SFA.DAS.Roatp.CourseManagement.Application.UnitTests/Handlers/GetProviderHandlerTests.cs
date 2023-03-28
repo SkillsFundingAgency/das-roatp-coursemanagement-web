@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -23,7 +22,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         [SetUp]
         public void Setup()
         {
-//            _provider. = Ukprn;
             _query = new GetProviderQuery(Ukprn);
             _apiClient = new Mock<IApiClient>();
             _handler = new GetProviderQueryHandler(_apiClient.Object, Mock.Of<ILogger<GetProviderQueryHandler>>());
@@ -33,18 +31,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         public async Task Handle_ValidApiRequest_ReturnsValidResponse()
         {
             _provider.MarketingInfo = MarketingInfo;
-            _apiClient.Setup(x => x.Get<Provider>($"providers/{ _query.Ukprn}")).ReturnsAsync(_provider);
+            _apiClient.Setup(x => x.Get<Provider>($"providers/{_query.Ukprn}")).ReturnsAsync(_provider);
             var result = await _handler.Handle(_query, CancellationToken.None);
             result.Should().NotBeNull();
             result.Provider.Should().BeEquivalentTo(_provider);
         }
 
         [Test]
-        public void Handle_InvalidApiResponse_ThrowsException()
+        public async Task Handle_InvalidApiResponse_ReturnsNull()
         {
-            _apiClient.Setup(x => x.Get<Provider>($"providers/{ _query.Ukprn}")).ReturnsAsync((Provider)null);
+            _apiClient.Setup(x => x.Get<Provider>($"providers/{_query.Ukprn}")).ReturnsAsync((Provider)null);
 
-            Assert.ThrowsAsync<InvalidOperationException>(() => _handler.Handle(_query, CancellationToken.None));
+            var result = await _handler.Handle(_query, CancellationToken.None);
+            result.Provider.Should().BeNull();
         }
     }
 }

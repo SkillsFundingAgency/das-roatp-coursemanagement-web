@@ -62,8 +62,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string GetAddProviderCourseLocation = "GetAddProviderCourseLocation";
         public const string PostAddProviderCourseLocation = "PostAddProviderCourseLocation";
-        
+
         public const string GetConfirmDeleteStandard = "GetConfirmDeleteStandard";
         public const string PostConfirmDeleteStandard = "PostConfirmDeleteStandard";
+
+        public const string ProviderNotRegistered = "provider-not-registered";
     }
 }

@@ -7,28 +7,27 @@ using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers;
+
+[TestFixture]
+public class ControllerAuthorizeAttributeTests
 {
-    [TestFixture]
-    public class ControllerAuthorizeAttributeTests
+
+    private readonly List<string> _controllersThatDoNotRequireAuthorize = new List<string>()
     {
+        "PingController", "ProviderAccountController", "ErrorController", "ControllerBase", "AddAStandardControllerBase", "ProviderNotRegisteredController"
+    };
 
-        private readonly List<string> _controllersThatDoNotRequireAuthorize = new List<string>()
+    [Test]
+    public void ControllersShouldHaveAuthorizeAttribute()
+    {
+        var webAssembly = typeof(ProviderAccountController).GetTypeInfo().Assembly;
+
+        var controllers = webAssembly.DefinedTypes.Where(c => c.IsSubclassOf(typeof(Controller))).ToList();
+
+        foreach (var controller in controllers.Where(c => !_controllersThatDoNotRequireAuthorize.Contains(c.Name)))
         {
-            "PingController", "ProviderAccountController", "ErrorController", "ControllerBase", "AddAStandardControllerBase"
-        };
-
-        [Test]
-        public void ControllersShouldHaveAuthorizeAttribute()
-        {
-            var webAssembly = typeof(ProviderAccountController).GetTypeInfo().Assembly;
-
-            var controllers = webAssembly.DefinedTypes.Where(c => c.IsSubclassOf(typeof(Controller))).ToList();
-
-            foreach (var controller in controllers.Where(c => !_controllersThatDoNotRequireAuthorize.Contains(c.Name)))
-            {
-                controller.Should().BeDecoratedWith<AuthorizeAttribute>();
-            }
+            controller.Should().BeDecoratedWith<AuthorizeAttribute>();
         }
     }
 }

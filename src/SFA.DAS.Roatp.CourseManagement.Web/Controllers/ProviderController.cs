@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderDescription;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -32,13 +32,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = new ProviderDescriptionViewModel
             {
                 BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
-                Description = result?.Provider?.MarketingInfo
+                Description = result.Provider.MarketingInfo
             };
-
-            if (result == null)
-            {
-                _logger.LogInformation("Provider data not found for {ukprn}", Ukprn);
-            }
 
             return View("~/Views/ProviderDescription/Index.cshtml", model);
         }
