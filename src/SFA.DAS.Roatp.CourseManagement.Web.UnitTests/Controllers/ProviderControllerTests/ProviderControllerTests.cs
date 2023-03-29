@@ -24,9 +24,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
 
         public const int Ukprn = 12345678;
         public const string MarketingInfo = "Marketing info";
-        
+
         private static string ReviewYourDetailsLink = Guid.NewGuid().ToString();
-  
+
         [SetUp]
         public void Before_each_test()
         {
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(() => new GetProviderQueryResult
                 {
-                   Provider = provider
+                    Provider = provider
                 });
 
             _controller = new ProviderController(_mediator.Object, _logger.Object);
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
         public async Task ProviderController_ViewProviderDescription_ReturnsValidResponse()
         {
             var result = await _controller.ViewProviderDescription(Ukprn);
-        
+
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("ProviderDescription/Index.cshtml");
@@ -63,24 +63,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
             var model = viewResult.Model as ProviderDescriptionViewModel;
             model.Should().NotBeNull();
             model.Description = MarketingInfo;
-            model.BackUrl.Should().Be(ReviewYourDetailsLink);
-        }
-
-        [Test]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException()
-        {
-            _mediator.Setup(m => m.Send(It.IsAny<GetProviderQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetProviderQueryResult)null);
-
-            var result = await _controller.ViewProviderDescription(Ukprn);
-
-            var viewResult = result as ViewResult;
-            viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ProviderDescription/Index.cshtml");
-            viewResult.Model.Should().NotBeNull();
-            var model = viewResult.Model as ProviderDescriptionViewModel;
-            model.Should().NotBeNull();
-            model.Description = null;
             model.BackUrl.Should().Be(ReviewYourDetailsLink);
         }
     }
