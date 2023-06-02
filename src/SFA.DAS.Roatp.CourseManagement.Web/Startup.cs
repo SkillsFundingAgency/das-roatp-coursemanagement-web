@@ -89,8 +89,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             }
             else
             {
-                var providerConfig = _configuration.GetSection(nameof(ProviderIdams)).Get<ProviderIdams>();
-                services.AddAndConfigureProviderAuthentication(providerConfig);
+                services.AddAndConfigureProviderAuthentication(_configuration);
             }
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });

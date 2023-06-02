@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 
@@ -15,37 +17,54 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
     [ExcludeFromCodeCoverage]
     public static class AuthenticationProviderExtensions
     {
-        public static void AddAndConfigureProviderAuthentication(this IServiceCollection services, ProviderIdams idams)
+        private const string ClientName = "ProviderRoATP";
+        private const string SignedOutCallbackPath = "/signout";
+        public static void AddAndConfigureProviderAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
-            var cookieOptions = new Action<CookieAuthenticationOptions>(options =>
+            var roatpCourseManagementConfiguration = configuration
+                .GetSection(nameof(RoatpCourseManagement))
+                .Get<RoatpCourseManagement>();
+
+            if (roatpCourseManagementConfiguration.UseDfESignIn)
             {
-                options.CookieManager = new ChunkingCookieManager { ChunkSize = 3000 };
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                options.AccessDeniedPath = "/error/403";
-            });
+                services
+                    .AddAndConfigureDfESignInAuthentication(configuration,
+                        $"{typeof(AuthenticationProviderExtensions).Assembly.GetName().Name}.Auth",
+                        typeof(CustomServiceRole), ClientName, SignedOutCallbackPath);
 
-            services
-                .AddAuthentication(sharedOptions =>
+            }
+            else
+            {
+                var providerConfig = configuration.GetSection(nameof(ProviderIdams)).Get<ProviderIdams>();
+                var cookieOptions = new Action<CookieAuthenticationOptions>(options =>
                 {
-                    sharedOptions.DefaultScheme =
-                        CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultSignInScheme =
-                        CookieAuthenticationDefaults.AuthenticationScheme;
-                    sharedOptions.DefaultChallengeScheme =
-                        WsFederationDefaults.AuthenticationScheme;
-                })
-                .AddWsFederation(options =>
-                {
-                    options.MetadataAddress = idams.MetadataAddress;
-                    options.Wtrealm = idams.Wtrealm;
-                    options.CallbackPath = "/{ukprn}/home"; 
-                    options.Events.OnSecurityTokenValidated = async (ctx) =>
+                    options.CookieManager = new ChunkingCookieManager { ChunkSize = 3000 };
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.AccessDeniedPath = "/error/403";
+                });
+
+                services
+                    .AddAuthentication(sharedOptions =>
                     {
-                        await PopulateProviderClaims(ctx.HttpContext, ctx.Principal);
-                    };
-                })
-                .AddCookie(cookieOptions);
-
+                        sharedOptions.DefaultScheme =
+                            CookieAuthenticationDefaults.AuthenticationScheme;
+                        sharedOptions.DefaultSignInScheme =
+                            CookieAuthenticationDefaults.AuthenticationScheme;
+                        sharedOptions.DefaultChallengeScheme =
+                            WsFederationDefaults.AuthenticationScheme;
+                    })
+                    .AddWsFederation(options =>
+                    {
+                        options.MetadataAddress = providerConfig.MetadataAddress;
+                        options.Wtrealm = providerConfig.Wtrealm;
+                        options.CallbackPath = "/{ukprn}/home";
+                        options.Events.OnSecurityTokenValidated = async (ctx) =>
+                        {
+                            await PopulateProviderClaims(ctx.HttpContext, ctx.Principal);
+                        };
+                    })
+                    .AddCookie(cookieOptions);
+            }
         }
 
         private static Task PopulateProviderClaims(HttpContext httpContext, ClaimsPrincipal principal)
