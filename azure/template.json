@@ -61,13 +61,13 @@
             "defaultValue": "[utcNow()]"
         }
     },
-    "variables": {
-        "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
-        "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
-        "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
-        "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
-        "configNames": "SFA.DAS.Roatp.CourseManagement.Web"
-    },
+  "variables": {
+    "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
+    "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
+    "resourceGroupName": "[concat(variables('resourceNamePrefix'), '-rg')]",
+    "appServiceName": "[concat(variables('resourceNamePrefix'), '-as')]",
+    "configNames": "SFA.DAS.Roatp.CourseManagement.Web,SFA.DAS.Provider.DfeSignIn"
+  },
     "resources": [
         {
             "apiVersion": "2021-04-01",
