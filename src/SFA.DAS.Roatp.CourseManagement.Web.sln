@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.CourseManagement.Web", "SFA.DAS.Roatp.CourseManagement.Web\SFA.DAS.Roatp.CourseManagement.Web.csproj", "{0565A2D0-36F4-4718-B99A-67088A7E015D}"
 EndProject
@@ -15,11 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.CourseManagem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.CourseManagement.Infrastructure", "SFA.DAS.Roatp.CourseManagement.Infrastructure\SFA.DAS.Roatp.CourseManagement.Infrastructure.csproj", "{C8A75774-54D6-42D1-9C01-4D2FF7798D15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Roatp.CourseManagement.Application.UnitTests", "SFA.DAS.Roatp.CourseManagement.Application.UnitTests\SFA.DAS.Roatp.CourseManagement.Application.UnitTests.csproj", "{62F5339C-7EEA-4BE2-9F6D-D4CD5281B045}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.CourseManagement.Application.UnitTests", "SFA.DAS.Roatp.CourseManagement.Application.UnitTests\SFA.DAS.Roatp.CourseManagement.Application.UnitTests.csproj", "{62F5339C-7EEA-4BE2-9F6D-D4CD5281B045}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Roatp.CourseManagement.Domain.UnitTests", "SFA.DAS.Roatp.CourseManagement.Domain.UnitTests\SFA.DAS.Roatp.CourseManagement.Domain.UnitTests.csproj", "{8ECAAD0B-2DD7-4F7D-BD15-A5A90236821D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.CourseManagement.Domain.UnitTests", "SFA.DAS.Roatp.CourseManagement.Domain.UnitTests\SFA.DAS.Roatp.CourseManagement.Domain.UnitTests.csproj", "{8ECAAD0B-2DD7-4F7D-BD15-A5A90236821D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests", "SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests\SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.csproj", "{DF3ABE23-443A-4789-8459-2ADA7F5662A8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests", "SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests\SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.csproj", "{DF3ABE23-443A-4789-8459-2ADA7F5662A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
