@@ -22,9 +22,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [Route("signout", Name = RouteNames.ProviderSignOut)]
         public IActionResult SignOut()
         {
+            // choose the authentication scheme based on the UseDfESignIn property value.
             var authScheme = _configOptions.Value.UseDfESignIn
-                ? WsFederationDefaults.AuthenticationScheme
-                : OpenIdConnectDefaults.AuthenticationScheme;
+                ? OpenIdConnectDefaults.AuthenticationScheme
+                : WsFederationDefaults.AuthenticationScheme;
 
             return SignOut(
                 new Microsoft.AspNetCore.Authentication.AuthenticationProperties
