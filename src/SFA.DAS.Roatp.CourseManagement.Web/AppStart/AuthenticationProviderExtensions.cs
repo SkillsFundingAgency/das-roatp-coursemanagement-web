@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
             {
                 services
                     .AddAndConfigureDfESignInAuthentication(configuration,
-                        $"{typeof(AuthenticationProviderExtensions).Assembly.GetName().Name}.Auth",
+                        "SFA.DAS.ProviderApprenticeshipService",
                         typeof(CustomServiceRole), ClientName, SignedOutCallbackPath);
 
             }
