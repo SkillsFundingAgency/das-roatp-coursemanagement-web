@@ -185,6 +185,10 @@
                                     "value": "[parameters('loggingRedisConnectionString')]"
                                 },
                                 {
+                                    "name": "Cdn:Url",
+                                    "value": "[parameters('cdnUrl')]"
+                                },
+                                {
                                     "name": "LoggingRedisKey",
                                     "value": "[parameters('loggingRedisKey')]"
                                 }
