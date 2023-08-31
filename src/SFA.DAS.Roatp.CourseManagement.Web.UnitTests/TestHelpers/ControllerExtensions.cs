@@ -15,6 +15,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers
             controller.Url = Mock.Of<IUrlHelper>();
             return controller;
         }
+        
+        public static Controller AddDefaultContextWithDfEUser(this Controller controller)
+        {
+            controller.ControllerContext = GetDefaultHttpContextWithDfEUser(TestConstants.DefaultUkprn, TestConstants.DefaultDfEUserId);
+            controller.Url = Mock.Of<IUrlHelper>();
+            return controller;
+        }
 
         public static Mock<IUrlHelper> AddUrlHelperMock(this Controller controller)
         {
@@ -38,6 +45,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers
                 {
                     new Claim(ProviderClaims.ProviderUkprn, ukprn),
                     new Claim(ProviderClaims.UserId, userId)
+                },
+                "mock"));
+
+            return new ControllerContext { HttpContext = new DefaultHttpContext() { User = user } };
+        }
+        
+        private static ControllerContext GetDefaultHttpContextWithDfEUser(string ukprn, string userId)
+        {
+            var user = new ClaimsPrincipal(new ClaimsIdentity(
+                new Claim[]
+                {
+                    new Claim(ProviderClaims.ProviderUkprn, ukprn),
+                    new Claim(ProviderClaims.DfEUserId, userId)
                 },
                 "mock"));
 

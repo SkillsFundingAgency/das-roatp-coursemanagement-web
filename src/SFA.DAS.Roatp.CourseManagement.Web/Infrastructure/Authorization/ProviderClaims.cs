@@ -10,5 +10,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
         public static readonly string Service = "http://schemas.portal.com/service";
         public static readonly string UserId = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn";
         public static readonly string Email = "http://schemas.portal.com/mail";
+        public static readonly string DfEUserId = "sub";
     }
 }

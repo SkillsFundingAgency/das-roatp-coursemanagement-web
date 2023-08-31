@@ -31,6 +31,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             _testController.GetUserId().Should().Be(TestConstants.DefaultUserId);
         }
 
+        [Test]
+        public void DfEUserId_ShouldGetValueFromContext()
+        {
+            _testController = new TestController();
+            _testController.AddDefaultContextWithDfEUser();
+            
+            _testController.GetUserId().Should().Be(TestConstants.DefaultDfEUserId);
+        }
+
         [Test, AutoData]
         public void GetRedirectToResultWithUkprn_ReturnsRedirectToRouteResultWithUkprn(string routeName)
         {
