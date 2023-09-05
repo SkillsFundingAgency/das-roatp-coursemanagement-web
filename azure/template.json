@@ -59,6 +59,9 @@
         "utcValue": {
             "type": "string",
             "defaultValue": "[utcNow()]"
+        },
+        "cdnUrl": {
+            "type": "string"
         }
     },
   "variables": {
@@ -157,6 +160,10 @@
                                     "value": "[parameters('environmentName')]"
                                 },
                                 {
+                                    "name": "ResourceEnvironmentName",
+                                    "value": "[parameters('resourceEnvironmentName')]"
+                                },
+                                {
                                     "name": "Environment",
                                     "value": "[parameters('environmentName')]"
                                 },
@@ -179,6 +186,10 @@
                                 {
                                     "name": "LoggingRedisConnectionString",
                                     "value": "[parameters('loggingRedisConnectionString')]"
+                                },
+                                {
+                                    "name": "Cdn:Url",
+                                    "value": "[parameters('cdnUrl')]"
                                 },
                                 {
                                     "name": "LoggingRedisKey",
