@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
                         policy.RequireClaim(ProviderClaims.ProviderUkprn);
                         policy.RequireClaim(ProviderClaims.Service, ProviderDaa, ProviderDab, ProviderDac, ProviderDav);
                         policy.Requirements.Add(new ProviderUkPrnRequirement());
+                        policy.Requirements.Add(new TrainingProviderAllRolesRequirement());
                     });
             });
         }

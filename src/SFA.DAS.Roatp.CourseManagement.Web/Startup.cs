@@ -76,6 +76,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddConfigurationOptions(_configuration);
 
             services.AddSingleton<IAuthorizationHandler, ProviderAuthorizationHandler>();
+            services.AddSingleton<ITrainingProviderAuthorizationHandler, TrainingProviderAuthorizationHandler>();
+            services.AddSingleton<IAuthorizationHandler, TrainingProviderAllRolesAuthorizationHandler>();
 
             services.AddProviderUiServiceRegistration(_configuration);
 

@@ -11,13 +11,13 @@ using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.DfESignIn.Auth.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.DfESignIn.Auth.Enums;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
 {
     [ExcludeFromCodeCoverage]
     public static class AuthenticationProviderExtensions
     {
-        private const string ClientName = "ProviderRoATP";
         private const string SignedOutCallbackPath = "/signout";
         public static void AddAndConfigureProviderAuthentication(this IServiceCollection services, IConfiguration configuration)
         {
@@ -29,8 +29,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
             {
                 services
                     .AddAndConfigureDfESignInAuthentication(configuration,
-                        $"{typeof(AuthenticationProviderExtensions).Assembly.GetName().Name}.Auth",
-                        typeof(CustomServiceRole), ClientName, SignedOutCallbackPath);
+                        "SFA.DAS.ProviderApprenticeshipService",
+                        typeof(CustomServiceRole),
+                        ClientName.ProviderRoatp,
+                        SignedOutCallbackPath,
+                        "");
 
             }
             else
