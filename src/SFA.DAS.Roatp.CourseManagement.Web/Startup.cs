@@ -31,6 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
     public class Startup
     {
         private readonly IConfigurationRoot _configuration;
+        private static readonly string[] tags = new[] { "ready" };
 
         public Startup(IConfiguration configuration)
         {
@@ -137,7 +138,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddHealthChecks()
                     .AddCheck<CourseManagementOuterApiHealthCheck>(CourseManagementOuterApiHealthCheck.HealthCheckResultDescription,
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" });
+                        tags: tags);
             services.AddDataProtection(_configuration);
 
             services.AddSession(options =>
