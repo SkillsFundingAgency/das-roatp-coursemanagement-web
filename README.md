@@ -63,7 +63,7 @@ You will also need to setup the roatp outer api and have it running (see https:/
 Open the solution with Visual Studio, and run the project SFA.DAS.Roatp.CourseManagement.Web, running under process 'SFA.DAS.Roatp.CourseManagement.Web' (not IIS)
 
 ## Technologies
-* .NetCore 8.0
+* .Net 8.0
 * NUnit
 * Moq
 * FluentAssertions
