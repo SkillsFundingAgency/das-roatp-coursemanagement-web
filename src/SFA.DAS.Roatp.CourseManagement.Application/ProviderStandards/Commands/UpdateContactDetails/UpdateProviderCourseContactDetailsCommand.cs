@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails
 {
-    public class UpdateProviderCourseContactDetailsCommand : IRequest
+    public class UpdateProviderCourseContactDetailsCommand : IRequest<Unit>
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }

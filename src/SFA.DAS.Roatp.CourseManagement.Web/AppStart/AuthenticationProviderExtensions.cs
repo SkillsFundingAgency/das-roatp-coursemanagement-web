@@ -1,17 +1,14 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.WsFederation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.DfESignIn.Auth.AppStart;
+using SFA.DAS.DfESignIn.Auth.Enums;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.DfESignIn.Auth.Enums;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
 {
@@ -25,49 +22,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
                 .GetSection(nameof(RoatpCourseManagement))
                 .Get<RoatpCourseManagement>();
 
-            if (roatpCourseManagementConfiguration.UseDfESignIn)
-            {
-                services
-                    .AddAndConfigureDfESignInAuthentication(configuration,
-                        "SFA.DAS.ProviderApprenticeshipService",
-                        typeof(CustomServiceRole),
-                        ClientName.ProviderRoatp,
-                        SignedOutCallbackPath,
-                        "");
-
-            }
-            else
-            {
-                var providerConfig = configuration.GetSection(nameof(ProviderIdams)).Get<ProviderIdams>();
-                var cookieOptions = new Action<CookieAuthenticationOptions>(options =>
-                {
-                    options.CookieManager = new ChunkingCookieManager { ChunkSize = 3000 };
-                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-                    options.AccessDeniedPath = "/error/403";
-                });
-
-                services
-                    .AddAuthentication(sharedOptions =>
-                    {
-                        sharedOptions.DefaultScheme =
-                            CookieAuthenticationDefaults.AuthenticationScheme;
-                        sharedOptions.DefaultSignInScheme =
-                            CookieAuthenticationDefaults.AuthenticationScheme;
-                        sharedOptions.DefaultChallengeScheme =
-                            WsFederationDefaults.AuthenticationScheme;
-                    })
-                    .AddWsFederation(options =>
-                    {
-                        options.MetadataAddress = providerConfig.MetadataAddress;
-                        options.Wtrealm = providerConfig.Wtrealm;
-                        options.CallbackPath = "/{ukprn}/home";
-                        options.Events.OnSecurityTokenValidated = async (ctx) =>
-                        {
-                            await PopulateProviderClaims(ctx.HttpContext, ctx.Principal);
-                        };
-                    })
-                    .AddCookie(cookieOptions);
-            }
+            services
+            .AddAndConfigureDfESignInAuthentication(configuration,
+                "SFA.DAS.ProviderApprenticeshipService",
+                typeof(CustomServiceRole),
+                ClientName.ProviderRoatp,
+                SignedOutCallbackPath,
+                "");
         }
 
         private static Task PopulateProviderClaims(HttpContext httpContext, ClaimsPrincipal principal)
