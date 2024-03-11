@@ -1,9 +1,9 @@
-﻿using MediatR;
-using System;
+﻿using System;
+using MediatR;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations
 {
-    public class DeleteProviderCourseLocationCommand : IRequest
+    public class DeleteProviderCourseLocationCommand : IRequest<Unit>
     {
         public int Ukprn { get; }
         public int LarsCode { get; }

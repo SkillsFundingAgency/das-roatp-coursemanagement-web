@@ -1,9 +1,9 @@
-﻿using MediatR;
-using System;
+﻿using System;
+using MediatR;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.UpdateProviderLocationDetails
 {
-    public class UpdateProviderLocationDetailsCommand : IRequest
+    public class UpdateProviderLocationDetailsCommand : IRequest<Unit>
     {
         public int Ukprn { get; set; }
         public Guid Id { get; set; }

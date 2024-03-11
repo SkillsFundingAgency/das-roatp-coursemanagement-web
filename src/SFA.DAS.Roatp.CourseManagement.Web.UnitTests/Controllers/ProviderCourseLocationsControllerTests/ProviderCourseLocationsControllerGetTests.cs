@@ -1,4 +1,8 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,10 +16,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationsControllerTests
 {
@@ -25,13 +25,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseLocationsController _sut;
-        string verifyUrlGetStandardDetails = "http://test-GetStandardDetails";
+        readonly string verifyUrlGetStandardDetails = "http://test-GetStandardDetails";
 
-        string verifyUrlGetLocationOption = "http://test-GetLocationOption";
+        readonly string verifyUrlGetLocationOption = "http://test-GetLocationOption";
 
-        string verifyRemoveProviderCourseLocationUrlGet = "http://test-RemoveProviderCourseLocation";
+        readonly string verifyRemoveProviderCourseLocationUrlGet = "http://test-RemoveProviderCourseLocation";
 
-        string verifyAddProviderCourseLocationUrlGet = "http://test-AddProviderCourseLocation";
+        readonly string verifyAddProviderCourseLocationUrlGet = "http://test-AddProviderCourseLocation";
 
         protected Mock<ISessionService> _sessionServiceMock;
 
@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             model.AddTrainingLocationUrl.Should().Be(verifyAddProviderCourseLocationUrlGet);
         }
 
-          [Test, AutoData]
+        [Test, AutoData]
         public async Task GetProviderCourseLocations_InvalidRequest_ReturnsEmptyResponse(int larsCode)
         {
             _mediatorMock
@@ -91,10 +91,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task GetProviderCourseLocations_validRequestLocationOptionBoth_ReturnsBackUrlGetLocationOption(int larsCode, ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        public async Task GetProviderCourseLocations_validRequestLocationOptionBoth_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+            _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
 
             _mediatorMock
@@ -114,10 +114,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task GetProviderCourseLocations_validRequestLocationOptionProviderLocation_ReturnsBackUrlGetLocationOption(int larsCode, ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+        public async Task GetProviderCourseLocations_validRequestLocationOptionProviderLocation_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+            _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -139,7 +139,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_validRequest_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+            _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -159,7 +159,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_validRequest_ReturnLocationHaveRemoveUrl(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+            _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
             queryResult = new GetProviderCourseLocationsQueryResult { ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation> { new Domain.ApiModels.ProviderCourseLocation { LocationType = Domain.ApiModels.LocationType.Provider, Id = Guid.NewGuid() } } };
             _mediatorMock

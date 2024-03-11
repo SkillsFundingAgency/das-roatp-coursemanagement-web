@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using FluentValidation;
 using FluentValidation.AspNetCore;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +18,7 @@ using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
@@ -31,6 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
     public class Startup
     {
         private readonly IConfigurationRoot _configuration;
+        private static readonly string[] tags = new[] { "ready" };
 
         public Startup(IConfiguration configuration)
         {
@@ -81,7 +82,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddProviderUiServiceRegistration(_configuration);
 
-            services.AddMediatR(typeof(GetAllProviderStandardsQueryHandler).Assembly);
+            services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(typeof(GetProviderQuery).Assembly));
 
             services.AddAuthorizationServicePolicies();
 
@@ -113,12 +114,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             .ShowBetaPhaseBanner()
             .EnableGoogleAnalytics()
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
-            .AddFluentValidation(fv =>
-            {
-                fv.RegisterValidatorsFromAssemblyContaining<Startup>();
-                fv.ImplicitlyValidateChildProperties = true;
-            })
             .SetDfESignInConfiguration(roatpCourseManagementConfiguration.UseDfESignIn);
+
+            services
+            .AddFluentValidationAutoValidation()
+            .AddFluentValidationClientsideAdapters()
+            .AddValidatorsFromAssemblyContaining<Startup>();
 
             services.AddHttpContextAccessor();
 
@@ -137,7 +138,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.AddHealthChecks()
                     .AddCheck<CourseManagementOuterApiHealthCheck>(CourseManagementOuterApiHealthCheck.HealthCheckResultDescription,
                         failureStatus: HealthStatus.Unhealthy,
-                        tags: new[] { "ready" });
+                        tags: tags);
             services.AddDataProtection(_configuration);
 
             services.AddSession(options =>
@@ -183,7 +184,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                     context.Response.Headers.Remove("X-Frame-Options");
                 }
 
-                context.Response.Headers.Add("X-Frame-Options", "SAMEORIGIN");
+                context.Response.Headers.Append("X-Frame-Options", "SAMEORIGIN");
 
                 await next();
 

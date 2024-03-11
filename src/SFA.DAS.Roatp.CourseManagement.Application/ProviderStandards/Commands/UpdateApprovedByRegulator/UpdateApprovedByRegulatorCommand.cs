@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator
 {
-    public class UpdateApprovedByRegulatorCommand : IRequest
+    public class UpdateApprovedByRegulatorCommand : IRequest<Unit>
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }

@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations
 {
-    public class DeleteCourseLocationsCommand : IRequest
+    public class DeleteCourseLocationsCommand : IRequest<Unit>
     {
         public int Ukprn { get; }
         public int LarsCode { get; }

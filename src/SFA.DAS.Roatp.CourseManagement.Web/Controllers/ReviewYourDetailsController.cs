@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ReviewYourDetailsController : ControllerBase
     {
         private readonly ProviderSharedUIConfiguration _pasSharedConfiguration;
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             });
 
             var providerLocationsUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new
-            { ukprn = Ukprn});
+            { ukprn = Ukprn });
             var providerDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, new { Ukprn });
 
             return View("ReviewYourDetails", new ReviewYourDetailsViewModel()

@@ -6,6 +6,7 @@
 
 [![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status/SkillsFundingAgency_das-roatp-coursemanagement-web?branchName=master)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=SkillsFundingAgency_das-roatp-coursemanagement-web&branchName=master)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-roatp-coursemanagement-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=SkillsFundingAgency_das-roatp-coursemanagement-web)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
 
 ## About
@@ -33,9 +34,38 @@ It interacts with an outer api (https://github.com/SkillsFundingAgency/das-apim-
   - RowKey: SFA.DAS.Roatp.CourseManagement.Web_1.0
   - Data: {The contents of the local config json file}
   
+In the web project, if not exist already, add `AppSettings.Development.json` file with following content:
+```json
+{
+  "RoatpCourseManagement": {
+    "RedisConnectionString": " ",
+    "DataProtectionKeysDatabase": "",
+    "UseDfESignIn": false
+  },
+  "RoatpCourseManagementOuterApi": {
+    "BaseUrl": "http://localhost:5335/",
+    "SubscriptionKey": "Key",
+    "PingUrl": "http://localhost:5335/"
+  },
+  "ProviderSharedUIConfiguration": {
+    "DashboardUrl": "https://at-pas.apprenticeships.education.gov.uk/"
+  },
+  "ProviderIdams": {
+    "MetadataAddress": "https://adfs.preprod.skillsfunding.service.gov.uk/FederationMetadata/2007-06/FederationMetadata.xml",
+    "Wtrealm": "https://localhost:5011/"
+  }
+}
+```  
+  
 You will also need to setup the roatp outer api and have it running (see https://github.com/SkillsFundingAgency/das-apim-endpoints/ and go to the section for 'Course Management')
 
 Open the solution with Visual Studio, and run the project SFA.DAS.Roatp.CourseManagement.Web, running under process 'SFA.DAS.Roatp.CourseManagement.Web' (not IIS)
+
+## Technologies
+* .Net 8.0
+* NUnit
+* Moq
+* FluentAssertions
 
 
   

@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationsControllerTests
 {
@@ -24,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseLocationsController _sut;
-        string verifyUrl = "http://test";
+        readonly string verifyUrl = "http://test";
         protected Mock<ISessionService> _sessionServiceMock;
 
         [SetUp]
@@ -48,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
                .ReturnsAsync(queryResult);
 
-            var result =  await _sut.ConfirmedProviderCourseLocations(model);
+            var result = await _sut.ConfirmedProviderCourseLocations(model);
             var redirectResult = result as RedirectToRouteResult;
             redirectResult.Should().NotBeNull();
             redirectResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
@@ -59,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task Post_InValidModel_ReturnsSameView(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+            _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
             queryResult.ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation>();
 
@@ -68,13 +67,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
            .ReturnsAsync(queryResult);
 
 
-            var result =  await _sut.ConfirmedProviderCourseLocations(model);
+            var result = await _sut.ConfirmedProviderCourseLocations(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.ViewName.Should().Contain("EditTrainingLocations.cshtml");
             viewResult.Model.Should().NotBeNull();
-            var modelResult= viewResult.Model as ProviderCourseLocationListViewModel;
+            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
             modelResult.BackUrl.Should().Be(verifyUrl);
             modelResult.CancelUrl.Should().Be(verifyUrl);
@@ -84,7 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task Post_ValidModel_RedirectToNationalDeliveryOption(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Add("Referer", refererUrl);
+            _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
             _mediatorMock
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
