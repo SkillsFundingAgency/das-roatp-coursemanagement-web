@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
                     .Connect($"{redisConnectionString},{dataProtectionKeysDatabase}");
 
                 services.AddDataProtection()
-                    .SetApplicationName("das-roatp-coursemanagement-web")
+                    .SetApplicationName("das-provider-web")
                     .PersistKeysToStackExchangeRedis(redis, "DataProtection-Keys");
             }
         }
