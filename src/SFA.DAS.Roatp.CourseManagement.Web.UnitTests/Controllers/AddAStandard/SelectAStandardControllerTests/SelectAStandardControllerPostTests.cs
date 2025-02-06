@@ -46,30 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public async Task SubmitAStandard_IfNoRegulator_RedirectsToRespectiveConfirmationPage(
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] SelectAStandardController sut,
-            SelectAStandardSubmitModel submitModel,
-            GetStandardInformationQueryResult standardInformation)
-        {
-            standardInformation.RegulatorName = string.Empty;
-            mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
-            sut
-                .AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.ViewStandards);
-
-            var response = await sut.SubmitAStandard(submitModel);
-
-            var result = response as RedirectToRouteResult;
-            result.Should().NotBeNull();
-            result.RouteName.Should().Be(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
-            sessionServiceMock.Verify(s => s.Set(It.Is<StandardSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode)));
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetAvailableProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
-        }
-
-        [Test, MoqAutoData]
         public async Task SubmitAStandard_IfNotRegulated_RedirectsToRespectiveConfirmationPage(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
