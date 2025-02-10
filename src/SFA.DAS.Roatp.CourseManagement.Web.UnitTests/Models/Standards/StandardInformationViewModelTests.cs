@@ -18,7 +18,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             {
                 option.WithMapping<StandardInformationViewModel>(r => r.Title, m => m.CourseName);
                 option.Excluding(r => r.StandardUId);
-                option.Excluding(r => r.Regulated);
                 option.Excluding(r => r.IsRegulatedForProvider);
                 return option;
             });

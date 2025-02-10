@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             var standardInformation = await _mediator.Send(new GetStandardInformationQuery(submitModel.SelectedLarsCode));
 
-            if (standardInformation.Regulated && standardInformation.IsRegulatedForProvider)
+            if (standardInformation.IsRegulatedForProvider)
             {
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmRegulatedStandard);
             }
