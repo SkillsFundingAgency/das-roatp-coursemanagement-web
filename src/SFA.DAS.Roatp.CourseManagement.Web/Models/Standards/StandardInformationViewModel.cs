@@ -13,6 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string Version { get; set; }
         public string CourseDisplayName => $"{CourseName} (Level {Level})";
         public bool IsStandardRegulated => !string.IsNullOrEmpty(RegulatorName);
+        public bool IsRegulatedForProvider { get; set; }
 
         public static implicit operator StandardInformationViewModel(GetStandardInformationQueryResult source)
             => new StandardInformationViewModel
@@ -23,7 +24,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 Sector = source.Sector,
                 CourseName = source.Title,
                 Level = source.Level,
-                RegulatorName = source.RegulatorName
+                RegulatorName = source.RegulatorName,
+                IsRegulatedForProvider = source.IsRegulatedForProvider
             };
     }
 }

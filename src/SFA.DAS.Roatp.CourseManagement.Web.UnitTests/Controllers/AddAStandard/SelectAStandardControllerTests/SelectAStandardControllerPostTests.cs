@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +15,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.SelectAStandardControllerTests
 {
@@ -46,14 +46,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public async Task SubmitAStandard_IfNonRegulatedStandard_RedirectsToRespectiveConfirmationPage(
+        public async Task SubmitAStandard_IfNotRegulatedForProvider_RedirectsToRespectiveConfirmationPage(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectAStandardController sut,
             SelectAStandardSubmitModel submitModel,
             GetStandardInformationQueryResult standardInformation)
         {
-            standardInformation.RegulatorName = string.Empty;
+            standardInformation.IsRegulatedForProvider = false;
             mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
             sut
                 .AddDefaultContextWithUser()
@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             SelectAStandardSubmitModel submitModel,
             GetStandardInformationQueryResult standardInformation)
         {
-            standardInformation.RegulatorName = "regulator X";
+            standardInformation.IsRegulatedForProvider = true;
             mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
             sut
                 .AddDefaultContextWithUser()

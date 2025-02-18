@@ -10,5 +10,6 @@
         public string Version { get; set; }
         public string RegulatorName { get; set; }
         public string Sector { get; set; }
+        public bool IsRegulatedForProvider { get; set; }
     }
 }
