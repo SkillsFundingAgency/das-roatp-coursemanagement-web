@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddStandardAddRegionsControllerTests
 {
@@ -74,6 +74,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             GetAllRegionsAndSubRegionsQueryResult queryResult)
         {
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards);
+            standardSessionModel.LocationOption = LocationOption.EmployerLocation;
+            standardSessionModel.HasNationalDeliveryOption = false;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
