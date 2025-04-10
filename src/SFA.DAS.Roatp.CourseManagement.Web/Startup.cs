@@ -110,7 +110,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                     }
                 })
                 .AddSessionStateTempDataProvider()
-                .SetDefaultNavigationSection(NavigationSection.Home)
+                .SetDefaultNavigationSection(NavigationSection.StandardsAndTrainingVenues)
                 .ShowBetaPhaseBanner()
                 .EnableGoogleAnalytics();
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
