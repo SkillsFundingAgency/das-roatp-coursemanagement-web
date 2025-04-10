@@ -99,22 +99,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddAuthorization<AuthorizationContextProvider>();
             services.Configure<RouteOptions>(options =>
-            {
-                options.LowercaseUrls = true;
-            }).AddMvc(options =>
-            {
-                options.AddAuthorization();
-                if (!_configuration.IsDev())
                 {
-                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                }
-            })
-            .AddSessionStateTempDataProvider()
-            .SetDefaultNavigationSection(NavigationSection.Home)
-            .ShowBetaPhaseBanner()
-            .EnableGoogleAnalytics()
+                    options.LowercaseUrls = true;
+                }).AddMvc(options =>
+                {
+                    options.AddAuthorization();
+                    if (!_configuration.IsDev())
+                    {
+                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                    }
+                })
+                .AddSessionStateTempDataProvider()
+                .SetDefaultNavigationSection(NavigationSection.Home)
+                .ShowBetaPhaseBanner()
+                .EnableGoogleAnalytics();
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
-            .SetDfESignInConfiguration(roatpCourseManagementConfiguration.UseDfESignIn);
 
             services
             .AddFluentValidationAutoValidation()
