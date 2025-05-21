@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
@@ -11,11 +12,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class StandardsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -47,11 +47,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/Standards/ViewStandards.cshtml", model);
             }
 
-            model.Standards = result.Standards.Select(c => (StandardViewModel)c).ToList();
+            model.Standards = result.Standards.Select(c => (StandardViewModel)c).OrderBy(c => c.CourseDisplayName).ToList();
 
             foreach (var standard in model.Standards)
             {
-                standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails, new {Ukprn, larsCode = standard.LarsCode});
+                standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, larsCode = standard.LarsCode });
                 standard.ConfirmRegulatedStandardUrl = standard.IsApprovalPending ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, standard.LarsCode }) : string.Empty;
             }
 
@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = (StandardDetailsViewModel)standardDetails;
             model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn });
             model.DeleteStandardUrl = Url.RouteUrl(RouteNames.GetConfirmDeleteStandard, new { ukprn = Ukprn, larsCode });
-            
+
             model.EditContactDetailsUrl = Url.RouteUrl(RouteNames.GetCourseContactDetails, new { Ukprn, larsCode });
             model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
             model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });

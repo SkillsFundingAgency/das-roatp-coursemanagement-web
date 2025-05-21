@@ -33,7 +33,7 @@
             </tr>
             </thead>
             <tbody class="govuk-table__body">
-            @foreach (var standard in Model.Standards.OrderBy(x => x.CourseDisplayName))
+            @foreach (var standard in Model.Standards)
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">

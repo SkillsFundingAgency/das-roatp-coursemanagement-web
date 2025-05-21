@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -17,7 +18,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using static System.String;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
@@ -109,7 +109,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.ShowNotificationBannerDeleteStandard.Should().Be((bool)isStandardDeleted);
             model.ShowNotificationBannerAddStandard.Should().Be((bool)isStandardAdded);
             object resposeDeleteTempDataValue = null;
-            tempDataMock.Verify(x=>x.TryGetValue(TempDataKeys.ShowStandardDeletedBannerTempDataKey, out resposeDeleteTempDataValue),Times.Once);
+            tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShowStandardDeletedBannerTempDataKey, out resposeDeleteTempDataValue), Times.Once);
             object resposeAddTempDataValue = null;
             tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShowStandardAddBannerTempDataKey, out resposeAddTempDataValue), Times.Once);
         }
@@ -119,7 +119,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
-            
+
             var result = await _controller.ViewStandards();
 
             var viewResult = result as ViewResult;
@@ -131,6 +131,82 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.Should().BeEmpty();
             model.BackLink.Should().Be(ReviewYourDetailsLink);
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Exactly(2));
+        }
+
+
+        [Test]
+        public async Task StandardsController_ViewStandards_Standards_Ordered_Alphabetically()
+        {
+            _logger = new Mock<ILogger<StandardsController>>();
+
+            var standard1 = new Standard
+            {
+                ProviderCourseId = 1,
+                CourseName = "a1",
+                Level = 1,
+                IsImported = true,
+                ApprovalBody = "TestBody1",
+            };
+            var standard2 = new Standard
+            {
+                ProviderCourseId = 2,
+                CourseName = "a1",
+                Level = 2,
+                IsImported = false,
+                ApprovalBody = null
+            };
+
+            var standard3 = new Standard
+            {
+                ProviderCourseId = 2,
+                CourseName = "c2",
+                Level = 2,
+                IsImported = false,
+                ApprovalBody = null
+            };
+
+            var standard4 = new Standard
+            {
+                ProviderCourseId = 2,
+                CourseName = "d2",
+                Level = 2,
+                IsImported = false,
+                ApprovalBody = null
+            };
+
+            var unorderedStandardList = new List<Standard> { standard3, standard4, standard2, standard1 };
+            var expectedStandards = new List<Standard> { standard1, standard2, standard3, standard4 };
+
+
+            _mediator = new Mock<IMediator>();
+            _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(() => new GetAllProviderStandardsQueryResult
+                {
+                    Standards = unorderedStandardList
+
+                });
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetStandardDetails, GetStandardDetailsLink)
+                .AddUrlForRoute(RouteNames.GetConfirmRegulatedStandard, GetConfirmRegulatedStandardLink)
+                .AddUrlForRoute(RouteNames.ReviewYourDetails, ReviewYourDetailsLink)
+                .AddUrlForRoute(RouteNames.GetAddStandardSelectStandard, AddAStandardLink);
+
+            var tempDataMock = new Mock<ITempDataDictionary>();
+            _controller.TempData = tempDataMock.Object;
+
+            var result = await _controller.ViewStandards();
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult!.Model.Should().NotBeNull();
+            var model = viewResult.Model as StandardListViewModel;
+            model.Should().NotBeNull();
+            model!.Standards.Should().NotBeEmpty();
+            model.Standards.Should().BeEquivalentTo(expectedStandards);
         }
     }
 }
