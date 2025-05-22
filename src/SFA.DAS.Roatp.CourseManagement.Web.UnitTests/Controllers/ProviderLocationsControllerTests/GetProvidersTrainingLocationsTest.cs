@@ -12,11 +12,12 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocationsControllerTests
 {
     [TestFixture]
     public class GetProvidersTrainingLocationsTest
@@ -28,6 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         const string BackUrl = "http://test";
         string verifyVenueNameUrl = "http://test-VenueNameUrl";
         const string AddTrainingLocationUrl = "www.abc.com";
+        private List<ProviderLocationViewModel> AlphabeticallyOrderedList;
 
         [SetUp]
         public void Before_each_test()
@@ -40,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var ProviderLocation1 = new ProviderLocation
             {
                 NavigationId = System.Guid.NewGuid(),
-                LocationName = "test1",
+                LocationName = "zz 1",
                 Postcode = "IG117WQ",
                 Email = "test1@test.com",
                 Phone = "1234567891"
@@ -48,13 +50,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var ProviderLocation2 = new ProviderLocation
             {
                 NavigationId = System.Guid.NewGuid(),
-                LocationName = "test2",
+                LocationName = "aa 2",
                 Postcode = "IG117XR",
                 Email = "test2@test.com",
                 Phone = "1234567892"
             };
+
+            var ProviderLocation3 = new ProviderLocation
+            {
+                NavigationId = System.Guid.NewGuid(),
+                LocationName = "mm 3",
+                Postcode = "IG117XR",
+                Email = "test2@test.com",
+                Phone = "1234567892"
+            };
+
             response.Add(ProviderLocation1);
             response.Add(ProviderLocation2);
+            response.Add(ProviderLocation3);
+
+
+            AlphabeticallyOrderedList = new List<ProviderLocationViewModel> { ProviderLocation2, ProviderLocation3, ProviderLocation1 };
 
             _mediatorMock = new Mock<IMediator>();
             _mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -78,7 +94,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                .Returns(BackUrl);
 
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c =>c.RouteName.Equals(RouteNames.GetTrainingLocationPostcode))))
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetTrainingLocationPostcode))))
                .Returns(AddTrainingLocationUrl);
 
             _urlHelperMock
@@ -95,10 +111,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ViewProviderLocations.cshtml");
+            viewResult!.ViewName.Should().Contain("ViewProviderLocations.cshtml");
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
-            model.ProviderLocations.Should().NotBeNull();
+            model!.ProviderLocations.Should().NotBeNull();
+            model.ProviderLocations.Count.Should().Be(3);
             model.BackUrl.Should().Be(BackUrl);
             model.AddTrainingLocationLink.Should().Be(AddTrainingLocationUrl);
         }
@@ -113,10 +130,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ViewProviderLocations.cshtml");
+            viewResult!.ViewName.Should().Contain("ViewProviderLocations.cshtml");
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
-            model.ProviderLocations.Should().BeEmpty();
+            model!.ProviderLocations.Should().BeEmpty();
             model.BackUrl.Should().Be(BackUrl);
         }
 
@@ -127,13 +144,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as ProviderLocationListViewModel;
+            var model = viewResult!.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
-            model.ProviderLocations.Should().NotBeEmpty();
+            model!.ProviderLocations.Should().NotBeEmpty();
             foreach (var location in model.ProviderLocations)
             {
                 location.VenueNameUrl.Should().Be(verifyVenueNameUrl);
             }
+        }
+
+        [Test]
+        public async Task GetProvidersTrainingLocation_ReturnsAlphabeticallyOrderedLocations()
+        {
+            var result = await _controller.GetProvidersTrainingLocations();
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult!.Model as ProviderLocationListViewModel;
+            model.Should().NotBeNull();
+            model!.ProviderLocations.Should().NotBeEmpty();
+            model.ProviderLocations.Should().BeEquivalentTo(AlphabeticallyOrderedList, option => option
+                .Excluding(c => c.VenueNameUrl));
         }
     }
 }

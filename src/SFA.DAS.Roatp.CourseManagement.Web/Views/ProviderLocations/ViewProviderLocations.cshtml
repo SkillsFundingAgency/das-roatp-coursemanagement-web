@@ -12,13 +12,17 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl">Training venues</h1>
-        <p class="govuk-body">This is your list of locations where you can train apprentices. You can add or update venues as and when you need to.</p>
-
+        <p class="govuk-body">Venues where you train apprentices. You can add a new venue or select the venue name to update it or delete it. You do not need to add a venue if you only do training at the employer's location.</p>
+        <p class="govuk-body">
+            <a href="@Model.AddTrainingLocationLink" class="govuk-button">
+                Add a new training venue
+            </a>
+        </p>
         <table class="govuk-table" aria-label="List of training locations">
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header" scope="col"> Venue name</th>
-                    <th class="govuk-table__header" scope="col"> Postcode</th>
+                    <th class="govuk-table__header govuk-!-text-align-right" scope="col"> Postcode</th>
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
@@ -30,7 +34,7 @@
                             @location.LocationName
                         </a>
                     </td>
-                    <td class="govuk-table__cell">
+                        <td class="govuk-table__cell govuk-!-text-align-right">
 
                             @location.Postcode
 
@@ -39,11 +43,6 @@
                 }
             </tbody>
         </table>
-        <p class="govuk-body">
-            <a href="@Model.AddTrainingLocationLink" class="govuk-link">
-                Add a new training venue
-            </a>
-        </p>
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>
     </div>
 </div>
