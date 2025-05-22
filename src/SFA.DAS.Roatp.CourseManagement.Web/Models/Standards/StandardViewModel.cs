@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class StandardViewModel 
+    public class StandardViewModel
     {
         public int ProviderCourseId { get; set; }
         public string CourseName { get; set; }
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 CourseName = source.CourseName,
                 Level = source.Level,
                 IsImported = source.IsImported,
-                CourseDisplayName = source.CourseName + " (Level " + source.Level + ")",
+                CourseDisplayName = source.CourseName + " (level " + source.Level + ")",
                 LarsCode = source.LarsCode,
                 Version = source.Version,
                 ApprovalBody = source.ApprovalBody,

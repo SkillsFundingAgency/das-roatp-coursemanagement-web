@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     [TestFixture]
     public class StandardViewModelTests
     {
-        [TestCase(true,"approval body", false)]
+        [TestCase(true, "approval body", false)]
         [TestCase(false, "approval body", false)]
         [TestCase(true, "", false)]
         [TestCase(false, "", false)]
@@ -19,6 +19,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const int level = 1;
             const int larsCode = 133;
             const string version = "1.1";
+            const string expectedCourseDisplayName = "course name (level 1)";
+
             var standard = new Standard
             {
                 ProviderCourseId = providerCourseId,
@@ -40,6 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.LarsCode.Should().Be(larsCode);
             viewModel.IsApprovedByRegulator.Should().Be(approvedByRegulator);
             viewModel.IsApprovalPending.Should().Be(expectedApprovalRequired);
+            viewModel.CourseDisplayName.Should().Be(expectedCourseDisplayName);
         }
     }
 }

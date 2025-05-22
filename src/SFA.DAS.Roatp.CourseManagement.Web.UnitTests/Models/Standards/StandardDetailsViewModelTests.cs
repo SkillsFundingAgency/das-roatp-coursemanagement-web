@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 {
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string sector = "digital";
             const int larsCode = 133;
             const string version = "3";
-            var expectedCourseDisplayName = $"{courseName} (Level {level})";
+            var expectedCourseDisplayName = $"{courseName} (level {level})";
             const string standardInfoUrl = "http://test.com";
             const string contactUsPhoneNumber = "12345";
             const string contactUsEmail = "me@test.com";
@@ -258,17 +258,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             StandardDetailsViewModel viewModel = standardDetails;
             var actualRegions = viewModel.Regions();
 
-             var regions = actualRegions.ToList();
-             regions.Count.Should().Be(2);
-             regions[0].Key.Should().Be(regionName1);
-             regions[1].Key.Should().Be(regionName2);
-             
-             var locationsInRegion1 = regions[0].ToList();
-             var locationsInRegion2 = regions[1].ToList();
+            var regions = actualRegions.ToList();
+            regions.Count.Should().Be(2);
+            regions[0].Key.Should().Be(regionName1);
+            regions[1].Key.Should().Be(regionName2);
 
-             locationsInRegion1[0].LocationName.Should().Be(region1_location1);
-             locationsInRegion2[0].LocationName.Should().Be(region2_location1);
-             locationsInRegion2[1].LocationName.Should().Be(region2_location2);
+            var locationsInRegion1 = regions[0].ToList();
+            var locationsInRegion2 = regions[1].ToList();
+
+            locationsInRegion1[0].LocationName.Should().Be(region1_location1);
+            locationsInRegion2[0].LocationName.Should().Be(region2_location1);
+            locationsInRegion2[1].LocationName.Should().Be(region2_location2);
         }
 
         [TestCase(true, "Yes")]
