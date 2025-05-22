@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
@@ -8,11 +9,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderLocationsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
             }
 
-            model.ProviderLocations = result.ProviderLocations.Select(c => (ProviderLocationViewModel)c).ToList();
+            model.ProviderLocations = result.ProviderLocations.Select(c => (ProviderLocationViewModel)c).OrderBy(l => l.LocationName).ToList();
             model.ProviderLocations.ForEach(l => l.VenueNameUrl = Url.RouteUrl(RouteNames.GetProviderLocationDetails, new { ukprn = Ukprn, Id = l.NavigationId }));
             return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
         }
