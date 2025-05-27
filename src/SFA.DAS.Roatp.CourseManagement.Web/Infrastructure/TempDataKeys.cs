@@ -5,5 +5,6 @@
         public const string SelectedAddressTempDataKey = "SelectedAddressTempDataKey";
         public const string ShowStandardDeletedBannerTempDataKey = "ShowStandardDeletedBannerTempDataKey";
         public const string ShowStandardAddBannerTempDataKey = "ShowStandardAddBannerTempDataKey";
+        public const string ShowVenueAddBannerTempDataKey = "ShowVenueAddBannerTempDataKey";
     }
 }

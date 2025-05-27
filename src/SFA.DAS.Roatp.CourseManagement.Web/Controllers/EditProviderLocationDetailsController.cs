@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.UpdateProviderLocationDetails;
@@ -11,11 +12,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class EditProviderLocationDetailsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -31,10 +31,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProviderLocationDetails([FromRoute] Guid Id)
         {
-           _logger.LogInformation("Getting Provider Location Details for {ukprn}, {Id}", Ukprn, Id);
+            _logger.LogInformation("Getting Provider Location Details for {ukprn}, {Id}", Ukprn, Id);
 
-           var model = await BuildViewModel(Id);
-           return View("~/Views/EditProviderLocation/EditProviderLocationsDetails.cshtml", model);
+            var model = await BuildViewModel(Id);
+            return View("~/Views/EditProviderLocation/EditProviderLocationsDetails.cshtml", model);
         }
 
         private async Task<ProviderLocationViewModel> BuildViewModel(Guid Id)
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> UpdateProviderLocationDetails(ProviderLocationDetailsSubmitModel model, [FromRoute] Guid Id)
         {
-            if(ModelState.IsValid) await CheckIfNameIsAvailable(model.LocationName, Id);
+            if (ModelState.IsValid) await CheckIfNameIsAvailable(model.LocationName, Id);
 
             if (!ModelState.IsValid)
             {
@@ -75,10 +75,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 Id = Id,
                 UserId = UserId,
                 UserDisplayName = UserDisplayName,
-                LocationName = model.LocationName,
-                Website = model.Website,
-                Email = model.EmailAddress,
-                Phone = model.PhoneNumber
+                LocationName = model.LocationName
             };
 
             await _mediator.Send(command);
@@ -89,7 +86,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         private async Task CheckIfNameIsAvailable(string locationName, Guid Id)
         {
             var locations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
-            if (locations.ProviderLocations.Where(a=>a.NavigationId != Id).Any(l => l.LocationName.ToLower() == locationName.Trim().ToLower()))
+            if (locations.ProviderLocations.Where(a => a.NavigationId != Id).Any(l => l.LocationName.ToLower() == locationName.Trim().ToLower()))
             {
                 ModelState.AddModelError("LocationName", LocationNameNotAvailable);
             }

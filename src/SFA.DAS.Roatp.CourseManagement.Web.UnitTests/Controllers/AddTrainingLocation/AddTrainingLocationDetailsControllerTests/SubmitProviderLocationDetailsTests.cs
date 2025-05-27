@@ -64,11 +64,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
 
             result.Should().NotBeNull();
             result.ViewName.Should().Be(AddProviderLocationDetailsController.ViewPath);
-            var actualModel = (ProviderLocationDetailsViewModel) result.Model;
-            actualModel.LocationName.Should().Be(model.LocationName);
-            actualModel.EmailAddress.Should().Be(model.EmailAddress);
-            actualModel.Website.Should().Be(model.Website);
-            actualModel.PhoneNumber.Should().Be(model.PhoneNumber);
+            var actualModel = (ProviderLocationDetailsViewModel)result.Model;
+            actualModel!.LocationName.Should().Be(model.LocationName);
             actualModel.CancelLink.Should().Be(getProviderLocationsUrl);
             actualModel.BackLink.Should().Be(getProviderLocationAddressUrl);
             mediatorMock.Verify(m => m.Send(It.IsAny<CreateProviderLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
@@ -98,6 +95,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetProviderLocations);
             tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedAddressTempDataKey));
+            tempDataMock.Verify(t => t.Add(TempDataKeys.ShowVenueAddBannerTempDataKey, true), Times.Once);
             mediatorMock.Verify(m => m.Send(It.Is<CreateProviderLocationCommand>(c =>
                 c.Ukprn.ToString() == TestConstants.DefaultUkprn &&
                 c.UserId == TestConstants.DefaultUserId &&
@@ -108,10 +106,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
                 c.Postcode == addressItem.Postcode &&
                 c.County == addressItem.County &&
                 c.Latitude == addressItem.Latitude &&
-                c.Longitude == addressItem.Longitude &&
-                c.Email == submitModel.EmailAddress &&
-                c.Website == submitModel.Website &&
-                c.Phone == submitModel.PhoneNumber
+                c.Longitude == addressItem.Longitude
             ), It.IsAny<CancellationToken>()));
         }
 

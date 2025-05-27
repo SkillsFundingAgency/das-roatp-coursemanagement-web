@@ -23,8 +23,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation
     public class ProviderLocationDetailsSubmitModel
     {
         public string LocationName { get; set; }
-        public string Website { get; set; }
-        public string EmailAddress { get; set; }
-        public string PhoneNumber { get; set; }
     }
 }

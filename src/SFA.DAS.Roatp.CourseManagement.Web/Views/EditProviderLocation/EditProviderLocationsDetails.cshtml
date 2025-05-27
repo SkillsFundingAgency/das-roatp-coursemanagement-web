@@ -11,8 +11,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-xl">Training Venues</div>
-        <h1 class="govuk-heading-xl">Venue details</h1>
+        <div class="govuk-caption-xl">Edit a training venue</div>
+        <h1 class="govuk-heading-xl">Change venue name</h1>
 
         <form method="post" asp-route="@RouteNames.PostUpdateProviderLocationDetails" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.NavigationId" />
@@ -40,47 +40,8 @@
                     <span>@Model.Postcode</span>
                 </p>
             </div>
-
-            <fieldset class="govuk-fieldset">
-                <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                    Venue contact details
-                </legend>
-                <p class="govuk-body">
-                    Add the contact details for the venue if you think they would be useful for an employer or apprentice to know. If it’s not useful for them, add details of your office instead.
-                </p>
-
-                <div esfa-validation-marker-for="Website" class="govuk-form-group">
-                    <div class="govuk-form-group">
-                        <label class="govuk-label govuk-label--m">
-                            Website
-                        </label>
-                        <span asp-validation-for="Website" class="govuk-error-message"></span>
-                        <input asp-for="Website" id="Website" class="govuk-input" type="text" maxlength="500">
-                    </div>
-                </div>
-                <div esfa-validation-marker-for="EmailAddress" class="govuk-form-group">
-                    <div class="govuk-form-group">
-                        <label class="govuk-label govuk-label--m">
-                            Email address
-                        </label>
-                        <span asp-validation-for="EmailAddress" class="govuk-error-message"></span>
-                        <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" maxlength="256">
-                    </div>
-                </div>
-                <div esfa-validation-marker-for="PhoneNumber" class="govuk-form-group">
-                    <div class="govuk-form-group">
-                        <label class="govuk-label govuk-label--m">
-                            Telephone number
-                        </label>
-                        <span asp-validation-for="PhoneNumber" class="govuk-error-message"></span>
-                        <input asp-for="PhoneNumber" id="PhoneNumber" class="govuk-input govuk-input--width-10" type="text" maxlength="50">
-                    </div>
-                </div>
-            </fieldset>
-
-
             <div class="govuk-button-group">
-                <button id="submit" type="submit" class="govuk-button">Save and continue</button>
+                <button id="submit" type="submit" class="govuk-button">Confirm</button>
                 <a href="@Model.CancelUrl" class="govuk-link">Cancel</a>
             </div>
         </form>

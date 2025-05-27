@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -12,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
+using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading;
@@ -27,7 +29,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
         private Mock<IMediator> _mediatorMock;
         private Mock<IUrlHelper> _urlHelperMock;
         const string BackUrl = "http://test";
-        string verifyVenueNameUrl = "http://test-VenueNameUrl";
+        readonly string _verifyVenueNameUrl = "http://test-VenueNameUrl";
+        readonly string _viewStandardsLink = Guid.NewGuid().ToString();
         const string AddTrainingLocationUrl = "www.abc.com";
         private List<ProviderLocationViewModel> AlphabeticallyOrderedList;
 
@@ -37,40 +40,34 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             _logger = new Mock<ILogger<ProviderLocationsController>>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111"), }, "mock"));
 
-            var response = new System.Collections.Generic.List<ProviderLocation>();
+            var response = new List<ProviderLocation>();
 
-            var ProviderLocation1 = new ProviderLocation
+            var providerLocation1 = new ProviderLocation
             {
                 NavigationId = System.Guid.NewGuid(),
                 LocationName = "zz 1",
-                Postcode = "IG117WQ",
-                Email = "test1@test.com",
-                Phone = "1234567891"
+                Postcode = "IG117WQ"
             };
-            var ProviderLocation2 = new ProviderLocation
+            var providerLocation2 = new ProviderLocation
             {
                 NavigationId = System.Guid.NewGuid(),
                 LocationName = "aa 2",
-                Postcode = "IG117XR",
-                Email = "test2@test.com",
-                Phone = "1234567892"
+                Postcode = "IG117XR"
             };
 
-            var ProviderLocation3 = new ProviderLocation
+            var providerLocation3 = new ProviderLocation
             {
                 NavigationId = System.Guid.NewGuid(),
                 LocationName = "mm 3",
-                Postcode = "IG117XR",
-                Email = "test2@test.com",
-                Phone = "1234567892"
+                Postcode = "IG117XR"
             };
 
-            response.Add(ProviderLocation1);
-            response.Add(ProviderLocation2);
-            response.Add(ProviderLocation3);
+            response.Add(providerLocation1);
+            response.Add(providerLocation2);
+            response.Add(providerLocation3);
 
 
-            AlphabeticallyOrderedList = new List<ProviderLocationViewModel> { ProviderLocation2, ProviderLocation3, ProviderLocation1 };
+            AlphabeticallyOrderedList = new List<ProviderLocationViewModel> { providerLocation2, providerLocation3, providerLocation1 };
 
             _mediatorMock = new Mock<IMediator>();
             _mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -99,9 +96,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
 
             _urlHelperMock
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetProviderLocationDetails))))
-              .Returns(verifyVenueNameUrl);
+              .Returns(_verifyVenueNameUrl);
+
+            _urlHelperMock
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ViewStandards))))
+                .Returns(_viewStandardsLink);
+
 
             _controller.Url = _urlHelperMock.Object;
+
+
+            var tempDataMock = new Mock<ITempDataDictionary>();
+            _controller.TempData = tempDataMock.Object;
         }
 
         [Test]
@@ -118,6 +124,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             model.ProviderLocations.Count.Should().Be(3);
             model.BackUrl.Should().Be(BackUrl);
             model.AddTrainingLocationLink.Should().Be(AddTrainingLocationUrl);
+            model.ShowNotificationBannerAddVenue.Should().Be(false);
+            model.ManageYourStandardsUrl.Should().BeNull();
         }
 
         [Test]
@@ -149,7 +157,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             model!.ProviderLocations.Should().NotBeEmpty();
             foreach (var location in model.ProviderLocations)
             {
-                location.VenueNameUrl.Should().Be(verifyVenueNameUrl);
+                location.VenueNameUrl.Should().Be(_verifyVenueNameUrl);
             }
         }
 
@@ -165,6 +173,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             model!.ProviderLocations.Should().NotBeEmpty();
             model.ProviderLocations.Should().BeEquivalentTo(AlphabeticallyOrderedList, option => option
                 .Excluding(c => c.VenueNameUrl));
+        }
+
+
+        [Test]
+        public async Task GetProvidersTrainingLocation_SetsUpAddBanner()
+        {
+            var tempDataMock = new Mock<ITempDataDictionary>();
+            object isVenueAdded = true;
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShowVenueAddBannerTempDataKey, out isVenueAdded));
+
+
+            _controller.TempData = tempDataMock.Object;
+
+            var result = await _controller.GetProvidersTrainingLocations();
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult!.ViewName.Should().Contain("ViewProviderLocations.cshtml");
+            var model = viewResult.Model as ProviderLocationListViewModel;
+            model.Should().NotBeNull();
+
+            model!.ShowNotificationBannerAddVenue.Should().Be(true);
+            model.ManageYourStandardsUrl.Should().Be(_viewStandardsLink);
         }
     }
 }
