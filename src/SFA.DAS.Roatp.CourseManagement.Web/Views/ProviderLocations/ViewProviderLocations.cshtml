@@ -11,6 +11,22 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
+        @if (Model.ShowNotificationBannerAddVenue)
+        {
+            <div class="govuk-notification-banner govuk-notification-banner--success" role="alert" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+                <div class="govuk-notification-banner__header">
+                    <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                        Success
+                    </h2>
+                </div>
+                <div class="govuk-notification-banner__content">
+                    <p class="govuk-notification-banner__heading">
+                        New training  venue added. Go to <a href="@Model.ManageYourStandardsUrl" class="govuk-link">Manage your standards</a> to add this venue to an existing or new standard.
+                    </p>
+                </div>
+            </div>
+        }
+
         <h1 class="govuk-heading-xl">Training venues</h1>
         <p class="govuk-body">Venues where you train apprentices. You can add a new venue or select the venue name to update it or delete it. You do not need to add a venue if you only do training at the employer's location.</p>
         <p class="govuk-body">
@@ -20,27 +36,27 @@
         </p>
         <table class="govuk-table" aria-label="List of training locations">
             <thead class="govuk-table__head">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header" scope="col"> Venue name</th>
-                    <th class="govuk-table__header govuk-!-text-align-right" scope="col"> Postcode</th>
-                </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col"> Venue name</th>
+                <th class="govuk-table__header govuk-!-text-align-right" scope="col"> Postcode</th>
+            </tr>
             </thead>
             <tbody class="govuk-table__body">
-                @foreach (var location in Model.ProviderLocations)
-                {
+            @foreach (var location in Model.ProviderLocations)
+            {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
                         <a class="govuk-link" href="@location.VenueNameUrl">
                             @location.LocationName
                         </a>
                     </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right">
+                    <td class="govuk-table__cell govuk-!-text-align-right">
 
-                            @location.Postcode
+                        @location.Postcode
 
                     </td>
                 </tr>
-                }
+            }
             </tbody>
         </table>
         <button class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" style="display: none; visibility: hidden">Save and continue</button>

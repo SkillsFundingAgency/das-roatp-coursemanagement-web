@@ -38,12 +38,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 AddTrainingLocationLink = Url.RouteUrl(RouteNames.GetTrainingLocationPostcode, new { ukprn = Ukprn })
             };
 
-
             if (result == null)
             {
                 _logger.LogInformation("Provider Locations data not found for {ukprn}", Ukprn);
                 return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
             }
+
+            TempData.TryGetValue(TempDataKeys.ShowVenueAddBannerTempDataKey, out var showAddBanner);
+            if (showAddBanner != null)
+            {
+                model.ShowNotificationBannerAddVenue = true;
+                model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.ViewStandards);
+            }
+
 
             model.ProviderLocations = result.ProviderLocations.Select(c => (ProviderLocationViewModel)c).OrderBy(l => l.LocationName).ToList();
             model.ProviderLocations.ForEach(l => l.VenueNameUrl = Url.RouteUrl(RouteNames.GetProviderLocationDetails, new { ukprn = Ukprn, Id = l.NavigationId }));

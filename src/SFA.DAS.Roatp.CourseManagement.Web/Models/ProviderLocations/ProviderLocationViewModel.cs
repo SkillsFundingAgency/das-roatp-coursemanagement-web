@@ -29,10 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 AddressLine2 = source.AddressLine2,
                 Town = source.Town,
                 County = source.County,
-                Postcode = source.Postcode,
-                EmailAddress = source.Email,
-                Website = source.Website,
-                PhoneNumber = source.Phone,
+                Postcode = source.Postcode
             };
         }
     }

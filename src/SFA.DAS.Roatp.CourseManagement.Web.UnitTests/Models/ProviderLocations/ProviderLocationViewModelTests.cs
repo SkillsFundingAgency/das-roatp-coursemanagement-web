@@ -18,8 +18,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
             viewModel.Should().BeEquivalentTo(providerLocation, o =>
             {
                 o.Excluding(c => c.LocationType);
-                o.Excluding(c => c.Email);
-                o.Excluding(c => c.Phone);
                 return o;
             });
         }

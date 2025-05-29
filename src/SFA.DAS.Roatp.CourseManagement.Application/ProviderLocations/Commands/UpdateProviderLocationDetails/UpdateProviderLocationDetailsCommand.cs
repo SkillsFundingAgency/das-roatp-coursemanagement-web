@@ -1,5 +1,5 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
+using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.UpdateProviderLocationDetails
 {
@@ -10,8 +10,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
         public string LocationName { get; set; }
-        public string Website { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
     }
 }

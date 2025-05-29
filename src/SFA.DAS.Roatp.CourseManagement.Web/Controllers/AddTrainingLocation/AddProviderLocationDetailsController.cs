@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
@@ -10,11 +11,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class AddProviderLocationDetailsController : ControllerBase
     {
         public const string ViewPath = "~/Views/AddTrainingLocation/AddTrainingLocationDetails.cshtml";
@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         public IActionResult GetLocationDetails()
         {
             var addressItem = GetAddressFromTempData(true);
-            
+
             if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
 
             var model = GetViewModel(addressItem);
@@ -47,23 +47,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             var addressItem = GetAddressFromTempData(true);
             if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
 
-            if(ModelState.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+            if (ModelState.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
 
             if (!ModelState.IsValid)
             {
                 var model = GetViewModel(addressItem);
 
                 model.LocationName = submitModel.LocationName;
-                model.PhoneNumber = submitModel.PhoneNumber;
-                model.Website = submitModel.Website;
-                model.EmailAddress = submitModel.EmailAddress;
-
                 return View(ViewPath, model);
             }
 
             var command = GetCommand(submitModel, addressItem);
 
             TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
+            TempData.Add(TempDataKeys.ShowVenueAddBannerTempDataKey, true);
 
             await _mediator.Send(command);
 
@@ -84,10 +81,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
                 Postcode = addressItem.Postcode,
                 County = addressItem.County,
                 Latitude = addressItem.Latitude,
-                Longitude = addressItem.Longitude,
-                Email = submitModel.EmailAddress,
-                Website = submitModel.Website,
-                Phone = submitModel.PhoneNumber
+                Longitude = addressItem.Longitude
             };
             return command;
         }
@@ -106,9 +100,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             if (address == null)
             {
                 _logger.LogWarning("Selected address not found in the Temp Data, navigating user back to the locations list page");
-                return null; 
+                return null;
             }
-            if(keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
+            if (keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
             return JsonSerializer.Deserialize<AddressItem>(address.ToString());
         }
 
