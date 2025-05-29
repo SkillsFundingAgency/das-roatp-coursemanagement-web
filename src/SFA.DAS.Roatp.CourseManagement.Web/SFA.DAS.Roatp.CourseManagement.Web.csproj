@@ -42,7 +42,4 @@
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\ProviderLocations\Partials\" />
-  </ItemGroup>
 </Project>
