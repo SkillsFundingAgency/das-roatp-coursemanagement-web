@@ -91,7 +91,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
                .Returns(BackUrl);
 
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetTrainingLocationPostcode))))
+               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.SearchAddress))))
                .Returns(AddTrainingLocationUrl);
 
             _urlHelperMock

@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             var model = new ProviderLocationListViewModel
             {
                 BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn = Ukprn }),
-                AddTrainingLocationLink = Url.RouteUrl(RouteNames.GetTrainingLocationPostcode, new { ukprn = Ukprn })
+                AddTrainingLocationLink = Url.RouteUrl(RouteNames.SearchAddress, new { ukprn = Ukprn })
             };
 
             if (result == null)

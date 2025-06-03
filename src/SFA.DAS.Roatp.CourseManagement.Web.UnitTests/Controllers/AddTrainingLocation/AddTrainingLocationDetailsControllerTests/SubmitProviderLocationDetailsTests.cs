@@ -49,13 +49,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             ProviderLocationDetailsSubmitModel model,
             AddressItem addressItem,
             string getProviderLocationsUrl,
-            string getProviderLocationAddressUrl)
+            string searchAddressUrl)
         {
             object address = JsonSerializer.Serialize(addressItem);
             sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
-                .AddUrlForRoute(RouteNames.GetProviderLocationAddress, getProviderLocationAddressUrl);
+                .AddUrlForRoute(RouteNames.SearchAddress, searchAddressUrl);
             sut.TempData = tempDataMock.Object;
             tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out address));
             sut.ModelState.AddModelError("key", "message");
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             var actualModel = (ProviderLocationDetailsViewModel)result.Model;
             actualModel!.LocationName.Should().Be(model.LocationName);
             actualModel.CancelLink.Should().Be(getProviderLocationsUrl);
-            actualModel.BackLink.Should().Be(getProviderLocationAddressUrl);
+            actualModel.BackLink.Should().Be(searchAddressUrl);
             mediatorMock.Verify(m => m.Send(It.IsAny<CreateProviderLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
@@ -79,14 +79,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             ProviderLocationDetailsSubmitModel submitModel,
             AddressItem addressItem,
             string getProviderLocationsUrl,
-            string getProviderLocationAddressUrl)
+            string searchAddressUrl)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
             object address = JsonSerializer.Serialize(addressItem);
             sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
-                .AddUrlForRoute(RouteNames.GetProviderLocationAddress, getProviderLocationAddressUrl);
+                .AddUrlForRoute(RouteNames.SearchAddress, searchAddressUrl);
             sut.TempData = tempDataMock.Object;
             tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out address));
 
@@ -118,7 +118,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             ProviderLocationDetailsSubmitModel model,
             AddressItem addressItem,
             string getProviderLocationsUrl,
-            string getProviderLocationAddressUrl,
+            string searchAddressUrl,
             GetAllProviderLocationsQueryResult allLocations)
         {
             allLocations.ProviderLocations.First().LocationName = model.LocationName;
@@ -127,7 +127,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
-                .AddUrlForRoute(RouteNames.GetProviderLocationAddress, getProviderLocationAddressUrl);
+                .AddUrlForRoute(RouteNames.SearchAddress, searchAddressUrl);
             sut.TempData = tempDataMock.Object;
             tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out address));
 
