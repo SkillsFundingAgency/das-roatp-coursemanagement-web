@@ -11,7 +11,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string CourseDisplayName { get; set; }
         public int LarsCode { get; set; }
         public string StandardUrl { get; set; }
-        public string Version { get; set; }
         public string ApprovalBody { get; set; }
         public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
 
@@ -29,7 +28,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 IsImported = source.IsImported,
                 CourseDisplayName = source.CourseName + " (level " + source.Level + ")",
                 LarsCode = source.LarsCode,
-                Version = source.Version,
                 ApprovalBody = source.ApprovalBody,
                 IsApprovedByRegulator = source.IsApprovedByRegulator
             };
