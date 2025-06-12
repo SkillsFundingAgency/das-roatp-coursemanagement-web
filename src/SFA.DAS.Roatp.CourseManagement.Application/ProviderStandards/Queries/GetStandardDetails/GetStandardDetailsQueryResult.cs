@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public string Sector { get; set; }
         public int LarsCode { get; set; }
         public string RegulatorName { get; set; }
-        public string Version { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
@@ -25,11 +25,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public bool HasNationalLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.National);
         public bool HasRegionalLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Regional);
 
-        public LocationOption LocationOption 
+        public LocationOption LocationOption
         {
             get
             {
-                if (!ProviderCourseLocations.Any()) 
+                if (!ProviderCourseLocations.Any())
                     return LocationOption.None;
                 if (HasProviderLocation && !HasNationalLocation && !HasRegionalLocation)
                     return LocationOption.ProviderLocation;
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 RegulatorName = v.RegulatorName,
                 Sector = v.Sector,
                 StandardInfoUrl = v.StandardInfoUrl,
-                Version = v.Version,
+                ApprenticeshipType = v.ApprenticeshipType,
                 IsApprovedByRegulator = v.IsApprovedByRegulator
             };
         }

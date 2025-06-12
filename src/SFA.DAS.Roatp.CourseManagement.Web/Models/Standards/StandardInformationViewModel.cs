@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -10,17 +11,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string IfateReferenceNumber { get; set; }
         public string Sector { get; set; }
         public string RegulatorName { get; set; }
-        public string Version { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public string CourseDisplayName => $"{CourseName} (level {Level})";
         public bool IsStandardRegulated => !string.IsNullOrEmpty(RegulatorName);
         public bool IsRegulatedForProvider { get; set; }
 
         public static implicit operator StandardInformationViewModel(GetStandardInformationQueryResult source)
-            => new StandardInformationViewModel
+            => new()
             {
                 LarsCode = source.LarsCode,
                 IfateReferenceNumber = source.IfateReferenceNumber,
-                Version = source.Version,
+                ApprenticeshipType = source.ApprenticeshipType,
                 Sector = source.Sector,
                 CourseName = source.Title,
                 Level = source.Level,

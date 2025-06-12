@@ -22,11 +22,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public ProviderCourseLocationViewModel NationalCourseLocation { get; set; }
 
         public IEnumerable<IGrouping<string, ProviderCourseLocationViewModel>> Regions()
-           {
-           return  SubRegionCourseLocations
-                .GroupBy(x => x.RegionName)
-                .OrderBy(x=>x.Key);
-           }
+        {
+            return SubRegionCourseLocations
+                 .GroupBy(x => x.RegionName)
+                 .OrderBy(x => x.Key);
+        }
 
         public string LocationSummary => LocationSummaryCalculator.GetLocationSummary(NationalCourseLocation != null, ProviderCourseLocations.Any(), SubRegionCourseLocations.Any());
 
@@ -51,14 +51,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             return new StandardDetailsViewModel
             {
                 StandardInformation = new StandardInformationViewModel
-                { 
+                {
                     CourseName = standardDetails.CourseName,
                     Level = standardDetails.Level,
                     IfateReferenceNumber = standardDetails.IFateReferenceNumber,
                     LarsCode = standardDetails.LarsCode,
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,
-                    Version = standardDetails.Version,
+                    ApprenticeshipType = standardDetails.ApprenticeshipType
                 },
                 ContactInformation = new StandardContactInformationViewModel
                 {

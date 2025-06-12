@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
         private const int LarsCode = 123;
-        private const string Version = "1.1";
+        private const ApprenticeshipType ApprenticeshipType = Domain.ApiModels.ApprenticeshipType.Apprenticeship;
         private const string verifyUrl = "http://test";
         private const string verifyEditContactDetailsUrl = "http://test-verifyEditContactDetailsUrl";
         private const string verifyEditLocationOptionUrl = "http://test-verifyEditLocationOptionUrl";
@@ -47,14 +47,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 Sector = "Digital",
                 LarsCode = LarsCode,
                 RegulatorName = "",
-                Version = Version,
+                ApprenticeshipType = ApprenticeshipType,
                 StandardInfoUrl = "www.test.com",
                 ContactUsEmail = "test@test.com",
                 ContactUsPageUrl = "www.test.com/ContactUs",
                 ContactUsPhoneNumber = "123456789",
-                ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> {new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName="Region1"} }
+                ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } }
             };
-            
+
             _mediator = new Mock<IMediator>();
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
@@ -77,8 +77,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as StandardDetailsViewModel;
             model.Should().NotBeNull();
-            model.StandardInformation.LarsCode.Should().Be(LarsCode);
-            model.StandardInformation.Version.Should().Be(Version);
+            model!.StandardInformation.LarsCode.Should().Be(LarsCode);
+            model.StandardInformation.ApprenticeshipType.Should().Be(ApprenticeshipType);
             model.BackUrl.Should().Be(verifyUrl);
             _logger.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Never);
         }
@@ -175,7 +175,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetStandardSubRegions, verifyeditProviderCourseRegionsUrl);
 
-               var result = await _controller.ViewStandard(LarsCode);
+            var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;

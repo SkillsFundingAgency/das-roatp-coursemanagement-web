@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
                 opt.Including(s => s.RegulatorName);
                 opt.Including(s => s.Sector);
                 opt.Including(s => s.StandardInfoUrl);
-                opt.Including(s => s.Version);
+                opt.Including(s => s.ApprenticeshipType);
                 opt.Including(s => s.IsApprovedByRegulator);
                 return opt;
             });
