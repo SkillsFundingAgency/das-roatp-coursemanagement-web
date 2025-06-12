@@ -9,9 +9,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public int Level { get; set; }
         public bool IsImported { get; set; }
         public string CourseDisplayName { get; set; }
-        public string Version { get; set; }
         public int LarsCode { get; set; }
         public string StandardUrl { get; set; }
+        public string Version { get; set; }
         public string ApprovalBody { get; set; }
         public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
 
