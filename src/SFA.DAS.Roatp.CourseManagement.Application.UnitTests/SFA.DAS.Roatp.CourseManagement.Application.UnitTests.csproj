@@ -23,7 +23,11 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.9.0" />
     <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.169" />
   </ItemGroup>
-
+  <!-- Transitive -->
+  <ItemGroup>
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+  </ItemGroup>
+  <!--// Transitive-->
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Application\SFA.DAS.Roatp.CourseManagement.Application.csproj" />
   </ItemGroup>

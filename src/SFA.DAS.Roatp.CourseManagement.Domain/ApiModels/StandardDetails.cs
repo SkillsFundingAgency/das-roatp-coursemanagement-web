@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public string Sector { get; set; }
         public int LarsCode { get; set; }
         public string RegulatorName { get; set; }
-        public string Version { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }

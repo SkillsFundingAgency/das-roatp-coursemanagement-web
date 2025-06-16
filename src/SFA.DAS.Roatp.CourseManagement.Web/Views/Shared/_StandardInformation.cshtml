@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using SFA.DAS.DfESignIn.Auth.Extensions
 @model StandardInformationViewModel
 
 <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
@@ -14,10 +15,10 @@
         </tr>
         <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="row">
-                Version
+                Type
             </th>
             <td class="govuk-table__cell">
-                @Model.Version
+                @Model.ApprenticeshipType.GetDescription()
             </td>
         </tr>
         <tr class="govuk-table__row">

@@ -206,7 +206,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var model = viewResult.Model as StandardListViewModel;
             model.Should().NotBeNull();
             model!.Standards.Should().NotBeEmpty();
-            model.Standards.Should().BeEquivalentTo(expectedStandards);
+            model.Standards.Should().BeEquivalentTo(expectedStandards, options => options.Excluding(c => c.Version));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string iFateReferenceNumber = "STD_1";
             const string sector = "digital";
             const int larsCode = 133;
-            const string version = "3";
+            const ApprenticeshipType ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             var expectedCourseDisplayName = $"{courseName} (level {level})";
             const string standardInfoUrl = "http://test.com";
             const string contactUsPhoneNumber = "12345";
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 Level = level,
                 IFateReferenceNumber = iFateReferenceNumber,
                 Sector = sector,
-                Version = version,
+                ApprenticeshipType = ApprenticeshipType,
                 RegulatorName = regulatorName,
                 StandardInfoUrl = standardInfoUrl,
                 ContactUsEmail = contactUsEmail,
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.StandardInformation.IfateReferenceNumber.Should().Be(iFateReferenceNumber);
             viewModel.StandardInformation.Sector.Should().Be(sector);
             viewModel.StandardInformation.LarsCode.Should().Be(larsCode);
-            viewModel.StandardInformation.Version.Should().Be(version);
+            viewModel.StandardInformation.ApprenticeshipType.Should().Be(ApprenticeshipType);
             viewModel.StandardInformation.RegulatorName.Should().Be(regulatorName);
             viewModel.StandardInformation.IsStandardRegulated.Should().Be(isRegulated);
             viewModel.StandardInformation.CourseDisplayName.Should().Be(expectedCourseDisplayName);
