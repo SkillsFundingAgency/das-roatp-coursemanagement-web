@@ -1,7 +1,7 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation
 @model ProviderLocationDetailsViewModel
 @{
-    ViewBag.Title = "Select an address";
+    ViewBag.Title = "Add venue name";
     ViewBag.Description = "";
 }
 @section breadcrumb {
@@ -30,10 +30,10 @@
                     Address
                 </h2>
                 <p class="govuk-body">
-                    <span>@Model.AddressLine1</span><br>
-                    <span>@Model.AddressLine2</span><br>
-                    <span>@Model.Town</span><br>
-                    <span>@Model.Postcode</span>
+                    @foreach (var addressLine in Model.AddressDetails)
+                    {
+                        <span>@addressLine</span><br/>
+                    }
                 </p>
 
                 <div class="govuk-button-group">

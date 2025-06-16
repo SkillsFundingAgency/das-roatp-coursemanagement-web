@@ -76,10 +76,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
                 UserDisplayName = base.UserDisplayName,
                 LocationName = submitModel.LocationName,
                 AddressLine1 = addressItem.AddressLine1,
-                AddressLine2 = addressItem.AddressLine2,
-                Town = addressItem.Town,
+                AddressLine2 = addressItem.AddressLine2 ?? string.Empty,
+                Town = addressItem.Town ?? string.Empty,
                 Postcode = addressItem.Postcode,
-                County = addressItem.County,
+                County = addressItem.County ?? string.Empty,
                 Latitude = addressItem.Latitude,
                 Longitude = addressItem.Longitude
             };
@@ -90,7 +90,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         {
             var model = new ProviderLocationDetailsViewModel(addressItem);
             model.CancelLink = GetUrlWithUkprn(RouteNames.GetProviderLocations);
-            model.BackLink = GetUrlWithUkprn(RouteNames.GetProviderLocationAddress);
+            model.BackLink = GetUrlWithUkprn(RouteNames.SearchAddress);
             return model;
         }
 

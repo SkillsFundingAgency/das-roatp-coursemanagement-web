@@ -2,11 +2,9 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
@@ -21,16 +19,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
     {
         [Test, MoqAutoData]
         public void GetLocationDetails_AddressInTempData_ReturnsViewResult(
-            Mock<ITempDataDictionary> tempDataMock, 
+            Mock<ITempDataDictionary> tempDataMock,
             [Greedy] AddProviderLocationDetailsController sut,
             AddressItem addressItem,
             string getProviderLocationsUrl,
-            string getProviderLocationAddressUrl)
+            string searchAddressUrl)
         {
             sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
-                .AddUrlForRoute(RouteNames.GetProviderLocationAddress, getProviderLocationAddressUrl);
+                .AddUrlForRoute(RouteNames.SearchAddress, searchAddressUrl);
             sut.TempData = tempDataMock.Object;
             object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
             tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out serialisedAddressItem));
@@ -42,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             var model = result.Model as ProviderLocationDetailsViewModel;
             model.AddressLine1.Should().Be(addressItem.AddressLine1);
             model.CancelLink.Should().Be(getProviderLocationsUrl);
-            model.BackLink.Should().Be(getProviderLocationAddressUrl);
+            model.BackLink.Should().Be(searchAddressUrl);
         }
 
         [Test, MoqAutoData]
