@@ -1,4 +1,8 @@
-﻿using MediatR;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,15 +13,11 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ProviderCourseLocationsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProviderCourseLocations([FromRoute] int larsCode)
         {
-            _logger.LogInformation("Getting Provider Course Locations for ukprn {ukprn} ", Ukprn);
+            _logger.LogInformation("Getting Provider Course Locations for ukprn {Ukprn} ", Ukprn);
 
             ProviderCourseLocationListViewModel model = await BuildViewModel(larsCode);
 
@@ -88,7 +88,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.PostProviderCourseLocations)]
         [HttpPost]
-        public async Task <IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
+        public async Task<IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
         {
             model = await BuildViewModel(model.LarsCode);
             var validator = new ProviderCourseLocationListViewModelValidator();
