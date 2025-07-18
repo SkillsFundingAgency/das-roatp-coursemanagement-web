@@ -1,0 +1,24 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
+
+public class ProviderLocationNotDeletedViewModel
+{
+    public string LocationName { get; set; }
+    public List<LocationStandardModel> StandardsWithoutOtherVenues { get; set; }
+
+    public static implicit operator ProviderLocationNotDeletedViewModel(ProviderLocation source)
+    {
+        var standards = source.Standards is { Count: > 0 }
+            ? source.Standards.Select(s => s).Where(s => !s.HasOtherVenues).OrderBy(s => s.Title).ThenBy(s => s.Level).ToList()
+            : [];
+
+        return new ProviderLocationNotDeletedViewModel
+        {
+            LocationName = source.LocationName,
+            StandardsWithoutOtherVenues = standards
+        };
+    }
+}

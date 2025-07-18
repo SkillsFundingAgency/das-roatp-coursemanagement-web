@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderLocationDetailsControllerTests
 {
@@ -49,15 +49,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ViewProviderLocationsDetails.cshtml");
+            viewResult!.ViewName.Should().Contain("ViewProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().Be(verifyUrl);
+            model!.BackUrl.Should().BeNull();
             model.UpdateContactDetailsUrl.Should().Be(verifyUpdateProviderLocationDetailsUrl);
         }
 
-          [Test, AutoData]
-        public async Task GetProviderLocationDetails_InvalidRequest_ReturnsEmptyResponse(Guid id)
+        [Test, AutoData]
+        public async Task GetProviderLocationDetails_InvalidRequest_ReturnsPageNotFound(Guid id)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderLocationDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -67,10 +67,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ViewProviderLocationsDetails.cshtml");
-            var model = viewResult.Model as ProviderLocationViewModel;
-            model.Should().NotBeNull();
-            model.BackUrl.Should().NotBeNull();
+            viewResult!.ViewName.Should().Contain("PageNotFound");
         }
     }
 }
