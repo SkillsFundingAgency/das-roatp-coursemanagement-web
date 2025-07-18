@@ -12,29 +12,76 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Training venue</div>
-        <h1 class="govuk-heading-xl">@Model.LocationName</h1>
-            <h2 class="govuk-heading-m">
-                Address
-            </h2>
-            <p class="govuk-body">
-                <span>@Model.AddressLine1</span><br>
-                <span>@Model.AddressLine2</span><br>
-                <span>@Model.Town</span><br>
-                <span>@Model.Postcode</span>
-            </p>
+        <h1 class="govuk-heading-xl">Venue details and standards</h1>
 
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
-        <p class="govuk-body">
-            <a href="@Model.UpdateContactDetailsUrl" class="govuk-link">
-                Change venue name
-            </a>
-        </p>
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-        <p class="govuk-body">
-            <a href="@Model.BackUrl" class="govuk-link">
-                Back to training venues
-            </a>
-        </p>
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Venue name</th>
+                <td class="govuk-table__cell">@Model.LocationName</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right">
+                        <a href="@Model.UpdateContactDetailsUrl" class="govuk-link">
+                        Change venue name
+                    </a>
+
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th scope="row" class="govuk-table__header">Address</th>
+                <td class="govuk-table__cell">
+                    <p class="govuk-body">
+                        @foreach (var addressLine in Model.AddressDetails)
+                        {
+                            <span>@addressLine</span><br/>
+                        }
+                    </p>
+                </td>
+                <td class="govuk-table__cell">&nbsp;</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Manage your standards at this venue</h2>
+        @if (Model.Standards.Count == 0)
+        {
+            <p class="govuk-body">
+                You do not deliver any standards at this venue. Go to <a href="www.google.com">Manage your standards</a> to add this venue to a new or existing standard.
+            </p>
+        }
+        else
+        {
+            <p class="govuk-body">
+                You can select the standard name to change your training or venue options, edit its contact details, or delete it from your standards.
+            </p>
+
+            @foreach (var standard in Model.Standards)
+            {
+                <p class="govuk-body">
+                        <a class="govuk-link" href="@standard.StandardUrl">
+                            @standard.CourseDisplayName
+                        </a>
+                </p>
+            }
+
+        }
+    </div>
+</div>
+<div class="govuk-grid-row govuk-!-margin-top-6">
+    
+    <div class="govuk-button-group">
+        <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
+            Delete this venue
+        </button>
+        <a href="@Model.BackUrl" class="govuk-link">
+            Back to training venues
+        </a>
+    </div>
+</div>
+
+
+
+        

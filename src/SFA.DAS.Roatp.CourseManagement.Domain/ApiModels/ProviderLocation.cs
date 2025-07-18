@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
@@ -13,5 +14,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public string County { get; set; }
         public string Postcode { get; set; }
         public LocationType LocationType { get; set; }
+        public List<LocationStandardModel> Standards { get; set; }
     }
 }

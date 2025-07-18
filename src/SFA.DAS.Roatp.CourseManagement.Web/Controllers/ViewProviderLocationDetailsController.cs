@@ -1,17 +1,17 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ViewProviderLocationDetailsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProviderLocationDetails([FromRoute] Guid Id)
         {
-            _logger.LogInformation("Getting Provider Location for {ukprn}, {Id}", Ukprn, Id);
+            _logger.LogInformation("Getting Provider Location for {Ukprn}, {Id}", Ukprn, Id);
 
             var result = await _mediator.Send(new GetProviderLocationDetailsQuery(Ukprn, Id));
 
@@ -37,13 +37,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             if (result == null || result.ProviderLocation == null)
             {
-                _logger.LogInformation("Provider Location Details not found for {ukprn} and {id}", Ukprn, Id);
+                _logger.LogInformation("Provider Location Details not found for {Ukprn} and {Id}", Ukprn, Id);
                 return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
             }
 
             model = (ProviderLocationViewModel)result.ProviderLocation;
             model.BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
             model.UpdateContactDetailsUrl = Url.RouteUrl(RouteNames.GetUpdateProviderLocationDetails, new { ukprn = Ukprn, Id });
+
+            foreach (var standard in model.Standards)
+            {
+                standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails,
+                    new { Ukprn, larsCode = standard.LarsCode });
+            }
+
             return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
         }
     }
