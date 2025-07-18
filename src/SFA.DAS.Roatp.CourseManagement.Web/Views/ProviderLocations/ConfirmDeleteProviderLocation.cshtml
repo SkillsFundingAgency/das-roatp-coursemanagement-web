@@ -1,0 +1,67 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.DfESignIn.Auth.Extensions
+@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations.ProviderLocationConfirmDeleteViewModel
+
+@{
+    ViewBag.Title = "Confirm deletion";
+}
+
+@section breadcrumb {
+    <a class="das-js-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-xl">Training venue</span>
+        <h1 class="govuk-heading-xl">Are you sure you want to delete this venue?</h1>
+        
+        <p class="govuk-body" asp-show="@Model.HasNoStandards">
+            No standards are delivered at this venue. If you delete this venue, you’ll not be able to add it as a training option to any of your standards.
+        </p>
+        
+        <p class="govuk-body" asp-show="@Model.HasOneStandard">
+            You deliver <strong>@Model.Standards.FirstOrDefault()!.CourseDisplayName</strong> at this venue. This venue will no longer show as one of the training options for this standard. The standard will not be deleted and its other training options will not be affected.
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    If you delete this venue, your standards linked to this venue will no longer show as being delivered here on Find apprenticeship training.
+                </strong>
+            </div>
+        </p>
+        
+        <p class="govuk-body" asp-show="@Model.HasTwoOrMoreStandards">You deliver these standards at this venue:
+            <ul class="govuk-list govuk-list--bullet">
+                @foreach (var standard in Model.Standards)
+                {
+                    <li>
+                        <strong>@standard.CourseDisplayName</strong>
+                    </li>
+                }
+            </ul>
+        
+            <p class="govuk-body">This venue will no longer show as one of the training options for these standards. The standards will not be deleted and their other training options will not be affected.</p>
+            <div class="govuk-warning-text">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    If you delete this venue, your standards linked to this venue will no longer show as being delivered here on Find apprenticeship training.
+                </strong>
+            </div>
+        </p>
+
+        <form method="post" asp-route="@RouteNames.GetConfirmDeleteLocation" enctype="multipart/form-data" novalidate>
+            <div class="govuk-button-group">
+                <button id="DeleteLocation" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
+                    Delete this venue
+                </button>
+        
+                <a href="@Model.TrainingVenuesUrl" class="govuk-link">
+                    Back to training venues
+                </a>
+        
+            </div>
+        </form>
+    </div>
+</div>

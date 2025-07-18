@@ -18,7 +18,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string Postcode { get; set; }
         public string UpdateContactDetailsUrl { get; set; }
         public string BackUrl { get; set; }
+        public string DeleteLocationUrl { get; set; }
         public string CancelUrl { get; set; }
+        public string ManageYourStandardsUrl { get; set; }
+
         public List<ProviderLocationStandardModel> Standards { get; set; }
 
         public List<string> AddressDetails
@@ -38,7 +41,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public static implicit operator ProviderLocationViewModel(ProviderLocation source)
         {
             var standards = source.Standards is { Count: > 0 }
-                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).ToList()
+                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).OrderBy(s => s.CourseDisplayName).ToList()
                 : [];
 
             return new ProviderLocationViewModel

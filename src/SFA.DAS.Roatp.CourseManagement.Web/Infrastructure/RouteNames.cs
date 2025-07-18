@@ -65,5 +65,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostConfirmDeleteStandard = "PostConfirmDeleteStandard";
 
         public const string ProviderNotRegistered = "provider-not-registered";
+
+        public const string GetConfirmDeleteLocation = "GetConfirmDeleteLocation";
+
+        public const string ConfirmDeleteLocationDone = "ConfirmDeleteLocationDone";
+        public const string DeleteLocationDenied = "DeleteLocationDenied";
+
+        public const string ErrorRedirect = "ErrorRedirect";
     }
 }

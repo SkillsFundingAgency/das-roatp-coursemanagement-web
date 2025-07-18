@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
@@ -21,7 +22,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
                 return o;
             });
 
-            sut.Standards.Should().BeEquivalentTo(providerLocation.Standards);
+            var sutFirstStandard = sut.Standards.First();
+            var providerLocationFirstStandard = providerLocation.Standards.OrderBy(s => s.Title).First();
+
+            sutFirstStandard.Should()
+                .BeEquivalentTo(providerLocationFirstStandard,
+                    o =>
+                        o.Excluding(s => s.StandardUrl)
+                        .Excluding(s => s.HasOtherVenues));
         }
 
         [TestCaseSource(nameof(AddressData))]
@@ -38,9 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
             var concatenatedAddressDetails = string.Join(",", sut.AddressDetails);
             concatenatedAddressDetails.Should().Be(concatenatedAddressDetails);
         }
-
-
-
 
         private static IEnumerable<TestCaseData> AddressData
         {

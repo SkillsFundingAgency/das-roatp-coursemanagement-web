@@ -1,0 +1,47 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using Microsoft.AspNetCore.Mvc.TagHelpers
+@using SFA.DAS.DfESignIn.Auth.Extensions
+@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations.ProviderLocationNotDeletedViewModel
+
+@{
+    ViewBag.Title = "This venue cannot be deleted";
+}
+
+@section breadcrumb {
+    <a class="das-js-back-link">Back</a>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-xl">Training venue</span>
+        <h1 class="govuk-heading-xl">This venue cannot be deleted</h1>
+        
+        <p class="govuk-body">
+            This venue has not been deleted. This is because the standards linked below are delivered only at @Model.LocationName. 
+        </p>
+        <h2 class="govuk-heading-m">What do to next</h2>
+
+        <p class="govuk-body">
+            To delete the venue you can do any of these:
+            <ul class="govuk-list govuk-list--bullet">
+                <li> delete the standards linked below</li>
+                <li>change them to be delivered at another venue</li>
+                <li>change them to be delivered at an employer's location</li>
+            </ul>
+        </p>
+        <p class="govuk-body">
+            The standards that need to be changed or deleted:
+        </p>
+        @foreach (var standard in Model.StandardsWithoutOtherVenues)
+        {
+            <p class="govuk-body">
+                <a class="govuk-link" href="@standard.StandardUrl">
+                    @standard.CourseDisplayName
+                </a>
+            </p>
+        }
+        <p class="govuk-body">
+            You can then return to your list of venues and delete this venue.
+        </p>
+    </div>
+</div>
