@@ -1,4 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -13,11 +18,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using static System.String;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
@@ -45,6 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 Level = 1,
                 IsImported = true,
                 ApprovalBody = "TestBody1",
+                IsRegulatedForProvider = true
             };
             var standard2 = new Standard
             {
@@ -52,7 +53,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 CourseName = "test2",
                 Level = 2,
                 IsImported = false,
-                ApprovalBody = null
+                ApprovalBody = null,
+                IsRegulatedForProvider = false
             };
 
             _mediator = new Mock<IMediator>();
@@ -103,7 +105,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Standards.Should().NotBeNull();
             model.BackLink.Should().Be(ReviewYourDetailsLink);
             model.Standards.First().StandardUrl.Should().Be(GetStandardDetailsLink);
-            model.Standards.First().IsRegulatedStandard.Should().BeTrue();
+            model.Standards.First().IsRegulatedForProvider.Should().BeTrue();
             model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(GetConfirmRegulatedStandardLink);
             model.Standards.Last().ConfirmRegulatedStandardUrl.Should().Be(Empty);
             model.ShowNotificationBannerDeleteStandard.Should().Be((bool)isStandardDeleted);
