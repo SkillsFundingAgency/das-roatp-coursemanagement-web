@@ -147,7 +147,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 CourseName = "a1",
                 Level = 1,
                 IsImported = true,
-                ApprovalBody = "TestBody1",
+                ApprovalBody = "TestBody1"
             };
             var standard2 = new Standard
             {
@@ -208,7 +208,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var model = viewResult.Model as StandardListViewModel;
             model.Should().NotBeNull();
             model!.Standards.Should().NotBeEmpty();
-            model.Standards.Should().BeEquivalentTo(expectedStandards, options => options.Excluding(c => c.Version));
+            model.Standards.Should().BeEquivalentTo(expectedStandards,
+                options => options.Excluding(c => c.Version).Excluding(c => c.HasLocations));
         }
     }
 }

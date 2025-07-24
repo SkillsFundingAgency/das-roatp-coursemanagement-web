@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string StandardUrl { get; set; }
         public string ApprovalBody { get; set; }
         public bool IsRegulatedForProvider { get; set; }
-
+        public bool HasLocation { get; set; }
         public bool IsApprovalPending => IsRegulatedForProvider && !IsApprovedByRegulator.HasValue;
         public bool? IsApprovedByRegulator { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
@@ -31,7 +31,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 LarsCode = source.LarsCode,
                 ApprovalBody = source.ApprovalBody,
                 IsApprovedByRegulator = source.IsApprovedByRegulator,
-                IsRegulatedForProvider = source.IsRegulatedForProvider
+                IsRegulatedForProvider = source.IsRegulatedForProvider,
+                HasLocation = source.HasLocations
             };
         }
 
@@ -39,7 +40,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         {
             if (IsApprovedByRegulator == null)
                 return false;
-            return IsRegulatedForProvider && (bool)!IsApprovedByRegulator;
+            if (!HasLocation)
+                return true;
+            if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
+                return true;
+            return false;
         }
     }
 }
