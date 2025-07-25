@@ -38,10 +38,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         private bool SetMissingInfo()
         {
-            if (IsApprovedByRegulator == null)
-                return false;
             if (!HasLocation)
                 return true;
+            if (IsApprovedByRegulator == null)
+                return false;
             if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
                 return true;
             return false;
