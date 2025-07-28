@@ -12,11 +12,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public int LarsCode { get; set; }
         public string StandardUrl { get; set; }
         public string ApprovalBody { get; set; }
-        public bool IsRegulatedStandard => !string.IsNullOrEmpty(ApprovalBody);
-
-        public bool IsApprovalPending => IsRegulatedStandard && !IsApprovedByRegulator.HasValue;
+        public bool IsRegulatedForProvider { get; set; }
+        public bool HasLocation { get; set; }
+        public bool IsApprovalPending => IsRegulatedForProvider && !IsApprovedByRegulator.HasValue;
         public bool? IsApprovedByRegulator { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
+        public bool StandardRequiresMoreInfo => SetMissingInfo();
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -29,8 +30,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 CourseDisplayName = source.CourseName + " (level " + source.Level + ")",
                 LarsCode = source.LarsCode,
                 ApprovalBody = source.ApprovalBody,
-                IsApprovedByRegulator = source.IsApprovedByRegulator
+                IsApprovedByRegulator = source.IsApprovedByRegulator,
+                IsRegulatedForProvider = source.IsRegulatedForProvider,
+                HasLocation = source.HasLocations
             };
+        }
+
+        private bool SetMissingInfo()
+        {
+            if (!HasLocation)
+                return true;
+            if (IsApprovedByRegulator == null)
+                return false;
+            if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
+                return true;
+            return false;
         }
     }
 }

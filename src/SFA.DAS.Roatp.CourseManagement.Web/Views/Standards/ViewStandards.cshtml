@@ -37,6 +37,14 @@
             {
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
+                        @if (standard.StandardRequiresMoreInfo)
+                        {
+                                <div class="govuk-!-margin-top-1 govuk-!-margin-bottom-2">
+                            <strong class="govuk-tag govuk-tag--orange">
+                                More details needed
+                            </strong>
+                            </div>
+                        }
                         <a class="govuk-link" href="@standard.StandardUrl">
                             @standard.CourseDisplayName
                         </a>

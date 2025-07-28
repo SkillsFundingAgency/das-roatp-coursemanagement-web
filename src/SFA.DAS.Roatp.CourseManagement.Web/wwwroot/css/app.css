@@ -45,3 +45,8 @@
     margin-bottom: 0;
     font-size: 100%;
 }
+
+/* Overwrite .govuk-tag max-width property to allow longer tags */
+.govuk-tag {
+    max-width: fit-content;
+}
