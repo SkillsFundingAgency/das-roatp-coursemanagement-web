@@ -38,6 +38,9 @@ public class ProviderLocationDeleteController : ControllerBase
     {
         _logger.LogInformation("Getting Location information for ukprn {Ukprn} id {Id}", ukprn, id);
 
+        var isUkprnAndIdValid = IsUkrpnAndIValid(ukprn, id);
+        if (!isUkprnAndIdValid) return View(ViewsPath.PageNotFoundPath);
+
         var result = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
 
         if (result == null)
@@ -46,9 +49,9 @@ public class ProviderLocationDeleteController : ControllerBase
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var isStandardWithoutOtherLocations = result.ProviderLocation.Standards.Any(standard => !standard.HasOtherVenues);
+        var hasStandardWithoutOtherLocations = result.ProviderLocation.Standards.Any(standard => !standard.HasOtherVenues);
 
-        if (isStandardWithoutOtherLocations)
+        if (hasStandardWithoutOtherLocations)
         {
             TempData.Add(TempDataKeys.ProviderLocationTempDataKey, JsonSerializer.Serialize(result));
             _logger.LogInformation("provider location for ukprn {Ukprn} id {Id} has one or more standards without other location", ukprn, id);
@@ -114,5 +117,18 @@ public class ProviderLocationDeleteController : ControllerBase
         }
 
         return View(LocationNotDeletedViewPath, model);
+    }
+
+
+
+    private bool IsUkrpnAndIValid(int ukprn, Guid id)
+    {
+        if (ukprn < 10000000 || ukprn > 99999999 || id == Guid.Empty)
+        {
+            _logger.LogInformation("ukprn {Ukprn} or id {Id} is not a valid value", ukprn, id);
+            return false;
+        }
+
+        return true;
     }
 }

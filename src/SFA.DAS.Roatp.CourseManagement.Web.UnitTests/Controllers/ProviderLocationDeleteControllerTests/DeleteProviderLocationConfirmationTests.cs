@@ -30,10 +30,10 @@ public class DeleteProviderLocationConfirmationTests
     public async Task Get_ValidRequest_NoOrphanedStandards_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
-        GetProviderLocationDetailsQueryResult queryResult,
-        int ukprn,
-        Guid id)
+        GetProviderLocationDetailsQueryResult queryResult)
     {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
         sut.AddDefaultContextWithUser().AddUrlHelperMock();
 
         foreach (var standard in queryResult.ProviderLocation.Standards)
@@ -74,10 +74,11 @@ public class DeleteProviderLocationConfirmationTests
         bool hasMultipleStandards,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
-        GetProviderLocationDetailsQueryResult queryResult,
-        int ukprn,
-        Guid id)
+        GetProviderLocationDetailsQueryResult queryResult)
     {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
+
         sut.AddDefaultContextWithUser();
 
         var generatedStandards = new List<LocationStandardModel>();
@@ -109,10 +110,10 @@ public class DeleteProviderLocationConfirmationTests
     [Test, MoqAutoData]
     public async Task Get_NoMatch_RedirectsToPageNotFound(
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ProviderLocationDeleteController sut,
-        int ukprn,
-        Guid id)
+        [Greedy] ProviderLocationDeleteController sut)
     {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
         mediatorMock
            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
            .ReturnsAsync((GetProviderLocationDetailsQueryResult)null);
@@ -125,16 +126,15 @@ public class DeleteProviderLocationConfirmationTests
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 
-
     [Test, MoqAutoData]
     public async Task Get_OrphanedStandard_RedirectsToDeleteDenied(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
         GetProviderLocationDetailsQueryResult queryResult,
-        Mock<ITempDataDictionary> tempDataMock,
-        int ukprn,
-        Guid id)
+        Mock<ITempDataDictionary> tempDataMock)
     {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
         foreach (var standard in queryResult.ProviderLocation.Standards)
         {
             standard.HasOtherVenues = false;
@@ -156,6 +156,54 @@ public class DeleteProviderLocationConfirmationTests
         viewResult.Should().NotBeNull();
         viewResult.RouteName.Should().Be("DeleteLocationDenied");
         tempDataMock.Verify(t => t.Add(TempDataKeys.ProviderLocationTempDataKey, expectedValueInTempData));
+    }
+
+    [Test, MoqAutoData]
+    public async Task Get_UnsuitableUkprn_PageNotFound(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ProviderLocationDeleteController sut,
+        GetProviderLocationDetailsQueryResult queryResult,
+        Mock<ITempDataDictionary> tempDataMock)
+    {
+        var ukprn = 1234567;
+        var id = Guid.NewGuid();
+
+        mediatorMock
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+
+        sut.TempData = tempDataMock.Object;
+
+        var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
+
+        result.Should().NotBeNull();
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Get_UnsuitableGuid_PageNotFound(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ProviderLocationDeleteController sut,
+        GetProviderLocationDetailsQueryResult queryResult,
+        Mock<ITempDataDictionary> tempDataMock)
+    {
+        var ukprn = 12345678;
+        var id = Guid.Empty;
+
+        mediatorMock
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+
+        sut.TempData = tempDataMock.Object;
+
+        var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
+
+        result.Should().NotBeNull();
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 }
 
