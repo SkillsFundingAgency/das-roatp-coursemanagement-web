@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetailsForDeletion;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -44,23 +43,23 @@ public class DeleteProviderLocationConfirmationTests
 
         var source = queryResult.ProviderLocation;
 
-        var expectedStandards = source.Standards is { Count: > 0 }
-            ? source.Standards.Select(s => (ProviderLocationStandardModel)s).OrderBy(s => s.CourseDisplayName).ToList()
-            : [];
+        var expectedStandards = source.Standards.Select(s => (ProviderLocationStandardModel)s)
+            .OrderBy(s => s.CourseDisplayName).ToList();
 
         mediatorMock
-            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsForDeletionQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(queryResult);
 
         var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
 
-        mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderLocationDetailsForDeletionQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+        mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderLocationDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
         model.Should().NotBeNull();
         model.NavigationId.Should().Be(queryResult.ProviderLocation.NavigationId);
         model.Standards.Should().BeEquivalentTo(expectedStandards);
+        model.BackLink.Should().BeNull();
     }
 
     [Test]
@@ -92,12 +91,12 @@ public class DeleteProviderLocationConfirmationTests
         var source = queryResult.ProviderLocation;
 
         mediatorMock
-            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsForDeletionQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
             .ReturnsAsync(queryResult);
 
         var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
 
-        mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderLocationDetailsForDeletionQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+        mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderLocationDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var model = viewResult.Model as ProviderLocationConfirmDeleteViewModel;
@@ -115,7 +114,7 @@ public class DeleteProviderLocationConfirmationTests
         Guid id)
     {
         mediatorMock
-           .Setup(m => m.Send(It.Is<GetProviderLocationDetailsForDeletionQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+           .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
            .ReturnsAsync((GetProviderLocationDetailsQueryResult)null);
 
         var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
@@ -123,7 +122,7 @@ public class DeleteProviderLocationConfirmationTests
         result.Should().NotBeNull();
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
-        viewResult!.ViewName.Should().Contain("PageNotFound");
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 
 
@@ -145,7 +144,7 @@ public class DeleteProviderLocationConfirmationTests
         var expectedValueInTempData = JsonSerializer.Serialize(queryResult);
 
         mediatorMock
-           .Setup(m => m.Send(It.Is<GetProviderLocationDetailsForDeletionQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+           .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
 
         sut.TempData = tempDataMock.Object;
@@ -156,8 +155,7 @@ public class DeleteProviderLocationConfirmationTests
         var viewResult = result as RedirectToRouteResult;
         viewResult.Should().NotBeNull();
         viewResult.RouteName.Should().Be("DeleteLocationDenied");
-        tempDataMock.Verify(t => t.Remove(TempDataKeys.ProviderLocationTempDateKey));
-        tempDataMock.Verify(t => t.Add(TempDataKeys.ProviderLocationTempDateKey, expectedValueInTempData));
+        tempDataMock.Verify(t => t.Add(TempDataKeys.ProviderLocationTempDataKey, expectedValueInTempData));
     }
 }
 

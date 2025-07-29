@@ -6,8 +6,6 @@ public class LocationStandardModel
     public int Level { get; set; }
     public int LarsCode { get; set; }
     public string StandardUrl { get; set; }
-
-    public string CourseDisplayName => $"{Title} (level {Level})";
-
+    public string CourseDisplayName { get; set; }
     public bool HasOtherVenues { get; set; }
 }

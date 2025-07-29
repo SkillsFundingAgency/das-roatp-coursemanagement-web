@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.DeleteProviderLocation;
 
-public class DeleteProviderLocationCommandHandler : IRequestHandler<DeleteProviderLocationCommand, Unit>
+public class DeleteProviderLocationCommandHandler : IRequestHandler<DeleteProviderLocationCommand>
 {
     private readonly ILogger<DeleteProviderLocationCommandHandler> _logger;
     private readonly IApiClient _apiClient;
@@ -19,7 +19,7 @@ public class DeleteProviderLocationCommandHandler : IRequestHandler<DeleteProvid
         _apiClient = apiClient;
     }
 
-    public async Task<Unit> Handle(DeleteProviderLocationCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteProviderLocationCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Command triggered to delete course locations for ukprn:{Ukprn} id:{Id} from user:{UserId}", request.Ukprn, request.Id, request.UserId);
 
@@ -31,7 +31,5 @@ public class DeleteProviderLocationCommandHandler : IRequestHandler<DeleteProvid
             var exception = new InvalidOperationException("Delete provider location response did not come back with success code");
             throw exception;
         }
-
-        return Unit.Value;
     }
 }

@@ -41,7 +41,7 @@ public class ProviderLocationNotDeletedTests
         }
 
         object expectedQueryResult = JsonSerializer.Serialize(queryResult);
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationTempDateKey, out expectedQueryResult));
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationTempDataKey, out expectedQueryResult));
 
         var result = sut.ProviderLocationNotDeleted(ukprn, id);
 
@@ -66,12 +66,12 @@ public class ProviderLocationNotDeletedTests
         sut.AddDefaultContextWithUser().AddUrlHelperMock();
 
         object expectedQueryResult = null;
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationTempDateKey, out expectedQueryResult));
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationTempDataKey, out expectedQueryResult));
 
         var result = sut.ProviderLocationNotDeleted(ukprn, id);
 
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
-        viewResult!.ViewName.Should().Contain("PageNotFound");
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 }

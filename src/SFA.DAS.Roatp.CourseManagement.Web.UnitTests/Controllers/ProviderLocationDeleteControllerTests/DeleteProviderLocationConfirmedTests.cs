@@ -21,17 +21,16 @@ public class DeleteProviderLocationConfirmedTests
     [Test, MoqAutoData]
     public void DeleteProviderLocationConfirmed_TempKeyPresent_ReturnsView(
         [Greedy] ProviderLocationDeleteController sut,
-        int ukprn,
-        Guid id)
+        int ukprn)
     {
         sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetProviderLocations, GetProviderLocationsUrl);
 
         var tempDataMock = new Mock<ITempDataDictionary>();
         sut.TempData = tempDataMock.Object;
         object isLocationDeleted = true;
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationDeletedBannerTempDateKey, out isLocationDeleted));
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationDeletedBannerTempDataKey, out isLocationDeleted));
 
-        var result = sut.DeleteProviderLocationConfirmed(ukprn, id);
+        var result = sut.DeleteProviderLocationConfirmed(ukprn);
 
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
@@ -43,17 +42,16 @@ public class DeleteProviderLocationConfirmedTests
     [Test, MoqAutoData]
     public void DeleteProviderLocationConfirmed_TempKeyAbsent_RedirectsToPageNotFound(
         [Greedy] ProviderLocationDeleteController sut,
-        int ukprn,
-        Guid id)
+        int ukprn)
     {
         sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetProviderLocations, GetProviderLocationsUrl);
 
         var tempDataMock = new Mock<ITempDataDictionary>();
         sut.TempData = tempDataMock.Object;
         object isLocationDeleted = null;
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationDeletedBannerTempDateKey, out isLocationDeleted));
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ProviderLocationDeletedBannerTempDataKey, out isLocationDeleted));
 
-        var result = sut.DeleteProviderLocationConfirmed(ukprn, id);
+        var result = sut.DeleteProviderLocationConfirmed(ukprn);
 
         var viewResult = result as RedirectToRouteResult;
         viewResult.Should().NotBeNull();

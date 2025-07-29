@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.DeleteProviderLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetailsForDeletion;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
@@ -17,13 +16,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("providers/{ukprn}/locations/{id}")]
+[Route("providers/{ukprn}/locations")]
 public class ProviderLocationDeleteController : ControllerBase
 {
     public const string ViewPath = "~/Views/ProviderLocations/ConfirmDeleteProviderLocation.cshtml";
     public const string LocationNotDeletedViewPath = "~/Views/ProviderLocations/LocationNotDeleted.cshtml";
     public const string LocationDeletionConfirmedViewPath = "~/Views/ProviderLocations/LocationDeletedConfirmation.cshtml";
-    public const string PageNotFoundPath = "~/Views/Error/PageNotFound.cshtml";
+
     private readonly IMediator _mediator;
     private readonly ILogger<ProviderLocationDeleteController> _logger;
 
@@ -33,26 +32,25 @@ public class ProviderLocationDeleteController : ControllerBase
         _logger = logger;
     }
 
-    [Route("delete-location", Name = RouteNames.GetConfirmDeleteLocation)]
+    [Route("{id}/delete-location", Name = RouteNames.GetConfirmDeleteLocation)]
     [HttpGet]
     public async Task<IActionResult> DeleteProviderLocationConfirmation(int ukprn, Guid id)
     {
         _logger.LogInformation("Getting Location information for ukprn {Ukprn} id {Id}", ukprn, id);
 
-        var result = await _mediator.Send(new GetProviderLocationDetailsForDeletionQuery(ukprn, id));
+        var result = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
 
         if (result == null)
         {
             _logger.LogInformation("provider location not found for ukprn {Ukprn} id {Id}", ukprn, id);
-            return View(PageNotFoundPath);
+            return View(ViewsPath.PageNotFoundPath);
         }
 
-        var standardWithoutOtherLocations = result.ProviderLocation.Standards.Any(standard => !standard.HasOtherVenues);
+        var isStandardWithoutOtherLocations = result.ProviderLocation.Standards.Any(standard => !standard.HasOtherVenues);
 
-        if (standardWithoutOtherLocations)
+        if (isStandardWithoutOtherLocations)
         {
-            TempData.Remove(TempDataKeys.ProviderLocationTempDateKey);
-            TempData.Add(TempDataKeys.ProviderLocationTempDateKey, JsonSerializer.Serialize(result));
+            TempData.Add(TempDataKeys.ProviderLocationTempDataKey, JsonSerializer.Serialize(result));
             _logger.LogInformation("provider location for ukprn {Ukprn} id {Id} has one or more standards without other location", ukprn, id);
             return RedirectToRoute(RouteNames.DeleteLocationDenied, new { ukprn, id });
         }
@@ -63,24 +61,23 @@ public class ProviderLocationDeleteController : ControllerBase
         return View(ViewPath, model);
     }
 
-    [Route("delete-location", Name = RouteNames.GetConfirmDeleteLocation)]
+    [Route("{id}/delete-location", Name = RouteNames.GetConfirmDeleteLocation)]
     [HttpPost]
     public async Task<IActionResult> PostDeleteProviderLocation(int ukprn, Guid id)
     {
         var command = new DeleteProviderLocationCommand(ukprn, id, UserId, UserDisplayName);
         await _mediator.Send(command);
 
-        TempData.Remove(TempDataKeys.ProviderLocationDeletedBannerTempDateKey);
-        TempData.Add(TempDataKeys.ProviderLocationDeletedBannerTempDateKey, true);
+        TempData.Add(TempDataKeys.ProviderLocationDeletedBannerTempDataKey, true);
 
-        return RedirectToRoute(RouteNames.ConfirmDeleteLocationDone, new { ukprn, id });
+        return RedirectToRoute(RouteNames.ConfirmDeleteLocationDone, new { ukprn });
     }
 
     [Route("delete-location-complete", Name = RouteNames.ConfirmDeleteLocationDone)]
     [HttpGet]
-    public IActionResult DeleteProviderLocationConfirmed(int ukprn, Guid id)
+    public IActionResult DeleteProviderLocationConfirmed(int ukprn)
     {
-        TempData.TryGetValue(TempDataKeys.ProviderLocationDeletedBannerTempDateKey, out var result);
+        TempData.TryGetValue(TempDataKeys.ProviderLocationDeletedBannerTempDataKey, out var result);
 
         if (result == null)
         {
@@ -95,16 +92,16 @@ public class ProviderLocationDeleteController : ControllerBase
         return View(LocationDeletionConfirmedViewPath, model);
     }
 
-    [Route("location-not-deleted", Name = RouteNames.DeleteLocationDenied)]
+    [Route("{id}/location-not-deleted", Name = RouteNames.DeleteLocationDenied)]
     [HttpGet]
     public IActionResult ProviderLocationNotDeleted(int ukprn, Guid id)
     {
-        TempData.TryGetValue(TempDataKeys.ProviderLocationTempDateKey, out var getProviderLocationDetailsQueryResult);
+        TempData.TryGetValue(TempDataKeys.ProviderLocationTempDataKey, out var getProviderLocationDetailsQueryResult);
 
         if (getProviderLocationDetailsQueryResult == null)
         {
             _logger.LogInformation("provider location not found for ukprn {Ukprn} id {Id}", ukprn, id);
-            return View(PageNotFoundPath);
+            return View(ViewsPath.PageNotFoundPath);
         }
 
         var result =

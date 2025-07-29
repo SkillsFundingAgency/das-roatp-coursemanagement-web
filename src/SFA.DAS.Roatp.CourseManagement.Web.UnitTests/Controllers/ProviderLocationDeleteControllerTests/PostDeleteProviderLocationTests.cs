@@ -35,7 +35,6 @@ public class PostDeleteProviderLocationTests
         mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderLocationCommand>(c => c.Ukprn == ukprn && c.Id == id), It.IsAny<CancellationToken>()), Times.Once);
 
         result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ConfirmDeleteLocationDone);
-        tempDataMock.Verify(t => t.Remove(TempDataKeys.ProviderLocationDeletedBannerTempDateKey));
-        tempDataMock.Verify(t => t.Add(TempDataKeys.ProviderLocationDeletedBannerTempDateKey, true));
+        tempDataMock.Verify(t => t.Add(TempDataKeys.ProviderLocationDeletedBannerTempDataKey, true));
     }
 }

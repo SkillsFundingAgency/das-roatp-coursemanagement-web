@@ -70,7 +70,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string ConfirmDeleteLocationDone = "ConfirmDeleteLocationDone";
         public const string DeleteLocationDenied = "DeleteLocationDenied";
-
-        public const string ErrorRedirect = "ErrorRedirect";
     }
 }

@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             viewResult!.ViewName.Should().Contain("ViewProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model!.BackUrl.Should().BeNull();
+            model!.BackLink.Should().BeNull();
             model.UpdateContactDetailsUrl.Should().Be(verifyUpdateProviderLocationDetailsUrl);
         }
 
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult!.ViewName.Should().Contain("PageNotFound");
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

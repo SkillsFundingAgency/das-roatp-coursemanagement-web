@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ViewProviderLocationDetailsController> _logger;
-        public const string PageNotFoundPath = "~/Views/Error/PageNotFound.cshtml";
+
         public ViewProviderLocationDetailsController(IMediator mediator, ILogger<ViewProviderLocationDetailsController> logger)
         {
             _logger = logger;
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null || result.ProviderLocation == null)
             {
                 _logger.LogInformation("Provider Location Details not found for {Ukprn} and {Id}", Ukprn, Id);
-                return View(PageNotFoundPath);
+                return View(ViewsPath.PageNotFoundPath);
             }
 
             var model = (ProviderLocationViewModel)result.ProviderLocation;
@@ -43,6 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model.UpdateContactDetailsUrl = Url.RouteUrl(RouteNames.GetUpdateProviderLocationDetails, new { ukprn = Ukprn, Id });
             model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.ViewStandards);
+            model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
 
             foreach (var standard in model.Standards)
             {

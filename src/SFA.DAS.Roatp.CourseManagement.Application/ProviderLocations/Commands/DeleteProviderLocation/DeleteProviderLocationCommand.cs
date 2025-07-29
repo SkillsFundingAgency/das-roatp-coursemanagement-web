@@ -2,7 +2,7 @@
 using MediatR;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.DeleteProviderLocation;
-public class DeleteProviderLocationCommand : IRequest<Unit>
+public class DeleteProviderLocationCommand : IRequest
 {
     public int Ukprn { get; }
     public Guid Id { get; }

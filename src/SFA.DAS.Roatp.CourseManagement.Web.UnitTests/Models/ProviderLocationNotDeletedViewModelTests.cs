@@ -15,15 +15,7 @@ public class ProviderLocationNotDeletedView()
     {
         var sut = (ProviderLocationNotDeletedViewModel)providerLocation;
         sut.LocationName.Should().Be(providerLocation.LocationName);
-    }
-
-
-    [Test, AutoData]
-    public void ImplicitOperator_NullStandards_ReturnsEmptyStandardList(ProviderLocation providerLocation)
-    {
-        providerLocation.Standards = null;
-        var sut = (ProviderLocationNotDeletedViewModel)providerLocation;
-        sut.StandardsWithoutOtherVenues.Should().BeEquivalentTo(new List<LocationStandardModel>());
+        sut.BackLink.Should().BeNull();
     }
 
     [Test, AutoData]
@@ -33,7 +25,6 @@ public class ProviderLocationNotDeletedView()
         var sut = (ProviderLocationNotDeletedViewModel)providerLocation;
         sut.StandardsWithoutOtherVenues.Should().BeEquivalentTo(new List<LocationStandardModel>());
     }
-
 
     [Test, AutoData]
     public void ImplicitOperator_Standards_ReturnsOrderedStandardsWithNoOtherVenuesOnly(ProviderLocation providerLocation)
