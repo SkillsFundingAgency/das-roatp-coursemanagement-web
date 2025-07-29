@@ -54,6 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             model.ProviderLocations = result.ProviderLocations.Select(c => (ProviderLocationViewModel)c).OrderBy(l => l.LocationName).ToList();
             model.ProviderLocations.ForEach(l => l.VenueNameUrl = Url.RouteUrl(RouteNames.GetProviderLocationDetails, new { ukprn = Ukprn, Id = l.NavigationId }));
+
             return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
         }
     }

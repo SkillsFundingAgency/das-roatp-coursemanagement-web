@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderLocationDetailsControllerTests
 {
@@ -50,11 +50,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
             viewResult.ViewName.Should().Contain("EditProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().Be(verifyUrl);
+            model.TrainingVenuesUrl.Should().Be(verifyUrl);
             model.CancelUrl.Should().Be(verifyUrl);
         }
 
-          [Test, AutoData]
+        [Test, AutoData]
         public async Task GetProviderLocationDetails_InvalidRequest_ReturnsEmptyResponse(Guid id)
         {
             _mediatorMock
@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
             viewResult.ViewName.Should().Contain("EditProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().Be(verifyUrl);
+            model.TrainingVenuesUrl.Should().Be(verifyUrl);
             model.CancelUrl.Should().Be(verifyUrl);
         }
     }

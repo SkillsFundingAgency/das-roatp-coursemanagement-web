@@ -29,7 +29,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
                 .BeEquivalentTo(providerLocationFirstStandard,
                     o =>
                         o.Excluding(s => s.StandardUrl)
-                        .Excluding(s => s.HasOtherVenues));
+                        .Excluding(s => s.HasOtherVenues)
+                        .Excluding(s => s.CourseDisplayName));
         }
 
         [TestCaseSource(nameof(AddressData))]

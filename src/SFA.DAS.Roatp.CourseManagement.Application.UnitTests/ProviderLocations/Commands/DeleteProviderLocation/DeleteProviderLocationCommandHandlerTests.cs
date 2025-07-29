@@ -4,7 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
-using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.DeleteProviderLocation;
@@ -40,7 +39,7 @@ public class DeleteProviderLocationCommandHandlerTests
         var expectedUrl = $"providers/{request.Ukprn}/locations/{request.Id}?userId={request.UserId}&userDisplayName={request.UserDisplayName}";
         apiClientMock.Setup(a => a.Post(expectedUrl, request)).ReturnsAsync(HttpStatusCode.BadRequest);
 
-        Func<Task<Unit>> action = () => sut.Handle(request, new CancellationToken());
+        Func<Task> action = () => sut.Handle(request, new CancellationToken());
 
         await action.Should().ThrowAsync<InvalidOperationException>();
     }

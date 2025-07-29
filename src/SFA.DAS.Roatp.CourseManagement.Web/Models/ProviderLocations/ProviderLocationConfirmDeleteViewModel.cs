@@ -5,12 +5,12 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 
-public class ProviderLocationConfirmDeleteViewModel
+public class ProviderLocationConfirmDeleteViewModel : IBackLink
 {
     public Guid NavigationId { get; set; }
     public string TrainingVenuesUrl { get; set; }
 
-    public List<ProviderLocationStandardModel> Standards { get; set; }
+    public List<ProviderLocationStandardModel> Standards { get; set; } = new();
 
     public bool HasNoStandards { get; set; }
     public bool HasOneStandard { get; set; }
@@ -19,9 +19,8 @@ public class ProviderLocationConfirmDeleteViewModel
 
     public static implicit operator ProviderLocationConfirmDeleteViewModel(ProviderLocation source)
     {
-        var standards = source.Standards is { Count: > 0 }
-            ? source.Standards.Select(s => (ProviderLocationStandardModel)s).OrderBy(s => s.CourseDisplayName).ToList()
-            : [];
+        var standards = source.Standards.Select(s => (ProviderLocationStandardModel)s).OrderBy(s => s.CourseDisplayName)
+            .ToList();
 
         var numberOfStandards = source.Standards == null || source.Standards.Count == 0 ? 0 : source.Standards.Count;
         return new ProviderLocationConfirmDeleteViewModel
@@ -33,4 +32,6 @@ public class ProviderLocationConfirmDeleteViewModel
             HasTwoOrMoreStandards = numberOfStandards > 1
         };
     }
+
+    public string BackLink { get; set; }
 }
