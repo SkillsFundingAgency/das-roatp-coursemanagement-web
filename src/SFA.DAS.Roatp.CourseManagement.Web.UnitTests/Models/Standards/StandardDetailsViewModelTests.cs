@@ -290,5 +290,41 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.IsApprovedByRegulator.Should().Be(isApprovedByRegulator);
             viewModel.ApprovedByRegulatorStatus().Should().Be(approvedByRegulatorStatus);
         }
+
+        [TestCase(false, false, false, true)]
+        [TestCase(true, false, null, false)]
+        [TestCase(true, true, false, true)]
+        [TestCase(true, true, true, false)]
+        [TestCase(true, false, null, false)]
+        public void StandardRequiresMoreInfoIsSet(bool hasLocations, bool isRegulatedForProvider, bool? isApprovedByRegulator, bool expected)
+        {
+            var standardDetails = new GetStandardDetailsQueryResult
+            {
+                HasLocations = hasLocations,
+                IsRegulatedForProvider = isRegulatedForProvider,
+                IsApprovedByRegulator = isApprovedByRegulator
+            };
+
+            StandardDetailsViewModel viewModel = standardDetails;
+            viewModel.StandardRequiresMoreInfo.Should().Be(expected);
+        }
+
+        [TestCase(true, true, false, StandardDetailsViewModel.NotApprovedText)]
+        [TestCase(false, false, null, StandardDetailsViewModel.LocationMissingText)]
+        [TestCase(false, true, false, StandardDetailsViewModel.LocationMissingAndNotApprovedText)]
+        [TestCase(true, true, true, "")]
+        public void MissingInformationTextIsSet(bool hasLocations, bool isRegulatedForProvider,
+            bool? isApprovedByRegulator, string expected)
+        {
+            var standardDetails = new GetStandardDetailsQueryResult
+            {
+                HasLocations = hasLocations,
+                IsRegulatedForProvider = isRegulatedForProvider,
+                IsApprovedByRegulator = isApprovedByRegulator
+            };
+
+            StandardDetailsViewModel viewModel = standardDetails;
+            viewModel.MissingInformationText.Should().Be(expected);
+        }
     }
 }
