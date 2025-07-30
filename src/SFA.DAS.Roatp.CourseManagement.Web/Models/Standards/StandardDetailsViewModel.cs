@@ -16,9 +16,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             "You must confirm if this standard has regulatory approval. It will not show on Find apprenticeship training until you do.";
 
         public const string LocationMissingAndNotApprovedText =
-            "You must do 2 things before this standard will show on Find apprenticeship training:\n" +
-            "* confirm if this standard has regulatory approval\n" +
-            "* add a training option";
+            "You must do 2 things before this standard will show on Find apprenticeship training:<ul class='govuk-list govuk-list--bullet'>" +
+            "<li>confirm if this standard has regulatory approval</li>" +
+            "<li>add a training option</li></ul>";
 
         public StandardInformationViewModel StandardInformation { get; set; }
 
@@ -105,11 +105,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         {
             if (HasLocations && IsRegulatedForProvider && IsApprovedByRegulator != null && (bool)!IsApprovedByRegulator)
                 return NotApprovedText;
-            if (!HasLocations && !IsRegulatedForProvider)
-                return LocationMissingText;
             if (!HasLocations && IsRegulatedForProvider && IsApprovedByRegulator != null &&
                 (bool)!IsApprovedByRegulator)
                 return LocationMissingAndNotApprovedText;
+            if (!HasLocations)
+                return LocationMissingText;
             return "";
         }
     }
