@@ -15,7 +15,7 @@
     @RenderSection("breadcrumb", required: false)
     @if (Model is IBackLink backlink)
     {
-        if (string.IsNullOrWhiteSpace(@backlink.BackLink))
+        if (string.IsNullOrWhiteSpace(@backlink.BackUrl))
         {
             <a class="das-js-back-link">Back</a>
         }

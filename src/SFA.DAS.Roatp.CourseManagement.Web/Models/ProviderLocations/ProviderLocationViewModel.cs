@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string CancelUrl { get; set; }
         public string ManageYourStandardsUrl { get; set; }
         public string TrainingVenuesUrl { get; set; }
+        public string BackUrl { get; set; }
 
         public List<ProviderLocationStandardModel> Standards { get; set; }
 
@@ -57,7 +58,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Standards = standards
             };
         }
-
-        public string BackLink { get; set; }
     }
 }

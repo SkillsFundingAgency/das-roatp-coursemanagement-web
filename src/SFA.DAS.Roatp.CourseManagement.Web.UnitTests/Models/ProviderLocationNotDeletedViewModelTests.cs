@@ -15,7 +15,7 @@ public class ProviderLocationNotDeletedView()
     {
         var sut = (ProviderLocationNotDeletedViewModel)providerLocation;
         sut.LocationName.Should().Be(providerLocation.LocationName);
-        sut.BackLink.Should().BeNull();
+        sut.BackUrl.Should().BeNull();
     }
 
     [Test, AutoData]

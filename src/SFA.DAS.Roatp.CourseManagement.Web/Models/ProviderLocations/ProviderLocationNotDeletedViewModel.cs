@@ -8,6 +8,7 @@ public class ProviderLocationNotDeletedViewModel : IBackLink
 {
     public string LocationName { get; set; }
     public List<LocationStandardModel> StandardsWithoutOtherVenues { get; set; } = new();
+    public string BackUrl { get; set; }
 
     public static implicit operator ProviderLocationNotDeletedViewModel(ProviderLocation source)
     {
@@ -26,6 +27,4 @@ public class ProviderLocationNotDeletedViewModel : IBackLink
             StandardsWithoutOtherVenues = standards
         };
     }
-
-    public string BackLink { get; set; }
 }
