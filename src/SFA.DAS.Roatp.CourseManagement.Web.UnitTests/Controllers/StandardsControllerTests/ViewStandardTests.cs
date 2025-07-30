@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,9 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
 {
@@ -52,6 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ContactUsEmail = "test@test.com",
                 ContactUsPageUrl = "www.test.com/ContactUs",
                 ContactUsPhoneNumber = "123456789",
+                IsRegulatedForProvider = true,
                 ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } }
             };
 
@@ -106,6 +107,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var response = new GetStandardDetailsQueryResult
             {
                 RegulatorName = Regulator,
+                IsRegulatedForProvider = true
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -123,7 +125,32 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var model = viewResult.Model as StandardDetailsViewModel;
             model.Should().NotBeNull();
             model.StandardInformation.RegulatorName.Should().Be(Regulator);
-            model.StandardInformation.IsStandardRegulated.Should().Be(true);
+            model.IsRegulatedForProvider.Should().Be(true);
+        }
+
+        [Test]
+        public async Task ViewStandard_ResponseIncludesLocations()
+        {
+            var response = new GetStandardDetailsQueryResult
+            {
+                HasLocations = true
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock();
+
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            var model = viewResult.Model as StandardDetailsViewModel;
+            model.Should().NotBeNull();
+            model.HasLocations.Should().Be(true);
         }
 
         [Test]
@@ -224,7 +251,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             var response = new GetStandardDetailsQueryResult
             {
-                RegulatorName = Regulator,
+                IsRegulatedForProvider = true
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))

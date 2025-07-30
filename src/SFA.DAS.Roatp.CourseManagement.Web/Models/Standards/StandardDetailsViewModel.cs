@@ -1,14 +1,25 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
     public class StandardDetailsViewModel
     {
+        public const string LocationMissingText =
+            "You must add a training option to this standard. It will not show on Find apprenticeship training until you do.";
+
+        public const string NotApprovedText =
+            "You must confirm if this standard has regulatory approval. It will not show on Find apprenticeship training until you do.";
+
+        public const string LocationMissingAndNotApprovedText =
+            "You must do 2 things before this standard will show on Find apprenticeship training:\n" +
+            "* confirm if this standard has regulatory approval\n" +
+            "* add a training option";
+
         public StandardInformationViewModel StandardInformation { get; set; }
 
         public StandardContactInformationViewModel ContactInformation { get; set; }
@@ -43,8 +54,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
         public string EditTrainingLocationsUrl { get; set; }
-
         public string EditProviderCourseRegionsUrl { get; set; }
+        public bool IsRegulatedForProvider { get; set; }
+        public bool HasLocations { get; set; }
+        public bool StandardRequiresMoreInfo => SetMissingInfo();
+        public string MissingInformationText => SetMissingInfoText();
 
         public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
         {
@@ -58,7 +72,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                     LarsCode = standardDetails.LarsCode,
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,
-                    ApprenticeshipType = standardDetails.ApprenticeshipType
+                    ApprenticeshipType = standardDetails.ApprenticeshipType,
+                    IsRegulatedForProvider = standardDetails.IsRegulatedForProvider
                 },
                 ContactInformation = new StandardContactInformationViewModel
                 {
@@ -70,8 +85,32 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 SubRegionCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Regional).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
-                IsApprovedByRegulator = standardDetails.IsApprovedByRegulator
+                IsApprovedByRegulator = standardDetails.IsApprovedByRegulator,
+                IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
+                HasLocations = standardDetails.HasLocations
             };
+        }
+        private bool SetMissingInfo()
+        {
+            if (!HasLocations)
+                return true;
+            if (IsApprovedByRegulator == null)
+                return false;
+            if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
+                return true;
+            return false;
+        }
+
+        private string SetMissingInfoText()
+        {
+            if (HasLocations && IsRegulatedForProvider && IsApprovedByRegulator != null && (bool)!IsApprovedByRegulator)
+                return NotApprovedText;
+            if (!HasLocations && !IsRegulatedForProvider)
+                return LocationMissingText;
+            if (!HasLocations && IsRegulatedForProvider && IsApprovedByRegulator != null &&
+                (bool)!IsApprovedByRegulator)
+                return LocationMissingAndNotApprovedText;
+            return "";
         }
     }
 }

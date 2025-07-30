@@ -1,11 +1,11 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json.Serialization;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
@@ -26,17 +26,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
         [JsonIgnore]
         public IEnumerable<IGrouping<string, CourseLocationModel>> RegionalLocations => CourseLocations.Where(l => l.LocationType == LocationType.Regional).GroupBy(l => l.RegionName).OrderBy(g => g.Key);
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public string LocationSummary => LocationSummaryCalculator.GetLocationSummary(HasNationalDeliveryOption.GetValueOrDefault(), ProviderLocations.Any(), RegionalLocations.Any());
 
-        [JsonIgnore] 
+        [JsonIgnore]
         public string CancelLink { get; set; }
 
-        public static implicit operator AddProviderCourseCommand(StandardSessionModel source) 
-            => new AddProviderCourseCommand 
+        public static implicit operator AddProviderCourseCommand(StandardSessionModel source)
+            => new AddProviderCourseCommand
             {
                 LarsCode = source.LarsCode,
-                IsApprovedByRegulator = source.StandardInformation.IsStandardRegulated ? true : (bool?)null,
+                IsApprovedByRegulator = source.StandardInformation.IsRegulatedForProvider ? true : (bool?)null,
                 StandardInfoUrl = source.ContactInformation.StandardInfoUrl,
                 ContactUsEmail = source.ContactInformation.ContactUsEmail,
                 ContactUsPageUrl = source.ContactInformation.ContactUsPageUrl,

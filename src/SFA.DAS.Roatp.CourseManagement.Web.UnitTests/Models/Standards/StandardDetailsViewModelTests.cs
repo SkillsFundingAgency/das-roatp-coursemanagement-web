@@ -1,21 +1,22 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 {
     [TestFixture]
     public class StandardDetailsViewModelTests
     {
-        [TestCase("regulator name", true)]
-        [TestCase("", false)]
-        public void ImplicitOperator_ConvertsFromStandardDetails(string regulatorName, bool isRegulated)
+        [Test]
+        public void ImplicitOperator_ConvertsFromStandardDetails()
         {
+            const string regulatorName = "regulator name";
+            const bool isRegulated = true;
             const string courseName = "course name";
             const int level = 2;
             const string iFateReferenceNumber = "STD_1";
@@ -41,6 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 ContactUsPageUrl = contactUsPageUrl,
+                IsRegulatedForProvider = isRegulated
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
@@ -51,11 +53,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.StandardInformation.LarsCode.Should().Be(larsCode);
             viewModel.StandardInformation.ApprenticeshipType.Should().Be(ApprenticeshipType);
             viewModel.StandardInformation.RegulatorName.Should().Be(regulatorName);
-            viewModel.StandardInformation.IsStandardRegulated.Should().Be(isRegulated);
             viewModel.StandardInformation.CourseDisplayName.Should().Be(expectedCourseDisplayName);
             viewModel.ContactInformation.StandardInfoUrl.Should().Be(standardInfoUrl);
             viewModel.ContactInformation.ContactUsEmail.Should().Be(contactUsEmail);
             viewModel.ContactInformation.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
+            viewModel.StandardInformation.IsRegulatedForProvider.Should().Be(isRegulated);
         }
 
         [Test]

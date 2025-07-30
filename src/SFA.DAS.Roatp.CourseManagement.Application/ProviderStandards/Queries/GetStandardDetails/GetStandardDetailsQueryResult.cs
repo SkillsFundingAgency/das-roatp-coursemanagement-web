@@ -1,7 +1,7 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails
 {
@@ -19,6 +19,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
         public bool? IsApprovedByRegulator { get; set; }
+        public bool IsRegulatedForProvider { get; set; }
+        public bool HasLocations { get; set; }
         public List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
 
         public bool HasProviderLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Provider);
@@ -56,7 +58,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 Sector = v.Sector,
                 StandardInfoUrl = v.StandardInfoUrl,
                 ApprenticeshipType = v.ApprenticeshipType,
-                IsApprovedByRegulator = v.IsApprovedByRegulator
+                IsApprovedByRegulator = v.IsApprovedByRegulator,
+                IsRegulatedForProvider = v.IsRegulatedForProvider,
+                HasLocations = v.HasLocations
             };
         }
     }

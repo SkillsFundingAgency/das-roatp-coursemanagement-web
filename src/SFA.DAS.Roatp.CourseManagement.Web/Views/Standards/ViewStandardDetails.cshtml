@@ -8,9 +8,9 @@
     <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
 }
 
-@if (Model.StandardInformation.IsStandardRegulated && !Model.IsApprovedByRegulator.GetValueOrDefault())
+@if (Model.StandardRequiresMoreInfo)
 {
-    <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardApprovalRequiredBanner.cshtml" />
+    <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardApprovalRequiredBanner.cshtml" model="Model"/>
 }
 
 <div class="govuk-grid-row">
@@ -25,18 +25,18 @@
         <partial name="_StandardContactInformation" for="ContactInformation" />
         <p class="govuk-body">
             <a href="@Model.EditContactDetailsUrl" class="govuk-link">
-                Update these contact details
+                Update these contact details.
             </a>
         </p>
     </div>
 </div>
 
-@if (Model.StandardInformation.IsStandardRegulated)
+@if (Model.StandardInformation.IsRegulatedForProvider)
 {
     <div class="govuk-grid-row govuk-!-margin-top-8">
         <div class="govuk-grid-column-two-thirds">
 
-            <h3 class="govuk-heading-m" id="table-header-regulation">Regulation</h3>
+            <h2 class="govuk-heading-l" id="table-header-regulation">Regulatory Approval</h2>
             <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
 
             <table class="govuk-table" aria-labelledby="table-header-regulation">
@@ -77,7 +77,7 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header das-table-cell-width-80" scope="col">
-                        <span class="govuk-heading-m">
+                        <span class="govuk-heading-l">
                             Training options
                         </span>
                     </th>
@@ -89,7 +89,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        @Model.LocationSummary
+                        @Html.Raw(Model.LocationSummary)
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="@Model.EditLocationOptionUrl" class="govuk-link govuk-link--no-visited-state">
@@ -159,10 +159,12 @@
 </div>
 
 <div class="das-highlight">
-    <h2 class="govuk-heading-m">Actions</h2>
-    <ul class="govuk-list govuk-!-margin-bottom-0">
-        <li><a href="@Model.DeleteStandardUrl" class="govuk-link govuk-link--no-visited-state">Delete standard</a> </li>
-    </ul>
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Actions</h2>
+        <ul class="govuk-list govuk-!-margin-bottom-0">
+            <li><a href="@Model.DeleteStandardUrl" class="govuk-link govuk-link--no-visited-state">Delete standard</a> </li>
+        </ul>
+    </div>
 </div>
 
 <div class="govuk-grid-row govuk-!-margin-top-8">
@@ -170,7 +172,7 @@
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         <p class="govuk-body">
             <a href="@Model.BackUrl" class="govuk-link govuk-link--no-visited-state">
-                Back to standards management
+                Back to manage your standards
             </a>
         </p>
     </div>

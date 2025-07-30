@@ -13,7 +13,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string RegulatorName { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public string CourseDisplayName => $"{CourseName} (level {Level})";
-        public bool IsStandardRegulated => !string.IsNullOrEmpty(RegulatorName);
         public bool IsRegulatedForProvider { get; set; }
 
         public static implicit operator StandardInformationViewModel(GetStandardInformationQueryResult source)
