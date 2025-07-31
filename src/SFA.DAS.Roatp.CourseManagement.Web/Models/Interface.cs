@@ -2,5 +2,5 @@
 
 public interface IBackLink
 {
-    public string BackLink { get; set; }
+    public string BackUrl { get; set; }
 }

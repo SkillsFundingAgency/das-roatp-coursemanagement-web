@@ -9,13 +9,11 @@ public class ProviderLocationConfirmDeleteViewModel : IBackLink
 {
     public Guid NavigationId { get; set; }
     public string TrainingVenuesUrl { get; set; }
-
     public List<ProviderLocationStandardModel> Standards { get; set; } = new();
-
     public bool HasNoStandards { get; set; }
     public bool HasOneStandard { get; set; }
-
     public bool HasTwoOrMoreStandards { get; set; }
+    public string BackUrl { get; set; }
 
     public static implicit operator ProviderLocationConfirmDeleteViewModel(ProviderLocation source)
     {
@@ -32,6 +30,4 @@ public class ProviderLocationConfirmDeleteViewModel : IBackLink
             HasTwoOrMoreStandards = numberOfStandards > 1
         };
     }
-
-    public string BackLink { get; set; }
 }

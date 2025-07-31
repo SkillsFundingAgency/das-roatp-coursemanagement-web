@@ -19,6 +19,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const int level = 1;
             const int larsCode = 133;
             const string expectedCourseDisplayName = "course name (level 1)";
+            const bool isRegulatedForProvider = true;
+            const bool hasLocations = true;
 
             var standard = new Standard
             {
@@ -27,10 +29,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 LarsCode = larsCode,
                 Level = level,
                 ApprovalBody = approvalBody,
-                IsApprovedByRegulator = approvedByRegulator
+                IsApprovedByRegulator = approvedByRegulator,
+                IsRegulatedForProvider = isRegulatedForProvider,
+                HasLocations = hasLocations
             };
 
             StandardViewModel viewModel = standard;
+
 
             viewModel.ProviderCourseId.Should().Be(providerCourseId);
             viewModel.CourseName.Should().Be(courseName);
@@ -40,6 +45,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.IsApprovedByRegulator.Should().Be(approvedByRegulator);
             viewModel.IsApprovalPending.Should().Be(expectedApprovalRequired);
             viewModel.CourseDisplayName.Should().Be(expectedCourseDisplayName);
+            viewModel.IsRegulatedForProvider.Should().Be(isRegulatedForProvider);
+            viewModel.HasLocation.Should().Be(hasLocations);
         }
     }
 }
