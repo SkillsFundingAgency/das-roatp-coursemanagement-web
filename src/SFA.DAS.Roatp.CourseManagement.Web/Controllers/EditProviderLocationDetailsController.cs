@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,9 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -45,12 +45,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 _logger.LogInformation("Provider Location Details not found for {ukprn} and {id}", Ukprn, Id);
                 return new ProviderLocationViewModel
                 {
-                    BackUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn }),
-                    CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn })
+                    CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn }),
+                    TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn }),
                 };
             }
             var model = (ProviderLocationViewModel)result.ProviderLocation;
-            model.BackUrl = model.CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
+            model.TrainingVenuesUrl = model.CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
             return model;
         }
 

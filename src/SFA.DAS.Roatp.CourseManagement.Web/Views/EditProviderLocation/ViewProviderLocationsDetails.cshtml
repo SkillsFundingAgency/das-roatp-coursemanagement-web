@@ -5,10 +5,6 @@
     ViewBag.Title = "View training venue";
 }
 
-@section breadcrumb {
-    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
-}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-xl">Training venue</div>
@@ -49,7 +45,7 @@
         @if (Model.Standards.Count == 0)
         {
             <p class="govuk-body">
-                You do not deliver any standards at this venue. Go to <a href="www.google.com">Manage your standards</a> to add this venue to a new or existing standard.
+                You do not deliver any standards at this venue. Go to <a href="@Model.ManageYourStandardsUrl">Manage your standards</a> to add this venue to a new or existing standard.
             </p>
         }
         else
@@ -73,15 +69,12 @@
 <div class="govuk-grid-row govuk-!-margin-top-6">
     
     <div class="govuk-button-group">
-        <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
-            Delete this venue
-        </button>
-        <a href="@Model.BackUrl" class="govuk-link">
+        <a id="Continue" href="@Model.DeleteLocationUrl" class="govuk-button govuk-button--warning">Delete this venue</a>
+        <a href="@Model.TrainingVenuesUrl" class="govuk-link">
             Back to training venues
         </a>
     </div>
 </div>
-
 
 
         

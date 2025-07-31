@@ -1,4 +1,6 @@
-﻿using AutoFixture;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -6,8 +8,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 {
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
             _apiClient = new Mock<IApiClient>();
             _handler = new GetProviderLocationDetailsQueryHandler(_apiClient.Object, Mock.Of<ILogger<GetProviderLocationDetailsQueryHandler>>());
         }
-        
+
         [Test]
         public async Task Handle_ValidApiRequest_ReturnsValidResponse()
         {

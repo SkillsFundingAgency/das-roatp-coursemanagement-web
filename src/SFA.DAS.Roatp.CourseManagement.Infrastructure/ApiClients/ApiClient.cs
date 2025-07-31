@@ -77,6 +77,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients
             }
         }
 
+        public async Task<HttpStatusCode> Delete(string uri)
+        {
+            var requestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+            var response = await _httpClient.SendAsync(requestMessage).ConfigureAwait(false);
+
+            await LogErrorIfUnsuccessfulResponse(response);
+            return response.StatusCode;
+        }
+
         private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
         {
             if (response.IsSuccessStatusCode) return;

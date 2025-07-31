@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using System.Security.Claims;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -38,11 +38,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             if (User.Identity.IsAuthenticated)
             {
-                _logger.LogError(feature.Error, "Unexpected error occured during request to path: {path} by user: {user}", feature.Path, User.FindFirstValue(ProviderClaims.UserId));
+                _logger.LogError(feature.Error, "Unexpected error occurred during request to path: {Path} by user: {User}", feature.Path, User.FindFirstValue(ProviderClaims.UserId));
             }
             else
             {
-                _logger.LogError(feature.Error, "Unexpected error occured during request to {path}", feature.Path);
+                _logger.LogError(feature.Error, "Unexpected error occurred during request to {Path}", feature.Path);
             }
             return View();
         }
