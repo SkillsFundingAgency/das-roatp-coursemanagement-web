@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             viewResult!.ViewName.Should().Contain("ViewProviderLocationsDetails.cshtml");
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
-            model!.BackLink.Should().BeNull();
+            model!.BackUrl.Should().BeNull();
             model.UpdateContactDetailsUrl.Should().Be(verifyUpdateProviderLocationDetailsUrl);
         }
 

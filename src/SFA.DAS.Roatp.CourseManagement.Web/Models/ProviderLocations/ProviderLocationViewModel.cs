@@ -58,7 +58,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Standards = standards
             };
         }
-
-        public string BackLink { get; set; }
     }
 }

@@ -14,7 +14,7 @@
 
         <form method="post" asp-route="@RouteNames.PostUpdateProviderLocationDetails" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="@Model.NavigationId" />
-            <input type="hidden" asp-for="@Model.BackLink" />
+            <input type="hidden" asp-for="@Model.BackUrl" />
             <input type="hidden" asp-for="@Model.CancelUrl" />
             <div esfa-validation-marker-for="LocationName" class="govuk-form-group">
                 <label class="govuk-label govuk-label--m" asp-for="LocationName">
