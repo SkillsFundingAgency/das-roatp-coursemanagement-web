@@ -31,8 +31,8 @@
         @if (Model.StandardsWithoutOtherVenues.Count==1)
         {
             <p class="govuk-body">
-                <a class="govuk-link" href="@Model.StandardsWithoutOtherVenues.First().StandardUrl">
-                    @Model.StandardsWithoutOtherVenues.First().CourseDisplayName
+                <a class="govuk-link" href="@Model.StandardsWithoutOtherVenues[0].StandardUrl">
+                    @Model.StandardsWithoutOtherVenues[0].CourseDisplayName
                 </a>
             </p>
         }
