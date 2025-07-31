@@ -9,17 +9,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
     public class StandardDetailsViewModel
     {
-        public const string LocationMissingText =
-            "You must add a training option to this standard. It will not show on Find apprenticeship training until you do.";
-
-        public const string NotApprovedText =
-            "You must confirm if this standard has regulatory approval. It will not show on Find apprenticeship training until you do.";
-
-        public const string LocationMissingAndNotApprovedText =
-            "You must do 2 things before this standard will show on Find apprenticeship training:<ul class='govuk-list govuk-list--bullet'>" +
-            "<li>confirm if this standard has regulatory approval</li>" +
-            "<li>add a training option</li></ul>";
-
         public StandardInformationViewModel StandardInformation { get; set; }
 
         public StandardContactInformationViewModel ContactInformation { get; set; }
@@ -58,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
-        public string MissingInformationText => SetMissingInfoText();
+        public MissingInfoBannerViewModel MissingInfoBannerViewModel { get; set; }
 
         public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
         {
@@ -87,7 +76,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
                 IsApprovedByRegulator = standardDetails.IsApprovedByRegulator,
                 IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
-                HasLocations = standardDetails.HasLocations
+                HasLocations = standardDetails.HasLocations,
+                MissingInfoBannerViewModel = new MissingInfoBannerViewModel
+                    (standardDetails.IsRegulatedForProvider, standardDetails.HasLocations, standardDetails.IsApprovedByRegulator)
             };
         }
         private bool SetMissingInfo()
@@ -99,18 +90,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
                 return true;
             return false;
-        }
-
-        private string SetMissingInfoText()
-        {
-            if (HasLocations && IsRegulatedForProvider && IsApprovedByRegulator != null && (bool)!IsApprovedByRegulator)
-                return NotApprovedText;
-            if (!HasLocations && IsRegulatedForProvider && IsApprovedByRegulator != null &&
-                (bool)!IsApprovedByRegulator)
-                return LocationMissingAndNotApprovedText;
-            if (!HasLocations)
-                return LocationMissingText;
-            return "";
         }
     }
 }

@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
             => new AddProviderCourseCommand
             {
                 LarsCode = source.LarsCode,
-                IsApprovedByRegulator = source.StandardInformation.IsRegulatedForProvider ? true : (bool?)null,
+                IsApprovedByRegulator = source.StandardInformation.IsRegulatedForProvider,
                 StandardInfoUrl = source.ContactInformation.StandardInfoUrl,
                 ContactUsEmail = source.ContactInformation.ContactUsEmail,
                 ContactUsPageUrl = source.ContactInformation.ContactUsPageUrl,

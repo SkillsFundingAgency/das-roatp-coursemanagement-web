@@ -309,12 +309,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.StandardRequiresMoreInfo.Should().Be(expected);
         }
 
-        [TestCase(true, true, false, StandardDetailsViewModel.NotApprovedText)]
-        [TestCase(false, false, null, StandardDetailsViewModel.LocationMissingText)]
-        [TestCase(false, true, false, StandardDetailsViewModel.LocationMissingAndNotApprovedText)]
-        [TestCase(true, true, true, "")]
-        public void MissingInformationTextIsSet(bool hasLocations, bool isRegulatedForProvider,
-            bool? isApprovedByRegulator, string expected)
+        [TestCase(true, true, false, MissingInfoBannerViewModel.MissingInfo.NotApproved)]
+        [TestCase(false, false, null, MissingInfoBannerViewModel.MissingInfo.LocationMissing)]
+        [TestCase(false, true, false, MissingInfoBannerViewModel.MissingInfo.LocationMissingAndNotApproved)]
+        [TestCase(true, true, true, null)]
+        public void MissingInformationTypeIsSet(bool hasLocations, bool isRegulatedForProvider,
+            bool? isApprovedByRegulator, MissingInfoBannerViewModel.MissingInfo? expected)
         {
             var standardDetails = new GetStandardDetailsQueryResult
             {
@@ -324,7 +324,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.MissingInformationText.Should().Be(expected);
+            viewModel.MissingInfoBannerViewModel.MissingInformationType.Should().Be(expected);
         }
     }
 }

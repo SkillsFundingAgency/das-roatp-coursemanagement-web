@@ -129,7 +129,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         }
 
         [Test]
-        public async Task ViewStandard_ResponseIncludesLocations()
+        public async Task ViewStandard_ResponseIndicatesHasLocations()
         {
             var response = new GetStandardDetailsQueryResult
             {

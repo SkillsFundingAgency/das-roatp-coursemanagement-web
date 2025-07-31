@@ -1,0 +1,36 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model MissingInfoBannerViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+                <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Important
+                </h2>
+            </div>
+            <div class="govuk-notification-banner__content">
+                <p class="govuk-body" asp-show(@Model.MissingInformationType= =@MissingInfoBannerViewModel.MissingInfo.LocationMissing)>
+                    <strong>
+                        You must add a training option to this standard. It will not show on Find apprenticeship training until you do.
+                    </strong>
+                </p>
+                <p class="govuk-body" asp-show(@Model.MissingInformationType= =@MissingInfoBannerViewModel.MissingInfo.NotApproved)>
+                    <strong>
+                        You must confirm if this standard has regulatory approval. It will not show on Find apprenticeship training until you do.
+                    </strong>
+                </p>
+                <p class="govuk-body" asp-show(@Model.MissingInformationType= =@MissingInfoBannerViewModel.MissingInfo.LocationMissingAndNotApproved)>
+                    <strong>
+                        You must do 2 things before this standard will show on Find apprenticeship training:
+                        <ul class='govuk-list govuk-list--bullet'>
+                           <li>confirm if this standard has regulatory approval</li>
+                           <li>add a training option</li>
+                           </ul>
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+

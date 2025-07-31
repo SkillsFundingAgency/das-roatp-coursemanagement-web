@@ -10,7 +10,7 @@
 
 @if (Model.StandardRequiresMoreInfo)
 {
-    <partial name="~/Views/Standards/StandardsPartials/_MissingInfoBanner.cshtml" for="MissingInfoBannerViewModel" />
+    <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardApprovalRequiredBanner.cshtml" model="Model"/>
 }
 
 <div class="govuk-grid-row">
@@ -31,12 +31,51 @@
     </div>
 </div>
 
-<div class="govuk-grid-row govuk-!-margin-top-8" asp-show="@Model.StandardInformation.IsRegulatedForProvider">
-    <div class="govuk-grid-column-two-thirds">
+<<<<<<< Updated upstream
+@if (Model.StandardInformation.IsRegulatedForProvider)
+{
+    <div class="govuk-grid-row govuk-!-margin-top-8">
+        <div class="govuk-grid-column-two-thirds">
+
             <h2 class="govuk-heading-l" id="table-header-regulation">Regulatory Approval</h2>
             <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
+
             <table class="govuk-table" aria-labelledby="table-header-regulation">
                 <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                            Regulator
+                        </th>
+                        <td class="govuk-table__cell das-table-cell-width-50">
+                            @Model.StandardInformation.RegulatorName
+                        </td>
+                        <td class="govuk-table__cell das-table-cell-width-20">
+                        </td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">
+                            Approved
+                        </th>
+                        <td class="govuk-table__cell">
+                            @Model.ApprovedByRegulatorStatus()
+                        </td>
+                        <td class="govuk-table__cell govuk-table__cell--numeric">
+                            <a href="@Model.ConfirmRegulatedStandardUrl" class="govuk-link">
+                                Change<span class="govuk-visually-hidden"> the regulated information</span>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
+        </div>
+=======
+<div class="govuk-grid-row govuk-!-margin-top-8" asp-show="Model.StandardInformation.IsStandardRegulated">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m" id="table-header-regulation">Regulation</h3>
+        <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
+        <table class="govuk-table" aria-labelledby="table-header-regulation">
+            <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
                 <th class="govuk-table__header das-table-cell-width-30" scope="row">
                     Regulator
@@ -63,6 +102,7 @@
             </tbody>
         </table>
         <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml"/>
+>>>>>>> Stashed changes
     </div>
 </div>
 
@@ -72,9 +112,9 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header das-table-cell-width-80" scope="col">
-                        <h2 class="govuk-heading-l">
+                        <span class="govuk-heading-l">
                             Training options
-                        </h2>
+                        </span>
                     </th>
                     <th class="govuk-table__header das-table-cell-width-20" scope="col">
                         <span class="govuk-visually-hidden">Action</span>
