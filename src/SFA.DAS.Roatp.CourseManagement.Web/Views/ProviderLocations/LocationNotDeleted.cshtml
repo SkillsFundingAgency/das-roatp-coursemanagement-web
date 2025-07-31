@@ -28,13 +28,26 @@
         <p class="govuk-body">
             The standards that need to be changed or deleted:
         </p>
-        @foreach (var standard in Model.StandardsWithoutOtherVenues)
+        @if (Model.StandardsWithoutOtherVenues.Count==1)
         {
             <p class="govuk-body">
-                <a class="govuk-link" href="@standard.StandardUrl">
-                    @standard.CourseDisplayName
+                <a class="govuk-link" href="@Model.StandardsWithoutOtherVenues.First().StandardUrl">
+                    @Model.StandardsWithoutOtherVenues.First().CourseDisplayName
                 </a>
             </p>
+        }
+        else
+        {
+            <ul class="govuk-list govuk-list--bullet">
+            @foreach (var standard in Model.StandardsWithoutOtherVenues)
+            {
+                <li>
+                    <a class="govuk-link" href="@standard.StandardUrl">
+                        @standard.CourseDisplayName
+                    </a>
+                </li>
+            }
+            </ul>
         }
         <p class="govuk-body">
             You can then return to your list of venues and delete this venue.
