@@ -1,9 +1,9 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+﻿using System.Collections.Generic;
+using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -43,8 +43,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string EditContactDetailsUrl { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
         public string EditTrainingLocationsUrl { get; set; }
-
         public string EditProviderCourseRegionsUrl { get; set; }
+        public bool IsRegulatedForProvider { get; set; }
+        public bool HasLocations { get; set; }
+        public bool StandardRequiresMoreInfo => SetMissingInfo();
+        public MissingInfoBannerViewModel MissingInfoBannerViewModel { get; set; }
 
         public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
         {
@@ -58,7 +61,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                     LarsCode = standardDetails.LarsCode,
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,
-                    ApprenticeshipType = standardDetails.ApprenticeshipType
+                    ApprenticeshipType = standardDetails.ApprenticeshipType,
+                    IsRegulatedForProvider = standardDetails.IsRegulatedForProvider
                 },
                 ContactInformation = new StandardContactInformationViewModel
                 {
@@ -70,8 +74,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 SubRegionCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Regional).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
-                IsApprovedByRegulator = standardDetails.IsApprovedByRegulator
+                IsApprovedByRegulator = standardDetails.IsApprovedByRegulator,
+                IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
+                HasLocations = standardDetails.HasLocations,
+                MissingInfoBannerViewModel = new MissingInfoBannerViewModel
+                    (standardDetails.IsRegulatedForProvider, standardDetails.HasLocations, standardDetails.IsApprovedByRegulator)
             };
+        }
+        private bool SetMissingInfo()
+        {
+            return (!HasLocations) || (IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault());
         }
     }
 }

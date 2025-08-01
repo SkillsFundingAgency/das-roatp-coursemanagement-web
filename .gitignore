@@ -351,4 +351,7 @@ MigrationBackup/
 /src/SFA.DAS.Roatp.CourseManagement.Web/appsettings.Development.json
 .DS_Store
 
+# Git merge files
+*.orig
+
 src/.idea/.idea.SFA.DAS.Roatp.CourseManagement.Web/.idea/

@@ -8,9 +8,9 @@
     <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
 }
 
-@if (Model.StandardInformation.IsStandardRegulated && !Model.IsApprovedByRegulator.GetValueOrDefault())
+@if (Model.StandardRequiresMoreInfo)
 {
-    <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardApprovalRequiredBanner.cshtml" />
+    <partial name="~/Views/Standards/StandardsPartials/_MissingInfoBanner.cshtml" for="MissingInfoBannerViewModel" />
 }
 
 <div class="govuk-grid-row">
@@ -31,45 +31,40 @@
     </div>
 </div>
 
-@if (Model.StandardInformation.IsStandardRegulated)
-{
-    <div class="govuk-grid-row govuk-!-margin-top-8">
-        <div class="govuk-grid-column-two-thirds">
-
-            <h3 class="govuk-heading-m" id="table-header-regulation">Regulation</h3>
+<div class="govuk-grid-row govuk-!-margin-top-8" asp-show="@Model.StandardInformation.IsRegulatedForProvider">
+    <div class="govuk-grid-column-two-thirds">
+            <h2 class="govuk-heading-l" id="table-header-regulation">Regulatory Approval</h2>
             <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
-
             <table class="govuk-table" aria-labelledby="table-header-regulation">
                 <tbody class="govuk-table__body">
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header das-table-cell-width-30" scope="row">
-                            Regulator
-                        </th>
-                        <td class="govuk-table__cell das-table-cell-width-50">
-                            @Model.StandardInformation.RegulatorName
-                        </td>
-                        <td class="govuk-table__cell das-table-cell-width-20">
-                        </td>
-                    </tr>
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header" scope="row">
-                            Approved
-                        </th>
-                        <td class="govuk-table__cell">
-                            @Model.ApprovedByRegulatorStatus()
-                        </td>
-                        <td class="govuk-table__cell govuk-table__cell--numeric">
-                            <a href="@Model.ConfirmRegulatedStandardUrl" class="govuk-link">
-                                Change<span class="govuk-visually-hidden"> the regulated information</span>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml" />
-        </div>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header das-table-cell-width-30" scope="row">
+                    Regulator
+                </th>
+                <td class="govuk-table__cell das-table-cell-width-50">
+                    @Model.StandardInformation.RegulatorName
+                </td>
+                <td class="govuk-table__cell das-table-cell-width-20">
+                </td>
+            </tr>
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="row">
+                    Approved
+                </th>
+                <td class="govuk-table__cell">
+                    @Model.ApprovedByRegulatorStatus()
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric">
+                    <a href="@Model.ConfirmRegulatedStandardUrl" class="govuk-link">
+                        Change<span class="govuk-visually-hidden"> the regulated information</span>
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml"/>
     </div>
-}
+</div>
 
 <div class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
@@ -77,9 +72,9 @@
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
                     <th class="govuk-table__header das-table-cell-width-80" scope="col">
-                        <span class="govuk-heading-m">
+                        <h2 class="govuk-heading-l">
                             Training options
-                        </span>
+                        </h2>
                     </th>
                     <th class="govuk-table__header das-table-cell-width-20" scope="col">
                         <span class="govuk-visually-hidden">Action</span>
@@ -89,7 +84,7 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td class="govuk-table__cell">
-                        @Model.LocationSummary
+                        @Html.Raw(Model.LocationSummary)
                     </td>
                     <td class="govuk-table__cell govuk-table__cell--numeric">
                         <a href="@Model.EditLocationOptionUrl" class="govuk-link govuk-link--no-visited-state">
@@ -158,11 +153,16 @@
     </div>
 </div>
 
-<div class="das-highlight">
-    <h2 class="govuk-heading-m">Actions</h2>
-    <ul class="govuk-list govuk-!-margin-bottom-0">
-        <li><a href="@Model.DeleteStandardUrl" class="govuk-link govuk-link--no-visited-state">Delete standard</a> </li>
-    </ul>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="das-highlight">
+            <h2 class="govuk-heading-m">Actions</h2>
+            <ul class="govuk-list govuk-!-margin-bottom-0">
+                <li><a href="@Model.DeleteStandardUrl" class="govuk-link govuk-link--no-visited-state">Delete standard</a> </li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <div class="govuk-grid-row govuk-!-margin-top-8">
@@ -170,7 +170,7 @@
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         <p class="govuk-body">
             <a href="@Model.BackUrl" class="govuk-link govuk-link--no-visited-state">
-                Back to standards management
+                Back to manage your standards
             </a>
         </p>
     </div>

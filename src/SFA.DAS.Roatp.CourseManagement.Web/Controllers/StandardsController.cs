@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,9 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -94,7 +94,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
             model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
 
-            model.ConfirmRegulatedStandardUrl = model.StandardInformation.IsStandardRegulated ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
+            model.ConfirmRegulatedStandardUrl = model.StandardInformation.IsRegulatedForProvider ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
 
             model.EditProviderCourseRegionsUrl = model.SubRegionCourseLocations.Any() ? Url.RouteUrl(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode }) : string.Empty;
 
