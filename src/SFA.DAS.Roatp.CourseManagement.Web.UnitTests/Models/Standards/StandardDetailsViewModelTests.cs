@@ -42,7 +42,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 ContactUsPageUrl = contactUsPageUrl,
-                IsRegulatedForProvider = isRegulated
+                IsRegulatedForProvider = isRegulated,
+                IsApprovedByRegulator = true
             };
 
             StandardDetailsViewModel viewModel = standardDetails;

@@ -53,6 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ContactUsPageUrl = "www.test.com/ContactUs",
                 ContactUsPhoneNumber = "123456789",
                 IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true,
                 ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } }
             };
 
@@ -70,6 +71,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_ReturnsValidResponse()
         {
+            var response = new GetStandardDetailsQueryResult
+            {
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true,
+                LarsCode = LarsCode
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
             var result = await _controller.ViewStandard(LarsCode);
 
             var viewResult = result as ViewResult;
@@ -107,7 +118,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var response = new GetStandardDetailsQueryResult
             {
                 RegulatorName = Regulator,
-                IsRegulatedForProvider = true
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -133,7 +145,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             var response = new GetStandardDetailsQueryResult
             {
-                HasLocations = true
+                HasLocations = true,
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -156,6 +170,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesEditContactDetailsUrl()
         {
+            var response = new GetStandardDetailsQueryResult
+            {
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
             _controller = new StandardsController(_mediator.Object, _logger.Object);
             _controller
                 .AddDefaultContextWithUser()
@@ -172,6 +195,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesEditLocationOptionUrl()
         {
+            var response = new GetStandardDetailsQueryResult
+            {
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
             _controller = new StandardsController(_mediator.Object, _logger.Object);
             _controller
                 .AddDefaultContextWithUser()
@@ -190,7 +222,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             var response = new GetStandardDetailsQueryResult
             {
-                ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } }
+                ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } },
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -212,7 +246,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesEditProviderCourseRegionsUrlEmpty()
         {
-            var response = new GetStandardDetailsQueryResult();
+            var response = new GetStandardDetailsQueryResult
+            {
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
+            };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
@@ -251,7 +289,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             var response = new GetStandardDetailsQueryResult
             {
-                IsRegulatedForProvider = true
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -273,6 +312,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesDeleteStandardUrl()
         {
+            var response = new GetStandardDetailsQueryResult
+            {
+                IsRegulatedForProvider = true,
+                IsApprovedByRegulator = true
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
             _controller = new StandardsController(_mediator.Object, _logger.Object);
             _controller
                 .AddDefaultContextWithUser()

@@ -9,7 +9,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     public class StandardViewModelTests
     {
         [TestCase(true, false, false)]
-        [TestCase(null, true, false)]
+        [TestCase(null, true, true)]
+        [TestCase(null, false, false)]
         [TestCase(true, true, false)]
         [TestCase(false, true, true)]
         public void ImplicitOperator_ConvertsFromStandard(bool? approvedByRegulator, bool isRegulatedForProvider, bool expectedApprovalRequired)
