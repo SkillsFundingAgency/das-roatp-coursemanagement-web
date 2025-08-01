@@ -83,13 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         }
         private bool SetMissingInfo()
         {
-            if (!HasLocations)
-                return true;
-            if (IsApprovedByRegulator == null)
-                return false;
-            if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
-                return true;
-            return false;
+            return (!HasLocations) || (IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault());
         }
     }
 }

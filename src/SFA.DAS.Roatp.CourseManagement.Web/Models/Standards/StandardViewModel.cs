@@ -49,11 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         private bool SetIsApprovalPending()
         {
-            if (!IsRegulatedForProvider || !IsApprovedByRegulator.HasValue)
-                return false;
-            if ((bool)IsApprovedByRegulator)
-                return false;
-            return true;
+            return IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault();
         }
     }
 }

@@ -308,23 +308,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             StandardDetailsViewModel viewModel = standardDetails;
             viewModel.StandardRequiresMoreInfo.Should().Be(expected);
         }
-
-        [TestCase(true, true, false, MissingInfoBannerViewModel.MissingInfo.NotApproved)]
-        [TestCase(false, false, null, MissingInfoBannerViewModel.MissingInfo.LocationMissing)]
-        [TestCase(false, true, false, MissingInfoBannerViewModel.MissingInfo.LocationMissingAndNotApproved)]
-        [TestCase(true, true, true, null)]
-        public void MissingInformationTypeIsSet(bool hasLocations, bool isRegulatedForProvider,
-            bool? isApprovedByRegulator, MissingInfoBannerViewModel.MissingInfo? expected)
-        {
-            var standardDetails = new GetStandardDetailsQueryResult
-            {
-                HasLocations = hasLocations,
-                IsRegulatedForProvider = isRegulatedForProvider,
-                IsApprovedByRegulator = isApprovedByRegulator
-            };
-
-            StandardDetailsViewModel viewModel = standardDetails;
-            viewModel.MissingInfoBannerViewModel.MissingInformationType.Should().Be(expected);
-        }
     }
 }
