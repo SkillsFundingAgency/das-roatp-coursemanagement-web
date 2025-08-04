@@ -1,4 +1,8 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +17,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderLocationDetailsControllerTests
 {
@@ -63,9 +63,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
 
         [Test, AutoData]
         public async Task UpdateProviderLocationDetails_InvalidRequest_ReturnsSameView(
-            GetProviderLocationDetailsQueryResult queryResult, 
-            ProviderLocationDetailsSubmitModel model, 
-            Guid id, 
+            GetProviderLocationDetailsQueryResult queryResult,
+            ProviderLocationDetailsSubmitModel model,
+            Guid id,
             GetAllProviderLocationsQueryResult allProviderLocationsQueryResult)
         {
             _sut.ModelState.AddModelError("key", "errorMessage");
@@ -86,15 +86,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
             viewResult.ViewName.Should().Contain("EditProviderLocationsDetails.cshtml");
             var viewmodel = viewResult.Model as ProviderLocationViewModel;
             viewmodel.Should().NotBeNull();
-            viewmodel.BackUrl.Should().Be(verifyUrl);
+            viewmodel.TrainingVenuesUrl.Should().Be(verifyUrl);
             viewmodel.CancelUrl.Should().Be(verifyUrl);
         }
 
         [Test, AutoData]
         public async Task UpdateProviderLocationDetails_LocationNameIsNotDistinct_ReturnsSameView(
-            GetProviderLocationDetailsQueryResult queryResult, 
-            ProviderLocationDetailsSubmitModel model, 
-            Guid id, 
+            GetProviderLocationDetailsQueryResult queryResult,
+            ProviderLocationDetailsSubmitModel model,
+            Guid id,
             GetAllProviderLocationsQueryResult allProviderLocationsQueryResult)
         {
             allProviderLocationsQueryResult.ProviderLocations.First().LocationName = model.LocationName;
@@ -115,7 +115,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
             viewResult.ViewName.Should().Contain("EditProviderLocationsDetails.cshtml");
             var viewmodel = viewResult.Model as ProviderLocationViewModel;
             viewmodel.Should().NotBeNull();
-            viewmodel.BackUrl.Should().Be(verifyUrl);
+            viewmodel.TrainingVenuesUrl.Should().Be(verifyUrl);
             viewmodel.CancelUrl.Should().Be(verifyUrl);
         }
     }
