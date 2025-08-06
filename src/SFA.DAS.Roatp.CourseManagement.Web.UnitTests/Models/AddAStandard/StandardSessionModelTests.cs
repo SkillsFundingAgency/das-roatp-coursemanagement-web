@@ -1,12 +1,12 @@
-﻿using AutoFixture;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAStandard
 {
@@ -21,13 +21,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAStandard
             actual.LarsCode.Should().Be(sut.LarsCode);
         }
 
-        [TestCase("Approval body", true)]
-        [TestCase("", null)]
-        public void Operator_IsApprovedByRegulator_IsBasedOnRegulatorName(string regulatorName, bool? expected)
+        [TestCase(true, true)]
+        [TestCase(false, null)]
+        public void Operator_IsApprovedByRegulator_IsBasedOnIsRegulatedForProvider(bool isRegulated, bool? expected)
         {
             var fixture = new Fixture();
             StandardSessionModel sut = fixture.Create<StandardSessionModel>();
-            sut.StandardInformation.RegulatorName = regulatorName;
+            sut.StandardInformation.IsRegulatedForProvider = isRegulated;
 
             AddProviderCourseCommand actual = sut;
 

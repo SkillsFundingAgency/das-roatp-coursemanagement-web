@@ -64,7 +64,7 @@
                             @Model.StandardInformation.LarsCode
                         </td>
                     </tr>
-                @if (!string.IsNullOrEmpty(Model.StandardInformation.RegulatorName))
+                @if (Model.StandardInformation.IsRegulatedForProvider)
                 {
                     <tr class="govuk-table__row">
                         <th scope="row" class="govuk-table__header">

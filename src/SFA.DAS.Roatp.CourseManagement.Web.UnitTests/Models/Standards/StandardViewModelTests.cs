@@ -8,18 +8,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
     [TestFixture]
     public class StandardViewModelTests
     {
-        [TestCase(true, "approval body", false)]
-        [TestCase(false, "approval body", false)]
-        [TestCase(true, "", false)]
-        [TestCase(false, "", false)]
-        public void ImplicitOperator_ConvertsFromStandard(bool approvedByRegulator, string approvalBody, bool expectedApprovalRequired)
+        [TestCase(true, false, false)]
+        [TestCase(null, true, true)]
+        [TestCase(null, false, false)]
+        [TestCase(true, true, false)]
+        [TestCase(false, true, true)]
+        public void ImplicitOperator_ConvertsFromStandard(bool? approvedByRegulator, bool isRegulatedForProvider, bool expectedApprovalRequired)
         {
             const int providerCourseId = 1;
             const string courseName = "course name";
             const int level = 1;
             const int larsCode = 133;
             const string expectedCourseDisplayName = "course name (level 1)";
-            const bool isRegulatedForProvider = true;
+            const string approvalBody = "approval body";
             const bool hasLocations = true;
 
             var standard = new Standard

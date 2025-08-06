@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ApprovalBody { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocation { get; set; }
-        public bool IsApprovalPending => IsRegulatedForProvider && !IsApprovedByRegulator.HasValue;
+        public bool IsApprovalPending => SetIsApprovalPending();
         public bool? IsApprovedByRegulator { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
@@ -38,13 +38,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         private bool SetMissingInfo()
         {
-            if (!HasLocation)
-                return true;
-            if (IsApprovedByRegulator == null)
-                return false;
-            if (IsRegulatedForProvider && (bool)!IsApprovedByRegulator)
-                return true;
-            return false;
+            return (!HasLocation) || (IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault());
+        }
+
+        private bool SetIsApprovalPending()
+        {
+            return IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault();
         }
     }
 }
