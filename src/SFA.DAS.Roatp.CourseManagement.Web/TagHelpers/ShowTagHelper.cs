@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.TagHelpers;
 
+[ExcludeFromCodeCoverage]
 [HtmlTargetElement(Attributes = "asp-show")]
 public class ShowTagHelper : TagHelper
 {
@@ -9,7 +11,7 @@ public class ShowTagHelper : TagHelper
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
-        if (!AspShow.HasValue || !AspShow.Value)
+        if (!AspShow.GetValueOrDefault())
         {
             output.SuppressOutput();
         }

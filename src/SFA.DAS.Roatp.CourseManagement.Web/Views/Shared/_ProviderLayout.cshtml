@@ -13,6 +13,17 @@
 @section breadcrumb
 {
     @RenderSection("breadcrumb", required: false)
+    @if (Model is IBackLink backlink)
+    {
+        if (string.IsNullOrWhiteSpace(@backlink.BackUrl))
+        {
+            <a class="das-js-back-link">Back</a>
+        }
+        else
+        {
+            <a class="=govuk-back-link" href="@Model.BackUrl">Back</a>
+        }
+    }
 }
 
 @section Scripts
