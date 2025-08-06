@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAStandard
         }
 
         [TestCase(true, true)]
-        [TestCase(false, false)]
+        [TestCase(false, null)]
         public void Operator_IsApprovedByRegulator_IsBasedOnIsRegulatedForProvider(bool isRegulated, bool? expected)
         {
             var fixture = new Fixture();
