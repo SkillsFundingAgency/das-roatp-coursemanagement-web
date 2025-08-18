@@ -206,6 +206,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             });
 
             app.UseRouting();
+
+            // Apply no-cache globally
+            app.UseNoBrowserCache();
+
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseSession();

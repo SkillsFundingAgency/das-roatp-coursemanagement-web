@@ -1,8 +1,12 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -16,8 +20,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderCo
 public class AddProviderContactPostTests
 {
     [Test, MoqAutoData]
-    public void Post_NoErrors_RedirectsToNextPage(
+    public async Task Post_NoStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] AddProviderContactController sut,
         int ukprn)
     {
@@ -32,18 +37,101 @@ public class AddProviderContactPostTests
 
         sut.AddDefaultContextWithUser();
 
-        var result = sut.PostProviderContact(ukprn, submitViewModel);
+        var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.EmailAddress == email && v.PhoneNumber == phoneNumber)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.GetAddProviderContact);
-
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
     }
 
     [Test, MoqAutoData]
-    public void Post_ModelStateIsInvalid_ReturnsViewResult(
+    public async Task Post_NoEmail_WithStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] AddProviderContactController sut,
+        GetAllProviderStandardsQueryResult standardsResult,
+        int ukprn)
+    {
+        var phoneNumber = "123445";
+
+        var submitViewModel = new AddProviderContactSubmitViewModel
+        {
+            PhoneNumber = phoneNumber
+        };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+
+        var result = await sut.PostProviderContact(ukprn, submitViewModel);
+
+        var redirectResult = result as RedirectToRouteResult;
+
+        sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.PhoneNumber == phoneNumber)), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Post_NoPhoneNumber_WithStandards_RedirectsToExpectedPage(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] AddProviderContactController sut,
+        GetAllProviderStandardsQueryResult standardsResult,
+        int ukprn)
+    {
+        var email = "test@test.com";
+
+        var submitViewModel = new AddProviderContactSubmitViewModel
+        {
+            EmailAddress = email
+        };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+
+        var result = await sut.PostProviderContact(ukprn, submitViewModel);
+
+        var redirectResult = result as RedirectToRouteResult;
+
+        sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.EmailAddress == email)), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Post_EmailAndPhoneNumberAndStandards_RedirectsToExpectedPage(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] AddProviderContactController sut,
+        GetAllProviderStandardsQueryResult standardsResult,
+        int ukprn)
+    {
+        var email = "test@test.com";
+        var phone = "123";
+
+        var submitViewModel = new AddProviderContactSubmitViewModel
+        {
+            EmailAddress = email,
+            PhoneNumber = phone
+        };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+
+        var result = await sut.PostProviderContact(ukprn, submitViewModel);
+
+        var redirectResult = result as RedirectToRouteResult;
+
+        sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.EmailAddress == email && v.PhoneNumber == phone)), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmUpdateStandardsFromProviderContactEmailPhone);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Post_ModelStateIsInvalid_ReturnsViewResult(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] AddProviderContactController sut,
         int ukprn)
     {
@@ -59,7 +147,7 @@ public class AddProviderContactPostTests
         sut.AddDefaultContextWithUser();
         sut.ModelState.AddModelError("key", "message");
 
-        var result = sut.PostProviderContact(ukprn, submitViewModel);
+        var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as AddProviderContactViewModel;

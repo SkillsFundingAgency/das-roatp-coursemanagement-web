@@ -4,6 +4,7 @@ using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddProviderContact;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddProviderContact;
 

@@ -5,6 +5,8 @@ using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -12,8 +14,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     public class ReviewYourDetailsController : ControllerBase
     {
         private readonly ProviderSharedUIConfiguration _pasSharedConfiguration;
-        public ReviewYourDetailsController(IOptions<ProviderSharedUIConfiguration> config)
+        private readonly ISessionService _sessionService;
+        public ReviewYourDetailsController(IOptions<ProviderSharedUIConfiguration> config, ISessionService sessionService)
         {
+            _sessionService = sessionService;
             _pasSharedConfiguration = config.Value;
         }
 
@@ -21,6 +25,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpGet]
         public IActionResult ReviewYourDetails()
         {
+            _sessionService.Delete(nameof(ProviderContactSessionModel));
+
             var standardsUrl = Url.RouteUrl(RouteNames.ViewStandards, new
             {
                 ukprn = Ukprn,
@@ -30,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             { ukprn = Ukprn });
             var providerDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, new { Ukprn });
 
-            var providerContactUrl = Url.RouteUrl(RouteNames.GetAddProviderContact, new { Ukprn });
+            var providerContactUrl = Url.RouteUrl(RouteNames.AddProviderContact, new { Ukprn });
 
             return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
             {
