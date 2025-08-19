@@ -27,7 +27,7 @@
                     An email address for a person or team to speak to about your standards
                 </div>
                 <span asp-validation-for="EmailAddress" class="govuk-error-message"></span>
-                <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" aria-describedby="EmailAddress-hint" maxlength="256" value="@Model.EmailAddress">
+                <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" aria-describedby="EmailAddress-hint" maxlength="254" value="@Model.EmailAddress">
             </div>
             <div esfa-validation-marker-for="PhoneNumber" class="govuk-form-group">
                 <label class="govuk-label govuk-label--m" asp-for="PhoneNumber" for="PhoneNumber">
