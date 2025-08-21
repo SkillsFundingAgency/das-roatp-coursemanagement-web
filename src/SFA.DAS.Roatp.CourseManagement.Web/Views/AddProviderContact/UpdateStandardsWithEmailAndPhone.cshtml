@@ -38,10 +38,10 @@
             <input type="hidden" asp-for="@Model.EmailAddress" />
             <input type="hidden" asp-for="@Model.PhoneNumber" />
             <div esfa-validation-marker-for="UpdateExistingStandards" class="govuk-form-group">
-                <span asp-validation-for="UpdateExistingStandards" class="govuk-error-message"></span>
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Do you want to update your existing standards with these contact details?</legend>
                     <div id="UpdateExistingStandards" class="govuk-radios" data-module="govuk-radios">
+                        <span asp-validation-for="UpdateExistingStandards" class="govuk-error-message"></span>
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="update-existing-standards-yes" type="radio" value="true"
                                    asp-for="UpdateExistingStandards" sfa-validationerror-class="form-control-error">
