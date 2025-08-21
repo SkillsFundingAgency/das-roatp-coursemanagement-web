@@ -1,0 +1,70 @@
+@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.ProviderContactCheckStandardsViewModel
+@{
+    ViewBag.Title = "check standards for a provider contact";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-caption-l">Update multiple standards</div>
+        <h1 class="govuk-heading-xl">Check details</h1>
+        
+        <h2 class="govuk-heading-m">Contact details</h2>
+
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.EmailAddress
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@Model.ChangeEmailPhoneUrl">Change<span class="govuk-visually-hidden"> email address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phone number
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.PhoneNumber
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@Model.ChangeEmailPhoneUrl">Change<span class="govuk-visually-hidden"> phone number</span></a>
+                </dd>
+            </div>
+           
+        </dl>
+
+        <h2 class="govuk-heading-m">Selected standards</h2>
+        <p class="govuk-body">
+            These are the standards you selected. <a class="govuk-link" href="@Model.ChangeSelectedStandardsUrl">Change your selected standards</a>
+        </p>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+
+                <ul class="govuk-list govuk-list--bullet">
+                    @foreach (var standardDetails in Model.CheckedStandards.OrderBy(x => x))
+                    {
+                        <li>@standardDetails</li>
+                    }
+                </ul>
+            </fieldset>
+        </div>
+        <h2 class="govuk-heading-m">Save and update</h2>
+        <p class="govuk-body">
+            By saving, your details will be automatically updated on Find apprenticeship training. We'll also save them for next time you add a standard. 
+        </p>
+        <p class="govuk-body">
+            Saving a new email address or phone number to your standards will not remove any other contact details associated with them.
+        </p>
+        <form method="post" asp-route="@RouteNames.AddProviderContactCheckStandards" enctype="multipart/form-data" novalidate>
+            <div class="govuk-button-group">
+                <button id="Continue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Continue
+                </button>
+                <a href="@Model.ReviewYourDetailsUrl" class="govuk-link">Cancel</a>
+            </div>
+
+        </form>
+    </div>
+</div>

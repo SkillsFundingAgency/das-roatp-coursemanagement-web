@@ -1,0 +1,35 @@
+@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.ProviderContactCheckStandardsViewModel
+@{
+    ViewBag.Title = "Contact details saved and standards updated";
+    var bulletedListClass = Model.UseBulletedList ? "govuk-list--bullet" : string.Empty;
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation">
+            <h1 class="govuk-panel__title">
+               Contact details saved and standards updated
+            </h1>
+        </div>
+        
+        <p class="govuk-body">
+            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
+        </p>
+        
+        <p class="govuk-body">
+            We've updated contact details on Find apprenticeship training for these standards:  
+        </p>
+        <div class="govuk-form-group">
+            <fieldset class="govuk-fieldset">
+                <ul class="govuk-list @bulletedListClass">
+                    @foreach (var standardDetails in Model.CheckedStandards.OrderBy(x => x))
+                    {
+                        <li>@standardDetails</li>
+                    }
+                </ul>
+            </fieldset>
+        </div>
+        <p class="govuk-body">
+            We've also saved your details to use next time you add a standard. Go to <a href="@Model.ReviewYourDetailsUrl" class="govuk-link">Manage your standards</a> to change contact details for individual standards.
+        </p>
+    </div>
+</div>
