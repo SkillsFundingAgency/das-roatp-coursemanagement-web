@@ -16,7 +16,7 @@ public class ProviderContactUpdateStandardsSubmitViewModelValidatorTests
 
         var result = sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(m => m.UpdateExistingStandards)
+        result.ShouldHaveValidationErrorFor(m => m.HasOptedToUpdateExistingStandards)
             .WithErrorMessage(ProviderContactUpdateStandardsSubmitViewModelValidator.UpdateStandardsNotPickedMessage);
     }
 
@@ -24,7 +24,7 @@ public class ProviderContactUpdateStandardsSubmitViewModelValidatorTests
     [TestCase(false)]
     public void NoSelectionIsMade(bool selection)
     {
-        var model = new ProviderContactUpdateStandardsSubmitViewModel { UpdateExistingStandards = selection };
+        var model = new ProviderContactUpdateStandardsSubmitViewModel { HasOptedToUpdateExistingStandards = selection };
         var sut = new ProviderContactUpdateStandardsSubmitViewModelValidator();
         var result = sut.TestValidate(model);
         result.ShouldNotHaveAnyValidationErrors();

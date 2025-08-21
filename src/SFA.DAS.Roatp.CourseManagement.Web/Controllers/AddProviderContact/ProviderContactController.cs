@@ -13,22 +13,22 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/add-provider-contact", Name = RouteNames.AddProviderContact)]
-public class AddProviderContactController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
+[Route("{ukprn}/add-provider-contact", Name = RouteNames.AddProviderContactDetails)]
+public class ProviderContactController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/AddProviderContact.cshtml";
 
     [HttpGet]
     public IActionResult AddProviderContact(int ukprn)
     {
-        var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
+        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
 
         var model = new AddProviderContactViewModel();
 
-        if (providerContactModel != null)
+        if (sessionModel != null)
         {
-            model.EmailAddress = providerContactModel.EmailAddress;
-            model.PhoneNumber = providerContactModel.PhoneNumber;
+            model.EmailAddress = sessionModel.EmailAddress;
+            model.PhoneNumber = sessionModel.PhoneNumber;
         }
 
         return View(ViewPath, model);
@@ -48,23 +48,30 @@ public class AddProviderContactController(IMediator _mediator, ISessionService _
             return View(ViewPath, model);
         }
 
-        var sessionModel = new ProviderContactSessionModel { EmailAddress = submitViewModel.EmailAddress, PhoneNumber = submitViewModel.PhoneNumber };
+        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
+        if (sessionModel == null) sessionModel = new ProviderContactSessionModel();
 
+        sessionModel.EmailAddress = submitViewModel.EmailAddress;
+        sessionModel.PhoneNumber = submitViewModel.PhoneNumber;
 
-        GetAllProviderStandardsQueryResult standardsResult = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn));
-        if (standardsResult.Standards != null)
+        if (sessionModel.Standards == null || sessionModel.Standards.Count == 0)
         {
-            sessionModel.Standards = standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList();
+            GetAllProviderStandardsQueryResult standardsResult = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn));
+            if (standardsResult.Standards != null)
+            {
+                sessionModel.Standards =
+                    standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList();
+            }
         }
 
         _sessionService.Set(sessionModel);
 
         if (sessionModel.Standards is { Count: > 0 } && !string.IsNullOrEmpty(submitViewModel.EmailAddress) && !string.IsNullOrEmpty(submitViewModel.PhoneNumber))
         {
-            return RedirectToRoute(RouteNames.ConfirmUpdateStandardsFromProviderContactEmailPhone, new { ukprn = Ukprn });
+            return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
         }
 
-        return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
+        return RedirectToRoute(RouteNames.AddProviderContactDetails, new { ukprn = Ukprn });
     }
 }
 

@@ -14,13 +14,13 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
 [TestFixture]
-public class ProviderContactUpdateStandardsControllerPostTests
+public class ConfirmUpdateStandardsControllerPostTests
 {
     [Test, MoqAutoData]
     public void Post_ModelStateIsInvalid_ReturnsViewResult(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ProviderContactUpdateStandardsController sut,
+        [Greedy] ConfirmUpdateStandardsController sut,
         int ukprn)
     {
         var email = "test@test.com";
@@ -47,21 +47,21 @@ public class ProviderContactUpdateStandardsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void Post_RedirectsToPage(
+    public void Post_UpdateExistingStandards_RedirectsToPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ProviderContactUpdateStandardsController sut,
-        int ukprn,
-        bool updateExistingStandards)
+        [Greedy] ConfirmUpdateStandardsController sut,
+        int ukprn)
     {
         var email = "test@test.com";
         var phoneNumber = "123445";
+        bool updateExistingStandards = true;
 
         var submitViewModel = new ProviderContactUpdateStandardsSubmitViewModel
         {
             EmailAddress = email,
             PhoneNumber = phoneNumber,
-            UpdateExistingStandards = updateExistingStandards
+            HasOptedToUpdateExistingStandards = updateExistingStandards
         };
 
         sut.AddDefaultContextWithUser();
@@ -71,6 +71,34 @@ public class ProviderContactUpdateStandardsControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.UpdateExistingStandards == updateExistingStandards)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmUpdateStandardsFromProviderContactEmailPhone);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactSelectStandardsForUpdate);
+    }
+
+    [Test, MoqAutoData]
+    public void Post_UpdateExistingStandardsFalse_RedirectsToPage(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ConfirmUpdateStandardsController sut,
+        int ukprn)
+    {
+        var email = "test@test.com";
+        var phoneNumber = "123445";
+        bool updateExistingStandards = false;
+
+        var submitViewModel = new ProviderContactUpdateStandardsSubmitViewModel
+        {
+            EmailAddress = email,
+            PhoneNumber = phoneNumber,
+            HasOptedToUpdateExistingStandards = updateExistingStandards
+        };
+
+        sut.AddDefaultContextWithUser();
+
+        var result = sut.PostUpdateStandardsEmailAndPhone(ukprn, submitViewModel);
+
+        var redirectResult = result as RedirectToRouteResult;
+
+        sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.UpdateExistingStandards == updateExistingStandards)), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactConfirmUpdateStandards);
     }
 }

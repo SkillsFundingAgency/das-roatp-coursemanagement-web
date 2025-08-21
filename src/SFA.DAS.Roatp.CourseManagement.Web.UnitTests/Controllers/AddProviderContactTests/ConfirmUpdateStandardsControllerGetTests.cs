@@ -13,12 +13,12 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
 [TestFixture]
-public class ProviderContactUpdateStandardsControllerGetTests
+public class ConfirmUpdateStandardsControllerGetTests
 {
     [Test, MoqAutoData]
     public void Get_ModelMissingFromSession_RedirectsToAddProviderContact(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ProviderContactUpdateStandardsController sut,
+        [Greedy] ConfirmUpdateStandardsController sut,
         int ukprn)
     {
         sut.AddDefaultContextWithUser();
@@ -29,13 +29,13 @@ public class ProviderContactUpdateStandardsControllerGetTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 
     [Test, MoqAutoData]
     public void Get_ModelInSession_PopulatesExpectedModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ProviderContactUpdateStandardsController sut,
+        [Greedy] ConfirmUpdateStandardsController sut,
         int ukprn,
         bool? updateExistingStandards
         )
@@ -62,7 +62,7 @@ public class ProviderContactUpdateStandardsControllerGetTests
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
-        model.UpdateExistingStandards.Should().Be(updateExistingStandards);
+        model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 }

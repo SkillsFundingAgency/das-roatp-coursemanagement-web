@@ -126,3 +126,38 @@ nodeListForEach(autoCompletes, function (autoComplete) {
 
 
 });
+
+/*select standards for added provider contact*/
+
+const selectAllStandardsCheckbox = document.getElementById('providerCourseStandardsCheckAll');
+const providerContactStandardsCheckboxes = document.getElementsByClassName('providerContactStandards');
+
+selectAllStandardsCheckbox.addEventListener('change', (event) => {
+    selectAllProviderContactStandards();
+});
+
+
+for (const item of providerContactStandardsCheckboxes) {
+    item.addEventListener('change', (event) => {
+        checkSelectAll();
+    });
+}
+
+checkSelectAll();
+
+function selectAllProviderContactStandards() {
+    for (const item of providerContactStandardsCheckboxes) {
+        item.checked = selectAllStandardsCheckbox.checked;
+    }
+}
+
+function checkSelectAll() {
+    let allChecked = true;
+    for (const item of providerContactStandardsCheckboxes) {
+        if (!item.checked) {
+            allChecked = false;
+        }
+    }
+
+    selectAllStandardsCheckbox.checked = allChecked;
+}
