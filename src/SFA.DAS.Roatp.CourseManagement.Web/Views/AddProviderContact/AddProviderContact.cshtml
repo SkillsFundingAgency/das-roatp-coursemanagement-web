@@ -1,0 +1,67 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.AddProviderContactViewModel
+@{
+    ViewBag.Title = "Add provider contact";
+}
+
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Save contact details</div>
+        <h1 class="govuk-heading-xl">Save your contact details</h1>
+        <p class="govuk-body">Your contact details show on the Find an apprenticeship training service and are how employers contact you about your standards. </p>
+        <p class="govuk-body">You can save a primary set of contact details. You can use them when adding a standard or updating multiple standards.</p> 
+        <p class="govuk-body">Once you've saved these details, you can decide if you want to apply them to one or multiple standards.</p>
+        <p class="govuk-body">You must add either an email address or phone number, or you can add both.</p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <form method="post" enctype="multipart/form-data" novalidate>
+            
+            <div esfa-validation-marker-for="EmailAddress" class="govuk-form-group">
+                <label class="govuk-label govuk-label--m" asp-for="EmailAddress" for="EmailAddress">
+                    Email address
+                </label>
+                <div id="EmailAddress-hint" class="govuk-hint">
+                    An email address for a person or team to speak to about your standards
+                </div>
+                <span asp-validation-for="EmailAddress" class="govuk-error-message"></span>
+                <input asp-for="EmailAddress" id="EmailAddress" class="govuk-input" type="text" aria-describedby="EmailAddress-hint" maxlength="254" value="@Model.EmailAddress">
+            </div>
+            <div esfa-validation-marker-for="PhoneNumber" class="govuk-form-group">
+                <label class="govuk-label govuk-label--m" asp-for="PhoneNumber" for="PhoneNumber">
+                    Phone number
+                </label>
+                <div id="PhoneNumber-hint" class="govuk-hint">
+                    A phone number for a person or team to speak to about your standards
+                </div>
+                <span asp-validation-for="PhoneNumber" class="govuk-error-message"></span>
+                <input asp-for="PhoneNumber" id="PhoneNumber" class="govuk-input" type="text" aria-describedby="PHoneNumber-hint" maxlength="50" value="@Model.PhoneNumber">
+            </div>
+            
+            <div class="govuk-button-group">
+                <button id="Continue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Continue
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    What happens if you only save an email address or phone number?
+                </span>
+            </summary>
+        <div class="govuk-details__text">
+            If you only save an email address and apply it to a standard, the phone number associated with the standard will stay the same.
+        </div>
+            <div class="govuk-details__text">
+                If you only save a phone number and apply it to a standard, the email associated with the standard will stay the same.
+            </div>
+        </details>
+    </div>
+</div>
