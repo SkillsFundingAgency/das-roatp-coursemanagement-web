@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.Services;
 using SFA.DAS.Roatp.CourseManagement.Domain;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Validators;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddProviderContact;
 
 public class AddProviderContactSubmitViewModelValidator : AbstractValidator<AddProviderContactSubmitViewModel>
 {

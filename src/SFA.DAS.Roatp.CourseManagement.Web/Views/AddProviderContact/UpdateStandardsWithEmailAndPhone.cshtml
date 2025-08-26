@@ -1,0 +1,67 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.ProviderContactUpdateStandardsViewModel
+@{
+    ViewBag.Title = "Update existing standards with contact details";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Save contact details</div>
+        <h1 class="govuk-heading-xl">Update your existing standards with these contact details</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.EmailAddress
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Phone number
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.PhoneNumber
+                </dd>
+            </div>
+        </dl>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">                    
+        <form method="post" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="@Model.EmailAddress" />
+            <input type="hidden" asp-for="@Model.PhoneNumber" />
+            <div esfa-validation-marker-for="UpdateExistingStandards" class="govuk-form-group">
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Do you want to update your existing standards with these contact details?</legend>
+                    <div id="UpdateExistingStandards" class="govuk-radios" data-module="govuk-radios">
+                        <span asp-validation-for="UpdateExistingStandards" class="govuk-error-message"></span>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="update-existing-standards-yes" type="radio" value="true"
+                                   asp-for="UpdateExistingStandards" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="update-existing-standards-yes">
+                                Yes, I want to choose which standards to update with these details
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="update-existing-standards-no" type="radio" value="false"
+                                   asp-for="UpdateExistingStandards" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="update-existing-standards-no">
+                                No, I just want to save them as an option for when I add a new standard
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>

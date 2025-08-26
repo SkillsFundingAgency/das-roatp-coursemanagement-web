@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Security.Claims;
+using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -9,7 +10,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System.Security.Claims;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
@@ -21,13 +23,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         public void Index_ReturnsViewWithModel()
         {
             var mockOptions = new Mock<IOptions<ProviderSharedUIConfiguration>>();
+            var mockSessionService = new Mock<ISessionService>();
             var config = new ProviderSharedUIConfiguration() { DashboardUrl = @"https://dashboard.com" };
-            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]{new Claim(ProviderClaims.ProviderUkprn,"111")}, "mock"));
-           
-            var  viewStandardsUrl = "http://test/view-standards";
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111") }, "mock"));
+
+            var viewStandardsUrl = "http://test/view-standards";
             var providerLocationsUrl = "http://test/provider-locations";
             var providerDescriptionUrl = "http://test/provider-description";
-            
+
             var expectedModel = new ReviewYourDetailsViewModel()
             {
                 BackUrl = config.DashboardUrl,
@@ -36,24 +39,25 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
                 ProviderDescriptionUrl = providerDescriptionUrl
             };
             mockOptions.Setup(o => o.Value).Returns(config);
-            var sut = new ReviewYourDetailsController(mockOptions.Object)
+            var sut = new ReviewYourDetailsController(mockOptions.Object, mockSessionService.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
                     HttpContext = new DefaultHttpContext() { User = user },
                 },
             };
-            
+
             sut.AddDefaultContextWithUser()
             .AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ViewStandards, viewStandardsUrl)
-            .AddUrlForRoute(RouteNames.GetProviderLocations,providerLocationsUrl)
+            .AddUrlForRoute(RouteNames.GetProviderLocations, providerLocationsUrl)
             .AddUrlForRoute(RouteNames.GetProviderDescription, providerDescriptionUrl);
 
             var result = sut.ReviewYourDetails() as ViewResult;
             result.Should().NotBeNull();
             result.ViewName.Should().Contain(nameof(ReviewYourDetailsController.ReviewYourDetails));
             result.Model.Should().BeEquivalentTo(expectedModel);
+            mockSessionService.Verify(x => x.Delete(nameof(ProviderContactSessionModel)), Times.Once);
         }
     }
 }
