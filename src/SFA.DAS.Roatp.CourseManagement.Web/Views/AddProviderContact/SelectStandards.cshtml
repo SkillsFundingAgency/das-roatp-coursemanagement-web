@@ -1,0 +1,48 @@
+@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.AddProviderContactStandardsViewModel
+@{
+    ViewBag.Title = "select standards for a provider contact";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Update multiple standards</div>
+        <h1 class="govuk-heading-xl">Select the standards you want these contact details to apply to</h1>
+
+        <form method="post" asp-route="@RouteNames.AddProviderContactSelectStandardsForUpdate" enctype="multipart/form-data" novalidate>
+
+            <div class="govuk-form-group" esfa-validation-marker-for="SelectedProviderCourseIds">
+                <span asp-validation-for="SelectedProviderCourseIds" class="govuk-error-message" id="SelectedProviderCourseIds" name="SelectedProviderCourseIds"></span>
+                <fieldset class="govuk-fieldset">
+
+                    <ul class="govuk-list govuk-grid-row">
+                        <li class="govuk-grid-column list-item-margin-bottom-30 list-item-margin-left-20">
+                            <div class="govuk-checkboxes__item  govuk-checkboxes--small">
+                                <input class="govuk-checkboxes__input" id="providerCourseStandardsCheckAll" name="providerCourseStandardsCheckAll" type="checkbox" value="0">
+                                <label class="govuk-label govuk-checkboxes__label" for="providerCourseStandardsCheckAll">
+                                    Select all
+                                </label>
+                            </div>
+                        </li>
+                        @foreach (var standardDetails in Model.Standards.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                        {
+                            <li class="govuk-grid-column  list-item-margin-left-20">
+                                <div class="govuk-checkboxes__item  govuk-checkboxes--small">
+                                    <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@standardDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@standardDetails.ProviderCourseId" checked="@standardDetails.IsSelected">
+                                    <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@standardDetails.ProviderCourseId">
+                                        @standardDetails.CourseName (level @standardDetails.Level)
+                                    </label>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="Continue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Continue
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -5,6 +5,7 @@ public class ProviderContactStandardModel
     public int ProviderCourseId { get; set; }
     public string CourseName { get; set; }
     public int Level { get; set; }
+    public bool IsSelected { get; set; }
 
     public static implicit operator ProviderContactStandardModel(Standard s)
     {

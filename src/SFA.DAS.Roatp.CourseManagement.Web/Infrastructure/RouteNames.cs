@@ -71,7 +71,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string ConfirmDeleteLocationDone = "ConfirmDeleteLocationDone";
         public const string DeleteLocationDenied = "DeleteLocationDenied";
 
-        public const string AddProviderContact = "AddProviderContact";
-        public const string ConfirmUpdateStandardsFromProviderContactEmailPhone = "ConfirmUpdateStandardsFromProviderContactEmailPhone";
+        public const string AddProviderContactDetails = "AddProviderContactDetails";
+        public const string AddProviderContactConfirmUpdateStandards = "AddProviderContactConfirmUpdateStandards";
+        public const string AddProviderContactSelectStandardsForUpdate = "AddProviderContactSelectStandardsForUpdate";
     }
 }

@@ -8,24 +8,24 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/update-existing-standards", Name = RouteNames.ConfirmUpdateStandardsFromProviderContactEmailPhone)]
+[Route("{ukprn}/update-existing-standards", Name = RouteNames.AddProviderContactConfirmUpdateStandards)]
 
-public class ProviderContactUpdateStandardsController(ISessionService _sessionService) : ControllerBase
+public class ConfirmUpdateStandardsController(ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddProviderContact/UpdateStandardsWithEmailAndPhone.cshtml";
+    public const string ViewPath = "~/Views/AddProviderContact/UpdateStandards.cshtml";
 
     [HttpGet]
     public IActionResult UpdateStandardsEmailAndPhone(int ukprn)
     {
         var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
 
-        if (providerContactModel == null) return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
+        if (providerContactModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
         var model = new ProviderContactUpdateStandardsViewModel
         {
             EmailAddress = providerContactModel.EmailAddress,
             PhoneNumber = providerContactModel.PhoneNumber,
-            UpdateExistingStandards = providerContactModel.UpdateExistingStandards
+            HasOptedToUpdateExistingStandards = providerContactModel.UpdateExistingStandards
         };
 
         return View(ViewPath, model);
@@ -46,9 +46,14 @@ public class ProviderContactUpdateStandardsController(ISessionService _sessionSe
         }
 
         var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
-        providerContactModel.UpdateExistingStandards = submitViewModel.UpdateExistingStandards;
+        providerContactModel.UpdateExistingStandards = submitViewModel.HasOptedToUpdateExistingStandards;
         _sessionService.Set(providerContactModel);
 
-        return RedirectToRoute(RouteNames.ConfirmUpdateStandardsFromProviderContactEmailPhone, new { ukprn = Ukprn });
+        if (submitViewModel.HasOptedToUpdateExistingStandards is true)
+        {
+            return RedirectToRoute(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn = Ukprn });
+        }
+
+        return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
     }
 }

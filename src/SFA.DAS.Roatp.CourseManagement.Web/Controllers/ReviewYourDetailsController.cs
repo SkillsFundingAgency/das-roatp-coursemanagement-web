@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             { ukprn = Ukprn });
             var providerDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, new { Ukprn });
 
-            var providerContactUrl = Url.RouteUrl(RouteNames.AddProviderContact, new { Ukprn });
+            var providerContactUrl = Url.RouteUrl(RouteNames.AddProviderContactDetails, new { Ukprn });
 
             return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
             {

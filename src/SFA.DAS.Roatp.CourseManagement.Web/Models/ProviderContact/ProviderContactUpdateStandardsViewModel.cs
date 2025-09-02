@@ -7,7 +7,7 @@ public class ProviderContactUpdateStandardsViewModel : ProviderContactUpdateStan
 
 public class ProviderContactUpdateStandardsSubmitViewModel
 {
-    public bool? UpdateExistingStandards { get; set; }
+    public bool? HasOptedToUpdateExistingStandards { get; set; }
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
 }

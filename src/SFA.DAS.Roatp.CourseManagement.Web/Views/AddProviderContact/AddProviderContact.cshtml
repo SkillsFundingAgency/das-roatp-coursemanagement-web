@@ -3,7 +3,6 @@
     ViewBag.Title = "Add provider contact";
 }
 
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
@@ -17,7 +16,7 @@
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-        <form method="post" asp-route="@RouteNames.AddProviderContact" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.AddProviderContactDetails" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="EmailAddress" class="govuk-form-group">
                 <label class="govuk-label govuk-label--m" asp-for="EmailAddress" for="EmailAddress">
                     Email address

@@ -9,7 +9,7 @@ public class ProviderContactUpdateStandardsSubmitViewModelValidator : AbstractVa
 
     public ProviderContactUpdateStandardsSubmitViewModelValidator()
     {
-        RuleFor(p => p.UpdateExistingStandards)
+        RuleFor(p => p.HasOptedToUpdateExistingStandards)
             .NotEmpty()
             .WithMessage(UpdateStandardsNotPickedMessage);
     }
