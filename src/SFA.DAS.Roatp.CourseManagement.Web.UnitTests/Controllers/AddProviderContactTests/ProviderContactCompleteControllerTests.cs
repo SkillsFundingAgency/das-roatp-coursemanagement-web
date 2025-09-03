@@ -64,7 +64,7 @@ public class ProviderContactCompleteControllerTests
 
         var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
 
-        var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
+        var model = viewResult!.Model as AddProviderContactCompleteViewModel;
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);

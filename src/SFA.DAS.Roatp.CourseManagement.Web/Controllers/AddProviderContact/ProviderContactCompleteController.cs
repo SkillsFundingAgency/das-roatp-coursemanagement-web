@@ -23,7 +23,7 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
 
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards);
 
-        var model = new ProviderContactCheckStandardsViewModel
+        var model = new AddProviderContactCompleteViewModel
         {
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
