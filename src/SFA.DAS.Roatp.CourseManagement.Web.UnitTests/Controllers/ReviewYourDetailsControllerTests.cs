@@ -30,13 +30,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var viewStandardsUrl = "http://test/view-standards";
             var providerLocationsUrl = "http://test/provider-locations";
             var providerDescriptionUrl = "http://test/provider-description";
+            var providerContactUrl = "http://test/provider-control";
 
             var expectedModel = new ReviewYourDetailsViewModel()
             {
                 BackUrl = config.DashboardUrl,
                 ProviderLocationsUrl = providerLocationsUrl,
                 StandardsUrl = viewStandardsUrl,
-                ProviderDescriptionUrl = providerDescriptionUrl
+                ProviderDescriptionUrl = providerDescriptionUrl,
+                ProviderContactUrl = providerContactUrl
             };
             mockOptions.Setup(o => o.Value).Returns(config);
             var sut = new ReviewYourDetailsController(mockOptions.Object, mockSessionService.Object)
@@ -51,7 +53,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             .AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ViewStandards, viewStandardsUrl)
             .AddUrlForRoute(RouteNames.GetProviderLocations, providerLocationsUrl)
-            .AddUrlForRoute(RouteNames.GetProviderDescription, providerDescriptionUrl);
+            .AddUrlForRoute(RouteNames.GetProviderDescription, providerDescriptionUrl)
+            .AddUrlForRoute(RouteNames.CheckProviderContactDetails, providerContactUrl);
 
             var result = sut.ReviewYourDetails() as ViewResult;
             result.Should().NotBeNull();
