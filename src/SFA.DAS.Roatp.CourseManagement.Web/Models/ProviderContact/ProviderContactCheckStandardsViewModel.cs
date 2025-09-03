@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
-public class ProviderContactCheckStandardsViewModel : IBackLink
+public class ProviderContactCheckStandardsViewModel
 {
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
