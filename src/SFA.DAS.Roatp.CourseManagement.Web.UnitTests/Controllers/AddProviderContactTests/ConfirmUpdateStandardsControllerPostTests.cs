@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderCo
 public class ConfirmUpdateStandardsControllerPostTests
 {
     [Test, MoqAutoData]
-    public void Post_ModelStateIsInvalid_ReturnsViewResult(
+    public void Post_ModelStateIsInvalid_EmailAndPhone_ReturnsViewResult(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ConfirmUpdateStandardsController sut,
@@ -39,8 +39,67 @@ public class ConfirmUpdateStandardsControllerPostTests
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
+        viewResult.ViewName.Should().Contain("UpdateStandardsPhoneAndEmail");
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
+        model.PhoneNumber.Should().Be(phoneNumber);
+
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());
+    }
+
+    [Test, MoqAutoData]
+    public void Post_ModelStateIsInvalid_EmailOnly_ReturnsViewResult(
+       [Frozen] Mock<ISessionService> sessionServiceMock,
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] ConfirmUpdateStandardsController sut,
+       int ukprn)
+    {
+        var email = "test@test.com";
+
+        var submitViewModel = new ProviderContactUpdateStandardsSubmitViewModel
+        {
+            EmailAddress = email
+        };
+
+        sut.AddDefaultContextWithUser();
+        sut.ModelState.AddModelError("key", "message");
+
+        var result = sut.PostUpdateStandardsEmailAndPhone(ukprn, submitViewModel);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
+        viewResult.ViewName.Should().Contain("UpdateStandardsEmailOnly");
+        model!.BackUrl.Should().BeNull();
+        model.EmailAddress.Should().Be(email);
+        model.PhoneNumber.Should().BeNull();
+
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());
+    }
+
+    [Test, MoqAutoData]
+    public void Post_ModelStateIsInvalid_PhoneOnly_ReturnsViewResult(
+       [Frozen] Mock<ISessionService> sessionServiceMock,
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] ConfirmUpdateStandardsController sut,
+       int ukprn)
+    {
+        var phoneNumber = "123445";
+
+        var submitViewModel = new ProviderContactUpdateStandardsSubmitViewModel
+        {
+            PhoneNumber = phoneNumber
+        };
+
+        sut.AddDefaultContextWithUser();
+        sut.ModelState.AddModelError("key", "message");
+
+        var result = sut.PostUpdateStandardsEmailAndPhone(ukprn, submitViewModel);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
+        viewResult.ViewName.Should().Contain("UpdateStandardsPhoneOnly");
+        model!.BackUrl.Should().BeNull();
+        model.EmailAddress.Should().BeNull();
         model.PhoneNumber.Should().Be(phoneNumber);
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());
@@ -99,6 +158,6 @@ public class ConfirmUpdateStandardsControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.UpdateExistingStandards == updateExistingStandards)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactConfirmUpdateStandards);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
     }
 }

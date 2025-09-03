@@ -23,13 +23,21 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
 
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards);
 
+        var showBoth = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
+        var showPhoneOnly = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && string.IsNullOrEmpty(sessionModel.EmailAddress);
+        var showEmailOnly = string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
+
         var model = new AddProviderContactCompleteViewModel
         {
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
             CheckedStandards = checkedStandards,
             ReviewYourDetailsUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails),
-            UseBulletedList = checkedStandards.Count > 1
+            UseBulletedList = checkedStandards.Count > 1,
+            ShowBoth = showBoth,
+            ShowEmailOnly = showEmailOnly,
+            ShowPhoneOnly = showPhoneOnly,
+            ShowStandards = checkedStandards.Count > 0
         };
 
         return View(ViewPath, model);

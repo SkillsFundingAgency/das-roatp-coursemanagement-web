@@ -70,7 +70,74 @@ public class ProviderContactCompleteControllerTests
         model.PhoneNumber.Should().Be(phoneNumber);
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
+        model.ShowBoth.Should().Be(true);
+        model.ShowEmailOnly.Should().Be(false);
+        model.ShowPhoneOnly.Should().Be(false);
+        model.UseBulletedList.Should().Be(expectedCheckedStandards.Count > 1);
+        model.ShowStandards.Should().Be(expectedCheckedStandards.Count > 0);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ProviderContactSessionModel)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_ModelInSession_Email_Only_PopulatesExpectedModel(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ProviderContactCompleteController sut,
+        List<ProviderContactStandardModel> standards,
+        string reviewYourDetailsLink,
+        int ukprn
+    )
+    {
+        var email = "test@test.com";
+
+        var sessionModel = new ProviderContactSessionModel
+        {
+            EmailAddress = email,
+            Standards = standards
+        };
+
+        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
+
+        sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
+
+        var result = sut.ContactDetailsSaved(ukprn);
+
+        var viewResult = result as ViewResult;
+
+        var model = viewResult!.Model as AddProviderContactCompleteViewModel;
+        model.ShowBoth.Should().Be(false);
+        model.ShowEmailOnly.Should().Be(true);
+        model.ShowPhoneOnly.Should().Be(false);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_ModelInSession_Phone_Only_PopulatesExpectedModel(
+       [Frozen] Mock<ISessionService> sessionServiceMock,
+       [Greedy] ProviderContactCompleteController sut,
+       List<ProviderContactStandardModel> standards,
+       string reviewYourDetailsLink,
+       int ukprn
+   )
+    {
+        var phoneNumber = "123445";
+
+        var sessionModel = new ProviderContactSessionModel
+        {
+            PhoneNumber = phoneNumber,
+            Standards = standards
+        };
+
+        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
+
+        sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
+
+        var result = sut.ContactDetailsSaved(ukprn);
+
+        var viewResult = result as ViewResult;
+
+        var model = viewResult!.Model as AddProviderContactCompleteViewModel;
+        model.ShowBoth.Should().Be(false);
+        model.ShowEmailOnly.Should().Be(false);
+        model.ShowPhoneOnly.Should().Be(true);
     }
 }

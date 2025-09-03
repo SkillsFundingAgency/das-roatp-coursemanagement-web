@@ -10,5 +10,11 @@ public class AddProviderContactCompleteViewModel
     public string ReviewYourDetailsUrl { get; set; }
     public List<string> CheckedStandards { get; set; }
 
+    public bool ShowBoth { get; set; }
+    public bool ShowPhoneOnly { get; set; }
+    public bool ShowEmailOnly { get; set; }
+
+    public bool ShowStandards { get; set; }
+
     public bool UseBulletedList { get; set; }
 }

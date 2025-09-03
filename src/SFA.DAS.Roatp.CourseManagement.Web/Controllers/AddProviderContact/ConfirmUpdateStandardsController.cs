@@ -12,23 +12,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 public class ConfirmUpdateStandardsController(ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddProviderContact/UpdateStandards.cshtml";
+    public const string ViewPathEmailAndPhone = "~/Views/AddProviderContact/UpdateStandardsPhoneAndEmail.cshtml";
+    public const string ViewPathEmail = "~/Views/AddProviderContact/UpdateStandardsEmailOnly.cshtml";
+    public const string ViewPathPhone = "~/Views/AddProviderContact/UpdateStandardsPhoneOnly.cshtml";
+
 
     [HttpGet]
     public IActionResult UpdateStandardsEmailAndPhone(int ukprn)
     {
-        var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
+        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
 
-        if (providerContactModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
+        if (sessionModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
         var model = new ProviderContactUpdateStandardsViewModel
         {
-            EmailAddress = providerContactModel.EmailAddress,
-            PhoneNumber = providerContactModel.PhoneNumber,
-            HasOptedToUpdateExistingStandards = providerContactModel.UpdateExistingStandards
+            EmailAddress = sessionModel.EmailAddress,
+            PhoneNumber = sessionModel.PhoneNumber,
+            HasOptedToUpdateExistingStandards = sessionModel.UpdateExistingStandards
         };
 
-        return View(ViewPath, model);
+        var viewPath = GetViewModelFromEmailAndPhone(model);
+
+        return View(viewPath, model);
     }
 
     [HttpPost]
@@ -41,8 +46,8 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService) :
                 EmailAddress = submitViewModel.EmailAddress,
                 PhoneNumber = submitViewModel.PhoneNumber
             };
-
-            return View(ViewPath, model);
+            var viewPath = GetViewModelFromEmailAndPhone(model);
+            return View(viewPath, model);
         }
 
         var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
@@ -54,6 +59,23 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService) :
             return RedirectToRoute(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn = Ukprn });
         }
 
-        return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
+        return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
+    }
+
+    private static string GetViewModelFromEmailAndPhone(ProviderContactUpdateStandardsViewModel model)
+    {
+        var viewPath = ViewPathEmailAndPhone;
+
+        if (!string.IsNullOrEmpty(model.EmailAddress) && !string.IsNullOrEmpty(model.PhoneNumber))
+        {
+            return ViewPathEmailAndPhone;
+        }
+
+        if (!string.IsNullOrEmpty(model.EmailAddress))
+        {
+            viewPath = ViewPathEmail;
+        }
+
+        return !string.IsNullOrEmpty(model.PhoneNumber) ? ViewPathPhone : viewPath;
     }
 }
