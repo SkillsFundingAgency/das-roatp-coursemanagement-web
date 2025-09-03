@@ -28,7 +28,8 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
             CheckedStandards = checkedStandards,
-            ReviewYourDetailsUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails)
+            ReviewYourDetailsUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails),
+            UseBulletedList = checkedStandards.Count > 1
         };
 
         return View(ViewPath, model);
