@@ -1,8 +1,10 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -13,32 +15,34 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
 [TestFixture]
-public class ConfirmUpdateStandardsControllerGetTests
+public class ProviderContactCompleteControllerTests
 {
     [Test, MoqAutoData]
     public void Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmUpdateStandardsController sut,
+        [Greedy] ProviderContactCompleteController sut,
         int ukprn)
     {
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns((ProviderContactSessionModel)null);
 
-        var result = sut.UpdateStandardsEmailAndPhone(ukprn);
+        var result = sut.ContactDetailsSaved(ukprn);
 
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Delete(nameof(ProviderContactSessionModel)), Times.Never);
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 
     [Test, MoqAutoData]
     public void Get_ModelInSession_PopulatesExpectedModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmUpdateStandardsController sut,
-        int ukprn,
-        bool? updateExistingStandards
-        )
+        [Greedy] ProviderContactCompleteController sut,
+        List<ProviderContactStandardModel> standards,
+        string reviewYourDetailsLink,
+        int ukprn
+    )
     {
         var email = "test@test.com";
         var phoneNumber = "123445";
@@ -47,22 +51,26 @@ public class ConfirmUpdateStandardsControllerGetTests
         {
             EmailAddress = email,
             PhoneNumber = phoneNumber,
-            UpdateExistingStandards = updateExistingStandards
+            Standards = standards
         };
 
-        sut.AddDefaultContextWithUser();
+        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
-        var result = sut.UpdateStandardsEmailAndPhone(ukprn);
+        var result = sut.ContactDetailsSaved(ukprn);
 
         var viewResult = result as ViewResult;
 
-        var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
+        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+
+        var model = viewResult!.Model as AddProviderContactCompleteViewModel;
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
-        model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
+        model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
+        model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Delete(nameof(ProviderContactSessionModel)), Times.Once);
     }
 }

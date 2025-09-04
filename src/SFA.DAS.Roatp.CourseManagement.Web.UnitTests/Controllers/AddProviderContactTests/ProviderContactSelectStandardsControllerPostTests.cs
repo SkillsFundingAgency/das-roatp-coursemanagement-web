@@ -74,12 +74,10 @@ public class SelectStandardsForUpdateControllerPostTests
 
         var result = sut.PostStandards(ukprn, submitViewModel);
 
-        var viewResult = result as ViewResult;
+        var redirectResult = result as RedirectToRouteResult;
 
-        var model = viewResult!.Model as AddProviderContactStandardsViewModel;
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactCheckStandards);
 
-        model!.Standards.Should().BeEquivalentTo(standards);
-        model.BackUrl.Should().BeNull();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Once());
     }

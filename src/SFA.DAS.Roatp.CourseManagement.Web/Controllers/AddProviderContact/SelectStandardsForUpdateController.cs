@@ -62,12 +62,6 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
             return View(ViewPath, viewModel);
         }
 
-
-        var model = new AddProviderContactStandardsViewModel
-        {
-            Standards = sessionModel.Standards
-        };
-
-        return View(ViewPath, model);
+        return RedirectToRoute(RouteNames.AddProviderContactCheckStandards, new { ukprn = Ukprn });
     }
 }
