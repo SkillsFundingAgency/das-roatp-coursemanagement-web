@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -13,28 +12,25 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/contact-check-standards", Name = RouteNames.AddProviderContactCheckStandards)]
-public class CheckStandardsController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
+[Route("{ukprn}/update-contact-details", Name = RouteNames.AddProviderContact)]
+
+public class ConfirmUpdateProviderContactController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddProviderContact/CheckStandards.cshtml";
+    public const string ViewPath = "~/Views/AddProviderContact/UpdateProviderContact.cshtml";
+
 
     [HttpGet]
-    public IActionResult CheckStandards(int ukprn)
+    public IActionResult CheckContact(int ukprn)
     {
         var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
         if (sessionModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
-        var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards);
-
-        var model = new ProviderContactCheckStandardsViewModel
+        var model = new ProviderContactUpdateViewModel
         {
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
-            CheckedStandards = checkedStandards,
             ReviewYourDetailsUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
             ChangeEmailPhoneUrl = Url.RouteUrl(RouteNames.AddProviderContactDetails, new { ukprn }),
-            ChangeSelectedStandardsUrl = Url.RouteUrl(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn }),
-            UseBulletedList = checkedStandards.Count > 1,
             ShowEmail = !string.IsNullOrEmpty(sessionModel.EmailAddress),
             ShowPhone = !string.IsNullOrEmpty(sessionModel.PhoneNumber)
         };
@@ -43,26 +39,20 @@ public class CheckStandardsController(IMediator _mediator, ISessionService _sess
     }
 
     [HttpPost]
-    public async Task<IActionResult> ConfirmCheckStandards(int ukprn)
+    public async Task<IActionResult> ConfirmCheckContact(int ukprn)
     {
 
-        var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
-        if (providerContactModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
-
-        var checkedProviderCourseIds = new List<int>();
-        foreach (var standard in providerContactModel.Standards.Where(s => s.IsSelected))
-        {
-            checkedProviderCourseIds.Add(standard.ProviderCourseId);
-        }
+        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
+        if (sessionModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
         var command = new AddProviderContactCommand
         {
             UserId = UserId,
             UserDisplayName = UserDisplayName,
             Ukprn = ukprn,
-            EmailAddress = providerContactModel.EmailAddress,
-            PhoneNumber = providerContactModel.PhoneNumber,
-            ProviderCourseIds = checkedProviderCourseIds
+            EmailAddress = sessionModel.EmailAddress,
+            PhoneNumber = sessionModel.PhoneNumber,
+            ProviderCourseIds = new List<int>()
         };
 
         await _mediator.Send(command);

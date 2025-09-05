@@ -73,6 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string AddProviderContactDetails = "AddProviderContactDetails";
         public const string AddProviderContactConfirmUpdateStandards = "AddProviderContactConfirmUpdateStandards";
+        public const string AddProviderContact = "AddProviderContact";
         public const string AddProviderContactSelectStandardsForUpdate = "AddProviderContactSelectStandardsForUpdate";
         public const string AddProviderContactCheckStandards = "AddProviderContactCheckStandards";
         public const string AddProviderContactSaved = "AddProviderContactSaved";

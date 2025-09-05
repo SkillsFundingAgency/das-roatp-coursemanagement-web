@@ -13,18 +13,18 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
 [TestFixture]
-public class ConfirmUpdateStandardsControllerGetTests
+public class ConfirmUpdateProviderContactControllerGetTests
 {
     [Test, MoqAutoData]
     public void Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmUpdateStandardsController sut,
-        int ukprn)
+     [Frozen] Mock<ISessionService> sessionServiceMock,
+     [Greedy] ConfirmUpdateProviderContactController sut,
+     int ukprn)
     {
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns((ProviderContactSessionModel)null);
 
-        var result = sut.UpdateStandardsEmailAndPhone(ukprn);
+        var result = sut.CheckContact(ukprn);
 
         var redirectResult = result as RedirectToRouteResult;
 
@@ -35,9 +35,8 @@ public class ConfirmUpdateStandardsControllerGetTests
     [Test, MoqAutoData]
     public void Get_ModelInSession_EmailandPhone_PopulatesExpectedModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmUpdateStandardsController sut,
-        int ukprn,
-        bool? updateExistingStandards
+        [Greedy] ConfirmUpdateProviderContactController sut,
+        int ukprn
         )
     {
         var email = "test@test.com";
@@ -46,91 +45,88 @@ public class ConfirmUpdateStandardsControllerGetTests
         var sessionModel = new ProviderContactSessionModel
         {
             EmailAddress = email,
-            PhoneNumber = phoneNumber,
-            UpdateExistingStandards = updateExistingStandards
+            PhoneNumber = phoneNumber
         };
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
-        var result = sut.UpdateStandardsEmailAndPhone(ukprn);
+        var result = sut.CheckContact(ukprn);
 
         var viewResult = result as ViewResult;
 
-        var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
+        var model = viewResult!.Model as ProviderContactUpdateViewModel;
 
-        viewResult.ViewName.Should().Contain("UpdateStandardsPhoneAndEmail");
+        viewResult.ViewName.Should().Contain("UpdateProviderContact.cshtml");
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
-        model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
+        model.ShowPhone.Should().Be(true);
+        model.ShowEmail.Should().Be(true);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 
     [Test, MoqAutoData]
     public void Get_ModelInSession_EmailOnly_PopulatesExpectedModel(
-       [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Greedy] ConfirmUpdateStandardsController sut,
-       int ukprn,
-       bool? updateExistingStandards
-       )
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ConfirmUpdateProviderContactController sut,
+        int ukprn
+        )
     {
         var email = "test@test.com";
 
         var sessionModel = new ProviderContactSessionModel
         {
-            EmailAddress = email,
-            UpdateExistingStandards = updateExistingStandards
+            EmailAddress = email
         };
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
-        var result = sut.UpdateStandardsEmailAndPhone(ukprn);
+        var result = sut.CheckContact(ukprn);
 
         var viewResult = result as ViewResult;
 
-        var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
-        viewResult.ViewName.Should().Contain("UpdateStandardsEmailOnly");
+        var model = viewResult!.Model as ProviderContactUpdateViewModel;
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().BeNull();
-        model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
+        model.ShowPhone.Should().Be(false);
+        model.ShowEmail.Should().Be(true);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 
     [Test, MoqAutoData]
     public void Get_ModelInSession_PhoneOnly_PopulatesExpectedModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmUpdateStandardsController sut,
-        int ukprn,
-        bool? updateExistingStandards
+        [Greedy] ConfirmUpdateProviderContactController sut,
+        int ukprn
         )
     {
         var phoneNumber = "123445";
 
         var sessionModel = new ProviderContactSessionModel
         {
-            PhoneNumber = phoneNumber,
-            UpdateExistingStandards = updateExistingStandards
+            PhoneNumber = phoneNumber
         };
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
-        var result = sut.UpdateStandardsEmailAndPhone(ukprn);
+        var result = sut.CheckContact(ukprn);
 
         var viewResult = result as ViewResult;
 
-        var model = viewResult!.Model as ProviderContactUpdateStandardsViewModel;
-        viewResult.ViewName.Should().Contain("UpdateStandardsPhoneOnly");
+        var model = viewResult!.Model as ProviderContactUpdateViewModel;
+
         model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().BeNull();
         model.PhoneNumber.Should().Be(phoneNumber);
-        model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
+        model.ShowPhone.Should().Be(true);
+        model.ShowEmail.Should().Be(false);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 }

@@ -1,24 +1,33 @@
 @model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.AddProviderContactCompleteViewModel
 @{
-    ViewBag.Title = "Contact details saved and standards updated";
+    var title = Model.ShowStandards ? "Contact details saved and standards updated" : "Contact details saved";
+
+    ViewBag.Title = @title;
     var bulletedListClass = Model.UseBulletedList ? "govuk-list--bullet" : string.Empty;
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-panel govuk-panel--confirmation">
             <h1 class="govuk-panel__title">
-               Contact details saved and standards updated
+                @title
             </h1>
         </div>
-        
-        <p class="govuk-body">
+        <p class="govuk-body" asp-show="@Model.ShowBoth">
             You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
         </p>
-        
-        <p class="govuk-body">
+
+        <p class="govuk-body" asp-show="@Model.ShowEmailOnly">
+            You have updated your contact details to <strong>@Model.EmailAddress</strong>.
+        </p>
+
+        <p class="govuk-body" asp-show="@Model.ShowPhoneOnly">
+            You have updated your contact details to <strong>@Model.PhoneNumber</strong>.
+        </p>
+
+        <p class="govuk-body" asp-show="Model.ShowStandards">
             We've updated contact details on Find apprenticeship training for these standards:  
         </p>
-        <div class="govuk-form-group">
+        <div class="govuk-form-group" asp-show="Model.ShowStandards">
             <fieldset class="govuk-fieldset">
                 <ul class="govuk-list @bulletedListClass">
                     @foreach (var standardDetails in Model.CheckedStandards.OrderBy(x => x))
