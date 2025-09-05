@@ -1,0 +1,66 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.CheckProviderContactViewModel
+@{
+    ViewBag.Title = "Check provider contact";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-l">Save contact details</div>
+        <h1 class="govuk-heading-xl">Contact details</h1>
+        <p class="govuk-body">Change your saved contact details. You'll be able to use these details when you add a new standard, and you can select which standards you want to update. </p>
+    </div>
+
+<div class="govuk-grid-column-two-thirds">
+    <div class="govuk-summary-card">
+
+        <div>
+            <div class="app-provider-contact">
+                <div class="govuk-summary-card__title-wrapper">
+                    <h2 class="govuk-summary-card__title">
+                   
+                        Contact details
+                    </h2>
+                    <ul class="govuk-summary-card__actions">
+                        <li class="govuk-summary-card__action">
+                            <div class="app-provider-shortlist-control ">
+                                    <a href="@Model.ChangeProviderContactDetailsLink" class="govuk-link">Change</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="govuk-summary-card__content">
+            <dl class="govuk-summary-list">
+                @if (!string.IsNullOrWhiteSpace(Model.EmailAddress))
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">Email address </dt>
+                            <dd class="govuk-summary-list__value">
+                                <p class="govuk-body">
+                                    <span>@Model.EmailAddress</span>
+                                </p>
+                            </dd>
+                        </div>
+                    }
+                @if (!string.IsNullOrWhiteSpace(Model.PhoneNumber))
+                    {
+                        <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">
+                                Phone number
+                            </dt>
+                            <dd class="govuk-summary-list__value">
+
+                                <p class="govuk-body">
+                                    <span>@Model.PhoneNumber</span>
+                                </p>
+                            </dd>
+                        </div>
+                    }
+            </dl>
+        </div>
+    </div>
+</div>
+</div>
