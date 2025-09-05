@@ -1,11 +1,11 @@
 ﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
-public class ProviderContactUpdateStandardsViewModel : ProviderContactUpdateStandardsSubmitViewModel, IBackLink
+public class ConfirmUpdateStandardsViewModel : ConfirmUpdateStandardsSubmitViewModel, IBackLink
 {
     public string BackUrl { get; set; }
 }
 
-public class ProviderContactUpdateStandardsSubmitViewModel
+public class ConfirmUpdateStandardsSubmitViewModel
 {
     public bool? HasOptedToUpdateExistingStandards { get; set; }
     public string EmailAddress { get; set; }

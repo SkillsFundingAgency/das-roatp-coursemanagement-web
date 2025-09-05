@@ -91,11 +91,12 @@ public class CheckStandardsControllerGetTests
        string reviewYourDetailsLink,
        string changeEmailPhoneUrl,
        string changeSelectedStandardsUrl,
+       string email,
+       string phone,
        int ukprn
    )
     {
-        var email = "test@test.com";
-        var phoneNumber = "123445";
+
 
         foreach (var standard in standards)
         {
@@ -107,7 +108,7 @@ public class CheckStandardsControllerGetTests
         var sessionModel = new ProviderContactSessionModel
         {
             EmailAddress = email,
-            PhoneNumber = phoneNumber,
+            PhoneNumber = phone,
             UpdateExistingStandards = true,
             Standards = standards
         };
@@ -120,9 +121,9 @@ public class CheckStandardsControllerGetTests
 
         var viewResult = result as ViewResult;
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
-
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
         model!.UseBulletedList.Should().Be(false);
+        model.ShowEmail.Should().Be(!string.IsNullOrEmpty(sessionModel.EmailAddress));
+        model.ShowPhone.Should().Be(!string.IsNullOrEmpty(sessionModel.PhoneNumber));
     }
 }

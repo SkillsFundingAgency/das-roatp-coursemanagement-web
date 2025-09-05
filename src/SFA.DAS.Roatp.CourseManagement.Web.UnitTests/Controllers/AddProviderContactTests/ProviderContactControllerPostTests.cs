@@ -26,6 +26,7 @@ public class ProviderContactControllerPostTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderContactController sut,
+        GetAllProviderStandardsQueryResult standardsResult,
         int ukprn)
     {
         var email = "test@test.com";
@@ -39,12 +40,16 @@ public class ProviderContactControllerPostTests
 
         sut.AddDefaultContextWithUser();
 
+        standardsResult.Standards = new List<Standard>();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.EmailAddress == email && v.PhoneNumber == phoneNumber)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
     }
 
     [Test, MoqAutoData]
@@ -72,7 +77,7 @@ public class ProviderContactControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.EmailAddress == email && v.PhoneNumber == phoneNumber)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContact);
     }
 
     [Test, MoqAutoData]
@@ -99,7 +104,7 @@ public class ProviderContactControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.PhoneNumber == phoneNumber)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactConfirmUpdateStandards);
     }
 
     [Test, MoqAutoData]
@@ -126,7 +131,7 @@ public class ProviderContactControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.EmailAddress == email)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactConfirmUpdateStandards);
     }
 
     [Test, MoqAutoData]

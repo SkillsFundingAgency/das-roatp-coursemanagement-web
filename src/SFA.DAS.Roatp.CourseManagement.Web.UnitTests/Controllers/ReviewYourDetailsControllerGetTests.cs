@@ -17,7 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 {
     [TestFixture]
-    public class ReviewYourDetailsControllerTests
+    public class ReviewYourDetailsControllerGetTests
     {
         [Test]
         public void Index_ReturnsViewWithModel()
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var viewStandardsUrl = "http://test/view-standards";
             var providerLocationsUrl = "http://test/provider-locations";
             var providerDescriptionUrl = "http://test/provider-description";
-            var providerContactUrl = "http://test/provider-control";
+            var providerContactUrl = "http://test/provider-contact";
 
             var expectedModel = new ReviewYourDetailsViewModel()
             {
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var result = sut.ReviewYourDetails() as ViewResult;
             result.Should().NotBeNull();
-            result.ViewName.Should().Contain(nameof(ReviewYourDetailsController.ReviewYourDetails));
+            result!.ViewName.Should().Contain(nameof(ReviewYourDetailsController.ReviewYourDetails));
             result.Model.Should().BeEquivalentTo(expectedModel);
             mockSessionService.Verify(x => x.Delete(nameof(ProviderContactSessionModel)), Times.Once);
         }

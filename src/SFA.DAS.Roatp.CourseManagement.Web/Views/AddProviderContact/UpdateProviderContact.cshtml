@@ -1,0 +1,53 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.ProviderContactUpdateViewModel
+@{
+    ViewBag.Title = "Save contact details";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Save contact details</div>
+        <h1 class="govuk-heading-xl">Check details</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row" asp-show="Model.ShowEmail">
+                <dt class="govuk-summary-list__key">
+                    Email address
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.EmailAddress
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@Model.ChangeEmailPhoneUrl">Change<span class="govuk-visually-hidden"> email address</span></a>
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row" asp-show="Model.ShowPhone">
+                <dt class="govuk-summary-list__key">
+                    Phone number
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    @Model.PhoneNumber
+                </dd>
+                <dd class="govuk-summary-list__actions">
+                    <a class="govuk-link" href="@Model.ChangeEmailPhoneUrl">Change<span class="govuk-visually-hidden"> email address</span></a>
+                </dd>
+            </div>
+        </dl>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+    <p class="govuk-body">
+        You can choose to use these contact details when you add a new standard.
+    </p>
+    <form method="post" asp-route="@RouteNames.AddProviderContact" enctype="multipart/form-data" novalidate>
+        <div class="govuk-button-group">
+            <button id="Continue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                Continue
+            </button>
+            <a href="@Model.ReviewYourDetailsUrl" class="govuk-link">Cancel</a>
+        </div>
+
+    </form>
+    </div>
+</div>
