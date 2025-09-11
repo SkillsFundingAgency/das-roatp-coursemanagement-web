@@ -68,8 +68,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 {
                     StandardInfoUrl = standardDetails.StandardInfoUrl,
                     ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber,
-                    ContactUsEmail = standardDetails.ContactUsEmail,
-                    ContactUsPageUrl = standardDetails.ContactUsPageUrl
+                    ContactUsEmail = standardDetails.ContactUsEmail
                 },
                 ProviderCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Provider).Select(x => (ProviderCourseLocationViewModel)x).ToList(),
                 SubRegionCourseLocations = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.Regional).Select(x => (ProviderCourseLocationViewModel)x).ToList(),

@@ -17,7 +17,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
-        public string ContactUsPageUrl { get; set; }
         public bool? IsApprovedByRegulator { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
@@ -47,7 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             return new GetStandardDetailsQueryResult
             {
                 ContactUsEmail = v.ContactUsEmail,
-                ContactUsPageUrl = v.ContactUsPageUrl,
                 ContactUsPhoneNumber = v.ContactUsPhoneNumber,
                 CourseName = v.CourseName,
                 IFateReferenceNumber = v.IFateReferenceNumber,

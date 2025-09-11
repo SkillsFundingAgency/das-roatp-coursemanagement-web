@@ -50,7 +50,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ApprenticeshipType = ApprenticeshipType,
                 StandardInfoUrl = "www.test.com",
                 ContactUsEmail = "test@test.com",
-                ContactUsPageUrl = "www.test.com/ContactUs",
                 ContactUsPhoneNumber = "123456789",
                 IsRegulatedForProvider = true,
                 IsApprovedByRegulator = true,

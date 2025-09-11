@@ -3,5 +3,6 @@
     public class AddStandardContactDetailsViewModel : CourseContactDetailsSubmitModel
     {
         public string CancelLink { get; set; }
+        public bool ShowSavedContactDetailsText { get; set; }
     }
 }

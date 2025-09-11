@@ -64,7 +64,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Verify(s => s.Set(standardSessionModel));
 
             standardSessionModel.ContactInformation.ContactUsPhoneNumber.Should().Be(submitModel.ContactUsPhoneNumber);
-            standardSessionModel.ContactInformation.ContactUsPageUrl.Should().Be(submitModel.ContactUsPageUrl);
             standardSessionModel.ContactInformation.ContactUsEmail.Should().Be(submitModel.ContactUsEmail);
             standardSessionModel.ContactInformation.StandardInfoUrl.Should().Be(submitModel.StandardInfoUrl);
         }

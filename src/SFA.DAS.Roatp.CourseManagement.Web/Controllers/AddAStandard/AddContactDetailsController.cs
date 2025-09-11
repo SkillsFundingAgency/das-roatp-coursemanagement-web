@@ -9,13 +9,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class AddContactDetailsController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/AddStandardContactDetails.cshtml";
         private readonly ILogger<AddContactDetailsController> _logger;
 
-        public AddContactDetailsController(ILogger<AddContactDetailsController> logger, ISessionService sessionService) : base (sessionService)
+        public AddContactDetailsController(ILogger<AddContactDetailsController> logger, ISessionService sessionService) : base(sessionService)
         {
             _logger = logger;
         }
@@ -28,6 +28,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             if (sessionModel == null) return redirectResult;
 
             var model = new AddStandardContactDetailsViewModel();
+            if (sessionModel.ContactInformation != null)
+            {
+                model.ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail;
+                model.ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber;
+                model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
+            }
+
+            if (sessionModel.LatestProviderContactModel != null && sessionModel.IsUsingSavedContactDetails is true)
+            {
+                model.ContactUsEmail = sessionModel.LatestProviderContactModel.EmailAddress;
+                model.ContactUsPhoneNumber = sessionModel.LatestProviderContactModel.PhoneNumber;
+                model.StandardInfoUrl = null;
+                model.ShowSavedContactDetailsText = true;
+            }
+
             model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
             return View(ViewPath, model);
         }
@@ -41,11 +56,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             if (!ModelState.IsValid)
             {
-                var model = new AddStandardContactDetailsViewModel() 
+                var model = new AddStandardContactDetailsViewModel()
                 {
                     ContactUsEmail = submitModel.ContactUsEmail,
                     ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber,
-                    ContactUsPageUrl = submitModel.ContactUsPageUrl,
                     StandardInfoUrl = submitModel.StandardInfoUrl
                 };
                 model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
@@ -54,7 +68,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             sessionModel.ContactInformation.ContactUsEmail = submitModel.ContactUsEmail;
             sessionModel.ContactInformation.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber;
-            sessionModel.ContactInformation.ContactUsPageUrl = submitModel.ContactUsPageUrl;
             sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl;
 
             _sessionService.Set(sessionModel);

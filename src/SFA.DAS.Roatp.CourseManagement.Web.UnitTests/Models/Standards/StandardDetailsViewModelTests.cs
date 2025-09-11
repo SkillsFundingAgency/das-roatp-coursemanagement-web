@@ -27,7 +27,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string standardInfoUrl = "http://test.com";
             const string contactUsPhoneNumber = "12345";
             const string contactUsEmail = "me@test.com";
-            const string contactUsPageUrl = "http://test.com/contact-us";
 
             var standardDetails = new GetStandardDetailsQueryResult
             {
@@ -41,7 +40,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 StandardInfoUrl = standardInfoUrl,
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
-                ContactUsPageUrl = contactUsPageUrl,
                 IsRegulatedForProvider = isRegulated,
                 IsApprovedByRegulator = true
             };

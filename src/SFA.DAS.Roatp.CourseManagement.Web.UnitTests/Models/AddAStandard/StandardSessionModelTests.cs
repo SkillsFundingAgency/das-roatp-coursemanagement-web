@@ -41,7 +41,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAStandard
 
             actual.StandardInfoUrl.Should().Be(sut.ContactInformation.StandardInfoUrl);
             actual.ContactUsEmail.Should().Be(sut.ContactInformation.ContactUsEmail);
-            actual.ContactUsPageUrl.Should().Be(sut.ContactInformation.ContactUsPageUrl);
             actual.ContactUsPhoneNumber.Should().Be(sut.ContactInformation.ContactUsPhoneNumber);
         }
 

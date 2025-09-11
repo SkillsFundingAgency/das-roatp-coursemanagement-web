@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
@@ -6,8 +8,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
     public class ConfirmNonRegulatedStandardController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/ConfirmNonRegulatedStandard.cshtml";
-        
+
         private readonly IMediator _mediator;
         private readonly ILogger<ConfirmNonRegulatedStandardController> _logger;
 
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         [HttpPost]
         [Route("{ukprn}/standards/add/confirm-standard", Name = RouteNames.PostAddStandardConfirmNonRegulatedStandard)]
-        public async Task<IActionResult> SubmitConfirmationOfStandard(ConfirmNonRegulatedStandardSubmitModel submitModel)
+        public async Task<IActionResult> SubmitConfirmationOfStandard(int ukprn, ConfirmNonRegulatedStandardSubmitModel submitModel)
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
@@ -59,10 +59,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             sessionModel.IsConfirmed = true;
             sessionModel.StandardInformation = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
+
             _sessionService.Set(sessionModel);
 
+            if (sessionModel.LatestProviderContactModel != null)
+            {
+                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardUseSavedContactDetails);
+            }
+
             _logger.LogInformation("Add standard: Non-regulated standard confirmed for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
-           
+
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 

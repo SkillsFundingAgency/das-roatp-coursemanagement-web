@@ -14,10 +14,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models
         {
             var vm = (EditCourseContactDetailsViewModel)standard;
 
-            vm.Should().BeEquivalentTo(standard, o => 
+            vm.Should().BeEquivalentTo(standard, o =>
             {
                 o.Including(c => c.ContactUsEmail);
-                o.Including(c => c.ContactUsPageUrl);
                 o.Including(c => c.ContactUsPhoneNumber);
                 o.Including(c => c.StandardInfoUrl);
                 return o;

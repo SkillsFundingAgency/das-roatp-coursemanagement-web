@@ -17,7 +17,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
             result.Should().BeEquivalentTo(source, opt =>
             {
                 opt.Including(s => s.ContactUsEmail);
-                opt.Including(s => s.ContactUsPageUrl);
                 opt.Including(s => s.ContactUsPhoneNumber);
                 opt.Including(s => s.IFateReferenceNumber);
                 opt.Including(s => s.LarsCode);

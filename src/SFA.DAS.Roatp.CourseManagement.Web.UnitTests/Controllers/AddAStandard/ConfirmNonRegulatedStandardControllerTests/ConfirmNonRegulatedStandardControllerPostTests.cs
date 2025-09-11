@@ -6,7 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -25,12 +27,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNonRegulatedStandardController sut,
-            ConfirmNonRegulatedStandardSubmitModel submitModel)
+            ConfirmNonRegulatedStandardSubmitModel submitModel,
+            int ukprn)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
-            var response = await sut.SubmitConfirmationOfStandard(submitModel);
+            var response = await sut.SubmitConfirmationOfStandard(ukprn, submitModel);
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
@@ -44,13 +47,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNonRegulatedStandardController sut,
             ConfirmNonRegulatedStandardSubmitModel submitModel,
-            StandardSessionModel sessionModel)
+            StandardSessionModel sessionModel,
+            int ukprn)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.ModelState.AddModelError("key", "message");
 
-            var response = await sut.SubmitConfirmationOfStandard(submitModel);
+            var response = await sut.SubmitConfirmationOfStandard(ukprn, submitModel);
 
             var result = (ViewResult)response;
             result.Should().NotBeNull();
@@ -64,13 +68,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNonRegulatedStandardController sut,
             ConfirmNonRegulatedStandardSubmitModel submitModel,
-            StandardSessionModel sessionModel)
+            StandardSessionModel sessionModel,
+            int ukprn)
         {
             submitModel.IsCorrectStandard = false;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 
-            var response = await sut.SubmitConfirmationOfStandard(submitModel);
+            var response = await sut.SubmitConfirmationOfStandard(ukprn, submitModel);
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
@@ -85,14 +90,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ConfirmNonRegulatedStandardController sut,
             ConfirmNonRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel,
-            GetStandardInformationQueryResult getStandardInformationQueryResult)
+            GetStandardInformationQueryResult getStandardInformationQueryResult,
+            int ukprn)
         {
             mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardInformationQueryResult);
             submitModel.IsCorrectStandard = true;
             sut.AddDefaultContextWithUser();
+            sessionModel.LatestProviderContactModel = null;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetLatestProviderContactQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync((GetLatestProviderContactQueryResult)null);
 
-            await sut.SubmitConfirmationOfStandard(submitModel);
+            await sut.SubmitConfirmationOfStandard(ukprn, submitModel);
 
             sessionServiceMock.Verify(m => m.Set(sessionModel), Times.Once);
             sessionModel.IsConfirmed.Should().BeTrue();
@@ -108,18 +116,47 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNonRegulatedStandardController sut,
             ConfirmNonRegulatedStandardSubmitModel submitModel,
-            StandardSessionModel sessionModel)
+            StandardSessionModel sessionModel,
+            int ukprn)
         {
             submitModel.IsCorrectStandard = true;
             sut.AddDefaultContextWithUser();
+            sessionModel.LatestProviderContactModel = null;
+            sessionModel.IsUsingSavedContactDetails = null;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetLatestProviderContactQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync((GetLatestProviderContactQueryResult)null);
 
-            var response = await sut.SubmitConfirmationOfStandard(submitModel);
+            var response = await sut.SubmitConfirmationOfStandard(ukprn, submitModel);
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetAddStandardAddContactDetails);
             sessionServiceMock.Verify(m => m.Set(It.IsAny<StandardSessionModel>()), Times.Once);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Post_StandardConfirmed_HasContactDetails_RedirectsUseSavedContactDetails(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] ConfirmNonRegulatedStandardController sut,
+            ConfirmNonRegulatedStandardSubmitModel submitModel,
+            StandardSessionModel sessionModel,
+            GetLatestProviderContactQueryResult contactQueryResult,
+            ProviderContactModel latestProviderContactModel,
+            int ukprn)
+        {
+            submitModel.IsCorrectStandard = true;
+            sut.AddDefaultContextWithUser();
+            sessionModel.LatestProviderContactModel = latestProviderContactModel;
+            sessionModel.IsUsingSavedContactDetails = null;
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetLatestProviderContactQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(contactQueryResult);
+
+            var response = await sut.SubmitConfirmationOfStandard(ukprn, submitModel);
+
+            var result = (RedirectToRouteResult)response;
+            result.Should().NotBeNull();
+            result.RouteName.Should().Be(RouteNames.GetAddStandardUseSavedContactDetails);
         }
     }
 }
