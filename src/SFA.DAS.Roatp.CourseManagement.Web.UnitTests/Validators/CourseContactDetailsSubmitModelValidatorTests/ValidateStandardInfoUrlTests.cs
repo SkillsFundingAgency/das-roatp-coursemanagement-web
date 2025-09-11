@@ -1,7 +1,7 @@
 ﻿using FluentValidation.TestHelper;
+using global::SFA.DAS.Roatp.CourseManagement.Web.Models;
+using global::SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactDetailsSubmitModelValidatorTests
 {
@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void WhenEmpty_ProducesValidatonError(string url)
+        public void WhenEmpty_ProducesValidationError(string url)
         {
             var sut = new CourseContactDetailsSubmitModelValidator();
 
