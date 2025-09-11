@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
@@ -6,13 +9,10 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount) )]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class EditCourseContactDetailsController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             await _mediator.Send(command);
 
-            return RedirectToRoute(RouteNames.GetStandardDetails, new {Ukprn, larsCode });
+            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
         }
 
         private async Task<EditCourseContactDetailsViewModel> GetViewModel(int larsCode)
@@ -66,7 +66,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = (EditCourseContactDetailsViewModel)result;
 
-            model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
             return model;
         }
     }
