@@ -9,13 +9,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class AddContactDetailsController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/AddStandardContactDetails.cshtml";
         private readonly ILogger<AddContactDetailsController> _logger;
 
-        public AddContactDetailsController(ILogger<AddContactDetailsController> logger, ISessionService sessionService) : base (sessionService)
+        public AddContactDetailsController(ILogger<AddContactDetailsController> logger, ISessionService sessionService) : base(sessionService)
         {
             _logger = logger;
         }
@@ -28,6 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             if (sessionModel == null) return redirectResult;
 
             var model = new AddStandardContactDetailsViewModel();
+
             model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
             return View(ViewPath, model);
         }
@@ -41,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             if (!ModelState.IsValid)
             {
-                var model = new AddStandardContactDetailsViewModel() 
+                var model = new AddStandardContactDetailsViewModel()
                 {
                     ContactUsEmail = submitModel.ContactUsEmail,
                     ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber,

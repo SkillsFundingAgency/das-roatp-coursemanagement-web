@@ -14,6 +14,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
     {
         public int LarsCode { get; set; }
         public bool IsConfirmed { get; set; }
+
+        public ProviderContactModel LatestProviderContactModel { get; set; }
+
+        public bool? IsUsingSavedContactDetails { get; set; }
+
         public StandardInformationViewModel StandardInformation { get; set; } = new StandardInformationViewModel();
         public StandardContactInformationViewModel ContactInformation { get; set; } = new StandardContactInformationViewModel();
         public LocationOption LocationOption { get; set; }
