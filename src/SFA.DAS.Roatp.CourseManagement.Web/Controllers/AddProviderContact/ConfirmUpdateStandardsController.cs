@@ -12,37 +12,42 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 public class ConfirmUpdateStandardsController(ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddProviderContact/UpdateStandards.cshtml";
+    public const string ViewPathEmailAndPhone = "~/Views/AddProviderContact/UpdateStandardsPhoneAndEmail.cshtml";
+    public const string ViewPathEmail = "~/Views/AddProviderContact/UpdateStandardsEmailOnly.cshtml";
+    public const string ViewPathPhone = "~/Views/AddProviderContact/UpdateStandardsPhoneOnly.cshtml";
+
 
     [HttpGet]
-    public IActionResult UpdateStandardsEmailAndPhone(int ukprn)
+    public IActionResult ConfirmUpdateStandards(int ukprn)
     {
-        var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
+        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
 
-        if (providerContactModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
+        if (sessionModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
-        var model = new ProviderContactUpdateStandardsViewModel
+        var model = new ConfirmUpdateStandardsViewModel
         {
-            EmailAddress = providerContactModel.EmailAddress,
-            PhoneNumber = providerContactModel.PhoneNumber,
-            HasOptedToUpdateExistingStandards = providerContactModel.UpdateExistingStandards
+            EmailAddress = sessionModel.EmailAddress,
+            PhoneNumber = sessionModel.PhoneNumber,
+            HasOptedToUpdateExistingStandards = sessionModel.UpdateExistingStandards
         };
 
-        return View(ViewPath, model);
+        var viewPath = GetViewPathFromEmailAndPhone(model);
+
+        return View(viewPath, model);
     }
 
     [HttpPost]
-    public IActionResult PostUpdateStandardsEmailAndPhone(int ukprn, ProviderContactUpdateStandardsSubmitViewModel submitViewModel)
+    public IActionResult PostConfirmUpdateStandards(int ukprn, ConfirmUpdateStandardsSubmitViewModel submitViewModel)
     {
         if (!ModelState.IsValid)
         {
-            var model = new ProviderContactUpdateStandardsViewModel
+            var model = new ConfirmUpdateStandardsViewModel
             {
                 EmailAddress = submitViewModel.EmailAddress,
                 PhoneNumber = submitViewModel.PhoneNumber
             };
-
-            return View(ViewPath, model);
+            var viewPath = GetViewPathFromEmailAndPhone(model);
+            return View(viewPath, model);
         }
 
         var providerContactModel = _sessionService.Get<ProviderContactSessionModel>();
@@ -54,6 +59,23 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService) :
             return RedirectToRoute(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn = Ukprn });
         }
 
-        return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
+        return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
+    }
+
+    private static string GetViewPathFromEmailAndPhone(ConfirmUpdateStandardsViewModel model)
+    {
+        var viewPath = ViewPathEmailAndPhone;
+
+        if (!string.IsNullOrEmpty(model.EmailAddress) && !string.IsNullOrEmpty(model.PhoneNumber))
+        {
+            return ViewPathEmailAndPhone;
+        }
+
+        if (!string.IsNullOrEmpty(model.EmailAddress))
+        {
+            viewPath = ViewPathEmail;
+        }
+
+        return !string.IsNullOrEmpty(model.PhoneNumber) ? ViewPathPhone : viewPath;
     }
 }

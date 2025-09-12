@@ -34,7 +34,9 @@ public class CheckStandardsController(IMediator _mediator, ISessionService _sess
             ReviewYourDetailsUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
             ChangeEmailPhoneUrl = Url.RouteUrl(RouteNames.AddProviderContactDetails, new { ukprn }),
             ChangeSelectedStandardsUrl = Url.RouteUrl(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn }),
-            UseBulletedList = checkedStandards.Count > 1
+            UseBulletedList = checkedStandards.Count > 1,
+            ShowEmail = !string.IsNullOrWhiteSpace(sessionModel.EmailAddress),
+            ShowPhone = !string.IsNullOrWhiteSpace(sessionModel.PhoneNumber)
         };
 
         return View(ViewPath, model);

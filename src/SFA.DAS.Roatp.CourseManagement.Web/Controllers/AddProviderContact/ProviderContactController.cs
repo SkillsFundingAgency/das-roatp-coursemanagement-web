@@ -54,24 +54,25 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
         sessionModel.EmailAddress = submitViewModel.EmailAddress;
         sessionModel.PhoneNumber = submitViewModel.PhoneNumber;
 
-        if (sessionModel.Standards == null || sessionModel.Standards.Count == 0)
+        if (sessionModel.Standards == null)
         {
-            GetAllProviderStandardsQueryResult standardsResult = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn));
-            if (standardsResult.Standards != null)
-            {
-                sessionModel.Standards =
-                    standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList();
-            }
+            GetAllProviderStandardsQueryResult standardsResult =
+                await _mediator.Send(new GetAllProviderStandardsQuery(ukprn));
+            sessionModel.Standards = standardsResult.Standards.Count > 0
+                ? standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList()
+                : new();
+
+            sessionModel.HasStandards = sessionModel.Standards.Count > 0;
         }
 
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.Standards is { Count: > 0 } && !string.IsNullOrEmpty(submitViewModel.EmailAddress) && !string.IsNullOrEmpty(submitViewModel.PhoneNumber))
+        if (sessionModel.HasStandards)
         {
             return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
         }
 
-        return RedirectToRoute(RouteNames.AddProviderContactDetails, new { ukprn = Ukprn });
+        return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
     }
 }
 
