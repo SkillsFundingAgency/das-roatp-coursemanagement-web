@@ -20,7 +20,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.53" />
     <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="3.0.169" />
   </ItemGroup>
   <!-- Transitive -->
