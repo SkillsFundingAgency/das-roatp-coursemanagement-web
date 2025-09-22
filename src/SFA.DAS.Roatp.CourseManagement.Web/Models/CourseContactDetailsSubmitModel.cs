@@ -16,5 +16,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
                 StandardInfoUrl = model.StandardInfoUrl,
                 ContactUsPhoneNumber = model.ContactUsPhoneNumber
             };
+
     }
 }

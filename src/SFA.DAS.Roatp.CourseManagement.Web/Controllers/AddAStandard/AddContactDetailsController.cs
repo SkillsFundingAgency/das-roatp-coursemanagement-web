@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
             }
 
-            if (sessionModel.LatestProviderContactModel != null && sessionModel.IsUsingSavedContactDetails is true)
+            if (IsUsingSavedContactDetails(sessionModel))
             {
                 model.ContactUsEmail = sessionModel.LatestProviderContactModel.EmailAddress;
                 model.ContactUsPhoneNumber = sessionModel.LatestProviderContactModel.PhoneNumber;
@@ -43,7 +43,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 model.ShowSavedContactDetailsText = true;
             }
 
-            model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
             return View(ViewPath, model);
         }
 
@@ -60,9 +59,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 {
                     ContactUsEmail = submitModel.ContactUsEmail,
                     ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber,
-                    StandardInfoUrl = submitModel.StandardInfoUrl
+                    StandardInfoUrl = submitModel.StandardInfoUrl,
+                    ShowSavedContactDetailsText = IsUsingSavedContactDetails(sessionModel)
                 };
-                model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
+
                 return View(ViewPath, model);
             }
 
@@ -75,6 +75,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             _logger.LogInformation("Add standard: Contact details added for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
 
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectLocationOption);
+        }
+
+
+        private static bool IsUsingSavedContactDetails(StandardSessionModel sessionModel)
+        {
+            return sessionModel.LatestProviderContactModel != null && sessionModel.IsUsingSavedContactDetails is true;
         }
     }
 }

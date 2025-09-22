@@ -1,8 +1,8 @@
 ﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
-    public class AddStandardContactDetailsViewModel : CourseContactDetailsSubmitModel
+    public class AddStandardContactDetailsViewModel : CourseContactDetailsSubmitModel, IBackLink
     {
-        public string CancelLink { get; set; }
         public bool ShowSavedContactDetailsText { get; set; }
+        public string BackUrl { get; set; }
     }
 }

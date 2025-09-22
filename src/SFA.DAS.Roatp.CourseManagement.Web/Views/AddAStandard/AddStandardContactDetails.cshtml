@@ -11,7 +11,7 @@
         <div class="govuk-caption-xl">Add standard</div>
         <h1 class="govuk-heading-xl">Your contact information for this standard</h1>
         <p asp-show="!Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this standard. </p>
-        <p asp-show="Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this standard. Changing your contact details here will not affect the contact details you saved before.</p>
+        <p asp-show="Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this standard. Changing your contact details here will not affect your primary set of contact details.</p>
 
         <p>All these sections must be filled in before you can continue.</p>
 
@@ -51,7 +51,6 @@
 
             <div class="govuk-button-group">
                 <button id="submit" type="submit" class="govuk-button">Continue</button>
-                <a href="@Model.CancelLink" class="govuk-link">Cancel</a>
             </div>
         </form>
     </div>
