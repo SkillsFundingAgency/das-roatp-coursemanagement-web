@@ -14,6 +14,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
     {
         public int LarsCode { get; set; }
         public bool IsConfirmed { get; set; }
+
+        public ProviderContactModel LatestProviderContactModel { get; set; }
+
+        public bool? IsUsingSavedContactDetails { get; set; }
+
         public StandardInformationViewModel StandardInformation { get; set; } = new StandardInformationViewModel();
         public StandardContactInformationViewModel ContactInformation { get; set; } = new StandardContactInformationViewModel();
         public LocationOption LocationOption { get; set; }
@@ -39,7 +44,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
                 IsApprovedByRegulator = source.StandardInformation.IsRegulatedForProvider ? true : null,
                 StandardInfoUrl = source.ContactInformation.StandardInfoUrl,
                 ContactUsEmail = source.ContactInformation.ContactUsEmail,
-                ContactUsPageUrl = source.ContactInformation.ContactUsPageUrl,
                 ContactUsPhoneNumber = source.ContactInformation.ContactUsPhoneNumber,
                 HasNationalDeliveryOption = source.HasNationalDeliveryOption.GetValueOrDefault(),
                 SubregionIds = source.CourseLocations.Where(l => l.LocationType == LocationType.Regional).Select(l => l.SubregionId.Value).ToList(),

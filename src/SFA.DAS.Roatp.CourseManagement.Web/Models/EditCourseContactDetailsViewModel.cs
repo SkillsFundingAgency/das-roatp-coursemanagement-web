@@ -15,7 +15,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
             new EditCourseContactDetailsViewModel
             {
                 ContactUsEmail = standardDetails.ContactUsEmail,
-                ContactUsPageUrl = standardDetails.ContactUsPageUrl,
                 StandardInfoUrl = standardDetails.StandardInfoUrl,
                 ContactUsPhoneNumber = standardDetails.ContactUsPhoneNumber
             };

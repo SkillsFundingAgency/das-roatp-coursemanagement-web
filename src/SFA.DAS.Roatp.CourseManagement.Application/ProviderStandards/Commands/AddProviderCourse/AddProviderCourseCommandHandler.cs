@@ -1,9 +1,9 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using System.Net;
+﻿using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse
 {
@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
         public async Task<Unit> Handle(AddProviderCourseCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Command triggered to create course: {larscode} for ukprn: {ukprn} by user:{userid}", request.LarsCode, request.Ukprn, request.UserId);
+
 
             var statusCode = await _apiClient.Post($"providers/{request.Ukprn}/courses/{request.LarsCode}/create", request);
 

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -87,7 +88,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel,
             GetStandardInformationQueryResult getStandardInformationQueryResult)
         {
-            mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardInformationQueryResult);
+            mediatorMock
+                .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode),
+                    It.IsAny<CancellationToken>())).ReturnsAsync(getStandardInformationQueryResult);
             submitModel.IsApprovedByRegulator = true;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
@@ -100,6 +103,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
                 .Excluding(c => c.StandardUId)
                 .Excluding(c => c.IsRegulatedForProvider)
                 .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName));
+
+        }
+
+        [Test, MoqAutoData]
+        public async Task Post_StandardConfirmed_HasContactDetails_RedirectsUseSavedContactDetails(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Greedy] ConfirmRegulatedStandardController sut,
+            ConfirmNewRegulatedStandardSubmitModel submitModel,
+            StandardSessionModel sessionModel,
+            ProviderContactModel latestProviderContactModel)
+        {
+            submitModel.IsApprovedByRegulator = true;
+            sut.AddDefaultContextWithUser();
+            sessionModel.LatestProviderContactModel = latestProviderContactModel;
+            sessionModel.IsUsingSavedContactDetails = null;
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+
+            var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
+
+            var result = (RedirectToRouteResult)response;
+            result.Should().NotBeNull();
+            result.RouteName.Should().Be(RouteNames.GetAddStandardUseSavedContactDetails);
         }
 
         [Test, MoqAutoData]
@@ -110,6 +136,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             StandardSessionModel sessionModel)
         {
             submitModel.IsApprovedByRegulator = true;
+            sessionModel.LatestProviderContactModel = null;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 

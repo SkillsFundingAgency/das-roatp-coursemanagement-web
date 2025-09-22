@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
 {
-    public class CourseContactDetailsSubmitModelValidator: AbstractValidator<CourseContactDetailsSubmitModel>
+    public class CourseContactDetailsSubmitModelValidator : AbstractValidator<CourseContactDetailsSubmitModel>
     {
         public CourseContactDetailsSubmitModelValidator()
         {
@@ -22,13 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
                 .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage)
                 .MaximumLength(50)
                 .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
-            RuleFor(p => p.ContactUsPageUrl)
-                .NotEmpty()
-                .WithMessage("Enter a contact page link")
-                .MaximumLength(500)
-                .WithMessage("Contact page address must be 500 characters or fewer")
-                .Matches(Constants.RegularExpressions.UrlRegex)
-                .WithMessage("Enter an address in the correct format, like www.example.com");
+
             RuleFor(p => p.StandardInfoUrl)
                 .NotEmpty()
                 .WithMessage(CommonValidationErrorMessage.WebsiteMissingMessage)

@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -51,6 +53,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             _logger.LogInformation("Begin of journey for ukprn: {ukprn} to add standard {larscode}", Ukprn, submitModel.SelectedLarsCode);
 
             var sessionModel = new StandardSessionModel { LarsCode = submitModel.SelectedLarsCode };
+
+
+            var providerContactResponse = await _mediator.Send(new GetLatestProviderContactQuery(Ukprn));
+
+            if (providerContactResponse != null)
+            {
+                sessionModel.LatestProviderContactModel = new ProviderContactModel
+                {
+                    EmailAddress = providerContactResponse.EmailAddress,
+                    PhoneNumber = providerContactResponse.PhoneNumber
+                };
+            }
+
             _sessionService.Set(sessionModel);
 
             var standardInformation = await _mediator.Send(new GetStandardInformationQuery(submitModel.SelectedLarsCode));

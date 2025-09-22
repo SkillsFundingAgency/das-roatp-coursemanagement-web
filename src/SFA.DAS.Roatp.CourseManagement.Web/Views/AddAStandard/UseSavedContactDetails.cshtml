@@ -1,0 +1,58 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
+@model UseSavedContactDetailsViewModel
+@{
+    ViewBag.Title = "Confirm standard";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-xl">Add standard</div>
+        <span class="govuk-heading-xl">Do you want to use your saved contact details for this standard?</span>
+        <dl class="govuk-summary-list">
+                <div class="govuk-summary-list__row" asp-show="Model.ShowEmail">
+                    <dt class="govuk-summary-list__key">
+                        Email address
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.EmailAddress
+                    </dd>
+                </div>
+                <div class="govuk-summary-list__row" asp-show="Model.ShowPhone">
+                    <dt class="govuk-summary-list__key">
+                        Phone number
+                    </dt>
+                    <dd class="govuk-summary-list__value">
+                        @Model.PhoneNumber
+                    </dd>
+                </div>
+            </dl>
+
+        <form method="post" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="IsUsingSavedContactDetails" class="govuk-form-group">
+                <span asp-validation-for="IsUsingSavedContactDetails" class="govuk-error-message"></span>
+                <fieldset class="govuk-fieldset">
+                    <div id="IsUsingSavedContactDetails" class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="use-contact-details-yes" type="radio" value="true"
+                                   asp-for="IsUsingSavedContactDetails" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="use-contact-details-yes">
+                                Yes, I want to use my saved contact details
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="use-contact-details-no" type="radio" value="false"
+                                   asp-for="IsUsingSavedContactDetails" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="use-contact-details-no">
+                                No, I want to use different contact details
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>

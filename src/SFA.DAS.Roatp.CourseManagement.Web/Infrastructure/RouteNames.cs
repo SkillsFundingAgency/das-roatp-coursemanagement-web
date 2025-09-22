@@ -48,6 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string GetNewStandardViewTrainingLocationOptions = "GetNewStandardViewTrainingLocationOptions";
         public const string PostNewStandardConfirmTrainingLocationOptions = "PostNewStandardConfirmTrainingLocationOptions";
         public const string GetAddStandardRemoveProviderCourseLocation = "GetAddStandardRemoveProviderCourseLocation";
+        public const string GetAddStandardUseSavedContactDetails = "GetAddStandardUseSavedContactDetails";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";
