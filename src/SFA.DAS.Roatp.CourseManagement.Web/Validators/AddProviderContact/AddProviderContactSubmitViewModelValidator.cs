@@ -25,9 +25,16 @@ public class AddProviderContactSubmitViewModelValidator : AbstractValidator<AddP
             .WithMessage(NoEmailOrPhoneNumberErrorMessage);
 
         RuleFor(x => x.PhoneNumber)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .When(a => string.IsNullOrWhiteSpace(a.EmailAddress))
-            .WithMessage(NoEmailOrPhoneNumberErrorMessage);
+            .WithMessage(NoEmailOrPhoneNumberErrorMessage)
+            .Matches(Constants.RegularExpressions.ExcludedCharactersRegex)
+            .WithMessage(CommonValidationErrorMessage.TelephoneHasExcludedCharacter)
+            .MinimumLength(10)
+            .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage)
+            .MaximumLength(50)
+            .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
     }
 
     private static bool IsDomainValid(string email)

@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
         [TestCase(null)]
         [TestCase("")]
         [TestCase(" ")]
-        public void WhenEmpty_ProducesValidatonError(string phoneNumber)
+        public void WhenEmpty_ProducesValidationError(string phoneNumber)
         {
             var sut = new CourseContactDetailsSubmitModelValidator();
 
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
         }
 
         [Test]
-        public void WhenTooLong_ProducesValidatonError()
+        public void WhenTooLong_ProducesValidationError()
         {
             string phoneNumber = new string('1', 51);
             var sut = new CourseContactDetailsSubmitModelValidator();
@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
         }
 
         [Test]
-        public void WhenTooShort_ProducesValidatonError()
+        public void WhenTooShort_ProducesValidationError()
         {
             string phoneNumber = new string('1', 9);
             var sut = new CourseContactDetailsSubmitModelValidator();
@@ -57,6 +57,34 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
             var result = sut.TestValidate(command);
 
             result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
+        }
+
+        [TestCase("!123456 7890")]
+        [TestCase("1\"23456 7890")]
+        [TestCase("£123456 7890")]
+        [TestCase("$123456 7890")]
+        [TestCase("%123456 7890")]
+        [TestCase("^123456 7890")]
+        [TestCase("&123456 7890")]
+        [TestCase("*123456 7890")]
+        [TestCase("=123456 7890")]
+        [TestCase("?123456 7890")]
+        [TestCase("<123456 7890")]
+        [TestCase(">123456 7890")]
+        [TestCase(";123456 7890")]
+        [TestCase("/123456 7890")]
+        public void ExcludedSpecialCharacters_ProducesValidationError(string phoneNumber)
+        {
+            var sut = new CourseContactDetailsSubmitModelValidator();
+
+            var command = new EditCourseContactDetailsViewModel()
+            {
+                ContactUsPhoneNumber = phoneNumber
+            };
+
+            var result = sut.TestValidate(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneHasExcludedCharacter);
         }
 
         [TestCase("01234 5678")]
