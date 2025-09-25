@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -13,12 +11,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ReviewYourDetailsController : ControllerBase
     {
-        private readonly ProviderSharedUIConfiguration _pasSharedConfiguration;
         private readonly ISessionService _sessionService;
-        public ReviewYourDetailsController(IOptions<ProviderSharedUIConfiguration> config, ISessionService sessionService)
+        public ReviewYourDetailsController(ISessionService sessionService)
         {
             _sessionService = sessionService;
-            _pasSharedConfiguration = config.Value;
         }
 
         [Route("{ukprn}/review-your-details", Name = RouteNames.ReviewYourDetails)]
@@ -40,7 +36,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
             {
-                BackUrl = _pasSharedConfiguration.DashboardUrl,
                 StandardsUrl = standardsUrl,
                 ProviderLocationsUrl = providerLocationsUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl,

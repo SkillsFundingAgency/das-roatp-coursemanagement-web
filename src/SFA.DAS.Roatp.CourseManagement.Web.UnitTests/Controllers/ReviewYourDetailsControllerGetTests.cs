@@ -2,10 +2,8 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -22,9 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
         [Test]
         public void Index_ReturnsViewWithModel()
         {
-            var mockOptions = new Mock<IOptions<ProviderSharedUIConfiguration>>();
             var mockSessionService = new Mock<ISessionService>();
-            var config = new ProviderSharedUIConfiguration() { DashboardUrl = @"https://dashboard.com" };
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111") }, "mock"));
 
             var viewStandardsUrl = "http://test/view-standards";
@@ -34,14 +30,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var expectedModel = new ReviewYourDetailsViewModel()
             {
-                BackUrl = config.DashboardUrl,
+                BackUrl = null,
                 ProviderLocationsUrl = providerLocationsUrl,
                 StandardsUrl = viewStandardsUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl,
                 ProviderContactUrl = providerContactUrl
             };
-            mockOptions.Setup(o => o.Value).Returns(config);
-            var sut = new ReviewYourDetailsController(mockOptions.Object, mockSessionService.Object)
+
+            var sut = new ReviewYourDetailsController(mockSessionService.Object)
             {
                 ControllerContext = new ControllerContext()
                 {
