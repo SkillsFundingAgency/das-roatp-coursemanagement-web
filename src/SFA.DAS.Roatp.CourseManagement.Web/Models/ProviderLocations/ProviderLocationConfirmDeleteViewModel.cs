@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 
-public class ProviderLocationConfirmDeleteViewModel : IBackLink
+public class ProviderLocationConfirmDeleteViewModel : IBrowserBackLink
 {
     public Guid NavigationId { get; set; }
     public string TrainingVenuesUrl { get; set; }
@@ -13,7 +13,6 @@ public class ProviderLocationConfirmDeleteViewModel : IBackLink
     public bool HasNoStandards { get; set; }
     public bool HasOneStandard { get; set; }
     public bool HasTwoOrMoreStandards { get; set; }
-    public string BackUrl { get; set; }
 
     public static implicit operator ProviderLocationConfirmDeleteViewModel(ProviderLocation source)
     {

@@ -1,7 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
-    public class SelectLocationOptionViewModel : LocationOptionSubmitModel
+    public class SelectLocationOptionViewModel : LocationOptionSubmitModel, IBrowserBackLink
     {
-        public string CancelLink { get; set; }
     }
 }

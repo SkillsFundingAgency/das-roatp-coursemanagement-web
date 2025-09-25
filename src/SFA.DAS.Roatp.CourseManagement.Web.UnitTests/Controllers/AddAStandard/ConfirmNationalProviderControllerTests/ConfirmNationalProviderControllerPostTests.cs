@@ -45,7 +45,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitConfirmationOnNationalProvider(submitModel);
 
             result.As<ViewResult>().ViewName.Should().Be(ConfirmNationalProviderController.ViewPath);
-            result.As<ViewResult>().Model.As<ConfirmNationalProviderViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]

@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         public const string ViewPath = "~/Views/AddAStandard/StandardTrainingLocations.cshtml";
         private readonly ILogger<StandardTrainingLocationsController> _logger;
 
-    
+
         public StandardTrainingLocationsController(
             ISessionService sessionService,
             ILogger<StandardTrainingLocationsController> logger) : base(sessionService)
@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             var model = GetModel();
             model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
-            
+
             return View(ViewPath, model);
         }
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return View(ViewPath, model);
             }
 
-            if(sessionModel.LocationOption == LocationOption.ProviderLocation)
+            if (sessionModel.LocationOption == LocationOption.ProviderLocation)
             {
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
             }
@@ -73,7 +73,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
         private TrainingLocationListViewModel GetModel() => new TrainingLocationListViewModel
         {
-            CancelLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectLocationOption),
             AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn })
         };
 
@@ -87,7 +86,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                     DeliveryMethod = location.DeliveryMethod,
                     LocationName = location.LocationName,
                     LocationType = location.LocationType,
-                    RemoveUrl = Url.RouteUrl(RouteNames.GetAddStandardRemoveProviderCourseLocation, new {ukprn= Ukprn, providerLocationId = location.ProviderLocationId})
+                    RemoveUrl = Url.RouteUrl(RouteNames.GetAddStandardRemoveProviderCourseLocation, new { ukprn = Ukprn, providerLocationId = location.ProviderLocationId })
                 });
             }
 

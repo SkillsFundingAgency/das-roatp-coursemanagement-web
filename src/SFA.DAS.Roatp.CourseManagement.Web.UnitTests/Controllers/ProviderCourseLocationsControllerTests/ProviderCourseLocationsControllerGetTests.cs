@@ -66,9 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ProviderCourseLocationListViewModel;
             model.Should().NotBeNull();
-            model.ProviderCourseLocations.Should().NotBeEmpty();
-            model.BackUrl.Should().NotBeNull();
-            model.CancelUrl.Should().NotBeNull();
+            model!.ProviderCourseLocations.Should().NotBeEmpty();
             model.AddTrainingLocationUrl.Should().Be(verifyAddProviderCourseLocationUrlGet);
         }
 
@@ -85,9 +83,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ProviderCourseLocationListViewModel;
             model.Should().NotBeNull();
-            model.ProviderCourseLocations.Should().BeEmpty();
-            model.BackUrl.Should().NotBeNull();
-            model.CancelUrl.Should().NotBeNull();
+            model!.ProviderCourseLocations.Should().BeEmpty();
         }
 
         [Test, AutoData]
@@ -109,8 +105,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
-            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
-            modelResult.BackUrl.Should().Be(verifyUrlGetLocationOption);
+            modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
         }
 
         [Test, AutoData]
@@ -131,8 +126,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
-            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
-            modelResult.BackUrl.Should().Be(verifyUrlGetLocationOption);
+            modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
         }
 
         [Test, AutoData]
@@ -151,8 +145,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
-            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
-            modelResult.BackUrl.Should().Be(verifyUrlGetStandardDetails);
+            modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
         }
 
         [Test, AutoData]
@@ -172,8 +165,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
-            modelResult.ProviderCourseLocations.Should().NotBeEmpty();
-            modelResult.ProviderCourseLocations.FirstOrDefault().RemoveUrl.Should().Be(verifyRemoveProviderCourseLocationUrlGet);
+            modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
+            modelResult.ProviderCourseLocations.FirstOrDefault()!.RemoveUrl.Should().Be(verifyRemoveProviderCourseLocationUrlGet);
         }
     }
 }

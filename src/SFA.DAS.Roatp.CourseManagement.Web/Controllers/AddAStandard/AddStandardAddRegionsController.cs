@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Regions.Queries;
@@ -9,13 +12,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [Authorize (Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class AddStandardAddRegionsController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/SelectRegions.cshtml";
@@ -70,7 +70,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             var regions = await _mediator.Send(new GetAllRegionsAndSubRegionsQuery());
             var model = new AddStandardAddRegionsViewModel(regions.Regions.Select(r => (RegionViewModel)r).ToList());
-            model.CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards);
             return model;
         }
     }

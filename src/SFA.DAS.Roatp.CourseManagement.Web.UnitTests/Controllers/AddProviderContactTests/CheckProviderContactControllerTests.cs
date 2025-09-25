@@ -67,6 +67,5 @@ public class CheckProviderContactControllerTests
         model!.EmailAddress.Should().Be(queryResult.EmailAddress);
         model.PhoneNumber.Should().Be(queryResult.PhoneNumber);
         model.ChangeProviderContactDetailsLink.Should().Be(addProviderContactDetailsLink);
-        model.BackUrl.Should().BeNull();
     }
 }

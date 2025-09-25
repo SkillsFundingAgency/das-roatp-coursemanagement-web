@@ -59,7 +59,6 @@ public class ConfirmUpdateProviderContactControllerGetTests
         var model = viewResult!.Model as ProviderContactUpdateViewModel;
 
         viewResult.ViewName.Should().Contain("UpdateProviderContact.cshtml");
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.ShowPhone.Should().Be(true);
@@ -90,7 +89,6 @@ public class ConfirmUpdateProviderContactControllerGetTests
         var viewResult = result as ViewResult;
 
         var model = viewResult!.Model as ProviderContactUpdateViewModel;
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().BeNull();
         model.ShowPhone.Should().Be(false);
@@ -122,7 +120,6 @@ public class ConfirmUpdateProviderContactControllerGetTests
 
         var model = viewResult!.Model as ProviderContactUpdateViewModel;
 
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().BeNull();
         model.PhoneNumber.Should().Be(phoneNumber);
         model.ShowPhone.Should().Be(true);

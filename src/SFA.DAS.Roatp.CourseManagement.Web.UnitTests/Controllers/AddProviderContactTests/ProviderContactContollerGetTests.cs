@@ -29,7 +29,6 @@ public class ProviderContactControllerGetTests
 
 
         var model = viewResult!.Model as AddProviderContactViewModel;
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().BeNull();
         model.PhoneNumber.Should().BeNull();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
@@ -59,8 +58,7 @@ public class ProviderContactControllerGetTests
         var viewResult = result as ViewResult;
 
         var model = viewResult!.Model as AddProviderContactViewModel;
-        model!.BackUrl.Should().BeNull();
-        model.EmailAddress.Should().Be(email);
+        model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }

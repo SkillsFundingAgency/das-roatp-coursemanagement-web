@@ -3,9 +3,8 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
-public class AddProviderContactStandardsViewModel : AddProviderContactStandardsSubmitViewModel, IBackLink
+public class AddProviderContactStandardsViewModel : AddProviderContactStandardsSubmitViewModel, IBrowserBackLink
 {
-    public string BackUrl { get; set; }
     public List<ProviderContactStandardModel> Standards { get; set; }
 }
 

@@ -3,17 +3,13 @@
 @{
     ViewBag.Title = "Remove option";
 }
-@section breadcrumb {
-    <a class="govuk-back-link" href="@Model.BackLink">Back</a>
-}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
         <div class="govuk-caption-l">Manage a standard</div>
         <h1 class="govuk-heading-xl">Are you sure you want to remove this training venue?</h1>
         <form method="post" asp-route="@RouteNames.PostRemoveProviderCourseLocation" enctype="multipart/form-data" novalidate>
-            <input type="hidden" asp-for="BackLink" />
-            <input type="hidden" asp-for="CancelLink" />
             <div class="grid-row">
                 <div class="column-two-thirds">
                     <table class="govuk-table">
@@ -55,7 +51,6 @@
                     <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                         Save and continue
                     </button>
-                    <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
                 </div>
         </form>
     </div>

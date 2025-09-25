@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddNationalLocation;
@@ -9,13 +12,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class EditNationalDeliveryOptionController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -32,13 +32,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [Route("{ukprn}/standards/{larsCode}/edit-national-delivery-option", Name = RouteNames.GetNationalDeliveryOption)]
         public IActionResult Index([FromRoute] int larsCode)
         {
-            if(!IsCorrectLocationOptionSetInSession())
+            if (!IsCorrectLocationOptionSetInSession())
             {
                 _logger.LogWarning("Location option is not set in session, navigating back to the question ukprn:{ukprn} larscode: {larscode}", Ukprn, larsCode);
                 return RedirectToRoute(RouteNames.GetLocationOption, new { Ukprn, larsCode });
             }
 
-            return View(GetModel(larsCode));
+            return View(new EditNationalDeliveryOptionViewModel());
         }
 
         [HttpPost]
@@ -48,27 +48,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (!ModelState.IsValid)
             {
                 _logger.LogInformation("National delivery option was not selected ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
-                return View(GetModel(larsCode));
+                return View(new EditNationalDeliveryOptionViewModel());
             }
 
             if (model.HasNationalDeliveryOption.GetValueOrDefault())
             {
                 _logger.LogInformation("National delivery option selected, adding national location to ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
-                await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName,DeleteProviderCourseLocationOption.DeleteEmployerLocations));
+                await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
                 await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId, UserDisplayName));
                 return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
             }
 
             _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{ukprn} larscode:{larscode}", Ukprn, larsCode);
 
-            return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode }); 
+            return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode });
         }
-
-        private EditNationalDeliveryOptionViewModel GetModel(int larsCode) => new EditNationalDeliveryOptionViewModel
-        {
-            BackLink = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode }),
-            CancelLink = GetStandardDetailsUrl(larsCode)
-        };
 
         private bool IsCorrectLocationOptionSetInSession()
         {

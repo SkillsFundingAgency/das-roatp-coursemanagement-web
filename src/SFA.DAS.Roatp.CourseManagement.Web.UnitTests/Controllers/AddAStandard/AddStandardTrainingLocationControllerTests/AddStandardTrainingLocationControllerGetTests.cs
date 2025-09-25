@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut)
         {
-             sut.AddDefaultContextWithUser();
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var result = await sut.SelectAProviderlocation();
@@ -45,14 +45,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, cancelLink);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel{LarsCode = larsCode});
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LarsCode = larsCode });
 
             var result = await sut.SelectAProviderlocation();
-        
+
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddStandardTrainingLocationController.ViewPath);
-            result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().CancelLink.Should().Be(cancelLink);
-            result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().BackLink.Should().Be(cancelLink);
         }
     }
 }

@@ -76,7 +76,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var viewModel = result.Model as ConfirmNewRegulatedStandardViewModel;
             viewModel.Should().NotBeNull();
             viewModel.StandardInformation.Should().BeEquivalentTo(standardInformation, o => o.ExcludingMissingMembers());
-            viewModel.CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
@@ -94,7 +93,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.ViewName.Should().Contain("NeedApprovalForRegulatedStandard.cshtml");
             var viewModel = result.Model as NeedApprovalForRegulatedStandardViewModel;
             viewModel.Should().NotBeNull();
-            viewModel.SelectAStandardLink.Should().Be(selectStandardLink);
+            viewModel!.SelectAStandardLink.Should().Be(selectStandardLink);
         }
     }
 }

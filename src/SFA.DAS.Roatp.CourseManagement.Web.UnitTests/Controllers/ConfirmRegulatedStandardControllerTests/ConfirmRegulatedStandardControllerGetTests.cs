@@ -78,8 +78,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmRegulatedStandardViewModel;
             model.Should().NotBeNull();
-            model.BackLink.Should().Be(detailsUrl);
-            model.CancelLink.Should().Be(detailsUrl);
         }
 
         [Test, AutoData]
@@ -100,8 +98,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmRegulatedStandardViewModel;
             model.Should().NotBeNull();
-            model.BackLink.Should().Be(detailsUrl);
-            model.CancelLink.Should().Be(detailsUrl);
         }
 
         [Test, AutoData]

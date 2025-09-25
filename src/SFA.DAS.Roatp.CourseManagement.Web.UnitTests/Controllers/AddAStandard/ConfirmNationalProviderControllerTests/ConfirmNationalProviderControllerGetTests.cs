@@ -58,7 +58,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.ConfirmNationalDeliveryOption();
 
             result.As<ViewResult>().ViewName.Should().Be(ConfirmNationalProviderController.ViewPath);
-            result.As<ViewResult>().Model.As<ConfirmNationalProviderViewModel>().CancelLink.Should().Be(cancelLink);
         }
     }
 }

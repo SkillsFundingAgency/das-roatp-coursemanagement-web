@@ -44,12 +44,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
-            var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel {CancelLink = cancelLink});
+            var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(StandardTrainingLocationsController.ViewPath);
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().Should().NotBeNull();
-            result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
@@ -62,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionModel.LocationOption = LocationOption.ProviderLocation;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
-           
+
             var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardReviewStandard);

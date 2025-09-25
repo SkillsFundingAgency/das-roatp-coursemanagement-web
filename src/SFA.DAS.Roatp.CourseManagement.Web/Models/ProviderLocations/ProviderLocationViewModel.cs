@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
 {
-    public class ProviderLocationViewModel : ProviderLocationDetailsSubmitModel, IBackLink
+    public class ProviderLocationViewModel : ProviderLocationDetailsSubmitModel, IBrowserBackLink
     {
         public Guid NavigationId { get; set; }
         public int? RegionId { get; set; }
@@ -18,10 +18,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string Postcode { get; set; }
         public string UpdateContactDetailsUrl { get; set; }
         public string DeleteLocationUrl { get; set; }
-        public string CancelUrl { get; set; }
         public string ManageYourStandardsUrl { get; set; }
         public string TrainingVenuesUrl { get; set; }
-        public string BackUrl { get; set; }
 
         public List<ProviderLocationStandardModel> Standards { get; set; }
 

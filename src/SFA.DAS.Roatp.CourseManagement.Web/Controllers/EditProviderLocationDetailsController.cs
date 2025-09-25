@@ -45,12 +45,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 _logger.LogInformation("Provider Location Details not found for {ukprn} and {id}", Ukprn, Id);
                 return new ProviderLocationViewModel
                 {
-                    CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn }),
                     TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn }),
                 };
             }
             var model = (ProviderLocationViewModel)result.ProviderLocation;
-            model.TrainingVenuesUrl = model.CancelUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
+            model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
             return model;
         }
 

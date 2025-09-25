@@ -75,8 +75,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Model.Should().NotBeNull();
             var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
-            modelResult.BackUrl.Should().Be(verifyUrl);
-            modelResult.CancelUrl.Should().Be(verifyUrl);
         }
 
         [Test, AutoData]

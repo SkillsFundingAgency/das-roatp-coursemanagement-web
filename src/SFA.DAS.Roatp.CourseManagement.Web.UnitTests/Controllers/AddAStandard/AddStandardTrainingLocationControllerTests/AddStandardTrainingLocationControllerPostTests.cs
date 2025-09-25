@@ -13,7 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -57,7 +56,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddStandardTrainingLocationController.ViewPath);
-            result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
@@ -83,9 +81,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = await sut.SubmitAProviderlocation(submitModel);
 
-            sessionServiceMock.Verify(s => 
-                s.Set(It.Is<StandardSessionModel>(x=>x.CourseLocations.Any(
-                    c=>c.ProviderLocationId==navigationId && c.LocationName==locationName)
+            sessionServiceMock.Verify(s =>
+                s.Set(It.Is<StandardSessionModel>(x => x.CourseLocations.Any(
+                    c => c.ProviderLocationId == navigationId && c.LocationName == locationName)
                 )));
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();

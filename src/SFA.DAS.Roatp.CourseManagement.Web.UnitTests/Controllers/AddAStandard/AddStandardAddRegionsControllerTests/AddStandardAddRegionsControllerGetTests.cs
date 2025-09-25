@@ -83,7 +83,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().ViewName.Should().Be(AddStandardAddRegionsController.ViewPath);
             result.As<ViewResult>().Model.As<AddStandardAddRegionsViewModel>().SubregionsGroupedByRegions.Should().NotBeEmpty();
-            result.As<ViewResult>().Model.As<AddStandardAddRegionsViewModel>().CancelLink.Should().Be(TestConstants.DefaultUrl);
         }
     }
 }

@@ -1,4 +1,8 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +17,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationAddControllerTests
 {
@@ -52,7 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 .ReturnsAsync(resultProviderCourseLocations);
 
             model.TrainingVenueNavigationId = resultAllProviderLocations.ProviderLocations.First().NavigationId.ToString();
-            var result =  await _sut.SubmitAProviderlocation(larsCode, model);
+            var result = await _sut.SubmitAProviderlocation(larsCode, model);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<AddProviderCourseLocationCommand>(), It.IsAny<CancellationToken>()), Times.Once);
 
@@ -75,11 +75,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain(ProviderCourseLocationAddController.ViewPath);
-            var viewmodel = viewResult.Model as ProviderCourseLocationAddViewModel;
-            viewmodel.Should().NotBeNull();
-            viewmodel.BackLink.Should().Be(verifyUrl);
-            viewmodel.CancelLink.Should().Be(verifyUrl);
+            viewResult!.ViewName.Should().Contain(ProviderCourseLocationAddController.ViewPath);
+            var viewModel = viewResult.Model as ProviderCourseLocationAddViewModel;
+            viewModel.Should().NotBeNull();
         }
     }
 }
