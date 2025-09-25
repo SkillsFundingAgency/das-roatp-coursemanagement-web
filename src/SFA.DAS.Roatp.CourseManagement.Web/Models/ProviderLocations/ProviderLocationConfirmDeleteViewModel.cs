@@ -13,7 +13,6 @@ public class ProviderLocationConfirmDeleteViewModel : IBackLink
     public bool HasNoStandards { get; set; }
     public bool HasOneStandard { get; set; }
     public bool HasTwoOrMoreStandards { get; set; }
-    public string BackUrl { get; set; }
 
     public static implicit operator ProviderLocationConfirmDeleteViewModel(ProviderLocation source)
     {

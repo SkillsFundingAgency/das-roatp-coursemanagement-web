@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,9 +15,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.AddStandardAddRegionsControllerTests
 {
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = await sut.SubmitRegions(submitModel);
 
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]
@@ -53,7 +53,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().ViewName.Should().Be(AddStandardAddRegionsController.ViewPath);
             result.As<ViewResult>().Model.As<AddStandardAddRegionsViewModel>().SubregionsGroupedByRegions.Should().NotBeEmpty();
-            result.As<ViewResult>().Model.As<AddStandardAddRegionsViewModel>().CancelLink.Should().Be(TestConstants.DefaultUrl);
         }
 
         [Test, MoqAutoData]

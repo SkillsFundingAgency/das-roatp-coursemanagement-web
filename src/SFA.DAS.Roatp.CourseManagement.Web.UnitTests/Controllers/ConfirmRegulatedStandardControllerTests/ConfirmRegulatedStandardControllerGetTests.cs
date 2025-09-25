@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public async Task Get_ValidRequestWithReferer_ReturnsValidBackAndCancelLinks(
+        public async Task Get_ValidRequestWithReferer_ReturnsValidModel(
            GetStandardDetailsQueryResult queryResult,
            int larsCode)
         {
@@ -78,8 +78,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmRegulatedStandardViewModel;
             model.Should().NotBeNull();
-            model.BackLink.Should().Be(detailsUrl);
-            model.CancelLink.Should().Be(detailsUrl);
         }
 
         [Test, AutoData]
@@ -87,8 +85,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
           GetStandardDetailsQueryResult queryResult,
           int larsCode)
         {
-            string detailsUrl = "#";
-
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
@@ -100,8 +96,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ConfirmRegulatedStandardViewModel;
             model.Should().NotBeNull();
-            model.BackLink.Should().Be(detailsUrl);
-            model.CancelLink.Should().Be(detailsUrl);
         }
 
         [Test, AutoData]

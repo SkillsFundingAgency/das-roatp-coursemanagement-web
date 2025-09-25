@@ -2,7 +2,6 @@
 
 public class AddProviderContactViewModel : AddProviderContactSubmitViewModel, IBackLink
 {
-    public string BackUrl { get; set; }
 }
 
 public class AddProviderContactSubmitViewModel

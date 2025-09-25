@@ -7,7 +7,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
     {
         [FromRoute]
         public int LarsCode { get; set; }
-        public string BackUrl { get; set; }
         public int ProviderCourseId { get; set; }
 
         public static implicit operator EditCourseContactDetailsViewModel(GetStandardDetailsQueryResult standardDetails) =>

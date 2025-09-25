@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
@@ -18,11 +18,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         [HttpGet]
         public Task<IActionResult> AddressSearch()
         {
-            var model = new AddressSearchViewModel
-            {
-                BackLink = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn })
-            };
-
+            TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
+            var model = new AddressSearchViewModel();
             return Task.FromResult<IActionResult>(View(ViewPath, model));
         }
 
@@ -30,10 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         [HttpPost]
         public Task<IActionResult> PostAddressSearch([FromForm] AddressSearchSubmitModel submitModel)
         {
-            var model = new AddressSearchViewModel
-            {
-                BackLink = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn })
-            };
+            var model = new AddressSearchViewModel();
 
             if (!ModelState.IsValid)
             {

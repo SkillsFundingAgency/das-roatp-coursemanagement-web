@@ -1,16 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
-    public class ProviderCourseLocationAddViewModel : ProviderCourseLocationAddSubmitModel
+    public class ProviderCourseLocationAddViewModel : ProviderCourseLocationAddSubmitModel, IBackLink
     {
         [FromRoute]
         public int LarsCode { get; set; }
         public IEnumerable<SelectListItem> TrainingVenues { get; set; }
-        public string BackLink { get; set; }
-        public string CancelLink { get; set; }
     }
 
     public class ProviderCourseLocationAddSubmitModel

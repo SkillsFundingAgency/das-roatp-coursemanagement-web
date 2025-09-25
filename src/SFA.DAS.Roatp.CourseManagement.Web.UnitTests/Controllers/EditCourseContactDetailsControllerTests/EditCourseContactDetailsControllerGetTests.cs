@@ -48,7 +48,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as EditCourseContactDetailsViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().BeNull();
         }
 
         [Test, AutoData]

@@ -85,7 +85,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn));
             var model = new SelectAStandardViewModel();
             model.Standards = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString()));
-            model.CancelLink = Url.RouteUrl(RouteNames.ViewStandards, new { Ukprn });
             return model;
         }
     }

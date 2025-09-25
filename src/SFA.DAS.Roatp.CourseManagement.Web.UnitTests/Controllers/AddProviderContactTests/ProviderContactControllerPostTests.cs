@@ -221,8 +221,7 @@ public class ProviderContactControllerPostTests
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as AddProviderContactViewModel;
-        model!.BackUrl.Should().BeNull();
-        model.EmailAddress.Should().Be(email);
+        model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());

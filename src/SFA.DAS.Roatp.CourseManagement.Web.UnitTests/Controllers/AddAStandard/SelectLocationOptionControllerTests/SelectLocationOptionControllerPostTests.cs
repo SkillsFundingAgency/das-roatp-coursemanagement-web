@@ -28,18 +28,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel());
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]
         public void SubmitLocationOption_ModelStateIsInvalid_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectLocationOptionController sut,
-            StandardSessionModel sessionModel,
-            string cancelLink)
+            StandardSessionModel sessionModel)
         {
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sut.ModelState.AddModelError("key", "message");
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel());
@@ -47,7 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(SelectLocationOptionController.ViewPath);
             result.As<ViewResult>().Model.As<SelectLocationOptionViewModel>().Should().NotBeNull();
-            result.As<ViewResult>().Model.As<SelectLocationOptionViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
@@ -63,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardConfirmNationalProvider);
-            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>()),Times.Once);
+            sessionServiceMock.Verify(s => s.Set(It.IsAny<StandardSessionModel>()), Times.Once);
         }
 
         [Test, MoqAutoData]

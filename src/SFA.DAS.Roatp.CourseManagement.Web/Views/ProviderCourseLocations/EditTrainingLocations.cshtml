@@ -3,11 +3,6 @@
 @{
     ViewBag.Title = "Training locations";
 }
-
-@section breadcrumb {
-    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
-}
-
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
@@ -16,8 +11,6 @@
         <p class="govuk-body">Tell us where your organisation does the training for this standard.</p>
         <p class="govuk-body">If your training venue for this standard is not showing below, use the ‘See training venues' link.</p>
         <form method="post" asp-route="@RouteNames.PostProviderCourseLocations" enctype="multipart/form-data" novalidate>
-            <input type="hidden" asp-for="@Model.BackUrl" />
-            <input type="hidden" asp-for="@Model.CancelUrl" />
             <table class="govuk-table" aria-label="List of training locations">
                 <thead class="govuk-table__head">
                     <tr class="govuk-table__row">
@@ -52,7 +45,6 @@
                 <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                     Continue
                 </button>
-                <a id="Cancel" href="@Model.CancelUrl" class="govuk-link">Cancel</a>
             </div>
         </form>
     </div>

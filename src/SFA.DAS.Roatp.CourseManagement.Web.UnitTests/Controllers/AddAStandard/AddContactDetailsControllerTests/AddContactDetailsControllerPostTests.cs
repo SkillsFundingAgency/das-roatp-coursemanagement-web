@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class AddContactDetailsControllerPostTests
     {
         [Test, MoqAutoData]
-        public void Get_ModelMissingFromSession_RedirectsToSelectAStandard(
+        public void Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut)
         {
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
 
@@ -66,7 +66,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddContactDetailsController.ViewPath);
-            result.As<ViewResult>().Model.As<AddStandardContactDetailsViewModel>().BackUrl.Should().BeNull();
             result.As<ViewResult>().Model.As<AddStandardContactDetailsViewModel>().ShowSavedContactDetailsText.Should().Be(showSavedContactDetailsText);
         }
 

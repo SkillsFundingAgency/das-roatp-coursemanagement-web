@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.SelectAStandardControllerTests
 {
@@ -38,7 +38,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             Assert.IsNotNull(viewResult);
             viewResult.ViewName.Should().Be(SelectAStandardController.ViewPath);
             var model = viewResult.Model as SelectAStandardViewModel;
-            model.CancelLink.Should().Be(TestConstants.DefaultUrl);
             var expectedNames = queryResult.AvailableCourses.Select(s => $"{s.Title} (Level {s.Level})");
             model.Standards.All(s => expectedNames.Contains(s.Text)).Should().BeTrue();
         }
