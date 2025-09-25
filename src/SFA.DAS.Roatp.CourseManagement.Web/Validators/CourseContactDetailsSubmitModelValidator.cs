@@ -15,9 +15,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
                 .WithMessage(CommonValidationErrorMessage.EmailLengthMessage)
                 .Matches(Constants.RegularExpressions.EmailRegex)
                 .WithMessage(CommonValidationErrorMessage.EmailInvalidMessage);
+
             RuleFor(p => p.ContactUsPhoneNumber)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(CommonValidationErrorMessage.TelephoneMissingMessage)
+                .Matches(Constants.RegularExpressions.ExcludedCharactersRegex)
+                .WithMessage(CommonValidationErrorMessage.TelephoneHasExcludedCharacter)
                 .MinimumLength(10)
                 .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage)
                 .MaximumLength(50)

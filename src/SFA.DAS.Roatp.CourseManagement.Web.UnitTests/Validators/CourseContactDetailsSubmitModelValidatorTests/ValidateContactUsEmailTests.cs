@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
         }
 
         [Test]
-        public void WhenTooLong_ProducesValidatonError()
+        public void WhenTooLong_ProducesValidationError()
         {
             string email = new string('*', 257);
             var sut = new CourseContactDetailsSubmitModelValidator();
@@ -41,13 +41,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
             result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailLengthMessage);
         }
 
-
         [TestCase("dfdfsd")]
         [TestCase("dfdfsd@")]
         [TestCase("dfdfsd@xv")]
         [TestCase("@rrfdsg")]
         [TestCase("w@w.")]
-        public void WhenInvalid_ProducesValidatonError(string email)
+        public void WhenInvalid_ProducesValidationError(string email)
         {
             var sut = new CourseContactDetailsSubmitModelValidator();
 

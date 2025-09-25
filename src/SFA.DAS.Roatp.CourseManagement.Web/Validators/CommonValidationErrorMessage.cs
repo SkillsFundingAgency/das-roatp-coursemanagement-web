@@ -8,6 +8,7 @@
 
         public const string TelephoneMissingMessage = "Enter a UK telephone number";
         public const string TelephoneLengthMessage = "Telephone number must be between 10 and 50 characters";
+        public const string TelephoneHasExcludedCharacter = "Enter a phone number in the correct format";
 
         public const string WebsiteMissingMessage = "Enter a website link";
         public const string WebsiteLengthMessage = "Website address must be 500 characters or less";

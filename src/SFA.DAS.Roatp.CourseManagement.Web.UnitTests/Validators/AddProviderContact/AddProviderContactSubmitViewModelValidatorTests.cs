@@ -38,7 +38,7 @@ public class AddProviderContactSubmitViewModelValidatorTests
         var model = new AddProviderContactSubmitViewModel()
         {
             EmailAddress = email,
-            PhoneNumber = "123"
+            PhoneNumber = "1234567890"
         };
 
         var sut = new AddProviderContactSubmitViewModelValidator();
@@ -68,5 +68,71 @@ public class AddProviderContactSubmitViewModelValidatorTests
             .WithErrorMessage(AddProviderContactSubmitViewModelValidator.NoEmailOrPhoneNumberErrorMessage);
         result.ShouldHaveValidationErrorFor(m => m.PhoneNumber)
             .WithErrorMessage(AddProviderContactSubmitViewModelValidator.NoEmailOrPhoneNumberErrorMessage);
+    }
+
+    [TestCase(" ")]
+    [TestCase("1")]
+    [TestCase("123")]
+    [TestCase("1234")]
+    [TestCase("123456789")]
+    public void Phone_Too_Short_ProducesValidationError(string phone)
+    {
+        var sut = new AddProviderContactSubmitViewModelValidator();
+
+        var command = new AddProviderContactSubmitViewModel()
+        {
+            PhoneNumber = phone,
+            EmailAddress = "test@test.com"
+        };
+
+        var result = sut.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
+    }
+
+    [Test]
+    public void PhoneTooLong_ProducesValidationError()
+    {
+        string phone = new string('1', 257);
+        var sut = new AddProviderContactSubmitViewModelValidator();
+
+        var command = new AddProviderContactSubmitViewModel()
+        {
+            PhoneNumber = phone,
+            EmailAddress = "test@test.com"
+        };
+
+        var result = sut.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
+    }
+
+    [TestCase("!123456 7890")]
+    [TestCase("1\"23456 7890")]
+    [TestCase("£123456 7890")]
+    [TestCase("$123456 7890")]
+    [TestCase("%123456 7890")]
+    [TestCase("^123456 7890")]
+    [TestCase("&123456 7890")]
+    [TestCase("*123456 7890")]
+    [TestCase("=123456 7890")]
+    [TestCase("?123456 7890")]
+    [TestCase("<123456 7890")]
+    [TestCase(">123456 7890")]
+    [TestCase(";123456 7890")]
+    [TestCase("/123456 7890")]
+    public void ExcludedSpecialCharacters_ProducesValidationError(string phoneNumber)
+    {
+        var sut = new AddProviderContactSubmitViewModelValidator();
+
+        var command = new AddProviderContactSubmitViewModel()
+        {
+            EmailAddress = "Test@test.com",
+            PhoneNumber = phoneNumber
+        };
+
+        var result = sut.TestValidate(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneHasExcludedCharacter);
     }
 }
