@@ -35,11 +35,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public void SubmitLocationOption_ModelStateIsInvalid_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectLocationOptionController sut,
-            StandardSessionModel sessionModel,
-            string cancelLink)
+            StandardSessionModel sessionModel)
         {
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sut.ModelState.AddModelError("key", "message");
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel());

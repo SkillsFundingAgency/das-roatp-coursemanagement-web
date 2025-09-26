@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseDeleteControllerTests
 {
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public void Before_Each_Test()
         {
             _mediatorMock = new Mock<IMediator>();
-           
+
             _sut = new ProviderCourseDeleteController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseDeleteController>>());
             _sut.AddDefaultContextWithUser()
                .AddUrlHelperMock()
@@ -48,13 +48,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             _mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Once);
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            var model = viewResult.Model as ConfirmDeleteStandardViewModel;
+            var model = viewResult!.Model as ConfirmDeleteStandardViewModel;
             model.Should().NotBeNull();
-            model.BackUrl.Should().Be(verifyUrl);
-            model.CancelUrl.Should().Be(verifyUrl);
         }
 
-          [Test, AutoData]
+        [Test, AutoData]
         public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
         {
             _mediatorMock

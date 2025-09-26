@@ -62,8 +62,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderContr
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as ProviderDescriptionViewModel;
             model.Should().NotBeNull();
-            model.Description = MarketingInfo;
-            model.BackUrl.Should().Be(ReviewYourDetailsLink);
+            model!.Description = MarketingInfo;
         }
     }
 }

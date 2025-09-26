@@ -20,10 +20,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void SelectLocationOption_SessionNotAvailable_RedirectsToSelectStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] SelectLocationOptionController sut,
-            string cancelLink)
+            [Greedy] SelectLocationOptionController sut)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
             var result = sut.SelectLocationOption();
@@ -51,10 +50,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public void SelectLocationOption_ResetCourseLocations(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] SelectLocationOptionController sut,
-            int larsCode,
-            string cancelLink)
+            int larsCode)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = larsCode, CourseLocations = new List<CourseLocationModel> { new CourseLocationModel() } });
 
             sut.SelectLocationOption();

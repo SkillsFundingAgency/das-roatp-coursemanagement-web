@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -6,9 +8,6 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests
 {
@@ -26,22 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.None);
-            model.BackLink.Should().Be(TestConstants.DefaultUrl);
-        }
-
-        [Test, AutoData]
-        public async Task Get_CancelLinkIsSetToStandardDetails()
-        {
-            SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
-
-            var actionResult = await _sut.Index(LarsCode);
-
-            var viewResult = (ViewResult)actionResult;
-            Assert.IsNotNull(viewResult);
-            var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.None);
-            model.CancelLink.Should().Be(TestConstants.DefaultUrl);
+            model!.LocationOption.Should().Be(LocationOption.None);
         }
 
         [Test]
@@ -54,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.None);
+            model!.LocationOption.Should().Be(LocationOption.None);
         }
 
         [Test]
@@ -78,14 +62,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.ProviderLocation);
+            model!.LocationOption.Should().Be(LocationOption.ProviderLocation);
         }
 
         [Test]
         public async Task Get_WithProviderAndNationalLocation_ReturnsBothLocationOption()
         {
-            var providerCourseLocations = new List<ProviderCourseLocation> 
-            { 
+            var providerCourseLocations = new List<ProviderCourseLocation>
+            {
                 new ProviderCourseLocation { LocationType = LocationType.Provider },
                 new ProviderCourseLocation { LocationType = LocationType.National },
             };
@@ -96,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.Both);
+            model!.LocationOption.Should().Be(LocationOption.Both);
         }
 
         [Test]
@@ -114,7 +98,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.Both);
+            model!.LocationOption.Should().Be(LocationOption.Both);
         }
 
         [Test]
@@ -131,7 +115,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.EmployerLocation);
+            model!.LocationOption.Should().Be(LocationOption.EmployerLocation);
         }
 
         [Test]
@@ -148,7 +132,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             var viewResult = (ViewResult)actionResult;
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
-            model.LocationOption.Should().Be(LocationOption.EmployerLocation);
+            model!.LocationOption.Should().Be(LocationOption.EmployerLocation);
         }
     }
 }

@@ -44,10 +44,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Get_ModelStateIsInvalid_ReturnsViewResult(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut,
-            StandardSessionModel standardSessionModel,
-            string cancelLink)
+            StandardSessionModel standardSessionModel)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>())
                 .Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
@@ -64,8 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut,
             CourseLocationAddViewModel submitModel,
-            string locationName,
-            string cancelLink)
+            string locationName)
         {
             var navigationId = Guid.NewGuid();
             var allLocations = new GetAllProviderLocationsQueryResult
@@ -75,7 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             };
 
             submitModel.TrainingVenueNavigationId = navigationId.ToString();
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, cancelLink);
+            sut.AddDefaultContextWithUser();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LarsCode = larsCode });
 

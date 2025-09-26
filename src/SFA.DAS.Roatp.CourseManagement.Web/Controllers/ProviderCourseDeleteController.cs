@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             var model = (ConfirmDeleteStandardViewModel)result;
-            model.BackUrl = model.CancelUrl = GetStandardDetailsUrl(model.StandardInformation.LarsCode);
+
             return View(ViewPath, model);
         }
 

@@ -4,10 +4,6 @@
     ViewBag.Title = "Standard details";
 }
 
-@section breadcrumb {
-    <a class="govuk-back-link" href="@Model.BackUrl">Back</a>
-}
-
 @if (Model.StandardRequiresMoreInfo)
 {
     <partial name="~/Views/Standards/StandardsPartials/_MissingInfoBanner.cshtml" for="MissingInfoBannerViewModel" />

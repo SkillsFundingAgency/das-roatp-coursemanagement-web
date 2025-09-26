@@ -6,15 +6,12 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalDeliveryOptionControllerTests
 {
     public abstract class EditNationalDeliveryOptionControllerTestBase
     {
         protected const int LarsCode = 123;
-        protected static string BackLinkUrl = Guid.NewGuid().ToString();
-        protected static string CancelLinkUrl = Guid.NewGuid().ToString();
         protected Mock<ISessionService> SessionServiceMock;
         protected EditNationalDeliveryOptionController Sut;
         protected Mock<IMediator> MediatorMock;
@@ -27,10 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
             Sut = new EditNationalDeliveryOptionController(MediatorMock.Object, SessionServiceMock.Object, Mock.Of<ILogger<EditNationalDeliveryOptionController>>());
 
             Sut
-                .AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetLocationOption, BackLinkUrl)
-                .AddUrlForRoute(RouteNames.GetStandardDetails, CancelLinkUrl);
+                .AddDefaultContextWithUser();
         }
 
         public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(locationOption.ToString());

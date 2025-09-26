@@ -31,7 +31,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = new ProviderDescriptionViewModel
             {
-                BackUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
                 Description = result.Provider.MarketingInfo
             };
 

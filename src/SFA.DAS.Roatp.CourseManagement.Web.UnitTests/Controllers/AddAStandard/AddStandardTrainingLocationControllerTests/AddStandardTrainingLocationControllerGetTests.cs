@@ -39,11 +39,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] AddStandardTrainingLocationController sut,
-            GetAllProviderLocationsQueryResult allLocations,
-            string cancelLink)
+            GetAllProviderLocationsQueryResult allLocations)
         {
 
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, cancelLink);
+            sut.AddDefaultContextWithUser();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LarsCode = larsCode });
 

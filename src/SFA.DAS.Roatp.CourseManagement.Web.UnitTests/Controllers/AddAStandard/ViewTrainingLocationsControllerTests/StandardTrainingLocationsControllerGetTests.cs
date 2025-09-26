@@ -23,8 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void ViewTrainingLocations_SessionNotAvailable_RedirectsToSelectStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] StandardTrainingLocationsController sut,
-            string cancelLink)
+            [Greedy] StandardTrainingLocationsController sut)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
@@ -69,8 +68,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public void ViewTrainingLocations_MapProviderLocations(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] StandardTrainingLocationsController sut,
-            DeliveryMethodModel deliveryModel,
-            string cancelLink)
+            DeliveryMethodModel deliveryModel)
         {
             var locationName = "location name";
             var courseLocationModel = new CourseLocationModel();
@@ -78,7 +76,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             courseLocationModel.LocationType = LocationType.Provider;
             courseLocationModel.DeliveryMethod = deliveryModel;
 
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = 1, CourseLocations = new List<CourseLocationModel> { courseLocationModel } });
 
             var result = sut.ViewTrainingLocations();

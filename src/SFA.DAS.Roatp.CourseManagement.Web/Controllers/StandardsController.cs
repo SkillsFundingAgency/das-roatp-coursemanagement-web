@@ -37,7 +37,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var model = new StandardListViewModel
             {
-                BackLink = Url.RouteUrl(RouteNames.ReviewYourDetails, new { Ukprn }),
                 AddAStandardLink = Url.RouteUrl(RouteNames.GetAddStandardSelectStandard, new { Ukprn })
             };
 
@@ -86,7 +85,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             var standardDetails = result;
 
-            var model = (StandardDetailsViewModel)standardDetails;
+            var model = (StandardDetailsViewModel)standardDetails; ;
             model.BackUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn });
             model.DeleteStandardUrl = Url.RouteUrl(RouteNames.GetConfirmDeleteStandard, new { ukprn = Ukprn, larsCode });
 

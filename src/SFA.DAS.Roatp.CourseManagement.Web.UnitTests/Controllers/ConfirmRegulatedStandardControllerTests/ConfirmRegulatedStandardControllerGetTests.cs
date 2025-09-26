@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         }
 
         [Test, AutoData]
-        public async Task Get_ValidRequestWithReferer_ReturnsValidBackAndCancelLinks(
+        public async Task Get_ValidRequestWithReferer_ReturnsValidModel(
            GetStandardDetailsQueryResult queryResult,
            int larsCode)
         {

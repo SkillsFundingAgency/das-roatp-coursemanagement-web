@@ -87,7 +87,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task GetProviderCourseLocations_validRequestLocationOptionBoth_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
+        public async Task GetProviderCourseLocations_validRequestLocationOptionBoth_ReturnGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
@@ -109,7 +109,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task GetProviderCourseLocations_validRequestLocationOptionProviderLocation_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
+        public async Task GetProviderCourseLocations_validRequestLocationOptionProviderLocation_ReturnsGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
@@ -124,13 +124,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+            var modelResult = viewResult!.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
             modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
         }
 
         [Test, AutoData]
-        public async Task GetProviderCourseLocations_validRequest_ReturnsBackUrlGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
+        public async Task GetProviderCourseLocations_validRequest_ReturnsGetLocationOption(int larsCode, GetProviderCourseLocationsQueryResult queryResult)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
@@ -163,7 +163,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+            var modelResult = viewResult!.Model as ProviderCourseLocationListViewModel;
             modelResult.Should().NotBeNull();
             modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
             modelResult.ProviderCourseLocations.FirstOrDefault()!.RemoveUrl.Should().Be(verifyRemoveProviderCourseLocationUrlGet);
