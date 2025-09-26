@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
@@ -62,26 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 location.RemoveUrl = Url.RouteUrl(RouteNames.GetRemoveProviderCourseLocation, new { ukprn = Ukprn, larsCode, id = location.Id });
             }
-            if (Request.GetTypedHeaders().Referer == null)
-            {
-                model.BackUrl = "#";
-            }
-            else
-            {
-                model.BackUrl = Request.GetTypedHeaders().Referer.ToString();
-                var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption);
-                if ((!string.IsNullOrEmpty(sessionValue) &&
-                    (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)
-                        && (locationOption == LocationOption.Both || locationOption == LocationOption.ProviderLocation))))
-                {
-                    model.BackUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { ukprn = Ukprn, larsCode = model.LarsCode });
-                }
-                else
-                {
-                    model.BackUrl = GetStandardDetailsUrl(model.LarsCode);
-                }
-            }
-            model.CancelUrl = GetStandardDetailsUrl(model.LarsCode);
+
             model.AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddProviderCourseLocation, new { ukprn = Ukprn, larsCode = model.LarsCode });
             return model;
         }

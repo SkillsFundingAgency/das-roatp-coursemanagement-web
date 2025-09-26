@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -9,9 +12,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegulatedStandardControllerTests
 {
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
             _mediatorMock = new Mock<IMediator>();
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(
-                new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), new Claim(ProviderClaims.UserId, UserId)}, 
+                new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), new Claim(ProviderClaims.UserId, UserId) },
                 "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
 
@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         public async Task Post_ValidModel_SendsUpdateCommand(ConfirmRegulatedStandardViewModel model)
         {
             model.IsApprovedByRegulator = true;
-            var result =  await _sut.UpdateApprovedByRegulator(model);
+            var result = await _sut.UpdateApprovedByRegulator(model);
             var redirectResult = result as RedirectResult;
             redirectResult.Should().NotBeNull();
             redirectResult.Url.Should().Be(model.RefererLink);
@@ -68,17 +68,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         [Test, AutoData]
         public async Task Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
         {
-            var backLink = model.BackLink;
-            var cancelLink = model.CancelLink;
             _sut.ModelState.AddModelError("key", "error");
 
-            var result =  await _sut.UpdateApprovedByRegulator(model);
+            var result = await _sut.UpdateApprovedByRegulator(model);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.Model.Should().Be(model);
-            model.BackLink.Should().Be(backLink);
-            model.CancelLink.Should().Be(cancelLink);
         }
         [Test, AutoData]
         public async Task Post_ValidModelWithIsRegulatedStandardFalse_RedirectToErrorPage(ConfirmRegulatedStandardViewModel model)

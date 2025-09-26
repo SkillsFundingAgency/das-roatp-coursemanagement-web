@@ -4,9 +4,6 @@
 @{
     ViewBag.Title = "Regulated standard";
 }
-@section breadcrumb {
-<a class="govuk-back-link" href="@Model.BackLink">Back</a>
-}
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -15,8 +12,6 @@
         <h1 class="govuk-heading-xl">This is a regulated standard</h1>
         <form method="post" asp-route="@RouteNames.PostConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="RegulatorName" />
-            <input type="hidden" asp-for="BackLink" />
-            <input type="hidden" asp-for="CancelLink" />
             <input type="hidden" asp-for="RefererLink" />
             
             <table class="govuk-table">
@@ -72,7 +67,6 @@
                 <button id="SaveAndContinue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
                     Save and continue
                 </button>
-                <a id="Cancel" href="@Model.CancelLink" class="govuk-link">Cancel</a>
             </div>
         </form>
     </div>

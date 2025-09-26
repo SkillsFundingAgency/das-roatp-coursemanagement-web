@@ -35,17 +35,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
            [Frozen] Mock<ISessionService> sessionServiceMock,
            [Greedy] ConfirmNationalProviderController sut,
            ConfirmNationalProviderSubmitModel submitModel,
-           StandardSessionModel sessionModel,
-           string cancelLink)
+           StandardSessionModel sessionModel)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             sut.ModelState.AddModelError("key", "message");
 
             var result = sut.SubmitConfirmationOnNationalProvider(submitModel);
 
             result.As<ViewResult>().ViewName.Should().Be(ConfirmNationalProviderController.ViewPath);
-            result.As<ViewResult>().Model.As<ConfirmNationalProviderViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]

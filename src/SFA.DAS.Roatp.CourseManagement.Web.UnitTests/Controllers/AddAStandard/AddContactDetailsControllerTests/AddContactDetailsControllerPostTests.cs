@@ -66,7 +66,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddContactDetailsController.ViewPath);
-            result.As<ViewResult>().Model.As<AddStandardContactDetailsViewModel>().BackUrl.Should().BeNull();
             result.As<ViewResult>().Model.As<AddStandardContactDetailsViewModel>().ShowSavedContactDetailsText.Should().Be(showSavedContactDetailsText);
         }
 

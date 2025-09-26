@@ -77,8 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var standardInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
             var model = new ConfirmNonRegulatedStandardViewModel()
             {
-                StandardInformation = standardInfo,
-                CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards)
+                StandardInformation = standardInfo
             };
             return model;
         }

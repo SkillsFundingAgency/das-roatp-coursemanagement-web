@@ -35,18 +35,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public void Get_StandardSessionModelIsSet_RedirectsToSelectAStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut,
-            StandardSessionModel standardSessionModel,
-            string cancelLink)
+            StandardSessionModel standardSessionModel)
         {
             standardSessionModel.LatestProviderContactModel = null;
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
             var result = sut.GetContactDetails();
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddContactDetailsController.ViewPath);
-            result.As<ViewResult>().Model.As<AddStandardContactDetailsViewModel>().BackUrl.Should().BeNull();
 
             var viewResult = result as ViewResult;
             var model = viewResult!.Model as AddStandardContactDetailsViewModel;
@@ -68,8 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             bool showSavedContactDetailsText,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut,
-            StandardSessionModel standardSessionModel,
-            string cancelLink)
+            StandardSessionModel standardSessionModel)
         {
             standardSessionModel.ContactInformation = new StandardContactInformationViewModel { ContactUsEmail = null, ContactUsPhoneNumber = null };
             standardSessionModel.IsUsingSavedContactDetails = isUsingSavedContactDetails;
@@ -89,7 +86,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
                 };
             }
 
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
             var result = sut.GetContactDetails();

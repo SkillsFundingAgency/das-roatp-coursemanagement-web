@@ -48,17 +48,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public void Get_LocationOptionIsEmployer_ReturnViewResult(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmNationalProviderController sut,
-            StandardSessionModel sessionModel,
-            string cancelLink)
+            StandardSessionModel sessionModel)
         {
             sessionModel.LocationOption = LocationOption.EmployerLocation;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
 
             var result = sut.ConfirmNationalDeliveryOption();
 
             result.As<ViewResult>().ViewName.Should().Be(ConfirmNationalProviderController.ViewPath);
-            result.As<ViewResult>().Model.As<ConfirmNationalProviderViewModel>().CancelLink.Should().Be(cancelLink);
         }
     }
 }

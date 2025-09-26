@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,9 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
@@ -44,14 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             var model = (ConfirmRegulatedStandardViewModel)result;
-            if (Request.GetTypedHeaders().Referer == null)
-            {
-                model.BackLink = model.CancelLink = "#";
-            }
-            else
-            {
-                model.BackLink = model.CancelLink = model.RefererLink = Request.GetTypedHeaders().Referer.ToString();
-            }
+            model.RefererLink = Request.GetTypedHeaders().Referer == null ? "#" : Request.GetTypedHeaders().Referer!.ToString();
 
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
         }
@@ -65,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
             }
 
-            if(!model.IsRegulatedStandard)
+            if (!model.IsRegulatedStandard)
             {
                 return Redirect($"Error/{HttpStatusCode.NotFound}");
             }

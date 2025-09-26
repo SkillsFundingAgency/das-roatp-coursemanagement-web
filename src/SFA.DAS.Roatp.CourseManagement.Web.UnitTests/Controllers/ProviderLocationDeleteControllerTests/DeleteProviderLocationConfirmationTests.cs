@@ -59,7 +59,6 @@ public class DeleteProviderLocationConfirmationTests
         model.Should().NotBeNull();
         model.NavigationId.Should().Be(queryResult.ProviderLocation.NavigationId);
         model.Standards.Should().BeEquivalentTo(expectedStandards);
-        model.BackUrl.Should().BeNull();
     }
 
     [Test]

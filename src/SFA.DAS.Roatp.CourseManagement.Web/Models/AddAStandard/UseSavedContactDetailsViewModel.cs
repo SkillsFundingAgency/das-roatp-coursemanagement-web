@@ -3,7 +3,7 @@
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 
 
-public class UseSavedContactDetailsViewModel : UseSavedContactDetailsSubmitViewModel, IBackLink
+public class UseSavedContactDetailsViewModel : UseSavedContactDetailsSubmitViewModel, IBrowserBackLink
 {
     [FromRoute]
     public required int Ukprn { get; set; }
@@ -11,7 +11,6 @@ public class UseSavedContactDetailsViewModel : UseSavedContactDetailsSubmitViewM
     public string PhoneNumber { get; set; }
     public bool? ShowEmail { get; set; }
     public bool? ShowPhone { get; set; }
-    public string BackUrl { get; set; }
 }
 
 public class UseSavedContactDetailsSubmitViewModel

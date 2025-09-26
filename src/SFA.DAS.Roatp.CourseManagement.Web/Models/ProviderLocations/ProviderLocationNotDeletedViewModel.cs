@@ -4,11 +4,10 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 
-public class ProviderLocationNotDeletedViewModel : IBackLink
+public class ProviderLocationNotDeletedViewModel : IBrowserBackLink
 {
     public string LocationName { get; set; }
     public List<LocationStandardModel> StandardsWithoutOtherVenues { get; set; } = new();
-    public string BackUrl { get; set; }
 
     public static implicit operator ProviderLocationNotDeletedViewModel(ProviderLocation source)
     {

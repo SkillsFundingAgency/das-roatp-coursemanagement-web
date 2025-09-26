@@ -1,8 +1,7 @@
 ﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 
-public class AddressSearchViewModel : AddressSearchSubmitModel
+public class AddressSearchViewModel : AddressSearchSubmitModel, IBrowserBackLink
 {
-    public string BackLink { get; set; } = null!;
 }
 
 public class AddressSearchSubmitModel
