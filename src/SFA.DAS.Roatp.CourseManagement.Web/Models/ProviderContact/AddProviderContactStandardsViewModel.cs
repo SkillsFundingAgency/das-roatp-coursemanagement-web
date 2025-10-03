@@ -5,7 +5,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
 public class AddProviderContactStandardsViewModel : AddProviderContactStandardsSubmitViewModel, IBackLink
 {
-    public string BackUrl { get; set; }
     public List<ProviderContactStandardModel> Standards { get; set; }
 }
 

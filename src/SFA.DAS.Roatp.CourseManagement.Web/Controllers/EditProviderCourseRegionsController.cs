@@ -1,4 +1,9 @@
-﻿using MediatR;
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
@@ -7,11 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             _logger.LogInformation("Getting All Sub Regions");
             var model = await BuildRegionsViewModel(larsCode);
-            if(!model.AllRegions.Any())
+            if (!model.AllRegions.Any())
             {
                 _logger.LogError("Sub Regions not found");
                 return Redirect($"Error/{HttpStatusCode.NotFound}");
@@ -53,7 +53,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             }
 
             RegionsViewModel model = new RegionsViewModel();
-            model.BackUrl = model.CancelLink = Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
 
             model.AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList();
             return model;

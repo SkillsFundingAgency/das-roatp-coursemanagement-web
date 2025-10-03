@@ -40,7 +40,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             Assert.IsNotNull(viewResult);
             viewResult.ViewName.Should().Be(SelectAStandardController.ViewPath);
             var model = viewResult.Model as SelectAStandardViewModel;
-            model.CancelLink.Should().Be(TestConstants.DefaultUrl);
             var expectedNames = queryResult.AvailableCourses.Select(s => $"{s.Title} (Level {s.Level})");
             model.Standards.All(s => expectedNames.Contains(s.Text)).Should().BeTrue();
         }

@@ -18,10 +18,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string Postcode { get; set; }
         public string UpdateContactDetailsUrl { get; set; }
         public string DeleteLocationUrl { get; set; }
-        public string CancelUrl { get; set; }
         public string ManageYourStandardsUrl { get; set; }
         public string TrainingVenuesUrl { get; set; }
-        public string BackUrl { get; set; }
 
         public List<ProviderLocationStandardModel> Standards { get; set; }
 

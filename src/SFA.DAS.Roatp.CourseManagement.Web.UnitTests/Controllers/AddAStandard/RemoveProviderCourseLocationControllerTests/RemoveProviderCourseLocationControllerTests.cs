@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class RemoveProviderCourseLocationControllerTests
     {
         [Test, MoqAutoData]
-        public void ModelMissingFromSession_RedirectsToSelectAStandard(
+        public void ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] RemoveProviderCourseLocationController sut)
         {
@@ -30,10 +30,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>())
                 .Returns((StandardSessionModel)null);
 
-            var result =  sut.RemoveProviderCourseLocation(providerLocationId);
+            var result = sut.RemoveProviderCourseLocation(providerLocationId);
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]

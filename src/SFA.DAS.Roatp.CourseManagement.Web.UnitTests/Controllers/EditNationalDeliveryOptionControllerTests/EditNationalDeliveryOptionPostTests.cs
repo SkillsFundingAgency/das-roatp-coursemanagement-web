@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -7,8 +9,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddN
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalDeliveryOptionControllerTests
 {
@@ -26,10 +26,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
             var actual = (ViewResult)result;
 
             Assert.NotNull(actual);
-            var resultModel =  (EditNationalDeliveryOptionViewModel)actual.Model;
-
-            resultModel.BackLink.Should().Be(BackLinkUrl);
-            resultModel.CancelLink.Should().Be(CancelLinkUrl);
         }
 
         [Test, AutoData]

@@ -2,10 +2,10 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
-    public class ConfirmNewRegulatedStandardViewModel : ConfirmNewRegulatedStandardSubmitModel
+    public class ConfirmNewRegulatedStandardViewModel : ConfirmNewRegulatedStandardSubmitModel, IBackLink
     {
+        public string ContinueLink { get; set; }
         public StandardInformationViewModel StandardInformation { get; set; }
-        public string CancelLink { get; set; }
     }
 
     public class ConfirmNewRegulatedStandardSubmitModel

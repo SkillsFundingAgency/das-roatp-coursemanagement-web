@@ -1,9 +1,9 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation
 {
-    public class ProviderLocationDetailsViewModel : ProviderLocationDetailsSubmitModel
+    public class ProviderLocationDetailsViewModel : ProviderLocationDetailsSubmitModel, IBackLink
     {
         public ProviderLocationDetailsViewModel(AddressItem addressItem)
         {
@@ -13,8 +13,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation
             Postcode = addressItem.Postcode;
         }
 
-        public string BackLink { get; set; } = "#";
-        public string CancelLink { get; set; } = "#";
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string Town { get; set; }

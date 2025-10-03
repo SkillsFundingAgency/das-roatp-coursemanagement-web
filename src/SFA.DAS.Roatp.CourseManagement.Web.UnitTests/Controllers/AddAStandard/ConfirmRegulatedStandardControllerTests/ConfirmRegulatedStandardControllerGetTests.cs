@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class ConfirmRegulatedStandardControllerGetTests
     {
         [Test, MoqAutoData]
-        public async Task Get_ModelMissingFromSession_RedirectsToSelectAStandard(
+        public async Task Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmRegulatedStandardController sut)
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
-            result.RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.RouteName.Should().Be(RouteNames.ReviewYourDetails);
             mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
-            result.RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.RouteName.Should().Be(RouteNames.ReviewYourDetails);
             mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
@@ -61,10 +61,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmRegulatedStandardController sut,
             StandardSessionModel sessionModel,
-            GetStandardInformationQueryResult standardInformation,
-            string cancelLink)
+            GetStandardInformationQueryResult standardInformation)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ViewStandards, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
 
@@ -75,8 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.ViewName.Should().Be(ConfirmRegulatedStandardController.ViewPath);
             var viewModel = result.Model as ConfirmNewRegulatedStandardViewModel;
             viewModel.Should().NotBeNull();
-            viewModel.StandardInformation.Should().BeEquivalentTo(standardInformation, o => o.ExcludingMissingMembers());
-            viewModel.CancelLink.Should().Be(cancelLink);
+            viewModel!.StandardInformation.Should().BeEquivalentTo(standardInformation, o => o.ExcludingMissingMembers());
         }
 
         [Test, MoqAutoData]
@@ -94,7 +92,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.ViewName.Should().Contain("NeedApprovalForRegulatedStandard.cshtml");
             var viewModel = result.Model as NeedApprovalForRegulatedStandardViewModel;
             viewModel.Should().NotBeNull();
-            viewModel.SelectAStandardLink.Should().Be(selectStandardLink);
+            viewModel!.SelectAStandardLink.Should().Be(selectStandardLink);
         }
     }
 }

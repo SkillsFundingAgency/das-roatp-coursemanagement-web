@@ -84,7 +84,7 @@ public class ProviderLocationDeleteController : ControllerBase
 
         if (result == null)
         {
-            return RedirectToRoute(RouteNames.GetProviderLocations, new { ukprn });
+            return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn });
         }
 
         var model = new ProviderLocationDeletedConfirmedViewModel

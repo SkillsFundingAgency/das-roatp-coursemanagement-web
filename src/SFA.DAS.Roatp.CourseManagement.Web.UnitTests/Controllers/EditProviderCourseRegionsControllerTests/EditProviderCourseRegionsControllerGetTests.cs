@@ -1,4 +1,9 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Net;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +17,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Net;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderCourseRegionsControllerTests
 {
@@ -68,29 +68,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as RegionsViewModel;
             model.Should().NotBeNull();
-            model.AllRegions.Should().NotBeEmpty();
+            model!.AllRegions.Should().NotBeEmpty();
             model.GetGroupedSubRegions().Should().NotBeEmpty();
         }
 
-        [Test, AutoData]
-        public async Task Get_ValidRequestWithReferer_ReturnsValidBackAndCancelLinks(
-           GetAllStandardRegionsQueryResult queryResult,
-           int larsCode)
-        {
-            _mediatorMock
-                .Setup(m => m.Send(It.Is<GetAllStandardRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(queryResult);
-
-
-            var result = await _sut.GetAllRegions(larsCode);
-
-            var viewResult = result as ViewResult;
-            viewResult.Should().NotBeNull();
-            var model = viewResult.Model as RegionsViewModel;
-            model.Should().NotBeNull();
-            model.BackUrl.Should().Be(DetailsUrl);
-            model.CancelLink.Should().Be(DetailsUrl);
-        }
         [Test, AutoData]
         public async Task Get_ValidRequestNoRegions_RedirectToNotFoundPage(
            GetAllStandardRegionsQueryResult queryResult,

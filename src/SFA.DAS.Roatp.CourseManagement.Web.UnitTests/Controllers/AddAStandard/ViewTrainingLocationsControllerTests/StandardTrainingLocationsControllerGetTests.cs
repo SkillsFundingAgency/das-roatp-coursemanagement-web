@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -12,8 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ViewTrainingLocationsControllerTests
 {
@@ -21,10 +21,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class StandardTrainingLocationsControllerGetTests
     {
         [Test, MoqAutoData]
-        public void ViewTrainingLocations_SessionNotAvailable_RedirectsToSelectStandard(
+        public void ViewTrainingLocations_SessionNotAvailable_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] StandardTrainingLocationsController sut,
-            string cancelLink)
+            [Greedy] StandardTrainingLocationsController sut)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
@@ -32,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = sut.ViewTrainingLocations();
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]
@@ -53,10 +52,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void ViewTrainingLocations_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] StandardTrainingLocationsController sut,
-            string cancelLink)
+            [Greedy] StandardTrainingLocationsController sut)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = 1 });
 
             var result = sut.ViewTrainingLocations();
@@ -64,15 +62,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(StandardTrainingLocationsController.ViewPath);
             result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().Should().NotBeNull();
-            result.As<ViewResult>().Model.As<TrainingLocationListViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
         public void ViewTrainingLocations_MapProviderLocations(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] StandardTrainingLocationsController sut,
-            DeliveryMethodModel deliveryModel,
-            string cancelLink)
+            DeliveryMethodModel deliveryModel)
         {
             var locationName = "location name";
             var courseLocationModel = new CourseLocationModel();
@@ -80,8 +76,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             courseLocationModel.LocationType = LocationType.Provider;
             courseLocationModel.DeliveryMethod = deliveryModel;
 
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectLocationOption, cancelLink);
-            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = 1, CourseLocations = new List<CourseLocationModel> {courseLocationModel}});
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = 1, CourseLocations = new List<CourseLocationModel> { courseLocationModel } });
 
             var result = sut.ViewTrainingLocations();
             var model = result.As<ViewResult>().Model.As<TrainingLocationListViewModel>();

@@ -38,7 +38,7 @@ public class UseSavedContactDetailsController : AddAStandardControllerBase
     public IActionResult PostUseSavedContactDetails(UseSavedContactDetailsSubmitViewModel model)
     {
         var sessionModel = _sessionService.Get<StandardSessionModel>();
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
+        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
         var validator = new UseSavedContactDetailsSubmitViewModelValidator();
         var validatorResult = validator.Validate(model);

@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
@@ -6,9 +9,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourse
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 model = (ProviderCourseLocationViewModel)result.ProviderCourseLocations.Find(l => l.Id == id);
             }
-            model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+
             return View("~/Views/ProviderCourseLocations/RemoveProviderCourseLocation.cshtml", model);
         }
 
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> RemoveProviderCourseLocation(ProviderCourseLocationViewModel model)
         {
-            var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode,  model.Id, UserId, UserDisplayName);
+            var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode, model.Id, UserId, UserDisplayName);
             await _mediator.Send(command);
 
             return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode = model.LarsCode });

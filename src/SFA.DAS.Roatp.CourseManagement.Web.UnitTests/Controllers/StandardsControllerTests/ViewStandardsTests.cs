@@ -102,8 +102,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as StandardListViewModel;
             model.Should().NotBeNull();
-            model.Standards.Should().NotBeNull();
-            model.BackLink.Should().Be(ReviewYourDetailsLink);
+            model!.Standards.Should().NotBeNull();
             model.Standards.First().StandardUrl.Should().Be(GetStandardDetailsLink);
             model.Standards.First().IsRegulatedForProvider.Should().BeTrue();
             model.Standards.First().ConfirmRegulatedStandardUrl.Should().Be(GetConfirmRegulatedStandardLink);
@@ -126,12 +125,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ViewStandards.cshtml");
+            viewResult!.ViewName.Should().Contain("ViewStandards.cshtml");
             viewResult.Model.Should().NotBeNull();
             var model = viewResult.Model as StandardListViewModel;
             model.Should().NotBeNull();
-            model.Standards.Should().BeEmpty();
-            model.BackLink.Should().Be(ReviewYourDetailsLink);
+            model!.Standards.Should().BeEmpty();
             _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Exactly(2));
         }
 

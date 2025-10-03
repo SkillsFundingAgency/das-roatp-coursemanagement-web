@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,8 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ReviewAndSaveStandardControllerTests
 {
@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class ReviewAndSaveStandardControllerPostTests
     {
         [Test, MoqAutoData]
-        public async Task Post_ModelMissingFromSession_RedirectsToSelectAStandard(
+        public async Task Post_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ReviewAndSaveStandardController sut)
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = await sut.SaveStandard();
 
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
             mediatorMock.Verify(m => m.Send(It.IsAny<AddProviderCourseCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 

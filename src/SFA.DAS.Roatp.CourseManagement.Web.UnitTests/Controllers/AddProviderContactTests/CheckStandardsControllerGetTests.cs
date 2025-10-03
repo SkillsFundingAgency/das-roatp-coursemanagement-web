@@ -72,8 +72,7 @@ public class CheckStandardsControllerGetTests
 
         var hasBulletedList = expectedCheckedStandards.Count > 1;
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
-        model!.BackUrl.Should().BeNull();
-        model.EmailAddress.Should().Be(email);
+        model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);

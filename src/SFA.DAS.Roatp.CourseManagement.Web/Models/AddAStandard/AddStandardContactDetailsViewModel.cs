@@ -3,6 +3,5 @@
     public class AddStandardContactDetailsViewModel : CourseContactDetailsSubmitModel, IBackLink
     {
         public bool ShowSavedContactDetailsText { get; set; }
-        public string BackUrl { get; set; }
     }
 }

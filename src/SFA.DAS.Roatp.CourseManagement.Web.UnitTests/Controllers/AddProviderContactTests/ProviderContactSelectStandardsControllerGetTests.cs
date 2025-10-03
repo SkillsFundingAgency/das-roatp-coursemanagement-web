@@ -62,7 +62,6 @@ public class SelectStandardsForUpdateControllerGetTests
         var model = viewResult!.Model as AddProviderContactStandardsViewModel;
 
         model!.Standards.Should().BeEquivalentTo(standards);
-        model.BackUrl.Should().BeNull();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 }

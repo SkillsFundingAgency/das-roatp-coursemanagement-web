@@ -1,18 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class RegionsViewModel : RegionsSubmitModel
+    public class RegionsViewModel : RegionsSubmitModel, IBackLink
     {
         [FromRoute]
         public int LarsCode { get; set; }
         public List<RegionViewModel> AllRegions { get; set; }
-
-        public string BackUrl { get; set; }
-        public string CancelLink { get; set; }
 
         public IEnumerable<IGrouping<string, RegionViewModel>> GetGroupedSubRegions()
         {

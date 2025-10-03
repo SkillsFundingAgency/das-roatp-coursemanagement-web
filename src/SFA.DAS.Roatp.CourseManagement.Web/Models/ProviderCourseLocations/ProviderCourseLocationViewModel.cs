@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 {
 
-    public class ProviderCourseLocationViewModel
+    public class ProviderCourseLocationViewModel : IBackLink
     {
         [FromRoute]
         public int LarsCode { get; set; }
@@ -17,8 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
 
         public DeliveryMethodModel DeliveryMethod { get; set; } = new DeliveryMethodModel();
         public string RemoveUrl { get; set; }
-        public string BackLink { get; set; }
-        public string CancelLink { get; set; }
+
         public static implicit operator ProviderCourseLocationViewModel(ProviderCourseLocation providerCourseLocation)
         {
             return new ProviderCourseLocationViewModel
@@ -26,8 +25,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
                 Id = providerCourseLocation.Id,
                 LocationName = providerCourseLocation.LocationName,
                 LocationType = providerCourseLocation.LocationType,
-                DeliveryMethod = new DeliveryMethodModel 
-                { 
+                DeliveryMethod = new DeliveryMethodModel
+                {
                     HasDayReleaseDeliveryOption = providerCourseLocation.HasDayReleaseDeliveryOption,
                     HasBlockReleaseDeliveryOption = providerCourseLocation.HasBlockReleaseDeliveryOption
                 },

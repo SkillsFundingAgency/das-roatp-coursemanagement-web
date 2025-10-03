@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
 
             var result = ctrl.TestAction();
 
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test]
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
 
             var result = ctrl.TestAction();
 
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test]
@@ -58,12 +58,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
     public class TestController : AddAStandardControllerBase
     {
         private readonly ILogger _logger;
-        public TestController(ISessionService sessionService, ILogger<TestController> logger) : base(sessionService) 
+        public TestController(ISessionService sessionService, ILogger<TestController> logger) : base(sessionService)
         {
             _logger = logger;
         }
 
-        public IActionResult TestAction() 
+        public IActionResult TestAction()
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;

@@ -3,9 +3,8 @@
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderDescription
 {
     [ExcludeFromCodeCoverage]
-    public class ProviderDescriptionViewModel
+    public class ProviderDescriptionViewModel : IBackLink
     {
         public string Description { get; set; }
-        public string BackUrl { get; set; }
     }
 }

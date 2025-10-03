@@ -11,7 +11,6 @@ public class UseSavedContactDetailsViewModel : UseSavedContactDetailsSubmitViewM
     public string PhoneNumber { get; set; }
     public bool? ShowEmail { get; set; }
     public bool? ShowPhone { get; set; }
-    public string BackUrl { get; set; }
 }
 
 public class UseSavedContactDetailsSubmitViewModel

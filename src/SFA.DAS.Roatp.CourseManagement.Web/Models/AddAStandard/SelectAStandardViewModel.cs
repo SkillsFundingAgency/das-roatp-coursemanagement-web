@@ -1,11 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
-    public class SelectAStandardViewModel : SelectAStandardSubmitModel
+    public class SelectAStandardViewModel : SelectAStandardSubmitModel, IBackLink
     {
-        public string CancelLink { get; set; }
         public IEnumerable<SelectListItem> Standards { get; set; }
     }
 

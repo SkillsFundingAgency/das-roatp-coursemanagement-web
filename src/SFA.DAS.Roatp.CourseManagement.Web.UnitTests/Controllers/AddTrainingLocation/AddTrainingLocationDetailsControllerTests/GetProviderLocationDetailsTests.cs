@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -10,7 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Text.Json;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLocation.AddTrainingLocationDetailsControllerTests
 {
@@ -21,14 +21,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         public void GetLocationDetails_AddressInTempData_ReturnsViewResult(
             Mock<ITempDataDictionary> tempDataMock,
             [Greedy] AddProviderLocationDetailsController sut,
-            AddressItem addressItem,
-            string getProviderLocationsUrl,
-            string searchAddressUrl)
+            AddressItem addressItem)
         {
-            sut.AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetProviderLocations, getProviderLocationsUrl)
-                .AddUrlForRoute(RouteNames.SearchAddress, searchAddressUrl);
+            sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
             object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
             tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out serialisedAddressItem));
@@ -38,9 +33,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             Assert.IsNotNull(result);
             result.ViewName.Should().Be(AddProviderLocationDetailsController.ViewPath);
             var model = result.Model as ProviderLocationDetailsViewModel;
-            model.AddressLine1.Should().Be(addressItem.AddressLine1);
-            model.CancelLink.Should().Be(getProviderLocationsUrl);
-            model.BackLink.Should().Be(searchAddressUrl);
+            model!.AddressLine1.Should().Be(addressItem.AddressLine1);
         }
 
         [Test, MoqAutoData]
@@ -56,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
             var result = sut.GetLocationDetails() as RedirectToRouteResult;
 
             result.Should().NotBeNull();
-            result.RouteName.Should().Be(RouteNames.GetProviderLocations);
+            result!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
     }
 }
