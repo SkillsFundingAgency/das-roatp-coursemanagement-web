@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ConfirmNationalProviderController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/ConfirmNationalProvider.cshtml";
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
             }
 
-            return View(ViewPath, GetModel());
+            return View(ViewPath, new ConfirmNationalProviderViewModel());
         }
 
         [HttpPost]
@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             if (!ModelState.IsValid)
             {
-                return View(ViewPath, GetModel());
+                return View(ViewPath, new ConfirmNationalProviderViewModel());
             }
 
             sessionModel.HasNationalDeliveryOption = submitModel.HasNationalDeliveryOption;
@@ -67,10 +67,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddRegions);
             }
         }
-
-        private ConfirmNationalProviderViewModel GetModel() => new ConfirmNationalProviderViewModel
-        {
-            CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards)
-        };
     }
 }

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -36,13 +37,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             if (result == null)
             {
-                var message = $"Standard Standard information found for ukprn {Ukprn} and larscode {larsCode}";
+                var message = $"Standard Standard information found for larscode {larsCode}";
                 _logger.LogError(message);
                 throw new InvalidOperationException(message);
             }
 
+            var standardResult = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+
+            if (standardResult == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
             var model = (ConfirmDeleteStandardViewModel)result;
-            model.BackUrl = model.CancelUrl = GetStandardDetailsUrl(model.StandardInformation.LarsCode);
+
             return View(ViewPath, model);
         }
 

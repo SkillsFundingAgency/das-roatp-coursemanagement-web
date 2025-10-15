@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -11,15 +12,12 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Text.Json;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLocation.AddressControllerTests;
 
 [TestFixture]
 public class PostAddressSearchTests
 {
-    public string _backLink = Guid.NewGuid().ToString();
 
     [Test, MoqAutoData]
     public void InvalidStatus_ReturnsViewResult(
@@ -27,7 +25,7 @@ public class PostAddressSearchTests
         AddressSearchSubmitModel model)
     {
 
-        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetProviderLocations, _backLink);
+        sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "errorMessage");
 
@@ -36,7 +34,6 @@ public class PostAddressSearchTests
         var viewResult = result.Result as ViewResult;
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddressController.ViewPath);
-        viewResult.As<ViewResult>().Model.As<AddressSearchViewModel>().BackLink.Should().Be(_backLink);
     }
 
     [Test, MoqAutoData]

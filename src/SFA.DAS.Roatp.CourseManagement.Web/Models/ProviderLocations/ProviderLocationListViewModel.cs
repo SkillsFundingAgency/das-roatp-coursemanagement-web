@@ -2,10 +2,9 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
 {
-    public class ProviderLocationListViewModel
+    public class ProviderLocationListViewModel : IBackLink
     {
         public List<ProviderLocationViewModel> ProviderLocations { get; set; } = new List<ProviderLocationViewModel>();
-        public string BackUrl { get; set; }
         public string AddTrainingLocationLink { get; set; }
 
         public bool ShowNotificationBannerAddVenue { get; set; }

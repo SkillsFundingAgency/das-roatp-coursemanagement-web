@@ -87,7 +87,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var model = new ConfirmNewRegulatedStandardViewModel()
             {
                 StandardInformation = standardInfo,
-                CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards)
+                ContinueLink = GetUrlWithUkprn(RouteNames.ViewStandards)
             };
             return model;
         }

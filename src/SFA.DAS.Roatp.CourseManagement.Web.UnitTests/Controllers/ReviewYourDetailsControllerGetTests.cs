@@ -30,7 +30,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             var expectedModel = new ReviewYourDetailsViewModel()
             {
-                BackUrl = null,
                 ProviderLocationsUrl = providerLocationsUrl,
                 StandardsUrl = viewStandardsUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl,

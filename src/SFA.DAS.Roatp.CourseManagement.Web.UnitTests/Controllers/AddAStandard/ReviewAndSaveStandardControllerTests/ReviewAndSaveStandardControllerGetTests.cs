@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class ReviewAndSaveStandardControllerGetTests
     {
         [Test, MoqAutoData]
-        public void Get_ModelMissingFromSession_RedirectsToSelectAStandard(
+        public void Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ReviewAndSaveStandardController sut)
         {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = sut.ReviewStandard();
 
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]

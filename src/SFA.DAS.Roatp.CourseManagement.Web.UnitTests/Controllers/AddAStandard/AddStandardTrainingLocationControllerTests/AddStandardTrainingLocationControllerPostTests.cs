@@ -13,7 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -27,7 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         private int larsCode = 1;
 
         [Test, MoqAutoData]
-        public async Task Post_ModelMissingFromSession_RedirectsToSelectAStandard(
+        public async Task Post_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut)
         {
@@ -38,17 +37,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = await sut.SubmitAProviderlocation(new CourseLocationAddSubmitModel());
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
-            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]
         public async Task Get_ModelStateIsInvalid_ReturnsViewResult(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut,
-            StandardSessionModel standardSessionModel,
-            string cancelLink)
+            StandardSessionModel standardSessionModel)
         {
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, cancelLink);
+            sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>())
                 .Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
@@ -57,7 +55,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddStandardTrainingLocationController.ViewPath);
-            result.As<ViewResult>().Model.As<CourseLocationAddViewModel>().CancelLink.Should().Be(cancelLink);
         }
 
         [Test, MoqAutoData]
@@ -66,8 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddStandardTrainingLocationController sut,
             CourseLocationAddViewModel submitModel,
-            string locationName,
-            string cancelLink)
+            string locationName)
         {
             var navigationId = Guid.NewGuid();
             var allLocations = new GetAllProviderLocationsQueryResult
@@ -77,15 +73,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             };
 
             submitModel.TrainingVenueNavigationId = navigationId.ToString();
-            sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, cancelLink);
+            sut.AddDefaultContextWithUser();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LarsCode = larsCode });
 
             var result = await sut.SubmitAProviderlocation(submitModel);
 
-            sessionServiceMock.Verify(s => 
-                s.Set(It.Is<StandardSessionModel>(x=>x.CourseLocations.Any(
-                    c=>c.ProviderLocationId==navigationId && c.LocationName==locationName)
+            sessionServiceMock.Verify(s =>
+                s.Set(It.Is<StandardSessionModel>(x => x.CourseLocations.Any(
+                    c => c.ProviderLocationId == navigationId && c.LocationName == locationName)
                 )));
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();

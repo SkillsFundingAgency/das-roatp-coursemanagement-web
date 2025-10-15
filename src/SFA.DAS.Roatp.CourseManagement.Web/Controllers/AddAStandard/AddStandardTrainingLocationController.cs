@@ -54,22 +54,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             {
                 return View(ViewPath, model);
             }
-            
+
             sessionModel.CourseLocations ??= new List<CourseLocationModel>();
-            
-            sessionModel.CourseLocations.Add(new CourseLocationModel 
+
+            sessionModel.CourseLocations.Add(new CourseLocationModel
             {
-               LocationType = LocationType.Provider,
-               ProviderLocationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
-               LocationName = model.TrainingVenues.First(x=>x.Value==submitModel.TrainingVenueNavigationId).Text,
-               DeliveryMethod = new DeliveryMethodModel
-               {
-                   HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption,
-                   HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption
-               }
+                LocationType = LocationType.Provider,
+                ProviderLocationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
+                LocationName = model.TrainingVenues.First(x => x.Value == submitModel.TrainingVenueNavigationId).Text,
+                DeliveryMethod = new DeliveryMethodModel
+                {
+                    HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption,
+                    HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption
+                }
             });
 
-           _sessionService.Set(sessionModel);
+            _sessionService.Set(sessionModel);
 
             return RedirectToRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
         }
@@ -95,7 +95,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
                 LarsCode = sessionModel.LarsCode
             };
 
-            model.BackLink = model.CancelLink = Url.RouteUrl(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
             return model;
         }
     }

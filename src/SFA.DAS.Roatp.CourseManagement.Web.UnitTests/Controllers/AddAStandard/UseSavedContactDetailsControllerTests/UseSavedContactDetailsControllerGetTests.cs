@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 public class UseSavedContactDetailsControllerGetTests
 {
     [Test, MoqAutoData]
-    public void Get_ModelMissingFromSession_RedirectsToGetAddStandardSelectStandard(
+    public void Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] UseSavedContactDetailsController sut,
         int ukprn)
@@ -29,11 +29,11 @@ public class UseSavedContactDetailsControllerGetTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Get<StandardSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 
     [Test, MoqAutoData]
-    public void Get_LatestProviderContactMissingFromSession_RedirectsToGetAddStandardSelectStandard(
+    public void Get_LatestProviderContactMissingFromSession_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] UseSavedContactDetailsController sut,
         int ukprn)
@@ -46,7 +46,7 @@ public class UseSavedContactDetailsControllerGetTests
         var redirectResult = result as RedirectToRouteResult;
 
         sessionServiceMock.Verify(s => s.Get<StandardSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 
     [Test, MoqAutoData]

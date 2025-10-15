@@ -12,7 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class SelectLocationOptionController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/SelectLocationOption.cshtml";
@@ -28,9 +28,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         {
             var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
             if (sessionModel == null) return redirectResult;
-           
-            var model = GetModel();
-            
+
+            var model = new SelectLocationOptionViewModel { };
+
             if (sessionModel.CourseLocations != null && sessionModel.CourseLocations.Any())
             {
                 sessionModel.CourseLocations = new List<CourseLocationModel>();
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             if (!ModelState.IsValid)
             {
-                return View(ViewPath, GetModel());
+                return View(ViewPath, new SelectLocationOptionViewModel { });
             }
 
             sessionModel.LocationOption = submitModel.LocationOption;
@@ -63,10 +63,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 
             return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
         }
-
-        private SelectLocationOptionViewModel GetModel() => new SelectLocationOptionViewModel
-        {
-            CancelLink = GetUrlWithUkprn(RouteNames.ViewStandards)
-        };
     }
 }

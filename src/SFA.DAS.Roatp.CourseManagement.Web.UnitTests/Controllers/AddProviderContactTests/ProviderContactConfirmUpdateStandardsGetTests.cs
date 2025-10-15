@@ -61,7 +61,6 @@ public class ProviderContactConfirmUpdateStandardsGetTests
         var model = viewResult!.Model as ConfirmUpdateStandardsViewModel;
 
         viewResult.ViewName.Should().Contain("UpdateStandardsPhoneAndEmail");
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
@@ -94,7 +93,6 @@ public class ProviderContactConfirmUpdateStandardsGetTests
 
         var model = viewResult!.Model as ConfirmUpdateStandardsViewModel;
         viewResult.ViewName.Should().Contain("UpdateStandardsEmailOnly");
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().BeNull();
         model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);
@@ -127,7 +125,6 @@ public class ProviderContactConfirmUpdateStandardsGetTests
 
         var model = viewResult!.Model as ConfirmUpdateStandardsViewModel;
         viewResult.ViewName.Should().Contain("UpdateStandardsPhoneOnly");
-        model!.BackUrl.Should().BeNull();
         model.EmailAddress.Should().BeNull();
         model.PhoneNumber.Should().Be(phoneNumber);
         model.HasOptedToUpdateExistingStandards.Should().Be(updateExistingStandards);

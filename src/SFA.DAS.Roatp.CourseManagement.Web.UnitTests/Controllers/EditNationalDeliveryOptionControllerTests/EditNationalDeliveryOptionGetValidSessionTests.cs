@@ -32,17 +32,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         {
             Model.Should().NotBeNull();
         }
-
-        [Test]
-        public void ThenBackLinkIsSetToGetLocationOption()
-        {
-            Model.BackLink.Should().Be(BackLinkUrl);
-        }
-
-        [Test]
-        public void ThenCancelLinkIsSetToStandardDetails()
-        {
-            Model.CancelLink.Should().Be(CancelLinkUrl);
-        }
     }
 }

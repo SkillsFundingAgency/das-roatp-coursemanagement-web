@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    public abstract class AddAStandardControllerBase: ControllerBase
+    public abstract class AddAStandardControllerBase : ControllerBase
     {
         protected readonly ISessionService _sessionService;
         protected AddAStandardControllerBase(ISessionService sessionService)
@@ -19,8 +19,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             var sessionModel = _sessionService.Get<StandardSessionModel>();
             if (sessionModel == null || sessionModel.LarsCode <= 0)
             {
-                logger.LogInformation("Session model or larscode is missing, escape route set to standards list.");
-                return (null, RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard));
+                logger.LogInformation("Session model or larscode is missing, escape route set to review your details.");
+                return (null, RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails));
             }
             return (sessionModel, null);
         }

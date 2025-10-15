@@ -2,7 +2,6 @@
 
 public class ConfirmUpdateStandardsViewModel : ConfirmUpdateStandardsSubmitViewModel, IBackLink
 {
-    public string BackUrl { get; set; }
 }
 
 public class ConfirmUpdateStandardsSubmitViewModel

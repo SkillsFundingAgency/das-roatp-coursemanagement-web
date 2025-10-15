@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
@@ -9,9 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -46,9 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
                 model.LocationOption = result;
             }
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is set to {locationOption}", Ukprn, larsCode, model.LocationOption);
-
-            model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
-
             _sessionService.Delete(SessionKeys.SelectedLocationOption);
 
             return View(model);
@@ -61,7 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (!ModelState.IsValid)
             {
                 var model = new EditLocationOptionViewModel();
-                model.BackLink = model.CancelLink = GetStandardDetailsUrl(larsCode);
+
                 return View(model);
             }
             _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {locationOption}", Ukprn, larsCode, submitModel.LocationOption);
@@ -72,18 +69,18 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             {
                 case LocationOption.ProviderLocation:
                 case LocationOption.EmployerLocation:
-                    var deleteOption = 
-                        submitModel.LocationOption == LocationOption.ProviderLocation ? 
+                    var deleteOption =
+                        submitModel.LocationOption == LocationOption.ProviderLocation ?
                         DeleteProviderCourseLocationOption.DeleteEmployerLocations :
                         DeleteProviderCourseLocationOption.DeleteProviderLocations;
-                    var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName ,deleteOption);
+                    var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, deleteOption);
                     await _mediator.Send(command);
                     break;
                 case LocationOption.Both:
                 default:
                     break;
             }
-            if(submitModel.LocationOption == LocationOption.ProviderLocation || submitModel.LocationOption == LocationOption.Both)
+            if (submitModel.LocationOption == LocationOption.ProviderLocation || submitModel.LocationOption == LocationOption.Both)
             {
                 return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
             }

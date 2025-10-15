@@ -1,4 +1,8 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationRemoveControllerTests
 {
@@ -50,11 +50,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult.Should().NotBeNull();
             var model = viewResult.Model as ProviderCourseLocationViewModel;
             model.Should().NotBeNull();
-            model.BackLink.Should().NotBeNull();
-            model.CancelLink.Should().NotBeNull();
         }
 
-          [Test, AutoData]
+        [Test, AutoData]
         public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode, Guid id)
         {
             _mediatorMock

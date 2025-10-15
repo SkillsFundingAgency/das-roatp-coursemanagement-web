@@ -1,16 +1,17 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount))]
+    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
     public class ReviewAndSaveStandardController : AddAStandardControllerBase
     {
         public const string ViewPath = "~/Views/AddAStandard/ReviewAndSaveStandard.cshtml";
@@ -37,8 +38,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
         [Route("{ukprn}/standards/add/save-standard", Name = RouteNames.PostAddStandardReviewStandard)]
         public async Task<IActionResult> SaveStandard()
         {
-            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redirectResult;
+            var sessionModel = _sessionService.Get<StandardSessionModel>();
+            if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
             AddProviderCourseCommand command = sessionModel;
             command.UserId = UserId;

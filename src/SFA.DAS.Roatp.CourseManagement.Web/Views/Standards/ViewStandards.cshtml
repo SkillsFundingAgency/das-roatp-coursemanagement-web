@@ -4,9 +4,6 @@
     ViewBag.Title = "Standards";
 }
 
-@section breadcrumb {
-    <a class="govuk-back-link" href="@Model.BackLink">Back</a>
-}
 @if (Model.ShowNotificationBannerDeleteStandard)
 {
     <partial name="~/Views/Standards/StandardsPartials/_StandardDeleteNotificationBanner.cshtml" />

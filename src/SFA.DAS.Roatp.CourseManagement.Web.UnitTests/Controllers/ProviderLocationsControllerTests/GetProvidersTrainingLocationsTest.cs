@@ -1,4 +1,9 @@
-﻿using FluentAssertions;
+﻿using System;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,11 +18,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
-using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocationsControllerTests
 {
@@ -87,8 +87,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             _urlHelperMock = new Mock<IUrlHelper>();
 
             _urlHelperMock
-               .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ReviewYourDetails))))
-               .Returns(BackUrl);
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ReviewYourDetails))))
+                .Returns(BackUrl);
 
             _urlHelperMock
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.SearchAddress))))
@@ -122,7 +122,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             model.Should().NotBeNull();
             model!.ProviderLocations.Should().NotBeNull();
             model.ProviderLocations.Count.Should().Be(3);
-            model.BackUrl.Should().Be(BackUrl);
             model.AddTrainingLocationLink.Should().Be(AddTrainingLocationUrl);
             model.ShowNotificationBannerAddVenue.Should().Be(false);
             model.ManageYourStandardsUrl.Should().BeNull();
@@ -142,7 +141,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             var model = viewResult.Model as ProviderLocationListViewModel;
             model.Should().NotBeNull();
             model!.ProviderLocations.Should().BeEmpty();
-            model.BackUrl.Should().Be(BackUrl);
         }
 
         [Test]

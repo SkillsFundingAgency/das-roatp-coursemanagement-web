@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class StandardDetailsViewModel
+    public class StandardDetailsViewModel : IBackLink
     {
         public StandardInformationViewModel StandardInformation { get; set; }
 

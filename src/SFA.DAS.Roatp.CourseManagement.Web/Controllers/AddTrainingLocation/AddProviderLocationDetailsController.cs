@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,9 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
 {
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
         {
             var addressItem = GetAddressFromTempData(true);
 
-            if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
+            if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
             var model = GetViewModel(addressItem);
             return View(ViewPath, model);
@@ -86,11 +86,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
             return command;
         }
 
-        private ProviderLocationDetailsViewModel GetViewModel(AddressItem addressItem)
+        private static ProviderLocationDetailsViewModel GetViewModel(AddressItem addressItem)
         {
             var model = new ProviderLocationDetailsViewModel(addressItem);
-            model.CancelLink = GetUrlWithUkprn(RouteNames.GetProviderLocations);
-            model.BackLink = GetUrlWithUkprn(RouteNames.SearchAddress);
             return model;
         }
 
@@ -103,7 +101,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
                 return null;
             }
             if (keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
-            return JsonSerializer.Deserialize<AddressItem>(address.ToString());
+            return JsonSerializer.Deserialize<AddressItem>(address.ToString()!);
         }
 
         private async Task CheckIfNameIsAvailable(string locationName)

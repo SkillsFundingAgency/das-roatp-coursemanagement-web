@@ -55,6 +55,6 @@ public class DeleteProviderLocationConfirmedTests
 
         var viewResult = result as RedirectToRouteResult;
         viewResult.Should().NotBeNull();
-        viewResult!.RouteName.Should().Be("traininglocations");
+        viewResult!.RouteName.Should().Be("review-your-details");
     }
 }

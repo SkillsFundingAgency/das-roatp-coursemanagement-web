@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
-            result.RouteName.Should().Be(RouteNames.GetAddStandardSelectStandard);
+            result.RouteName.Should().Be(RouteNames.ReviewYourDetails);
             mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
