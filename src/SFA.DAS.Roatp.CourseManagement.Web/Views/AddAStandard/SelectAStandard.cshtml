@@ -16,7 +16,7 @@
                     To add a standard, start typing in the box and its name will appear.
                 </label>
                 <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
-                <label asp-for="SelectedLarsCode" class="govuk-visually-hidden">Choose a standard
+                <label asp-for="SelectedLarsCode"> <span class="govuk-visually-hidden">Choose a standard </span>
                     <select asp-for="SelectedLarsCode" asp-items="@Model.Standards" class="govuk-select app-autocomplete" data-placeholder="Start typing the name of the standard">
                         <option value="" disabled selected></option>
                     </select>
