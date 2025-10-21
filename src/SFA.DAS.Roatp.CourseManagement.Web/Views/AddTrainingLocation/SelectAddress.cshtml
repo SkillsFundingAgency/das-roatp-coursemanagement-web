@@ -24,8 +24,8 @@
             <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">
                 <span asp-validation-for="SearchTerm" class="govuk-error-message"></span>
                 <div data-module="govuk-input">
-                    <label asp-for="SearchTerm">
-                        <span class="govuk-visually-hidden">Search Term</span>
+                    <span class="govuk-visually-hidden">Search Term</span>
+                    <label class="govuk-label" asp-for="SearchTerm">
                         <input id="SearchTerm" type="text" name="SearchTerm" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="200" data-module="autoComplete"/>
                     </label> 
                 </div>
