@@ -7,25 +7,29 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Add a standard</div>
-        <h1 class="govuk-heading-xl">Select a standard</h1>
-
         <form method="post" asp-route="@RouteNames.PostAddStandardSelectStandard" enctype="multipart/form-data" novalidate>
+
+            <span class="govuk-caption-l">Add a standard</span>
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--xl" asp-for="SelectedLarsCode">
+                    Select a standard
+                </label>
+            </h1>
+
             <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
-                <label class="govuk-label" asp-for="SelectedLarsCode">
+                <div class="govuk-hint">
                     To add a standard, start typing in the box and its name will appear.
-                </label>
+                </div>
                 <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
-                <label asp-for="SelectedLarsCode"> <span class="govuk-visually-hidden">Choose a standard </span>
-                    <select asp-for="SelectedLarsCode" asp-items="@Model.Standards" class="govuk-select app-autocomplete" data-placeholder="Start typing the name of the standard">
-                        <option value="" disabled selected></option>
-                    </select>
-                </label>
+                <select asp-for="SelectedLarsCode" asp-items="@Model.Standards" class="govuk-select app-autocomplete" data-placeholder="Start typing the name of the standard">
+                    <option value="" disabled selected></option>
+                </select>
             </div>
 
             <div class="govuk-button-group">
                 <button id="submit" type="submit" class="govuk-button">Continue</button>
             </div>
+            
         </form>
     </div>
 </div>
