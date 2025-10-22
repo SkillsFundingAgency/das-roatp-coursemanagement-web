@@ -16,19 +16,21 @@
             <input asp-for="Postcode" id="Postcode" type="hidden" />
             <input asp-for="Longitude" id="Longitude" type="hidden" />
             <input asp-for="Latitude" id="Latitude" type="hidden" />
-            <div class="govuk-caption-l">Add a training venue</div>
-            <h1 class="govuk-heading-l margin-bottom-30">Select an address</h1>
+            
+            <span class="govuk-caption-l">Add a training venue</span>
+
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--xl" asp-for="SearchTerm">
+                    Select an address
+                </label>
+            </h1>
+            
             <div id="LocationName-hint" class="govuk-hint">
                 Start typing an address or postcode.
             </div>
             <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">
                 <span asp-validation-for="SearchTerm" class="govuk-error-message"></span>
-                <div data-module="govuk-input">
-                    <span class="govuk-visually-hidden">Search Term</span>
-                    <label class="govuk-label" asp-for="SearchTerm">
-                        <input id="SearchTerm" type="text" name="SearchTerm" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="200" data-module="autoComplete"/>
-                    </label> 
-                </div>
+                <input type="text" name="SearchTerm" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="200" data-module="autoComplete"/>
             </div>
             <div class="govuk-button-group">
                 <button id="continue" type="submit" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
