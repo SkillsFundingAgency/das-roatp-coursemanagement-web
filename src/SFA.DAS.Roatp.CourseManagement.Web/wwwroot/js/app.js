@@ -6,7 +6,13 @@ $(function () {
   var selectElements = $('.app-autocomplete')
     selectElements.each(function () {
         var form = $(this).closest('form');
-
+  
+        // Hide the original select field from screen readers 
+        const hiddenSelect = document.getElementById(this.id);
+        hiddenSelect.setAttribute('aria-hidden', 'true');
+        hiddenSelect.setAttribute('tabindex', '-1');
+        hiddenSelect.setAttribute('title', 'Hidden select field');
+        
         accessibleAutocomplete.enhanceSelectElement({
             selectElement: this,
             minLength: 3,
@@ -50,6 +56,9 @@ function AutoComplete(selectField) {
 }
 
 AutoComplete.prototype.init = function () {
+    this.selectElement.setAttribute('aria-hidden', 'true');
+    this.selectElement.setAttribute('tabindex', '-1');
+    this.selectElement.setAttribute('title', 'Hidden input field');
     this.autoComplete()
 }
 
