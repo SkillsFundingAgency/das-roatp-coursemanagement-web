@@ -1,8 +1,8 @@
 ﻿using MediatR;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations
 {
-    public class GetProviderCourseLocationsQuery : IRequest<GetProviderCourseLocationsQueryResult>
+    public class GetProviderCourseLocationsQuery : IRequest<GetAvailableProviderLocationsQueryResult>
     {
         public int Ukprn { get; }
         public string LarsCode { get; }
@@ -12,10 +12,5 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             Ukprn = ukprn;
             LarsCode = larsCode;
         }
-    }
-
-    public class GetProviderCourseLocationsQueryResult
-    {
-        public StandardLookupModel[] Locations { get; set; }
     }
 }
