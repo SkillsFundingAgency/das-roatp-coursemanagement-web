@@ -2,7 +2,7 @@
 {
     public class StandardLookupModel
     {
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
     }

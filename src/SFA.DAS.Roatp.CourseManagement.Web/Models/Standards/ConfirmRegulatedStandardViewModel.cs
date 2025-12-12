@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
     public class ConfirmRegulatedStandardViewModel : IBackLink
     {
         [FromRoute]
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string RegulatorName { get; set; }
         public bool IsRegulatedStandard => !string.IsNullOrEmpty(RegulatorName);
         public bool? IsApprovedByRegulator { get; set; }

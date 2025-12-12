@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     [TestFixture]
     public class AddStandardTrainingLocationControllerPostTests
     {
-        private int larsCode = 1;
+        private string larsCode = "1";
 
         [Test, MoqAutoData]
         public async Task Post_ModelMissingFromSession_RedirectsToReviewYourDetails(

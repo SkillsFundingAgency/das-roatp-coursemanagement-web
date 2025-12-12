@@ -81,7 +81,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             return View("~/Views/AddAStandard/NeedApprovalForRegulatedStandard.cshtml", model);
         }
 
-        private async Task<ConfirmNewRegulatedStandardViewModel> GetViewModel(int larsCode)
+        private async Task<ConfirmNewRegulatedStandardViewModel> GetViewModel(string larsCode)
         {
             var standardInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
             var model = new ConfirmNewRegulatedStandardViewModel()

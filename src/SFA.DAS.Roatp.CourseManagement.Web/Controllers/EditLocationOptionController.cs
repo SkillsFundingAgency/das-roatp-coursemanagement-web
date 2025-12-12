@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [HttpGet]
         [Route("{ukprn}/standards/{larsCode}/edit-location-option", Name = RouteNames.GetLocationOption)]
-        public async Task<IActionResult> Index([FromRoute] int larsCode)
+        public async Task<IActionResult> Index([FromRoute] string larsCode)
         {
             var model = new EditLocationOptionViewModel();
             var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption);
@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [HttpPost]
         [Route("{ukprn}/standards/{larsCode}/edit-location-option", Name = RouteNames.PostLocationOption)]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, [FromRoute] int ukprn, LocationOptionSubmitModel submitModel)
+        public async Task<IActionResult> Index([FromRoute] string larsCode, [FromRoute] int ukprn, LocationOptionSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {

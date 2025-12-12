@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.GetStandardDetails)]
         [HttpGet]
         [ClearSession(SessionKeys.SelectedLocationOption)]
-        public async Task<IActionResult> ViewStandard(int larsCode)
+        public async Task<IActionResult> ViewStandard(string larsCode)
         {
             _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
 

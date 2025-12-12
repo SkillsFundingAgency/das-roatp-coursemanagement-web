@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
     public class ProviderCourseLocationAddViewModel : ProviderCourseLocationAddSubmitModel, IBackLink
     {
         [FromRoute]
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public IEnumerable<SelectListItem> TrainingVenues { get; set; }
     }
 

@@ -5,9 +5,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
     public class GetStandardDetailsQuery : IRequest<GetStandardDetailsQueryResult>
     {
         public int Ukprn { get; }
-        public int LarsCode { get; }
+        public string LarsCode { get; }
 
-        public GetStandardDetailsQuery(int ukprn, int larsCode)
+        public GetStandardDetailsQuery(int ukprn, string larsCode)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

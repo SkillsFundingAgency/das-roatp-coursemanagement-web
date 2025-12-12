@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
     public class ProviderCourseLocationViewModel : IBackLink
     {
         [FromRoute]
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public Guid Id { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }

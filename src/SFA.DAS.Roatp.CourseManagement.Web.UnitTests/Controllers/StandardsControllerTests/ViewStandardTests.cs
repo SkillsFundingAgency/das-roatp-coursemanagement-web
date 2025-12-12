@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private const int LarsCode = 123;
+        private const string LarsCode = "123";
         private const ApprenticeshipType ApprenticeshipType = Domain.ApiModels.ApprenticeshipType.Apprenticeship;
         private const string verifyUrl = "http://test";
         private const string verifyEditContactDetailsUrl = "http://test-verifyEditContactDetailsUrl";

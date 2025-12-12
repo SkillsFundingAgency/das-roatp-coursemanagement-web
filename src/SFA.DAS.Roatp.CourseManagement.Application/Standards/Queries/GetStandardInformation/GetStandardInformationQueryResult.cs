@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStanda
     {
         public string StandardUId { get; set; }
         public string IfateReferenceNumber { get; set; }
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string Title { get; set; }
         public int Level { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }

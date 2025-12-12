@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 {
     public class StandardSessionModel
     {
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public bool IsConfirmed { get; set; }
 
         public ProviderContactModel LatestProviderContactModel { get; set; }

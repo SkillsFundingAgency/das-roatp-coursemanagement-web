@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         }
 
         [Test, AutoData]
-        public async Task Post_ValidModel_SendsUpdateCommand(RegionsSubmitModel model, int larsCode)
+        public async Task Post_ValidModel_SendsUpdateCommand(RegionsSubmitModel model, string larsCode)
         {
             string[] selectedSubRegions = new string[] { "1", "2" };
             model.SelectedSubRegions = selectedSubRegions;
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         }
 
         [Test, AutoData]
-        public async Task Post_InValidData_RedirectToSameView(RegionsSubmitModel model, GetAllStandardRegionsQueryResult queryResult, int larsCode)
+        public async Task Post_InValidData_RedirectToSameView(RegionsSubmitModel model, GetAllStandardRegionsQueryResult queryResult, string larsCode)
         {
             _sut.ModelState.AddModelError("key", "error");
             _mediatorMock

@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/edit-contact-details", Name = RouteNames.GetCourseContactDetails)]
         [HttpGet]
-        public async Task<IActionResult> Index([FromRoute] int larsCode)
+        public async Task<IActionResult> Index([FromRoute] string larsCode)
         {
             EditCourseContactDetailsViewModel model = await GetViewModel(larsCode);
 
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
         [HttpPost]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, CourseContactDetailsSubmitModel submitModel)
+        public async Task<IActionResult> Index([FromRoute] string larsCode, CourseContactDetailsSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
         }
 
-        private async Task<EditCourseContactDetailsViewModel> GetViewModel(int larsCode)
+        private async Task<EditCourseContactDetailsViewModel> GetViewModel(string larsCode)
         {
             var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 

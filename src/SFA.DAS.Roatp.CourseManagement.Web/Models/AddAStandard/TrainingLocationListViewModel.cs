@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
     public class TrainingLocationListViewModel : IBackLink
     {
         [FromRoute]
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         [FromRoute]
         public int Ukprn { get; set; }
         public List<ProviderCourseLocationViewModel> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocationViewModel>();

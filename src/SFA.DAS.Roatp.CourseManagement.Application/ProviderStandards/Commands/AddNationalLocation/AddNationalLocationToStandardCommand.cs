@@ -5,10 +5,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
     public class AddNationalLocationToStandardCommand : IRequest<Unit>
     {
         public int Ukprn { get; }
-        public int LarsCode { get; }
+        public string LarsCode { get; }
         public string UserId { get; }
         public string UserDisplayName { get; set; }
-        public AddNationalLocationToStandardCommand(int ukprn, int larsCode, string userId, string userDisplayName)
+        public AddNationalLocationToStandardCommand(int ukprn, string larsCode, string userId, string userDisplayName)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

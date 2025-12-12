@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
     [TestFixture]
     public class EditLocationOptionControllerPostTests : EditLocationOptionControllerTestBase
     {
-        private const int LarsCode = 123;
+        private const string LarsCode = "123";
         private const int Ukprn = 10012002;
         [Test]
         public async Task Post_InvalidModel_ReturnsViewWithValidationError()

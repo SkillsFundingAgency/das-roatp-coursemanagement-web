@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [HttpGet]
         [Route("{ukprn}/standards/{larsCode}/edit-national-delivery-option", Name = RouteNames.GetNationalDeliveryOption)]
-        public IActionResult Index([FromRoute] int larsCode)
+        public IActionResult Index([FromRoute] string larsCode)
         {
             if (!IsCorrectLocationOptionSetInSession())
             {
@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [HttpPost]
         [Route("{ukprn}/standards/{LarsCode}/edit-national-delivery-option", Name = RouteNames.PostNationalDeliveryOption)]
-        public async Task<IActionResult> Index([FromRoute] int larsCode, ConfirmNationalProviderSubmitModel model)
+        public async Task<IActionResult> Index([FromRoute] string larsCode, ConfirmNationalProviderSubmitModel model)
         {
             if (!ModelState.IsValid)
             {

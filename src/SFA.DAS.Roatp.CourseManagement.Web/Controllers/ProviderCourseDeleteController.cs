@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.GetConfirmDeleteStandard)]
         [HttpGet]
-        public async Task<IActionResult> GetProviderCourse(int larsCode)
+        public async Task<IActionResult> GetProviderCourse(string larsCode)
         {
             _logger.LogInformation("Getting Standard information for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
 

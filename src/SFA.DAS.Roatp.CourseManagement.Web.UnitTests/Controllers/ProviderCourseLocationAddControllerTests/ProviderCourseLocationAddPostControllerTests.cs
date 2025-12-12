@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
         [Test, AutoData]
         public async Task Post_ValidModel_RedirectToRoute(GetAllProviderLocationsQueryResult resultAllProviderLocations,
-            GetProviderCourseLocationsQueryResult resultProviderCourseLocations, int larsCode, ProviderCourseLocationAddSubmitModel model)
+            GetProviderCourseLocationsQueryResult resultProviderCourseLocations, string larsCode, ProviderCourseLocationAddSubmitModel model)
         {
             resultAllProviderLocations.ProviderLocations.First().NavigationId = Guid.NewGuid();
             _mediatorMock
@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task Post_InValidModel_ReturnsSameView(GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult, int larsCode, ProviderCourseLocationAddSubmitModel model)
+        public async Task Post_InValidModel_ReturnsSameView(GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult, string larsCode, ProviderCourseLocationAddSubmitModel model)
         {
             _mediatorMock
             .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))

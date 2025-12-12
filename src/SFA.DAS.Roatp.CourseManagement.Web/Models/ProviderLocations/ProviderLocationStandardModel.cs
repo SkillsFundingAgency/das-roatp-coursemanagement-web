@@ -6,7 +6,7 @@ public class ProviderLocationStandardModel
 {
     public string Title { get; set; }
     public int Level { get; set; }
-    public int LarsCode { get; set; }
+    public string LarsCode { get; set; }
     public string CourseDisplayName { get; set; }
     public string StandardUrl { get; set; }
 

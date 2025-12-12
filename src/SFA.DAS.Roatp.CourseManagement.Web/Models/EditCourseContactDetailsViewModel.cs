@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
     public class EditCourseContactDetailsViewModel : CourseContactDetailsSubmitModel, IBackLink
     {
         [FromRoute]
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public int ProviderCourseId { get; set; }
 
         public static implicit operator EditCourseContactDetailsViewModel(GetStandardDetailsQueryResult standardDetails) =>
