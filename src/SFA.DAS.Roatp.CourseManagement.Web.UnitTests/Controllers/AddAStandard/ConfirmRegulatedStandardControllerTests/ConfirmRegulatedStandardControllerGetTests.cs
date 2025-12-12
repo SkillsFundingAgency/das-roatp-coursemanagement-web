@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ConfirmRegulatedStandardController sut,
             StandardSessionModel sessionModel)
         {
-            sessionModel.LarsCode = 0;
+            sessionModel.LarsCode = "0";
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 

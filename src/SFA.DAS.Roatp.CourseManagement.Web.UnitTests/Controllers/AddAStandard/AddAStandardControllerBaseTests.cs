@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard
         [Test]
         public void GetSessionModelWithEscapeRoute_LarsCodeSetInSessionModel_ReturnsSessionModel()
         {
-            var larsCode = 1;
+            var larsCode = "1";
             var sessionServiceMock = new Mock<ISessionService>();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel() { LarsCode = larsCode });
             var ctrl = new TestController(sessionServiceMock.Object, Mock.Of<ILogger<TestController>>());
