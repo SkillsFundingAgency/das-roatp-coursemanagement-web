@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
 
     public class SelectAStandardSubmitModel
     {
-        public int SelectedLarsCode { get; set; }
+        public string SelectedLarsCode { get; set; }
 
     }
 }

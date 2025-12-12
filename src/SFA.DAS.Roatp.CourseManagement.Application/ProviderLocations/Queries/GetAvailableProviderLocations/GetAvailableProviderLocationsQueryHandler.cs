@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations
 {
-    public class GetAvailableProviderLocationsQueryHandler : IRequestHandler<GetProviderCourseLocationsQuery, GetAvailableProviderLocationsQueryResult>
+    public class GetAvailableProviderLocationsQueryHandler : IRequestHandler<GetAvailableProviderLocationsQuery, GetAvailableProviderLocationsQueryResult>
     {
         private readonly IApiClient _apiClient;
         private readonly ILogger<GetAvailableProviderLocationsQueryHandler> _logger;
@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.G
             _logger = logger;
         }
 
-        public async Task<GetAvailableProviderLocationsQueryResult> Handle(GetProviderCourseLocationsQuery request, CancellationToken cancellationToken)
+        public async Task<GetAvailableProviderLocationsQueryResult> Handle(GetAvailableProviderLocationsQuery request, CancellationToken cancellationToken)
         {
             var result = await _apiClient.Get<GetAvailableProviderLocationsQueryResult>($"providers/{request.Ukprn}/locations/{request.LarsCode}/available-providerlocations");
             _logger.LogInformation("Found {count} available provider locations for ukprn: {ukprn} larsCode: {larsCode}", result.AvailableProviderLocations.Count, request.Ukprn, request.LarsCode);
