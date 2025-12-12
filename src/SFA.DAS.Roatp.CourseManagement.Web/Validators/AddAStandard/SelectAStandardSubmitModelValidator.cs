@@ -10,6 +10,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard
         {
             RuleFor(m => m.SelectedLarsCode)
                 .NotEmpty()
+                .WithMessage(StandardIsRequiredMesssage)
+                .Must(code => int.TryParse(code, out var v) && v > 0)
                 .WithMessage(StandardIsRequiredMesssage);
         }
     }
