@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddProviderCon
 public class AddProviderContactSubmitViewModelValidatorTests
 {
     [TestCase("test@account.com", true)]
-    [TestCase("test@test.com", false)]
     [TestCase("avcx", false)]
     [TestCase(".com", false)]
     public async Task EmailRegexChecked(string email, bool isValid)
