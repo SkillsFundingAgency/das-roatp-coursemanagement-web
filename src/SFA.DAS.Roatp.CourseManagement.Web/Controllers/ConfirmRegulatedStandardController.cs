@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 var message = $"Standard details not found for ukprn {ukprn} and larscode {larsCode}";
-                _logger.LogError(message);
+                _logger.LogError("Standard details not found for ukprn {Ukprn} and larscode {LarsCode}", ukprn, larsCode);
                 throw new InvalidOperationException(message);
             }
 
