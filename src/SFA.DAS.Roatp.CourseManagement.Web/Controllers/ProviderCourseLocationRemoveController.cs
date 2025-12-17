@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 var message = $"Provider Course Location not found for ukprn {Ukprn} and larscode {larsCode}";
-                _logger.LogError(message);
+                _logger.LogError("Provider Course Location not found for ukprn {Ukprn} and larscode {LarsCode}", Ukprn, larsCode);
                 throw new InvalidOperationException(message);
             }
 

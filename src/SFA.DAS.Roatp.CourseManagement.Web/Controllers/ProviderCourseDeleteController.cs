@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 var message = $"Standard Standard information found for larscode {larsCode}";
-                _logger.LogError(message);
+                _logger.LogError("Standard Standard information found for larscode {LarsCode}", larsCode);
                 throw new InvalidOperationException(message);
             }
 
