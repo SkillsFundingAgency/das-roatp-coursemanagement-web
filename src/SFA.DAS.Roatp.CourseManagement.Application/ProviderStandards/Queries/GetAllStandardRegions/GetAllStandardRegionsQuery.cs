@@ -5,9 +5,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
     public class GetAllStandardRegionsQuery : IRequest<GetAllStandardRegionsQueryResult>
     {
         public int Ukprn { get; }
-        public int LarsCode { get; }
+        public string LarsCode { get; }
 
-        public GetAllStandardRegionsQuery(int ukprn, int larsCode)
+        public GetAllStandardRegionsQuery(int ukprn, string larsCode)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

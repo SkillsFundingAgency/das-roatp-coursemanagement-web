@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
 {
     public abstract class EditNationalDeliveryOptionControllerTestBase
     {
-        protected const int LarsCode = 123;
+        protected const string LarsCode = "123";
         protected Mock<ISessionService> SessionServiceMock;
         protected EditNationalDeliveryOptionController Sut;
         protected Mock<IMediator> MediatorMock;

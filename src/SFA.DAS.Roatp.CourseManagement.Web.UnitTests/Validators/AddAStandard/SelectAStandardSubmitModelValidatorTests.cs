@@ -8,9 +8,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAStandard
     [TestFixture]
     public class SelectAStandardSubmitModelValidatorTests
     {
-        [TestCase(0, false)]
-        [TestCase(12, true)]
-        public void SelectedLarsCode_Validation(int larsCode, bool isValid)
+        [TestCase("0", true)]
+        [TestCase("12", true)]
+        [TestCase(null, false)]
+        [TestCase("", false)]
+        [TestCase(" ", false)]
+        public void SelectedLarsCode_Validation(string larsCode, bool isValid)
         {
             var model = new SelectAStandardSubmitModel() { SelectedLarsCode = larsCode };
             var sut = new SelectAStandardSubmitModelValidator();

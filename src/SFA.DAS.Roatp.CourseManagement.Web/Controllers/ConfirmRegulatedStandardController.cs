@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.GetConfirmRegulatedStandard)]
         [HttpGet]
-        public async Task<IActionResult> ConfirmRegulatedStandard([FromRoute] int larsCode)
+        public async Task<IActionResult> ConfirmRegulatedStandard([FromRoute] string larsCode)
         {
             var ukprn = Ukprn;
             _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 var message = $"Standard details not found for ukprn {ukprn} and larscode {larsCode}";
-                _logger.LogError(message);
+                _logger.LogError("Standard details not found for ukprn {Ukprn} and larscode {LarsCode}", ukprn, larsCode);
                 throw new InvalidOperationException(message);
             }
 

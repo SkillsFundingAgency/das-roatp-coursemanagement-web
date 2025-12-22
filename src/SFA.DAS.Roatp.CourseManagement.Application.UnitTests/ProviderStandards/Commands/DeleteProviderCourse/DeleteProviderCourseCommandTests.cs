@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
     public class DeleteProviderCourseCommandTests
     {
         [Test, AutoData]
-        public void Constructor_BuildsCommand(int ukprn, int larsCode, string userId, string userDisplayName)
+        public void Constructor_BuildsCommand(int ukprn, string larsCode, string userId, string userDisplayName)
         {
             var sut = new DeleteProviderCourseCommand(ukprn, larsCode, userId, userDisplayName);
             sut.Ukprn.Should().Be(ukprn);

@@ -43,7 +43,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ConfirmRegulatedStandardController sut,
             StandardSessionModel sessionModel)
         {
-            sessionModel.LarsCode = 0;
+            // LarsCode must be null/empty to Not Set In Session
+            sessionModel.LarsCode = string.Empty;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
 

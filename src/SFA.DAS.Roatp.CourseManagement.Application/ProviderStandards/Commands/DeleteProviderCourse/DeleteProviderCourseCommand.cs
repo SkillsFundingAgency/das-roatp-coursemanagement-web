@@ -5,10 +5,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCo
     public class DeleteProviderCourseCommand : IRequest<Unit>
     {
         public int Ukprn { get; }
-        public int LarsCode { get; }
+        public string LarsCode { get; }
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
-        public DeleteProviderCourseCommand(int ukprn, int larsCode, string userId, string userDisplayName)
+        public DeleteProviderCourseCommand(int ukprn, string larsCode, string userId, string userDisplayName)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

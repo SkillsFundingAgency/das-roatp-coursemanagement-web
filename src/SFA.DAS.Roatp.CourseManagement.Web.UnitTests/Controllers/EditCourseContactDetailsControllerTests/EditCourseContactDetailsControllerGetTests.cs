@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
             GetStandardDetailsQueryResult queryResult,
-            int larsCode)
+            string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
+        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))

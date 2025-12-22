@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task Get_ValidRequest_ReturnsView(
             GetStandardInformationQueryResult queryResult,
             GetStandardDetailsQueryResult getStandardDetailsQueryResult,
-            int larsCode)
+            string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
@@ -64,7 +64,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task Get_StandardNotPresentAgainstProvider_ReturnsToReviewYourDetails(
             GetStandardInformationQueryResult queryResult,
             GetStandardDetailsQueryResult getStandardDetailsQueryResult,
-            int larsCode)
+            string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
@@ -85,7 +85,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
+        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()))

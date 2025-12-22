@@ -61,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var providerLocationId = Guid.NewGuid();
             var standardSessionModel = new StandardSessionModel
             {
-                LarsCode = 1,
+                LarsCode = "1",
                 CourseLocations = new List<CourseLocationModel>
                 {
                     new CourseLocationModel

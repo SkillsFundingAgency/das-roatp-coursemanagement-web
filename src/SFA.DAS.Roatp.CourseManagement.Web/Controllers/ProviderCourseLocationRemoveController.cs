@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation", Name = RouteNames.GetRemoveProviderCourseLocation)]
         [HttpGet]
-        public async Task<IActionResult> GetProviderCourseLocation(int larsCode, Guid id)
+        public async Task<IActionResult> GetProviderCourseLocation(string larsCode, Guid id)
         {
             _logger.LogInformation("Getting Provider Course Location for ukprn {ukprn} ", Ukprn);
 
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             if (result == null)
             {
                 var message = $"Provider Course Location not found for ukprn {Ukprn} and larscode {larsCode}";
-                _logger.LogError(message);
+                _logger.LogError("Provider Course Location not found for ukprn {Ukprn} and larscode {LarsCode}", Ukprn, larsCode);
                 throw new InvalidOperationException(message);
             }
 

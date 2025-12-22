@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.GetProviderCourseLocations)]
         [HttpGet]
-        public async Task<IActionResult> GetProviderCourseLocations([FromRoute] int larsCode)
+        public async Task<IActionResult> GetProviderCourseLocations([FromRoute] string larsCode)
         {
             _logger.LogInformation("Getting Provider Course Locations for ukprn {Ukprn} ", Ukprn);
 
@@ -41,14 +41,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
         }
 
-        private async Task<ProviderCourseLocationListViewModel> BuildViewModel(int larsCode)
+        private async Task<ProviderCourseLocationListViewModel> BuildViewModel(string larsCode)
         {
             var result = await _mediator.Send(new GetProviderCourseLocationsQuery(Ukprn, larsCode));
 
             if (result == null)
             {
-                var message = $"Provider Course Locations not found for ukprn {Ukprn} and larscode {larsCode}";
-                _logger.LogError(message);
+                _logger.LogError("Provider Course Locations not found for ukprn {Ukprn} and larscode {LarsCode}", Ukprn, larsCode);
                 result = new GetProviderCourseLocationsQueryResult();
             }
 

@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     [TestFixture]
     public class AddStandardTrainingLocationControllerGetTests
     {
-        private int larsCode = 1;
+        private string larsCode = "1";
         [Test, MoqAutoData]
         public async Task Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,

@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
     public class RegionsViewModel : RegionsSubmitModel, IBackLink
     {
         [FromRoute]
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public List<RegionViewModel> AllRegions { get; set; }
 
         public IEnumerable<IGrouping<string, RegionViewModel>> GetGroupedSubRegions()

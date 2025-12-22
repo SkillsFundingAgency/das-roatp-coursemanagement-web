@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
     [TestFixture]
     public class EditLocationOptionControllerGetTests : EditLocationOptionControllerTestBase
     {
-        private const int LarsCode = 123;
+        private const string LarsCode = "123";
         [Test, AutoData]
         public async Task Get_BackLinkIsSetToStandardDetails()
         {

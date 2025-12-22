@@ -72,7 +72,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
         }
 
-        private async Task<ConfirmNonRegulatedStandardViewModel> GetViewModel(int larsCode)
+        private async Task<ConfirmNonRegulatedStandardViewModel> GetViewModel(string larsCode)
         {
             var standardInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
             var model = new ConfirmNonRegulatedStandardViewModel()

@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -8,15 +10,13 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests
 {
     [TestFixture]
     public class EditLocationOptionControllerPostTests : EditLocationOptionControllerTestBase
     {
-        private const int LarsCode = 123;
+        private const string LarsCode = "123";
         private const int Ukprn = 10012002;
         [Test]
         public async Task Post_InvalidModel_ReturnsViewWithValidationError()
@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             model.LocationOption = LocationOption.ProviderLocation;
 
-            var result = await _sut.Index(123, Ukprn, model);
+            var result = await _sut.Index("123", Ukprn, model);
 
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();
@@ -92,7 +92,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         {
             model.LocationOption = LocationOption.Both;
 
-            var result = await _sut.Index(123, Ukprn, model);
+            var result = await _sut.Index("123", Ukprn, model);
 
             var routeResult = result as RedirectToRouteResult;
             routeResult.Should().NotBeNull();

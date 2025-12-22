@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const int level = 2;
             const string iFateReferenceNumber = "STD_1";
             const string sector = "digital";
-            const int larsCode = 133;
+            const string larsCode = "133";
             const ApprenticeshipType ApprenticeshipType = ApprenticeshipType.FoundationApprenticeship;
             var expectedCourseDisplayName = $"{courseName} (level {level})";
             const string standardInfoUrl = "http://test.com";

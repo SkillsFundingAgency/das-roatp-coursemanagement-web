@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task SelectAProviderlocation_ValidRequest_ReturnsView(
             GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult,
             GetProviderCourseLocationsQueryResult resultProviderCourseLocations,
-            int larsCode)
+            string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))

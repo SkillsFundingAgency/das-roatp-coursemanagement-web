@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
     public class EditNationalDeliveryOptionPostTests : EditNationalDeliveryOptionControllerTestBase
     {
         [Test, AutoData]
-        public async Task Post_InvalidState_ReturnsView(ConfirmNationalProviderSubmitModel model, int larsCode)
+        public async Task Post_InvalidState_ReturnsView(ConfirmNationalProviderSubmitModel model, string larsCode)
         {
             SetupController();
             Sut.ModelState.AddModelError("key", "error");
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         }
 
         [Test, AutoData]
-        public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(ConfirmNationalProviderSubmitModel model, int larsCode)
+        public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(ConfirmNationalProviderSubmitModel model, string larsCode)
         {
             SetupController();
             model.HasNationalDeliveryOption = true;
@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         }
 
         [Test, AutoData]
-        public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(ConfirmNationalProviderSubmitModel model, int larsCode)
+        public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(ConfirmNationalProviderSubmitModel model, string larsCode)
         {
             SetupController();
             model.HasNationalDeliveryOption = false;

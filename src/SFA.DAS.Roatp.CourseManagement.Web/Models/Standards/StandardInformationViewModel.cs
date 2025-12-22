@@ -5,7 +5,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
     public class StandardInformationViewModel
     {
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string CourseName { get; set; }
         public int Level { get; set; }
         public string IfateReferenceNumber { get; set; }

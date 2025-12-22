@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public int Level { get; set; }
         public string IFateReferenceNumber { get; set; }
         public string Sector { get; set; }
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string RegulatorName { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public string StandardInfoUrl { get; set; }

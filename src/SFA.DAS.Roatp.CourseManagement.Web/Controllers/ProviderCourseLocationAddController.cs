@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations/add-new", Name = RouteNames.GetAddProviderCourseLocation)]
         [HttpGet]
-        public async Task<IActionResult> SelectAProviderlocation([FromRoute] int larsCode)
+        public async Task<IActionResult> SelectAProviderlocation([FromRoute] string larsCode)
         {
             var model = await GetModel(larsCode);
             return View(ViewPath, model);
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
         [Route("{ukprn}/standards/{larsCode}/providerlocations/add-new", Name = RouteNames.PostAddProviderCourseLocation)]
         [HttpPost]
-        public async Task<IActionResult> SubmitAProviderlocation([FromRoute] int larsCode, ProviderCourseLocationAddSubmitModel submitModel)
+        public async Task<IActionResult> SubmitAProviderlocation([FromRoute] string larsCode, ProviderCourseLocationAddSubmitModel submitModel)
         {
             if (!ModelState.IsValid)
             {
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
             return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { ukprn = Ukprn, larsCode });
         }
 
-        private async Task<ProviderCourseLocationAddViewModel> GetModel(int larsCode)
+        private async Task<ProviderCourseLocationAddViewModel> GetModel(string larsCode)
         {
             _logger.LogInformation("Getting available provider course locations for ukprn {ukprn}  larsCode {larsCode}", Ukprn, larsCode);
             var result = await _mediator.Send(new GetAvailableProviderLocationsQuery(Ukprn, larsCode));

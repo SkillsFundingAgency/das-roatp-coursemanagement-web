@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
             GetAllStandardRegionsQueryResult queryResult,
-            int larsCode)
+            string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
@@ -75,7 +75,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         [Test, AutoData]
         public async Task Get_ValidRequestNoRegions_RedirectToNotFoundPage(
            GetAllStandardRegionsQueryResult queryResult,
-           int larsCode)
+           string larsCode)
         {
             queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.CourseRegionModel>();
             _mediatorMock
@@ -91,7 +91,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         }
 
         [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(int larsCode)
+        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))

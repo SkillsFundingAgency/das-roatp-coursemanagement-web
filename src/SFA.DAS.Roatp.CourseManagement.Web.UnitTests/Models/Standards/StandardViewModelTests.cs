@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const int providerCourseId = 1;
             const string courseName = "course name";
             const int level = 1;
-            const int larsCode = 133;
+            const string larsCode = "133";
             const string expectedCourseDisplayName = "course name (level 1)";
             const string approvalBody = "approval body";
             const bool hasLocations = true;
