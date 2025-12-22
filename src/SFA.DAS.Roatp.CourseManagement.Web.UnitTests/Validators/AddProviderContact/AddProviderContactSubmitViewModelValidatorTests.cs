@@ -1,17 +1,17 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddProviderContact;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddProviderContact;
 
 [TestFixture]
 public class AddProviderContactSubmitViewModelValidatorTests
 {
-    [TestCase("test@test.com", true)]
+    [TestCase("test@gmail.com", true)]
     [TestCase("avcx", false)]
     [TestCase(".com", false)]
     public async Task EmailRegexChecked(string email, bool isValid)
