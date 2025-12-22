@@ -1,10 +1,10 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddProviderContact;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddProviderContact;
 
