@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,7 +8,12 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 {
@@ -20,10 +22,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
     {
         private readonly IMediator _mediator;
         private readonly ILogger<StandardsController> _logger;
-        public StandardsController(IMediator mediator, ILogger<StandardsController> logger)
+        private readonly IProviderCourseTypeService _providerCourseTypeService;
+        public StandardsController(IMediator mediator, ILogger<StandardsController> logger, IProviderCourseTypeService providerCourseTypeService)
         {
             _logger = logger;
             _mediator = mediator;
+            _providerCourseTypeService = providerCourseTypeService;
         }
 
         [Route("{ukprn}/standards", Name = RouteNames.ViewStandards)]
@@ -31,6 +35,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         [ClearSession(nameof(StandardSessionModel))]
         public async Task<IActionResult> ViewStandards()
         {
+            var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
+
+            var courseTypes = providerCourseTypeResponse?.Select(c => c.CourseType);
+
+            if (!courseTypes.Contains(CourseType.Apprenticeship.ToString()))
+            {
+                return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+            }
+
             _logger.LogInformation("Getting standards for {ukprn}", Ukprn);
 
             var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn));
