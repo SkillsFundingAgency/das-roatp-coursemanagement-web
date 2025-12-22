@@ -15,6 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
             ConfigureHttpClient(services, configuration);
             services.AddHttpContextAccessor();
             services.AddTransient<ISessionService, SessionService>();
+            services.AddTransient<IProviderCourseTypeService, ProviderCourseTypeService>();
         }
         private static void ConfigureHttpClient(IServiceCollection services, IConfiguration configuration)
         {

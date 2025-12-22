@@ -1,5 +1,4 @@
-﻿using System.Security.Claims;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
+using System.Security.Claims;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 {
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var mockSessionService = new Mock<ISessionService>();
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111") }, "mock"));
 
-            var viewStandardsUrl = "http://test/view-standards";
+            var selectCourseTypeUrl = "http://test/view-standards";
             var providerLocationsUrl = "http://test/provider-locations";
             var providerDescriptionUrl = "http://test/provider-description";
             var providerContactUrl = "http://test/provider-contact";
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var expectedModel = new ReviewYourDetailsViewModel()
             {
                 ProviderLocationsUrl = providerLocationsUrl,
-                StandardsUrl = viewStandardsUrl,
+                StandardsUrl = selectCourseTypeUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl,
                 ProviderContactUrl = providerContactUrl
             };
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
 
             sut.AddDefaultContextWithUser()
             .AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.ViewStandards, viewStandardsUrl)
+            .AddUrlForRoute(RouteNames.SelectCourseType, selectCourseTypeUrl)
             .AddUrlForRoute(RouteNames.GetProviderLocations, providerLocationsUrl)
             .AddUrlForRoute(RouteNames.GetProviderDescription, providerDescriptionUrl)
             .AddUrlForRoute(RouteNames.CheckProviderContactDetails, providerContactUrl);

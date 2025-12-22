@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             _sessionService.Delete(nameof(ProviderContactSessionModel));
 
-            var standardsUrl = Url.RouteUrl(RouteNames.ViewStandards, new
+            var standardsUrl = Url.RouteUrl(RouteNames.SelectCourseType, new
             {
                 ukprn = Ukprn,
             });
