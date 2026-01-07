@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System;
@@ -37,9 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-            var courseTypes = providerCourseTypeResponse?.Select(c => c.CourseType);
-
-            if (!courseTypes.Contains(CourseType.Apprenticeship.ToString()))
+            if (!providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship))
             {
                 return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
             }

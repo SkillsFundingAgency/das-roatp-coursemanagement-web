@@ -5,9 +5,11 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
 {
+    [ExcludeFromCodeCoverage]
     public static class AddServiceRegistrationsExtension
     {
         public static void AddServiceRegistrations(this IServiceCollection services, IConfiguration configuration)

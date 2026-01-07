@@ -8,11 +8,11 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             {
                 new CourseTypeModel()
                 {
-                    CourseType = CourseType.Apprenticeship.ToString()
+                    CourseType = CourseType.Apprenticeship
                 }
             };
             _providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
@@ -225,7 +225,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         }
 
         [Test]
-        public async Task StandardsController_ViewStandards_DoesNotProvideStandards_RedirectsToCorrectAction()
+        public async Task ViewStandards_DoesNotProvideStandards_RedirectsToReviewYourDetails()
         {
             _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
