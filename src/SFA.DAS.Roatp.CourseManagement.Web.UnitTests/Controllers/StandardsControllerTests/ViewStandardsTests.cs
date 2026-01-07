@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             {
                 new CourseTypeModel()
                 {
-                    CourseType = CourseType.Apprenticeship.ToString()
+                    CourseType = CourseType.Apprenticeship
                 }
             };
             _providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
@@ -225,7 +225,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         }
 
         [Test]
-        public async Task StandardsController_ViewStandards_DoesNotProvideStandards_RedirectsToCorrectAction()
+        public async Task ViewStandards_DoesNotProvideStandards_RedirectsToReviewYourDetails()
         {
             _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);

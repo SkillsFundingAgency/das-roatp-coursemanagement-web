@@ -37,9 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-            var courseTypes = providerCourseTypeResponse.Select(c => c.CourseType);
-
-            if (!courseTypes.Contains(CourseType.Apprenticeship.ToString()))
+            if (!providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship))
             {
                 return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
             }

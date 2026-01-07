@@ -19,10 +19,8 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
     {
         var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-        var courseTypes = providerCourseTypeResponse.Select(c => c.CourseType);
-
-        if (courseTypes.Contains(CourseType.Apprenticeship.ToString()) &&
-            courseTypes.Contains(CourseType.ApprenticeshipUnit.ToString()))
+        if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship) &&
+            providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
         {
             var viewModel = new SelectCourseTypeViewModel()
             {
@@ -33,12 +31,12 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
             return View(viewModel);
         }
 
-        if (courseTypes.Contains(CourseType.Apprenticeship.ToString()))
+        if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship))
         {
             return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
         }
 
-        if (courseTypes.Contains(CourseType.ApprenticeshipUnit.ToString()))
+        if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
         {
             return RedirectToRouteWithUkprn(RouteNames.ManageApprenticeshipUnits);
         }

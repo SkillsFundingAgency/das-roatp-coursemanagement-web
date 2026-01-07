@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers
             var expectedModel = new ReviewYourDetailsViewModel()
             {
                 ProviderLocationsUrl = providerLocationsUrl,
-                StandardsUrl = selectCourseTypeUrl,
+                SelectCourseTypeUrl = selectCourseTypeUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl,
                 ProviderContactUrl = providerContactUrl
             };

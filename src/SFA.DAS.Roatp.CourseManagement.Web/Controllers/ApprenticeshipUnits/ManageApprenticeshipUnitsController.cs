@@ -19,9 +19,7 @@ public class ManageApprenticeshipUnitsController(IProviderCourseTypeService _pro
     {
         var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-        var courseTypes = providerCourseTypeResponse.Select(c => c.CourseType);
-
-        if (!courseTypes.Contains(CourseType.ApprenticeshipUnit.ToString()))
+        if (!providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
         {
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }

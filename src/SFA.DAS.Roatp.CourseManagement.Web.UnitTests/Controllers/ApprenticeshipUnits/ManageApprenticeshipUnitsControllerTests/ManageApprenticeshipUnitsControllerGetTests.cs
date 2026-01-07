@@ -18,21 +18,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.Apprenticeshi
 public class ManageApprenticeshipUnitsControllerGetTests
 {
     [Test, MoqAutoData]
-    public async Task Get_Index_GetProviderCourseTypeReturnsApprenticeshipUnitCourseType_ReturnsView(
-        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService)
+    public async Task Index_CourseTypeReturnsApprenticeshipUnit_ReturnsView(
+        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
+        [Greedy] ManageApprenticeshipUnitsController sut)
     {
         // Arrange
         var courseTypes = new List<CourseTypeModel>()
         {
             new CourseTypeModel()
             {
-                CourseType = CourseType.ApprenticeshipUnit.ToString()
+                CourseType = CourseType.ApprenticeshipUnit
             }
         };
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
-        var sut = new ManageApprenticeshipUnitsController(providerCourseTypeService.Object);
         sut.AddDefaultContextWithUser();
 
         var addAnApprenticeshipUnitLink = "#";
@@ -51,21 +51,21 @@ public class ManageApprenticeshipUnitsControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public async Task Get_Index_GetProviderCourseTypeDoesNotReturnApprenticeshipUnitCourseType_RedirectsToCorrectAction(
-        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService)
+    public async Task Index_CourseTypeDoesNotReturnApprenticeshipUnit_RedirectsToReviewYourDetails(
+        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
+        [Greedy] ManageApprenticeshipUnitsController sut)
     {
         // Arrange
         var courseTypes = new List<CourseTypeModel>()
         {
             new CourseTypeModel()
             {
-                CourseType = CourseType.Apprenticeship.ToString()
+                CourseType = CourseType.Apprenticeship
             }
         };
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
-        var sut = new ManageApprenticeshipUnitsController(providerCourseTypeService.Object);
         sut.AddDefaultContextWithUser();
 
         // Act
