@@ -11,20 +11,15 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
+[Route("{ukprn}/select-course-type", Name = RouteNames.SelectCourseType)]
 public class SelectCourseTypeController(IProviderCourseTypeService _providerCourseTypeService) : ControllerBase
 {
-    [Route("{ukprn}/select-course-type", Name = RouteNames.SelectCourseType)]
     [HttpGet]
     public async Task<IActionResult> Index()
     {
         var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-        var courseTypes = providerCourseTypeResponse?.Select(c => c.CourseType);
-
-        if (!courseTypes.Any())
-        {
-            return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-        }
+        var courseTypes = providerCourseTypeResponse.Select(c => c.CourseType);
 
         if (courseTypes.Contains(CourseType.Apprenticeship.ToString()) &&
             courseTypes.Contains(CourseType.ApprenticeshipUnit.ToString()))
@@ -32,12 +27,22 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
             var viewModel = new SelectCourseTypeViewModel()
             {
                 ApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn, }),
-                ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.SelectCourseType, new { ukprn = Ukprn })
+                ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageApprenticeshipUnits, new { ukprn = Ukprn })
             };
 
             return View(viewModel);
         }
 
-        return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
+        if (courseTypes.Contains(CourseType.Apprenticeship.ToString()))
+        {
+            return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
+        }
+
+        if (courseTypes.Contains(CourseType.ApprenticeshipUnit.ToString()))
+        {
+            return RedirectToRouteWithUkprn(RouteNames.ManageApprenticeshipUnits);
+        }
+
+        return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
     }
 }

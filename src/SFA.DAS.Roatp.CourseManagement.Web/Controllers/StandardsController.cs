@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-            var courseTypes = providerCourseTypeResponse?.Select(c => c.CourseType);
+            var courseTypes = providerCourseTypeResponse.Select(c => c.CourseType);
 
             if (!courseTypes.Contains(CourseType.Apprenticeship.ToString()))
             {
