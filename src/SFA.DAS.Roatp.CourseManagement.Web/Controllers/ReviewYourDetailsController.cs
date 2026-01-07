@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
         {
             _sessionService.Delete(nameof(ProviderContactSessionModel));
 
-            var standardsUrl = Url.RouteUrl(RouteNames.SelectCourseType, new
+            var selectCourseTypeUrl = Url.RouteUrl(RouteNames.SelectCourseType, new
             {
                 ukprn = Ukprn,
             });
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
 
             return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
             {
-                StandardsUrl = standardsUrl,
+                SelectCourseTypeUrl = selectCourseTypeUrl,
                 ProviderLocationsUrl = providerLocationsUrl,
                 ProviderDescriptionUrl = providerDescriptionUrl,
                 ProviderContactUrl = providerContactUrl
