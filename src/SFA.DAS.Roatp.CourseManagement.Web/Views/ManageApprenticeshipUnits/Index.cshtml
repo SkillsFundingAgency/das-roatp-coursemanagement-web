@@ -1,0 +1,17 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model ManageApprenticeshipUnitsViewModel
+@{
+    ViewData["Title"] = "Manage your apprenticeship units";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your apprenticeship units</h1>
+        <p class="govuk-body">Use this section to add a new apprenticeship unit, update its details or delete it. Any changes you make will update Find apprenticeship training.</p>
+        <p class="govuk-body">
+            <a href="@Model.AddAnApprenticeshipUnitLink" class="govuk-button">
+                Add an apprenticeship unit
+            </a>
+        </p>
+    </div>
+</div>

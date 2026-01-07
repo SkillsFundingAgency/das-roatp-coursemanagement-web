@@ -1,0 +1,29 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@model SelectCourseTypeViewModel
+@{
+    ViewData["Title"] = "Choose training type";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-8">Choose training type</h1>
+    </div>
+</div>
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-row app-flex-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="app-feature-box">
+                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="  @Model.ApprenticeshipsUrl" class="govuk-link">Apprenticeships</a></h2>
+                    <p class="app-feature-box__content">Add, update or delete your apprenticeships.</p>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="app-feature-box">
+                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ApprenticeshipUnitsUrl" class="govuk-link">Apprenticeship units</a></h2>
+                    <p class="app-feature-box__content">Add, update or delete your apprenticeship units.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
