@@ -52,6 +52,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string GetAddStandardUseSavedContactDetails = "GetAddStandardUseSavedContactDetails";
 
         public const string ManageApprenticeshipUnits = "ManageApprenticeshipUnits";
+        public const string SelectAnApprenticeshipUnit = "SelectAnApprenticeshipUnit";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";

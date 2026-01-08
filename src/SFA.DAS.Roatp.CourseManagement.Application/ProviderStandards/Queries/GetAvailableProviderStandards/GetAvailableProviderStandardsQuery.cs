@@ -1,13 +1,15 @@
 ﻿using MediatR;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
+
+public class GetAvailableProviderStandardsQuery : IRequest<GetAvailableProviderStandardsQueryResult>
 {
-    public class GetAvailableProviderStandardsQuery: IRequest<GetAvailableProviderStandardsQueryResult>
+    public int Ukprn { get; }
+    public CourseType? CourseType { get; }
+    public GetAvailableProviderStandardsQuery(int ukprn, CourseType? courseType)
     {
-        public int Ukprn { get; }
-        public GetAvailableProviderStandardsQuery(int ukprn)
-        {
-            Ukprn = ukprn;
-        }
+        Ukprn = ukprn;
+        CourseType = courseType;
     }
 }
