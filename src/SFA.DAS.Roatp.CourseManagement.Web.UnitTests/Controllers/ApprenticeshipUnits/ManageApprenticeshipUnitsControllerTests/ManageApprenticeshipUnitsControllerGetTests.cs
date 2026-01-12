@@ -35,9 +35,9 @@ public class ManageApprenticeshipUnitsControllerGetTests
 
         sut.AddDefaultContextWithUser();
 
-        var addAnApprenticeshipUnitLink = "#";
+        var addAnApprenticeshipUnitLink = RouteNames.SelectAnApprenticeshipUnit;
         sut.AddUrlHelperMock()
-            .AddUrlForRoute("#");
+            .AddUrlForRoute(RouteNames.SelectAnApprenticeshipUnit, addAnApprenticeshipUnitLink);
 
         // Act
         var result = await sut.Index() as ViewResult;

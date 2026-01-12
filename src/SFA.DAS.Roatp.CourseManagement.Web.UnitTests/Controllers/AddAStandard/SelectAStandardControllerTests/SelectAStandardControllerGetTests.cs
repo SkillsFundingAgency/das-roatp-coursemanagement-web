@@ -1,7 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,43 +9,47 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.SelectAStandardControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.SelectAStandardControllerTests;
+
+[TestFixture]
+public class SelectAStandardControllerGetTests
 {
-    [TestFixture]
-    public class SelectAStandardControllerGetTests
+    [Test, MoqAutoData]
+    public async Task SelectAStandard_ReturnsViewResult(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] SelectAStandardController sut,
+        GetAvailableProviderStandardsQueryResult queryResult)
     {
-        [Test, MoqAutoData]
-        public async Task SelectAStandard_ReturnsViewResult(
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] SelectAStandardController sut,
-            GetAvailableProviderStandardsQueryResult queryResult)
-        {
-            sut
-                .AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.ViewStandards);
-            mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        sut
+            .AddDefaultContextWithUser()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ViewStandards);
+        mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.Apprenticeship), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
-            var response = await sut.SelectAStandard();
+        var response = await sut.SelectAStandard();
 
-            var viewResult = response as ViewResult;
-            Assert.IsNotNull(viewResult);
-            viewResult.ViewName.Should().Be(SelectAStandardController.ViewPath);
-            var model = viewResult.Model as SelectAStandardViewModel;
-            var expectedNames = queryResult.AvailableCourses.Select(s => $"{s.Title} (Level {s.Level})");
-            model.Standards.All(s => expectedNames.Contains(s.Text)).Should().BeTrue();
-        }
+        var viewResult = response as ViewResult;
+        Assert.IsNotNull(viewResult);
+        viewResult.ViewName.Should().Be(SelectAStandardController.ViewPath);
+        var model = viewResult.Model as SelectAStandardViewModel;
+        var expectedNames = queryResult.AvailableCourses.Select(s => $"{s.Title} (Level {s.Level})");
+        model.Standards.All(s => expectedNames.Contains(s.Text)).Should().BeTrue();
+        mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.Apprenticeship), It.IsAny<CancellationToken>()), Times.Once());
+    }
 
-        [Test]
-        public void SelectAStandard_ClearsStandardSessionModel()
-        {
-            var method = typeof(SelectAStandardController).GetMethod(nameof(SelectAStandardController.SelectAStandard));
-            method.Should().BeDecoratedWith<ClearSessionAttribute>();
-            var clearSessionAttribute = method.GetCustomAttributes(false).FirstOrDefault(att => att.GetType().Name == typeof(ClearSessionAttribute).Name);
-            clearSessionAttribute.As<ClearSessionAttribute>().SessionKey.Should().Be(nameof(StandardSessionModel));
-        }
+    [Test]
+    public void SelectAStandard_ClearsStandardSessionModel()
+    {
+        var method = typeof(SelectAStandardController).GetMethod(nameof(SelectAStandardController.SelectAStandard));
+        method.Should().BeDecoratedWith<ClearSessionAttribute>();
+        var clearSessionAttribute = method.GetCustomAttributes(false).FirstOrDefault(att => att.GetType().Name == typeof(ClearSessionAttribute).Name);
+        clearSessionAttribute.As<ClearSessionAttribute>().SessionKey.Should().Be(nameof(StandardSessionModel));
     }
 }
