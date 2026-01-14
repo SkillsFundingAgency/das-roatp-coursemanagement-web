@@ -53,6 +53,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 
         public const string ManageApprenticeshipUnits = "ManageApprenticeshipUnits";
         public const string SelectAnApprenticeshipUnit = "SelectAnApprenticeshipUnit";
+        public const string ConfirmApprenticeshipUnit = "ConfirmApprenticeshipUnit";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";

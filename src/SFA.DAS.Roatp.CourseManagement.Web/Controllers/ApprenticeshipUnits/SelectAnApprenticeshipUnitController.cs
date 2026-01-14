@@ -7,6 +7,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ApprenticeshipUnits;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 [Route("{ukprn}/manage-apprenticeship-units/add/select-apprenticeship-unit", Name = RouteNames.SelectAnApprenticeshipUnit)]
-public class SelectAnApprenticeshipUnitController(IMediator _mediator) : ControllerBase
+public class SelectAnApprenticeshipUnitController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -33,7 +35,13 @@ public class SelectAnApprenticeshipUnitController(IMediator _mediator) : Control
 
         }
 
-        return RedirectToRouteWithUkprn(RouteNames.SelectAnApprenticeshipUnit);
+        var sessionModel = new ApprenticeshipUnitSessionModel();
+
+        sessionModel.LarsCode = submitModel.SelectedLarsCode;
+
+        _sessionService.Set(sessionModel);
+
+        return RedirectToRouteWithUkprn(RouteNames.ConfirmApprenticeshipUnit);
     }
 
     private async Task<SelectAnApprenticeshipUnitViewModel> GetModel()

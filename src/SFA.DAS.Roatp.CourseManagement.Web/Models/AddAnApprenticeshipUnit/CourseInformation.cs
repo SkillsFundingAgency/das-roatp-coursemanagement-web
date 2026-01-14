@@ -1,9 +1,11 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
 
-public class StandardInformationViewModel
+public class CourseInformation
 {
     public string LarsCode { get; set; }
     public string CourseName { get; set; }
@@ -12,10 +14,12 @@ public class StandardInformationViewModel
     public string Sector { get; set; }
     public string RegulatorName { get; set; }
     public ApprenticeshipType ApprenticeshipType { get; set; }
-    public string CourseDisplayName => $"{CourseName} (level {Level})";
     public bool IsRegulatedForProvider { get; set; }
+    public int Duration { get; set; }
+    public DurationUnits DurationUnits { get; set; }
+    public CourseType CourseType { get; set; }
 
-    public static implicit operator StandardInformationViewModel(GetStandardInformationQueryResult source)
+    public static implicit operator CourseInformation(GetStandardInformationQueryResult source)
         => new()
         {
             LarsCode = source.LarsCode,
@@ -25,6 +29,9 @@ public class StandardInformationViewModel
             CourseName = source.Title,
             Level = source.Level,
             RegulatorName = source.ApprovalBody,
-            IsRegulatedForProvider = source.IsRegulatedForProvider
+            IsRegulatedForProvider = source.IsRegulatedForProvider,
+            Duration = source.Duration,
+            DurationUnits = source.DurationUnits,
+            CourseType = source.CourseType,
         };
 }
