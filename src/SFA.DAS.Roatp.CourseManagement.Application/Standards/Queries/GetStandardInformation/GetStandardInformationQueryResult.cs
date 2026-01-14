@@ -10,8 +10,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStanda
         public string Title { get; set; }
         public int Level { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
-        public string RegulatorName { get; set; }
-        public string Sector { get; set; }
+        public string ApprovalBody { get; set; }
+        public string Route { get; set; }
         public bool IsRegulatedForProvider { get; set; }
     }
 }
