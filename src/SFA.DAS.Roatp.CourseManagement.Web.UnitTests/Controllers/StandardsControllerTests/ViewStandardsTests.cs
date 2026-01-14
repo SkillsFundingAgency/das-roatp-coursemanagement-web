@@ -28,10 +28,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private static string ReviewYourDetailsLink = Guid.NewGuid().ToString();
-        private static string GetStandardDetailsLink = Guid.NewGuid().ToString();
-        private static string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
-        private static string AddAStandardLink = Guid.NewGuid().ToString();
+        private static readonly string ReviewYourDetailsLink = Guid.NewGuid().ToString();
+        private static readonly string GetStandardDetailsLink = Guid.NewGuid().ToString();
+        private static readonly string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
+        private static readonly string AddAStandardLink = Guid.NewGuid().ToString();
 
         [SetUp]
         public void Before_each_test()
@@ -43,7 +43,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ProviderCourseId = 1,
                 CourseName = "test1",
                 Level = 1,
-                IsImported = true,
                 ApprovalBody = "TestBody1",
                 IsRegulatedForProvider = true
             };
@@ -52,7 +51,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ProviderCourseId = 2,
                 CourseName = "test2",
                 Level = 2,
-                IsImported = false,
                 ApprovalBody = null,
                 IsRegulatedForProvider = false
             };
@@ -79,7 +77,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         {
             var method = typeof(StandardsController).GetMethod(nameof(StandardsController.ViewStandards));
             method.Should().BeDecoratedWith<ClearSessionAttribute>();
-            var clearSessionAttribute = method.GetCustomAttributes(false).FirstOrDefault(att => att.GetType().Name == typeof(ClearSessionAttribute).Name);
+            var clearSessionAttribute = method?.GetCustomAttributes(false).FirstOrDefault(att => att.GetType().Name == typeof(ClearSessionAttribute).Name);
             clearSessionAttribute.As<ClearSessionAttribute>().SessionKey.Should().Be(nameof(StandardSessionModel));
         }
 
@@ -98,9 +96,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("ViewStandards.cshtml");
-            viewResult.Model.Should().NotBeNull();
-            var model = viewResult.Model as StandardListViewModel;
+            viewResult?.ViewName.Should().Contain("ViewStandards.cshtml");
+            viewResult?.Model.Should().NotBeNull();
+            var model = viewResult?.Model as StandardListViewModel;
             model.Should().NotBeNull();
             model!.Standards.Should().NotBeNull();
             model.Standards.First().StandardUrl.Should().Be(GetStandardDetailsLink);
@@ -144,7 +142,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ProviderCourseId = 1,
                 CourseName = "a1",
                 Level = 1,
-                IsImported = true,
                 ApprovalBody = "TestBody1"
             };
             var standard2 = new Standard
@@ -152,7 +149,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ProviderCourseId = 2,
                 CourseName = "a1",
                 Level = 2,
-                IsImported = false,
                 ApprovalBody = null
             };
 
@@ -161,7 +157,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ProviderCourseId = 2,
                 CourseName = "c2",
                 Level = 2,
-                IsImported = false,
                 ApprovalBody = null
             };
 
@@ -170,7 +165,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ProviderCourseId = 2,
                 CourseName = "d2",
                 Level = 2,
-                IsImported = false,
                 ApprovalBody = null
             };
 
@@ -207,7 +201,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Should().NotBeNull();
             model!.Standards.Should().NotBeEmpty();
             model.Standards.Should().BeEquivalentTo(expectedStandards,
-                options => options.Excluding(c => c.Version).Excluding(c => c.HasLocations));
+                options => options.Excluding(c => c.HasLocations));
         }
     }
 }
