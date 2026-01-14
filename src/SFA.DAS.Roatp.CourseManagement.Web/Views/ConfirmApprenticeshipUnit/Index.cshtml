@@ -1,0 +1,66 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit
+@model ConfirmApprenticeshipUnitViewModel
+@{
+    ViewBag.Title = "Confirm apprenticeship unit";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <span class="govuk-caption-l">Add an apprenticeship unit</span>
+        
+        <h1 class="govuk-heading-xl">@Model.CourseInformation.CourseName</h1>
+        <table class="govuk-table" aria-label="Course details">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header das-table-cell-width-60" scope="row">Sector</th>
+                    <td class="govuk-table__cell das-table-cell-width-70">@Model.CourseInformation.Sector</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Learning aim reference code</th>
+                    <td class="govuk-table__cell">@Model.CourseInformation.LarsCode</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Skills England code</th>
+                    <td class="govuk-table__cell">@Model.CourseInformation.IfateReferenceNumber</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Delivery hours</th>
+                    <td class="govuk-table__cell">@Model.CourseInformation.Duration</td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="row">Level</th>
+                    <td class="govuk-table__cell">@Model.CourseInformation.Level</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form method="post" asp-route="@RouteNames.ConfirmApprenticeshipUnit" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="IsCorrectCourse" class="govuk-form-group">
+                <span asp-validation-for="IsCorrectCourse" class="govuk-error-message"></span>
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right apprenticeship unit?</legend>
+                    <div id="IsCorrectCourse" class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-correct-course-yes" type="radio" value="true"
+                                   asp-for="IsCorrectCourse" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-correct-course-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-correct-course-no" type="radio" value="false"
+                                   asp-for="IsCorrectCourse" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-correct-course-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -7,5 +7,7 @@ public enum ApprenticeshipType
     [Description("Standard apprenticeship")]
     Apprenticeship,
     [Description("Foundation apprenticeship")]
-    FoundationApprenticeship
+    FoundationApprenticeship,
+    [Description("Apprenticeship unit")]
+    ApprenticeshipUnit,
 }
