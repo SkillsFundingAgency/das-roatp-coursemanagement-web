@@ -35,7 +35,7 @@ public class SelectAnApprenticeshipUnitController(IMediator _mediator, ISessionS
 
         }
 
-        var sessionModel = new ApprenticeshipUnitSessionModel();
+        var sessionModel = new ShortCourseSessionModel();
 
         sessionModel.LarsCode = submitModel.SelectedLarsCode;
 

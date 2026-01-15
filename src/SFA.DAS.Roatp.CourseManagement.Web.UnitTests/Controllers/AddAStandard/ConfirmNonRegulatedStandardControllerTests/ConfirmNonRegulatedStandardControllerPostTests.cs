@@ -107,6 +107,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionModel.StandardInformation.Should().BeEquivalentTo(getStandardInformationQueryResult, option => option
                 .Excluding(c => c.StandardUId)
                 .Excluding(c => c.IsRegulatedForProvider)
+                .Excluding(c => c.Duration)
+                .Excluding(c => c.DurationUnits)
+                .Excluding(c => c.CourseType)
                 .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName)
                 .WithMapping<StandardInformationViewModel>(c => c.ApprovalBody, v => v.RegulatorName)
                 .WithMapping<StandardInformationViewModel>(c => c.Route, v => v.Sector));
