@@ -93,4 +93,27 @@ public class ConfirmApprenticeshipUnitControllerPostTests
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Once);
     }
+
+    [Test, MoqAutoData]
+    public async Task Index_SessionIsNull_RedirectsToReviewYourDetails(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Greedy] ConfirmApprenticeshipUnitController sut,
+    ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
+
+        // Act
+        var response = await sut.Index(new ConfirmApprenticeshipUnitSubmitModel());
+
+        // Assert
+        var redirectResult = response as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+        mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Never);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
+    }
 }

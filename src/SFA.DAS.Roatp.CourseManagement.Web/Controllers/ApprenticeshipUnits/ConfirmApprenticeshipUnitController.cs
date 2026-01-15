@@ -20,6 +20,8 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
+        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
         var model = await GetViewModel(sessionModel.LarsCode);
 
         return View(model);
@@ -29,6 +31,8 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
     public async Task<IActionResult> Index(ConfirmApprenticeshipUnitSubmitModel submitModel)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+
+        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
         if (!ModelState.IsValid)
         {

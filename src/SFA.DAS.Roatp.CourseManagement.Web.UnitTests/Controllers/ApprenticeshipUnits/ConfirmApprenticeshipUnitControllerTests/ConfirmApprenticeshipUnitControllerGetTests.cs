@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ApprenticeshipUnits;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -42,6 +43,28 @@ public class ConfirmApprenticeshipUnitControllerGetTests
         model.Should().NotBeNull();
         model!.ShortCourseInformation.Should().BeEquivalentTo(queryResult, o => o.ExcludingMissingMembers());
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Once);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Index_SessionIsNull_RedirectsToReviewYourDetails(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Greedy] ConfirmApprenticeshipUnitController sut,
+    ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
+
+        // Act
+        var response = await sut.Index();
+
+        // Assert
+        var redirectResult = response as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+        mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Never);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 }
