@@ -1,7 +1,7 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
 
