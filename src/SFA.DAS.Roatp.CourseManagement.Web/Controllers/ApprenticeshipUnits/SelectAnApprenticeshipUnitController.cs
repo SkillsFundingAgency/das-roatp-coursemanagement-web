@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
@@ -19,6 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ApprenticeshipUnits;
 public class SelectAnApprenticeshipUnitController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     [HttpGet]
+    [ClearSession(nameof(ShortCourseSessionModel))]
     public async Task<IActionResult> Index()
     {
         var viewModel = await GetModel();
