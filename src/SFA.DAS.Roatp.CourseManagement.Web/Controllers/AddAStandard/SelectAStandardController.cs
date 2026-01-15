@@ -12,7 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
 using System.Threading.Tasks;
