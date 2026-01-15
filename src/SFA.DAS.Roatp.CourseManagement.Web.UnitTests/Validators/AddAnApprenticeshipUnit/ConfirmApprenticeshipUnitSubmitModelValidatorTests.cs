@@ -8,7 +8,7 @@ public class ConfirmApprenticeshipUnitSubmitModelValidatorTests
 {
     [TestCase(true)]
     [TestCase(false)]
-    public void IsCorrectStandard_Valid_NoErrors(bool value)
+    public void IsCorrectShortCourse_Valid_NoErrors(bool value)
     {
         var model = new ConfirmApprenticeshipUnitSubmitModel { IsCorrectShortCourse = value };
         var sut = new ConfirmApprenticeshipUnitSubmitModelValidator();
@@ -19,7 +19,7 @@ public class ConfirmApprenticeshipUnitSubmitModelValidatorTests
     }
 
     [Test]
-    public void IsCorrectStandard_Invalid_NoErrors()
+    public void IsCorrectShortCourse_Invalid_NoErrors()
     {
         var model = new ConfirmApprenticeshipUnitSubmitModel();
         var sut = new ConfirmApprenticeshipUnitSubmitModelValidator();
