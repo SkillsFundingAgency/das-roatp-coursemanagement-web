@@ -2,8 +2,8 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 
-public class ApprenticeshipUnitSessionModel
+public class ShortCourseSessionModel
 {
     public string LarsCode { get; set; }
-    public CourseInformation CourseInformation { get; set; } = new CourseInformation();
+    public ShortCourseInformationViewModel ShortCourseInformation { get; set; } = new ShortCourseInformationViewModel();
 }

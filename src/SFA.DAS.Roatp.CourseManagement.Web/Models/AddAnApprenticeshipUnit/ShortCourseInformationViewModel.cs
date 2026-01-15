@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Constants;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
 
-public class CourseInformation
+public class ShortCourseInformationViewModel
 {
     public string LarsCode { get; set; }
     public string CourseName { get; set; }
@@ -19,7 +19,7 @@ public class CourseInformation
     public DurationUnits DurationUnits { get; set; }
     public CourseType CourseType { get; set; }
 
-    public static implicit operator CourseInformation(GetStandardInformationQueryResult source)
+    public static implicit operator ShortCourseInformationViewModel(GetStandardInformationQueryResult source)
         => new()
         {
             LarsCode = source.LarsCode,

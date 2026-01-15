@@ -2,10 +2,10 @@
 
 public class ConfirmApprenticeshipUnitViewModel : ConfirmApprenticeshipUnitSubmitModel, IBackLink
 {
-    public CourseInformation CourseInformation { get; set; }
+    public ShortCourseInformationViewModel ShortCourseInformation { get; set; }
 }
 
 public class ConfirmApprenticeshipUnitSubmitModel
 {
-    public bool? IsCorrectCourse { get; set; }
+    public bool? IsCorrectShortCourse { get; set; }
 }
