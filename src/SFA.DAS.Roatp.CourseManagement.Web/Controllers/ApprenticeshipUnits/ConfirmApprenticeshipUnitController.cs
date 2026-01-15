@@ -18,7 +18,7 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
     [HttpGet]
     public async Task<IActionResult> Index()
     {
-        var sessionModel = _sessionService.Get<ApprenticeshipUnitSessionModel>();
+        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
         var model = await GetViewModel(sessionModel.LarsCode);
 
@@ -28,7 +28,7 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
     [HttpPost]
     public async Task<IActionResult> Index(ConfirmApprenticeshipUnitSubmitModel submitModel)
     {
-        var sessionModel = _sessionService.Get<ApprenticeshipUnitSessionModel>();
+        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
         if (!ModelState.IsValid)
         {
@@ -37,20 +37,24 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
             return View(model);
         }
 
-        if (submitModel.IsCorrectCourse == false)
+        if (submitModel.IsCorrectShortCourse == false)
         {
             return RedirectToRouteWithUkprn(RouteNames.SelectAnApprenticeshipUnit);
         }
+
+        sessionModel.ShortCourseInformation = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
+
+        _sessionService.Set(sessionModel);
 
         return RedirectToRouteWithUkprn(RouteNames.ConfirmApprenticeshipUnit);
     }
 
     private async Task<ConfirmApprenticeshipUnitViewModel> GetViewModel(string larsCode)
     {
-        var courseInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
+        var shortCourseInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
         var model = new ConfirmApprenticeshipUnitViewModel()
         {
-            CourseInformation = courseInfo
+            ShortCourseInformation = shortCourseInfo
         };
         return model;
     }

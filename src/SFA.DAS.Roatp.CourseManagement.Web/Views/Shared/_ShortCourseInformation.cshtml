@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit
+@model ShortCourseInformationViewModel
+
+<h1 class="govuk-heading-xl">@Model.CourseName</h1>
+<table class="govuk-table" aria-label="Course details">
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header das-table-cell-width-60" scope="row">Sector</th>
+            <td class="govuk-table__cell das-table-cell-width-70">@Model.Sector</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Learning aim reference code</th>
+            <td class="govuk-table__cell">@Model.LarsCode</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Skills England code</th>
+            <td class="govuk-table__cell">@Model.IfateReferenceNumber</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Delivery hours</th>
+            <td class="govuk-table__cell">@Model.Duration</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Level</th>
+            <td class="govuk-table__cell">@Model.Level</td>
+        </tr>
+    </tbody>
+</table>

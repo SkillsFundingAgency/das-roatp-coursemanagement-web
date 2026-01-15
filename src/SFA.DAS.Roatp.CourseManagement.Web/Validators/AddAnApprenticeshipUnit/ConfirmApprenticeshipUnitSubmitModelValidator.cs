@@ -8,7 +8,7 @@ public class ConfirmApprenticeshipUnitSubmitModelValidator : AbstractValidator<C
     public const string ConfirmationAnswerMissingMessage = "You must select if this is the right apprenticeship unit or not";
     public ConfirmApprenticeshipUnitSubmitModelValidator()
     {
-        RuleFor(c => c.IsCorrectCourse)
+        RuleFor(c => c.IsCorrectShortCourse)
             .NotEmpty()
             .WithMessage(ConfirmationAnswerMissingMessage);
     }
