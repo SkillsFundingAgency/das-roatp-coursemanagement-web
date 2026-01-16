@@ -1,0 +1,35 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses
+@model SelectShortCourseViewModel
+@{
+    ViewBag.Title = "Select an apprenticeship unit";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <form method="post" asp-route="@RouteNames.SelectAnApprenticeshipUnit" enctype="multipart/form-data" novalidate>
+
+            <span class="govuk-caption-l">Add an apprenticeship unit</span>
+            <h1 class="govuk-label-wrapper govuk-!-margin-bottom-9">
+                <label class="govuk-label govuk-label--xl" asp-for="SelectedLarsCode">
+                    Select an apprenticeship unit
+                </label>
+            </h1>
+
+            <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
+                <div class="govuk-hint">
+                    To add an apprenticeship unit, start typing in the box and its name will appear.
+                </div>
+                <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
+                <select asp-for="SelectedLarsCode" asp-items="@Model.ShortCourses" class="govuk-select app-autocomplete">
+                    <option value="" disabled selected></option>
+                </select>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+
+        </form>
+    </div>
+</div>

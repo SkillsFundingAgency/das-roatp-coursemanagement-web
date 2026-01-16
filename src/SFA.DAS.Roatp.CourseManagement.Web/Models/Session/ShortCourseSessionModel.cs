@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
+﻿using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 
