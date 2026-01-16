@@ -1,0 +1,36 @@
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse
+@model SelectShortCourseViewModel
+@{
+    ViewBag.Title = $"Select an {Model.CourseType}".Humanize();
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <form method="post" asp-route="@RouteNames.SelectShortCourse" enctype="multipart/form-data" novalidate>
+
+            <input type="hidden" asp-for="CourseType" />
+            <span class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</span>
+            <h1 class="govuk-label-wrapper govuk-!-margin-bottom-9">
+                <label class="govuk-label govuk-label--xl" asp-for="SelectedLarsCode">
+                    Select an @Model.CourseType.Humanize(LetterCasing.LowerCase)
+                </label>
+            </h1>
+
+            <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
+                <div class="govuk-hint">
+                    To add an @Model.CourseType.Humanize(LetterCasing.LowerCase), start typing in the box and its name will appear.
+                </div>
+                <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
+                <select asp-for="SelectedLarsCode" asp-items="@Model.ShortCourses" class="govuk-select app-autocomplete">
+                    <option value="" disabled selected></option>
+                </select>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+
+        </form>
+    </div>
+</div>
