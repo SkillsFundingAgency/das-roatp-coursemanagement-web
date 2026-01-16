@@ -19,28 +19,30 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
     {
         var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-        if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship) &&
-            providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
+        if (providerCourseTypeResponse.Count == 0)
         {
-            var viewModel = new SelectCourseTypeViewModel()
+            return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+        }
+
+        if (providerCourseTypeResponse.Count == 1)
+        {
+            if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship))
             {
-                ApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn, }),
-                ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageApprenticeshipUnits, new { ukprn = Ukprn })
-            };
+                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
+            }
 
-            return View(viewModel);
+            if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
+            {
+                return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
+            }
         }
 
-        if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.Apprenticeship))
+        var viewModel = new SelectCourseTypeViewModel()
         {
-            return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
-        }
+            ApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn, }),
+            ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit })
+        };
 
-        if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
-        {
-            return RedirectToRouteWithUkprn(RouteNames.ManageApprenticeshipUnits);
-        }
-
-        return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+        return View(viewModel);
     }
 }
