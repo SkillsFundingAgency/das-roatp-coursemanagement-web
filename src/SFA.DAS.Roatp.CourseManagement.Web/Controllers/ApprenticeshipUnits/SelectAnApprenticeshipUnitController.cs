@@ -50,7 +50,7 @@ public class SelectAnApprenticeshipUnitController(IMediator _mediator, ISessionS
     {
         var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn, CourseType.ApprenticeshipUnit));
         var model = new SelectAnApprenticeshipUnitViewModel();
-        model.ApprenticeshipUnit = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString()));
+        model.ApprenticeshipUnits = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString()));
         return model;
     }
 }

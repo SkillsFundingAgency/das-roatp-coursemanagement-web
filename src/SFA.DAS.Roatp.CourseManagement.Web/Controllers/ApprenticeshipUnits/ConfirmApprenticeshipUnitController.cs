@@ -24,11 +24,15 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
 
         var model = await GetViewModel(sessionModel.LarsCode);
 
+        sessionModel.ShortCourseInformation = model.ShortCourseInformation;
+
+        _sessionService.Set(sessionModel);
+
         return View(model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(ConfirmApprenticeshipUnitSubmitModel submitModel)
+    public IActionResult Index(ConfirmApprenticeshipUnitSubmitModel submitModel)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -36,19 +40,20 @@ public class ConfirmApprenticeshipUnitController(IMediator _mediator, ISessionSe
 
         if (!ModelState.IsValid)
         {
-            var model = await GetViewModel(sessionModel.LarsCode);
+            var model = new ConfirmApprenticeshipUnitViewModel()
+            {
+                ShortCourseInformation = sessionModel.ShortCourseInformation
+            };
 
             return View(model);
         }
 
         if (submitModel.IsCorrectShortCourse == false)
         {
+            _sessionService.Delete(nameof(ShortCourseSessionModel));
+
             return RedirectToRouteWithUkprn(RouteNames.SelectAnApprenticeshipUnit);
         }
-
-        sessionModel.ShortCourseInformation = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
-
-        _sessionService.Set(sessionModel);
 
         return RedirectToRouteWithUkprn(RouteNames.ConfirmApprenticeshipUnit);
     }

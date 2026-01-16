@@ -44,6 +44,7 @@ public class ConfirmApprenticeshipUnitControllerGetTests
         model!.ShortCourseInformation.Should().BeEquivalentTo(queryResult, o => o.ExcludingMissingMembers());
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Once);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Once);
     }
 
     [Test, MoqAutoData]
@@ -66,5 +67,6 @@ public class ConfirmApprenticeshipUnitControllerGetTests
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Never);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
     }
 }
