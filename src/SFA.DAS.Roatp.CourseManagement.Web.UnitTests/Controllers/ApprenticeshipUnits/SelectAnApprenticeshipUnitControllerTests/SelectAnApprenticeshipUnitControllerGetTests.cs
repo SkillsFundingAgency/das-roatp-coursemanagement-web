@@ -35,7 +35,7 @@ public class SelectAnApprenticeshipUnitControllerGetTests
         Assert.IsNotNull(viewResult);
         var model = viewResult.Model as SelectAnApprenticeshipUnitViewModel;
         model.Should().NotBeNull();
-        model!.ApprenticeshipUnit.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
+        model!.ApprenticeshipUnits.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>()), Times.Once());
     }
 }
