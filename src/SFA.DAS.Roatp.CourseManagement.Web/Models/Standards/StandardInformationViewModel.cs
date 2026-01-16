@@ -21,10 +21,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 LarsCode = source.LarsCode,
                 IfateReferenceNumber = source.IfateReferenceNumber,
                 ApprenticeshipType = source.ApprenticeshipType,
-                Sector = source.Sector,
+                Sector = source.Route,
                 CourseName = source.Title,
                 Level = source.Level,
-                RegulatorName = source.RegulatorName,
+                RegulatorName = source.ApprovalBody,
                 IsRegulatedForProvider = source.IsRegulatedForProvider
             };
     }

@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +13,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ConfirmRegulatedStandardControllerTests
 {
@@ -102,7 +102,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionModel.StandardInformation.Should().BeEquivalentTo(getStandardInformationQueryResult, option => option
                 .Excluding(c => c.StandardUId)
                 .Excluding(c => c.IsRegulatedForProvider)
-                .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName));
+                .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName)
+                .WithMapping<StandardInformationViewModel>(c => c.ApprovalBody, v => v.RegulatorName)
+                .WithMapping<StandardInformationViewModel>(c => c.Route, v => v.Sector));
 
         }
 
