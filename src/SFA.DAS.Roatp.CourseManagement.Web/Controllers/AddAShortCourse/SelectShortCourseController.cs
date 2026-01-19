@@ -2,13 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SFA.DAS.DfESignIn.Auth.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
@@ -20,23 +19,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{courseType}/new/select-course", Name = RouteNames.SelectShortCourse)]
 public class SelectShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddShortCourses/SelectShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseView.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(CourseType courseType)
     {
-        var courseType = CourseType.ApprenticeshipUnit;
-
         var viewModel = await GetModel(courseType);
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(SelectShortCourseSubmitModel submitModel)
+    public async Task<IActionResult> Index(SelectShortCourseSubmitModel submitModel, CourseType courseType)
     {
-        var courseType = CourseType.ApprenticeshipUnit;
-
         if (!ModelState.IsValid)
         {
             var viewModel = await GetModel(courseType);
@@ -48,8 +43,6 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
 
         sessionModel.LarsCode = submitModel.SelectedLarsCode;
 
-        sessionModel.CourseTypeDescription = courseType.GetDescription().ToLower();
-
         _sessionService.Set(sessionModel);
 
         return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType });
@@ -58,10 +51,9 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
     private async Task<SelectShortCourseViewModel> GetModel(CourseType courseType)
     {
         var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn, courseType));
-        var courseTypeDescription = courseType.GetDescription().ToLower();
         var model = new SelectShortCourseViewModel();
         model.ShortCourses = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString()));
-        model.CourseTypeDescription = courseTypeDescription;
+        model.CourseType = courseType;
         return model;
     }
 }

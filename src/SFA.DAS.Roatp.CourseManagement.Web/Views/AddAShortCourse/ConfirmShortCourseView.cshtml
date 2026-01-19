@@ -1,20 +1,21 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse
 @model ConfirmShortCourseViewModel
 @{
-    ViewBag.Title = $"Confirm {Model.CourseTypeDescription}";
+    ViewBag.Title = $"Confirm {Model.CourseType}".Humanize();
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <span class="govuk-caption-l">Add an @Model.CourseTypeDescription</span>
+        <span class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</span>
         <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
         
         <form method="post" asp-route="@RouteNames.ConfirmShortCourse" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsCorrectShortCourse" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectShortCourse" class="govuk-error-message"></span>
-                <input type="hidden" asp-for="CourseTypeDescription" />
+                <input type="hidden" asp-for="CourseType" />
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right @Model.CourseTypeDescription?</legend>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right @Model.CourseType.Humanize(LetterCasing.LowerCase)?</legend>
                     <div id="IsCorrectShortCourse" class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="is-correct-shortcourse-yes" type="radio" value="true"

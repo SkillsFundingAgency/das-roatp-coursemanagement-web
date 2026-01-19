@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardIn
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Threading.Tasks;
@@ -16,10 +16,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{courseType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
 public class ConfirmShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddShortCourses/ConfirmShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/AddAShortCourse/ConfirmShortCourseView.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(CourseType courseType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -27,7 +27,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
 
         var model = await GetViewModel(sessionModel.LarsCode);
 
-        model.CourseTypeDescription = sessionModel.CourseTypeDescription;
+        model.CourseType = courseType;
 
         sessionModel.ShortCourseInformation = model.ShortCourseInformation;
 
@@ -37,7 +37,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
     }
 
     [HttpPost]
-    public IActionResult Index(ConfirmShortCourseSubmitModel submitModel)
+    public IActionResult Index(ConfirmShortCourseSubmitModel submitModel, CourseType courseType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -48,13 +48,11 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
             var model = new ConfirmShortCourseViewModel()
             {
                 ShortCourseInformation = sessionModel.ShortCourseInformation,
-                CourseTypeDescription = sessionModel.CourseTypeDescription
+                CourseType = courseType
             };
 
             return View(ViewPath, model);
         }
-
-        var courseType = CourseType.ApprenticeshipUnit;
 
         if (submitModel.IsCorrectShortCourse == false)
         {

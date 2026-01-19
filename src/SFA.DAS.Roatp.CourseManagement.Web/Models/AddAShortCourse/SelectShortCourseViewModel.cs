@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 
 public class SelectShortCourseViewModel : SelectShortCourseSubmitModel, IBackLink
 {
@@ -11,6 +12,6 @@ public class SelectShortCourseViewModel : SelectShortCourseSubmitModel, IBackLin
 public class SelectShortCourseSubmitModel
 {
     public string SelectedLarsCode { get; set; }
-    public string CourseTypeDescription { get; set; }
+    public CourseType CourseType { get; set; }
 
 }

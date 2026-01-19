@@ -1,7 +1,8 @@
 ﻿using FluentValidation;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
+using Humanizer;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAShortCourse;
 
 public class SelectShortCourseSubmitModelValidator : AbstractValidator<SelectShortCourseSubmitModel>
 {
@@ -9,6 +10,6 @@ public class SelectShortCourseSubmitModelValidator : AbstractValidator<SelectSho
     {
         RuleFor(m => m.SelectedLarsCode)
             .NotEmpty()
-            .WithMessage(m => $"Select a {m.CourseTypeDescription}");
+            .WithMessage(m => $"Select an {m.CourseType}".Humanize());
     }
 }

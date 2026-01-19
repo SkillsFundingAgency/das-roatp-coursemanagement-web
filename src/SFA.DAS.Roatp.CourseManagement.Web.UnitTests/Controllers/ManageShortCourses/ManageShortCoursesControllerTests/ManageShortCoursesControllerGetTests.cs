@@ -1,10 +1,8 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.DfESignIn.Auth.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -33,8 +31,7 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
-        var expectedCourseTypeHeading = CourseType.ApprenticeshipUnit.GetDescription().ToLower().Pluralize();
-        var expectedCourseTypeDescription = CourseType.ApprenticeshipUnit.GetDescription().ToLower();
+        var expectedCourseType = CourseType.ApprenticeshipUnit;
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
@@ -45,15 +42,14 @@ public class ManageShortCoursesControllerGetTests
             .AddUrlForRoute(RouteNames.SelectShortCourse, selectShortCourseUrl);
 
         // Act
-        var result = await sut.Index() as ViewResult;
+        var result = await sut.Index(expectedCourseType) as ViewResult;
 
         // Assert
         result.Should().NotBeNull();
         result!.Model.Should().NotBeNull();
         var model = result!.Model as ManageShortCoursesViewModel;
         model!.AddAShortCourseLink.Should().Be(selectShortCourseUrl);
-        model!.CourseTypeHeading.Should().Be(expectedCourseTypeHeading);
-        model!.CourseTypeDescription.Should().Be(expectedCourseTypeDescription);
+        model!.CourseType.Should().Be(expectedCourseType);
         providerCourseTypeService.Verify(c => c.GetProviderCourseType(It.IsAny<int>()), Times.Once);
     }
 
@@ -71,12 +67,14 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
+        var expectedCourseType = CourseType.ApprenticeshipUnit;
+
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.Index();
+        var result = await sut.Index(expectedCourseType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

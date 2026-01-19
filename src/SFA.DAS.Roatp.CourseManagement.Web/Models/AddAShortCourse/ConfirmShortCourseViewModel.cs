@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
+﻿using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 
 public class ConfirmShortCourseViewModel : ConfirmShortCourseSubmitModel, IBackLink
 {
@@ -8,5 +10,5 @@ public class ConfirmShortCourseViewModel : ConfirmShortCourseSubmitModel, IBackL
 public class ConfirmShortCourseSubmitModel
 {
     public bool? IsCorrectShortCourse { get; set; }
-    public string CourseTypeDescription { get; set; }
+    public CourseType CourseType { get; set; }
 }

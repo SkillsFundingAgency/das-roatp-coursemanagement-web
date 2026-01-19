@@ -2,9 +2,9 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAShortCourse;
 public class ShortCourseInformationViewModelTests
 {
     [Test, AutoData]

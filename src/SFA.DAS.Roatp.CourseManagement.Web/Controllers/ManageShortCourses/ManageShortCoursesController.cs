@@ -1,7 +1,5 @@
-﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.DfESignIn.Auth.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -19,10 +17,8 @@ public class ManageShortCoursesController(IProviderCourseTypeService _providerCo
     public const string ViewPath = "~/Views/ManageShortCourses/ManageShortCoursesView.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(CourseType courseType)
     {
-        var courseType = CourseType.ApprenticeshipUnit;
-
         var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
         if (!providerCourseTypeResponse.Any(x => x.CourseType == courseType))
@@ -34,8 +30,7 @@ public class ManageShortCoursesController(IProviderCourseTypeService _providerCo
 
         var viewModel = new ManageShortCoursesViewModel()
         {
-            CourseTypeHeading = courseType.GetDescription().ToLower().Pluralize(),
-            CourseTypeDescription = courseType.GetDescription().ToLower(),
+            CourseType = courseType,
             AddAShortCourseLink = selectShortCourseUrl,
         };
 
