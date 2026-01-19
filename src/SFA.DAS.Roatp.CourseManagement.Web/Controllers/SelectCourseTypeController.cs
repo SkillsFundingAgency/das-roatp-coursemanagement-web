@@ -25,7 +25,7 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
             var viewModel = new SelectCourseTypeViewModel()
             {
                 ApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn, }),
-                ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageApprenticeshipUnits, new { ukprn = Ukprn })
+                ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit })
             };
 
             return View(viewModel);
@@ -38,7 +38,7 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
 
         if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
         {
-            return RedirectToRouteWithUkprn(RouteNames.ManageApprenticeshipUnits);
+            return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
         }
 
         return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);

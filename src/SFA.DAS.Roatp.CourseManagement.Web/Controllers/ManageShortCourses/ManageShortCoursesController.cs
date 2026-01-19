@@ -11,10 +11,11 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/manage-apprenticeship-units", Name = RouteNames.ManageApprenticeshipUnits)]
+[Route("{ukprn}/courses/{courseType}", Name = RouteNames.ManageShortCourses)]
 public class ManageShortCoursesController(IProviderCourseTypeService _providerCourseTypeService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ManageShortCourses/ManageShortCoursesView.cshtml";
+    public const string CourseTypeDescription = "apprenticeship units";
 
     [HttpGet]
     public async Task<IActionResult> Index()
@@ -26,10 +27,11 @@ public class ManageShortCoursesController(IProviderCourseTypeService _providerCo
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var selectShortCourseUrl = GetUrlWithUkprn(RouteNames.SelectAnApprenticeshipUnit);
+        var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
 
         var viewModel = new ManageShortCoursesViewModel()
         {
+            CourseTypeDescription = CourseTypeDescription,
             AddAShortCourseLink = selectShortCourseUrl,
         };
 

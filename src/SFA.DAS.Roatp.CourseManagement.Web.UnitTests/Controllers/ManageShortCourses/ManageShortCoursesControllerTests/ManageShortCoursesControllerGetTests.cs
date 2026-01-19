@@ -31,13 +31,15 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
+        var expectedCourseTypeDescription = "apprenticeship units";
+
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
         sut.AddDefaultContextWithUser();
 
-        var selectShortCourseUrl = RouteNames.SelectAnApprenticeshipUnit;
+        var selectShortCourseUrl = RouteNames.SelectShortCourse;
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.SelectAnApprenticeshipUnit, selectShortCourseUrl);
+            .AddUrlForRoute(RouteNames.SelectShortCourse, selectShortCourseUrl);
 
         // Act
         var result = await sut.Index() as ViewResult;
@@ -47,6 +49,7 @@ public class ManageShortCoursesControllerGetTests
         result!.Model.Should().NotBeNull();
         var model = result!.Model as ManageShortCoursesViewModel;
         model!.AddAShortCourseLink.Should().Be(selectShortCourseUrl);
+        model!.CourseTypeDescription.Should().Be(expectedCourseTypeDescription);
         providerCourseTypeService.Verify(c => c.GetProviderCourseType(It.IsAny<int>()), Times.Once);
     }
 

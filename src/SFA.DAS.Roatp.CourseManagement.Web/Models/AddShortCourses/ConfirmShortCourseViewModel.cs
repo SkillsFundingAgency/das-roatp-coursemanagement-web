@@ -3,6 +3,7 @@
 public class ConfirmShortCourseViewModel : ConfirmShortCourseSubmitModel, IBackLink
 {
     public ShortCourseInformationViewModel ShortCourseInformation { get; set; }
+    public string CourseTypeDescription { get; set; }
 }
 
 public class ConfirmShortCourseSubmitModel

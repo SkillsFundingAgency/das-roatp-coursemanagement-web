@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddShortCourses;
@@ -12,7 +13,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/manage-apprenticeship-units/add/confirm-apprenticeship-unit", Name = RouteNames.ConfirmApprenticeshipUnit)]
+[Route("{ukprn}/courses/{courseType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
 public class ConfirmShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddShortCourses/ConfirmShortCourseView.cshtml";
@@ -25,6 +26,8 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
         var model = await GetViewModel(sessionModel.LarsCode);
+
+        model.CourseTypeDescription = sessionModel.CourseTypeDescription;
 
         sessionModel.ShortCourseInformation = model.ShortCourseInformation;
 
@@ -44,7 +47,8 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
         {
             var model = new ConfirmShortCourseViewModel()
             {
-                ShortCourseInformation = sessionModel.ShortCourseInformation
+                ShortCourseInformation = sessionModel.ShortCourseInformation,
+                CourseTypeDescription = sessionModel.CourseTypeDescription
             };
 
             return View(ViewPath, model);
@@ -54,10 +58,10 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
         {
             _sessionService.Delete(nameof(ShortCourseSessionModel));
 
-            return RedirectToRouteWithUkprn(RouteNames.SelectAnApprenticeshipUnit);
+            return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
         }
 
-        return RedirectToRouteWithUkprn(RouteNames.ConfirmApprenticeshipUnit);
+        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
     }
 
     private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode)

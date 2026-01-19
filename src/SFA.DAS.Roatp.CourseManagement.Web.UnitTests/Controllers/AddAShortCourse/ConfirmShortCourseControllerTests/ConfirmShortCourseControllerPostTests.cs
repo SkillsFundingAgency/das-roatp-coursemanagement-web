@@ -35,6 +35,7 @@ public class ConfirmShortCourseControllerPostTests
         var model = viewResult.Model as ConfirmShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourseInformation.Should().BeEquivalentTo(sessionModel.ShortCourseInformation, o => o.ExcludingMissingMembers());
+        model!.CourseTypeDescription.Should().Be(sessionModel.CourseTypeDescription);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
     }
@@ -55,7 +56,7 @@ public class ConfirmShortCourseControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectAnApprenticeshipUnit);
+        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourse);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Once);
     }
@@ -76,7 +77,7 @@ public class ConfirmShortCourseControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmApprenticeshipUnit);
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmShortCourse);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
     }
