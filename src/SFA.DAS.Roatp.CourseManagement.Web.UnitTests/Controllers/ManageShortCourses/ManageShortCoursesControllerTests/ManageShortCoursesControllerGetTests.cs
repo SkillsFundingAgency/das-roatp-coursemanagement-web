@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -32,7 +33,7 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
-        var expectedCourseTypeHeading = "apprenticeship units";
+        var expectedCourseTypeHeading = CourseType.ApprenticeshipUnit.GetDescription().ToLower().Pluralize();
         var expectedCourseTypeDescription = CourseType.ApprenticeshipUnit.GetDescription().ToLower();
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
