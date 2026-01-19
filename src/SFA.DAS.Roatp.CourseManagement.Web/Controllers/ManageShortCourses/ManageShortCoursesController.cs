@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.DfESignIn.Auth.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -15,23 +16,26 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 public class ManageShortCoursesController(IProviderCourseTypeService _providerCourseTypeService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ManageShortCourses/ManageShortCoursesView.cshtml";
-    public const string CourseTypeDescription = "apprenticeship units";
+    public const string CourseTypeHeading = "apprenticeship units";
 
     [HttpGet]
     public async Task<IActionResult> Index()
     {
+        var courseType = CourseType.ApprenticeshipUnit;
+
         var providerCourseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
 
-        if (!providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
+        if (!providerCourseTypeResponse.Any(x => x.CourseType == courseType))
         {
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
+        var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType });
 
         var viewModel = new ManageShortCoursesViewModel()
         {
-            CourseTypeDescription = CourseTypeDescription,
+            CourseTypeHeading = CourseTypeHeading,
+            CourseTypeDescription = courseType.GetDescription().ToLower(),
             AddAShortCourseLink = selectShortCourseUrl,
         };
 

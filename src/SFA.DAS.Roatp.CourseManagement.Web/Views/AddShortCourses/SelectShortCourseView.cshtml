@@ -8,6 +8,7 @@
         <partial name="_validationSummary" />
         <form method="post" asp-route="@RouteNames.SelectShortCourse" enctype="multipart/form-data" novalidate>
 
+            <input type="hidden" asp-for="CourseTypeDescription" />
             <span class="govuk-caption-l">Add an @Model.CourseTypeDescription</span>
             <h1 class="govuk-label-wrapper govuk-!-margin-bottom-9">
                 <label class="govuk-label govuk-label--xl" asp-for="SelectedLarsCode">

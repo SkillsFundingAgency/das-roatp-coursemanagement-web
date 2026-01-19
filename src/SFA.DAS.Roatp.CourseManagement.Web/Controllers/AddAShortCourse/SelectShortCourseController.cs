@@ -26,16 +26,20 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
     [ClearSession(nameof(ShortCourseSessionModel))]
     public async Task<IActionResult> Index()
     {
-        var viewModel = await GetModel();
+        var courseType = CourseType.ApprenticeshipUnit;
+
+        var viewModel = await GetModel(courseType);
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
     public async Task<IActionResult> Index(SelectShortCourseSubmitModel submitModel)
     {
+        var courseType = CourseType.ApprenticeshipUnit;
+
         if (!ModelState.IsValid)
         {
-            var viewModel = await GetModel();
+            var viewModel = await GetModel(courseType);
             return View(ViewPath, viewModel);
 
         }
@@ -44,17 +48,17 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
 
         sessionModel.LarsCode = submitModel.SelectedLarsCode;
 
-        sessionModel.CourseTypeDescription = CourseType.ApprenticeshipUnit.GetDescription().ToLower();
+        sessionModel.CourseTypeDescription = courseType.GetDescription().ToLower();
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
+        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType });
     }
 
-    private async Task<SelectShortCourseViewModel> GetModel()
+    private async Task<SelectShortCourseViewModel> GetModel(CourseType courseType)
     {
-        var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn, CourseType.ApprenticeshipUnit));
-        var courseTypeDescription = CourseType.ApprenticeshipUnit.GetDescription().ToLower();
+        var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn, courseType));
+        var courseTypeDescription = courseType.GetDescription().ToLower();
         var model = new SelectShortCourseViewModel();
         model.ShortCourses = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString()));
         model.CourseTypeDescription = courseTypeDescription;

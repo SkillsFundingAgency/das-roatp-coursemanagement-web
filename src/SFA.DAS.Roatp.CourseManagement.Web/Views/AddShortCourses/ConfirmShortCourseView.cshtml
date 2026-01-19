@@ -12,6 +12,7 @@
         <form method="post" asp-route="@RouteNames.ConfirmShortCourse" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsCorrectShortCourse" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectShortCourse" class="govuk-error-message"></span>
+                <input type="hidden" asp-for="CourseTypeDescription" />
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right @Model.CourseTypeDescription?</legend>
                     <div id="IsCorrectShortCourse" class="govuk-radios" data-module="govuk-radios">

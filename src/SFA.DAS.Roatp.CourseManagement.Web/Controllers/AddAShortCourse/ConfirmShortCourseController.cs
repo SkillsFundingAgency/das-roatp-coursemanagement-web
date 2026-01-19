@@ -54,14 +54,16 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
             return View(ViewPath, model);
         }
 
+        var courseType = CourseType.ApprenticeshipUnit;
+
         if (submitModel.IsCorrectShortCourse == false)
         {
             _sessionService.Delete(nameof(ShortCourseSessionModel));
 
-            return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
+            return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType });
         }
 
-        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
+        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType });
     }
 
     private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode)

@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.DfESignIn.Auth.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -31,7 +32,8 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
-        var expectedCourseTypeDescription = "apprenticeship units";
+        var expectedCourseTypeHeading = "apprenticeship units";
+        var expectedCourseTypeDescription = CourseType.ApprenticeshipUnit.GetDescription().ToLower();
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
@@ -49,6 +51,7 @@ public class ManageShortCoursesControllerGetTests
         result!.Model.Should().NotBeNull();
         var model = result!.Model as ManageShortCoursesViewModel;
         model!.AddAShortCourseLink.Should().Be(selectShortCourseUrl);
+        model!.CourseTypeHeading.Should().Be(expectedCourseTypeHeading);
         model!.CourseTypeDescription.Should().Be(expectedCourseTypeDescription);
         providerCourseTypeService.Verify(c => c.GetProviderCourseType(It.IsAny<int>()), Times.Once);
     }
