@@ -5,7 +5,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit;
 
 public class SelectAnApprenticeshipUnitViewModel : SelectAnApprenticeshipUnitSubmitModel, IBackLink
 {
-    public IEnumerable<SelectListItem> ApprenticeshipUnit { get; set; }
+    public IEnumerable<SelectListItem> ApprenticeshipUnits { get; set; }
 }
 
 public class SelectAnApprenticeshipUnitSubmitModel

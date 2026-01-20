@@ -1,0 +1,41 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAnApprenticeshipUnit
+@model ConfirmApprenticeshipUnitViewModel
+@{
+    ViewBag.Title = "Confirm apprenticeship unit";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <span class="govuk-caption-l">Add an apprenticeship unit</span>
+        <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
+        
+        <form method="post" asp-route="@RouteNames.ConfirmApprenticeshipUnit" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="IsCorrectShortCourse" class="govuk-form-group">
+                <span asp-validation-for="IsCorrectShortCourse" class="govuk-error-message"></span>
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right apprenticeship unit?</legend>
+                    <div id="IsCorrectShortCourse" class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-correct-shortcourse-yes" type="radio" value="true"
+                                   asp-for="IsCorrectShortCourse" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-correct-shortcourse-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-correct-shortcourse-no" type="radio" value="false"
+                                   asp-for="IsCorrectShortCourse" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-correct-shortcourse-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>
