@@ -12,6 +12,6 @@ public class SelectShortCourseViewModel : SelectShortCourseSubmitModel, IBackLin
 public class SelectShortCourseSubmitModel
 {
     public string SelectedLarsCode { get; set; }
-    public CourseType CourseType { get; set; }
+    public required CourseType CourseType { get; set; }
 
 }

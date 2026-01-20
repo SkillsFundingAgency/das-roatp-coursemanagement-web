@@ -22,7 +22,7 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sut.ModelState.AddModelError("key", "message");
@@ -30,7 +30,7 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel(), expectedCourseType);
+        var response = sut.Index(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -38,7 +38,7 @@ public class ConfirmShortCourseControllerPostTests
         var model = viewResult.Model as ConfirmShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourseInformation.Should().BeEquivalentTo(sessionModel.ShortCourseInformation, o => o.ExcludingMissingMembers());
-        model!.CourseType.Should().Be(expectedCourseType);
+        model!.CourseType.Should().Be(courseType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
     }
@@ -50,14 +50,14 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false }, expectedCourseType);
+        var response = sut.Index(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false, CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -73,14 +73,14 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true }, expectedCourseType);
+        var response = sut.Index(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -96,14 +96,14 @@ public class ConfirmShortCourseControllerPostTests
     ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel(), expectedCourseType);
+        var response = sut.Index(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

@@ -1,5 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAShortCourse;
 
@@ -10,7 +11,8 @@ public class ConfirmShortCourseSubmitModelValidatorTests
     [TestCase(false)]
     public void IsCorrectShortCourse_Valid_NoErrors(bool value)
     {
-        var model = new ConfirmShortCourseSubmitModel { IsCorrectShortCourse = value };
+        var courseType = CourseType.ApprenticeshipUnit;
+        var model = new ConfirmShortCourseSubmitModel { IsCorrectShortCourse = value, CourseType = courseType };
         var sut = new ConfirmShortCourseSubmitModelValidator();
 
         var result = sut.TestValidate(model);
@@ -21,7 +23,8 @@ public class ConfirmShortCourseSubmitModelValidatorTests
     [Test]
     public void IsCorrectShortCourse_Invalid_WithExpectedError()
     {
-        var model = new ConfirmShortCourseSubmitModel();
+        var courseType = CourseType.ApprenticeshipUnit;
+        var model = new ConfirmShortCourseSubmitModel() { CourseType = courseType };
         var sut = new ConfirmShortCourseSubmitModelValidator();
 
         var result = sut.TestValidate(model);

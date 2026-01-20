@@ -25,9 +25,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = await GetViewModel(sessionModel.LarsCode);
-
-        model.CourseType = courseType;
+        var model = await GetViewModel(sessionModel.LarsCode, courseType);
 
         sessionModel.ShortCourseInformation = model.ShortCourseInformation;
 
@@ -64,12 +62,13 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
         return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType });
     }
 
-    private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode)
+    private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode, CourseType courseType)
     {
         var shortCourseInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
         var model = new ConfirmShortCourseViewModel()
         {
-            ShortCourseInformation = shortCourseInfo
+            ShortCourseInformation = shortCourseInfo,
+            CourseType = courseType
         };
         return model;
     }

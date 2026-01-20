@@ -27,7 +27,7 @@ public class SelectShortCourseControllerPostTests
             GetAvailableProviderStandardsQueryResult queryResult)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sut.ModelState.AddModelError("key", "message");
@@ -35,7 +35,7 @@ public class SelectShortCourseControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var response = await sut.Index(new SelectShortCourseSubmitModel(), expectedCourseType);
+        var response = await sut.Index(new SelectShortCourseSubmitModel() { CourseType = courseType }, courseType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -43,7 +43,7 @@ public class SelectShortCourseControllerPostTests
         var model = viewResult.Model as SelectShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourses.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
-        model!.CourseType.Should().Be(expectedCourseType);
+        model!.CourseType.Should().Be(courseType);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>()), Times.Once());
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
     }
@@ -55,12 +55,12 @@ public class SelectShortCourseControllerPostTests
             [Greedy] SelectShortCourseController sut)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = await sut.Index(new SelectShortCourseSubmitModel(), expectedCourseType);
+        var response = await sut.Index(new SelectShortCourseSubmitModel() { CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

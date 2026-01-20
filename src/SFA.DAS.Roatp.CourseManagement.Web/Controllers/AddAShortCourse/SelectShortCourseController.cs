@@ -51,9 +51,12 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
     private async Task<SelectShortCourseViewModel> GetModel(CourseType courseType)
     {
         var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn, courseType));
-        var model = new SelectShortCourseViewModel();
-        model.ShortCourses = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString()));
-        model.CourseType = courseType;
+        var model = new SelectShortCourseViewModel()
+        {
+            ShortCourses = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString())),
+            CourseType = courseType
+        };
+
         return model;
     }
 }

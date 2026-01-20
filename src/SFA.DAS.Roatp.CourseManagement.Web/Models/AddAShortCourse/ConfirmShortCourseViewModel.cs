@@ -10,5 +10,5 @@ public class ConfirmShortCourseViewModel : ConfirmShortCourseSubmitModel, IBackL
 public class ConfirmShortCourseSubmitModel
 {
     public bool? IsCorrectShortCourse { get; set; }
-    public CourseType CourseType { get; set; }
+    public required CourseType CourseType { get; set; }
 }
