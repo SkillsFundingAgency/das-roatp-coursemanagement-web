@@ -24,7 +24,12 @@ public class ManageApprenticeshipUnitsController(IProviderCourseTypeService _pro
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var viewModel = new ManageApprenticeshipUnitsViewModel();
+        var selectAnApprenticeshipUnitUrl = GetUrlWithUkprn(RouteNames.SelectAnApprenticeshipUnit);
+
+        var viewModel = new ManageApprenticeshipUnitsViewModel()
+        {
+            AddAnApprenticeshipUnitLink = selectAnApprenticeshipUnitUrl,
+        };
 
         return View(viewModel);
     }
