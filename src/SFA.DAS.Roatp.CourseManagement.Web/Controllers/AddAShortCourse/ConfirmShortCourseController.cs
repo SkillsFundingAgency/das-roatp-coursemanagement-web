@@ -19,7 +19,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
     public const string ViewPath = "~/Views/AddAShortCourse/ConfirmShortCourseView.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> Index(CourseType courseType)
+    public async Task<IActionResult> ConfirmShortCourse(CourseType courseType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -35,7 +35,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
     }
 
     [HttpPost]
-    public IActionResult Index(ConfirmShortCourseSubmitModel submitModel, CourseType courseType)
+    public IActionResult ConfirmShortCourse(ConfirmShortCourseSubmitModel submitModel, CourseType courseType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -59,7 +59,12 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
             return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType });
         }
 
-        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, courseType });
+        if (sessionModel.LatestProviderContactModel == null)
+        {
+            return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, courseType });
+        }
+
+        return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, courseType });
     }
 
     private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode, CourseType courseType)

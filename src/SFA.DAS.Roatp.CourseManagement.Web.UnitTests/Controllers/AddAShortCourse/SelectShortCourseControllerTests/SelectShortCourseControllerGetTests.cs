@@ -17,20 +17,20 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCour
 public class SelectShortCourseControllerGetTests
 {
     [Test, MoqAutoData]
-    public async Task Index_ReturnsView(
+    public async Task SelectShortCourse_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] SelectShortCourseController sut,
         GetAvailableProviderStandardsQueryResult queryResult)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var response = await sut.Index(expectedCourseType);
+        var response = await sut.SelectShortCourse(courseType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -38,7 +38,7 @@ public class SelectShortCourseControllerGetTests
         var model = viewResult.Model as SelectShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourses.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
-        model!.CourseType.Should().Be(expectedCourseType);
+        model!.CourseType.Should().Be(courseType);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>()), Times.Once());
     }
 }
