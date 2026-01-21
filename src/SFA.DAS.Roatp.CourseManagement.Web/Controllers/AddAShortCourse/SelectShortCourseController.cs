@@ -2,7 +2,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -23,14 +25,14 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
-    public async Task<IActionResult> Index(CourseType courseType)
+    public async Task<IActionResult> SelectShortCourse(CourseType courseType)
     {
         var viewModel = await GetModel(courseType);
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Index(SelectShortCourseSubmitModel submitModel, CourseType courseType)
+    public async Task<IActionResult> SelectShortCourse(SelectShortCourseSubmitModel submitModel, CourseType courseType)
     {
         if (!ModelState.IsValid)
         {
@@ -42,6 +44,17 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
         var sessionModel = new ShortCourseSessionModel();
 
         sessionModel.LarsCode = submitModel.SelectedLarsCode;
+
+        var providerContactResponse = await _mediator.Send(new GetLatestProviderContactQuery(Ukprn));
+
+        if (providerContactResponse != null)
+        {
+            sessionModel.LatestProviderContactModel = new ProviderContactModel
+            {
+                EmailAddress = providerContactResponse.EmailAddress,
+                PhoneNumber = providerContactResponse.PhoneNumber
+            };
+        }
 
         _sessionService.Set(sessionModel);
 

@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCour
 public class ConfirmShortCourseControllerGetTests
 {
     [Test, MoqAutoData]
-    public async Task Index_ReturnsView(
+    public async Task ConfirmShortCourse_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmShortCourseController sut,
@@ -37,7 +37,7 @@ public class ConfirmShortCourseControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = await sut.Index(expectedCourseType);
+        var response = await sut.ConfirmShortCourse(expectedCourseType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -48,11 +48,11 @@ public class ConfirmShortCourseControllerGetTests
         model!.CourseType.Should().Be(expectedCourseType);
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Once);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ShortCourseInformation == model.ShortCourseInformation)), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public async Task Index_SessionIsNull_RedirectsToReviewYourDetails(
+    public async Task ConfirmShortCourse_SessionIsNull_RedirectsToReviewYourDetails(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Greedy] ConfirmShortCourseController sut,
@@ -66,7 +66,7 @@ public class ConfirmShortCourseControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
 
         // Act
-        var response = await sut.Index(expectedCourseType);
+        var response = await sut.ConfirmShortCourse(expectedCourseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

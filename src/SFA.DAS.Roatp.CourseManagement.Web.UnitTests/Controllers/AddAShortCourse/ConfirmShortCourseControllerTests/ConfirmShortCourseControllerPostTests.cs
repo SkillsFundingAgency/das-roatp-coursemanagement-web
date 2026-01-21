@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCour
 public class ConfirmShortCourseControllerPostTests
 {
     [Test, MoqAutoData]
-    public void Index_InvalidState_ReturnsView(
+    public void ConfirmShortCourse_InvalidState_ReturnsView(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
@@ -30,7 +30,7 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -44,7 +44,7 @@ public class ConfirmShortCourseControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void Index_ValidState_IsCorrectShortCourseIsFalse_RedirectsToSelectAnApprenticeshipUnit(
+    public void ConfirmShortCourse_ValidState_IsCorrectShortCourseIsFalse_ClearsSessionAndRedirectsToSelectAnApprenticeshipUnit(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
@@ -57,7 +57,7 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false, CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false, CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -67,7 +67,7 @@ public class ConfirmShortCourseControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void Index_ValidState_IsCorrectShortCourseIsTrue_SetsSessionAndRedirectsToSelectAnApprenticeshipUnit(
+    public void ConfirmShortCourse_ValidState_IsCorrectShortCourseIsTrue_RedirectsToConfirmSavedContactDetailsForShortCourse(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
@@ -80,17 +80,17 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmShortCourse);
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmSavedContactDetailsForShortCourse);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
     }
 
     [Test, MoqAutoData]
-    public void Index_SessionIsNull_RedirectsToReviewYourDetails(
+    public void ConfirmShortCourse_SessionIsNull_RedirectsToReviewYourDetails(
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Greedy] ConfirmShortCourseController sut,
     ShortCourseSessionModel sessionModel)
@@ -103,11 +103,36 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
 
         // Act
-        var response = sut.Index(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
+    }
+
+    [Test, MoqAutoData]
+    public void ConfirmShortCourse_ValidState_LatestProviderContactIsNullInSession_RedirectsToConfirmSavedContactDetailsForShortCourse(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ConfirmShortCourseController sut,
+        ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        var courseType = CourseType.ApprenticeshipUnit;
+
+        sessionModel.LatestProviderContactModel = null;
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
+
+        // Assert
+        var redirectResult = response as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmSavedContactDetailsForShortCourse);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
     }
