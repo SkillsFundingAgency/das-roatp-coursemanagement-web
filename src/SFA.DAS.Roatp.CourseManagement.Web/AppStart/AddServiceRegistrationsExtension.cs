@@ -5,9 +5,11 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
 {
+    [ExcludeFromCodeCoverage]
     public static class AddServiceRegistrationsExtension
     {
         public static void AddServiceRegistrations(this IServiceCollection services, IConfiguration configuration)
@@ -15,6 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
             ConfigureHttpClient(services, configuration);
             services.AddHttpContextAccessor();
             services.AddTransient<ISessionService, SessionService>();
+            services.AddTransient<IProviderCourseTypeService, ProviderCourseTypeService>();
         }
         private static void ConfigureHttpClient(IServiceCollection services, IConfiguration configuration)
         {

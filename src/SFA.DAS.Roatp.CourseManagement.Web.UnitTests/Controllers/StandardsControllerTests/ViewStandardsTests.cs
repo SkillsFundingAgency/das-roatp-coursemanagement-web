@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -12,12 +7,20 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using static System.String;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsControllerTests
@@ -28,10 +31,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
-        private static readonly string ReviewYourDetailsLink = Guid.NewGuid().ToString();
-        private static readonly string GetStandardDetailsLink = Guid.NewGuid().ToString();
-        private static readonly string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
-        private static readonly string AddAStandardLink = Guid.NewGuid().ToString();
+        private Mock<IProviderCourseTypeService> _providerCourseTypeService;
+        private static string ReviewYourDetailsLink = Guid.NewGuid().ToString();
+        private static string GetStandardDetailsLink = Guid.NewGuid().ToString();
+        private static string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
+        private static string AddAStandardLink = Guid.NewGuid().ToString();
 
         [SetUp]
         public void Before_each_test()
@@ -62,7 +66,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                     Standards = new List<Standard> { standard1, standard2 }
                 });
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _providerCourseTypeService = new Mock<IProviderCourseTypeService>();
+            var courseTypes = new List<CourseTypeModel>()
+            {
+                new CourseTypeModel()
+                {
+                    CourseType = CourseType.Apprenticeship
+                }
+            };
+            _providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _providerCourseTypeService.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -180,7 +194,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
 
                 });
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _providerCourseTypeService.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -202,6 +216,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model!.Standards.Should().NotBeEmpty();
             model.Standards.Should().BeEquivalentTo(expectedStandards,
                 options => options.Excluding(c => c.HasLocations));
+        }
+
+        [Test]
+        public async Task ViewStandards_DoesNotProvideStandards_RedirectsToReviewYourDetails()
+        {
+            _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+                     .ReturnsAsync(() => null);
+
+            var courseTypes = new List<CourseTypeModel>();
+            _providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
+
+            var result = await _controller.ViewStandards();
+
+            var redirectResult = result as RedirectToRouteResult;
+            redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+            _providerCourseTypeService.Verify(c => c.GetProviderCourseType(It.IsAny<int>()), Times.Once);
         }
     }
 }

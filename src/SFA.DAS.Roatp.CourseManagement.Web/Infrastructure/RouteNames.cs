@@ -25,6 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string GetProviderLocationDetails = "GetProviderLocationDetails";
         public const string GetRemoveProviderCourseLocation = "GetRemoveProviderCourseLocation";
         public const string PostRemoveProviderCourseLocation = "PostRemoveProviderCourseLocation";
+        public const string SelectCourseType = "SelectCourseType";
 
         public const string GetAddStandardSelectStandard = "GetAddStandardSelectStandard";
         public const string PostAddStandardSelectStandard = "PostAddStandardSelectStandard";
@@ -49,6 +50,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string PostNewStandardConfirmTrainingLocationOptions = "PostNewStandardConfirmTrainingLocationOptions";
         public const string GetAddStandardRemoveProviderCourseLocation = "GetAddStandardRemoveProviderCourseLocation";
         public const string GetAddStandardUseSavedContactDetails = "GetAddStandardUseSavedContactDetails";
+
+        public const string ManageApprenticeshipUnits = "ManageApprenticeshipUnits";
+        public const string SelectAnApprenticeshipUnit = "SelectAnApprenticeshipUnit";
+        public const string ConfirmApprenticeshipUnit = "ConfirmApprenticeshipUnit";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";
