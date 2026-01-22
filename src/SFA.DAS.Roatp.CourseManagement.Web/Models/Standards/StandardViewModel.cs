@@ -7,7 +7,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public int ProviderCourseId { get; set; }
         public string CourseName { get; set; }
         public int Level { get; set; }
-        public bool IsImported { get; set; }
         public string CourseDisplayName { get; set; }
         public string LarsCode { get; set; }
         public string StandardUrl { get; set; }
@@ -26,7 +25,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ProviderCourseId = source.ProviderCourseId,
                 CourseName = source.CourseName,
                 Level = source.Level,
-                IsImported = source.IsImported,
                 CourseDisplayName = source.CourseName + " (level " + source.Level + ")",
                 LarsCode = source.LarsCode,
                 ApprovalBody = source.ApprovalBody,

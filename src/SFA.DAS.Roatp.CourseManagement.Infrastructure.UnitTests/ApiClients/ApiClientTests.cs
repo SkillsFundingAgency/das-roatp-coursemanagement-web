@@ -1,16 +1,16 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Moq.Protected;
-using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Moq.Protected;
+using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
 {
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
                .ReturnsAsync(new HttpResponseMessage()
                {
                    StatusCode = HttpStatusCode.OK,
-                   Content = new StringContent("[{'ProviderCourseId':1,'CourseName':'Test','Level':1,'IsImported':'false'}]", Encoding.UTF8, "application/json"),
+                   Content = new StringContent("[{'ProviderCourseId':1,'CourseName':'Test','Level':1}]", Encoding.UTF8, "application/json"),
                })
                .Verifiable();
 
@@ -112,7 +112,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.ApiClients
 
             _apiClient = new ApiClient(httpClient, logger.Object);
 
-            Assert.ThrowsAsync<InvalidOperationException>(async() => await _apiClient.Get<List<Domain.ApiModels.Standard>>($"/Standards/{ukprn}"));
+            Assert.ThrowsAsync<InvalidOperationException>(async () => await _apiClient.Get<List<Domain.ApiModels.Standard>>($"/Standards/{ukprn}"));
         }
 
         [Test]
