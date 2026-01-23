@@ -1,27 +1,27 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
-@model AddStandardContactDetailsViewModel
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse
+@model AddShortCourseContactDetailsViewModel
 @{
-    ViewBag.Title = "Add course contact details";
-    ViewBag.Description = "";
+    ViewBag.Title = "Add short course contact details";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <partial name="_validationSummary" /> 
-        <div class="govuk-caption-l">Add standard</div>
-        <h1 class="govuk-heading-xl margin-bottom-30">Your contact information for this standard</h1>
-        <p asp-show="!Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this standard. </p>
-        <p asp-show="Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this standard. Changing your contact details here will not affect your primary set of contact details.</p>
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</div>
+        <h1 class="govuk-heading-xl margin-bottom-30">Your contact details for this @Model.CourseType.Humanize(LetterCasing.LowerCase)</h1>
+        <p asp-show="!Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training. Employers will use these details to contact you about this @Model.CourseType.Humanize(LetterCasing.LowerCase). </p>
+        <p asp-show="Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this @Model.CourseType.Humanize(LetterCasing.LowerCase). Changing your contact details here will not affect your primary set of contact details.</p>
 
-        <p>All these sections must be filled in before you can continue.</p>
+        <p>All fields must be filled in before you can continue.</p>
 
-        <form method="post" asp-route="@RouteNames.PostAddStandardAddContactDetails" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.AddShortCourseContactDetails" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="ContactUsEmail" class="govuk-form-group">
                 <label class="govuk-label govuk-label--m" asp-for="ContactUsEmail">
                     Email address
                 </label>
                 <div id="ContactUsEmail-hint" class="govuk-hint">
-                    An email address for a person or team to speak to about this standard.
+                    An email address for a person or team to speak to about this @Model.CourseType.Humanize(LetterCasing.LowerCase).
                 </div>
                 <span asp-validation-for="ContactUsEmail" class="govuk-error-message"></span>
                 <input asp-for="ContactUsEmail" id="ContactUsEmail" class="govuk-input" type="text" aria-describedby="ContactUsEmail-hint" maxlength="254">
@@ -29,10 +29,10 @@
 
             <div class="govuk-form-group" esfa-validation-marker-for="ContactUsPhoneNumber">
                 <label class="govuk-label govuk-label--m" asp-for="ContactUsPhoneNumber">
-                    Telephone number
+                    Phone number
                 </label>
                 <div id="ContactUsPhoneNumber-hint" class="govuk-hint">
-                    A phone number for a person or team to speak to about this standard.
+                    A phone number for a person or team to speak to about this @Model.CourseType.Humanize(LetterCasing.LowerCase).
                 </div>
                 <span asp-validation-for="ContactUsPhoneNumber" class="govuk-error-message"></span>
                 <input asp-for="ContactUsPhoneNumber" id="ContactUsPhoneNumber" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPhoneNumber-hint" maxlength="50">
@@ -40,10 +40,10 @@
 
             <div class="govuk-form-group" esfa-validation-marker-for="StandardInfoUrl">
                 <label class="govuk-label govuk-label--m" asp-for="StandardInfoUrl">
-                    Your website page
+                    Website
                 </label>
                 <div id="StandardInfoUrl-hint" class="govuk-hint">
-                    If you have a page on your website for this standard, add the link.
+                    A link to a page on your website for this @Model.CourseType.Humanize(LetterCasing.LowerCase).
                 </div>
                 <span asp-validation-for="StandardInfoUrl" class="govuk-error-message"></span>
                 <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="1000">
