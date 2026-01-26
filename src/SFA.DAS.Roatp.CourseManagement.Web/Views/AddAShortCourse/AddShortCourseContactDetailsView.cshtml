@@ -43,7 +43,7 @@
                     Website
                 </label>
                 <div id="StandardInfoUrl-hint" class="govuk-hint">
-                    A link to a page on your website for this @Model.CourseType.Humanize(LetterCasing.LowerCase).
+                    A link to a page on your website for this @Model.CourseType.Humanize(LetterCasing.LowerCase). You can enter upto 500 characters.
                 </div>
                 <span asp-validation-for="StandardInfoUrl" class="govuk-error-message"></span>
                 <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="500">

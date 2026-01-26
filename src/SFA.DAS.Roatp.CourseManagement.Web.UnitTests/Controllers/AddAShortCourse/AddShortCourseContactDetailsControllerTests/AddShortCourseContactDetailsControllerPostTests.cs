@@ -59,4 +59,27 @@ public class AddShortCourseContactDetailsControllerPostTests
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
+
+    [Test, MoqAutoData]
+    public void AddShortCourseContactDetails_ValidState_SetsSessionRedirectsToAddShortCourseContactDetails(
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Greedy] AddShortCourseContactDetailsController sut,
+    ShortCourseSessionModel sessionModel,
+    CourseContactDetailsSubmitModel submitModel)
+    {
+        // Arrange
+        var courseType = CourseType.ApprenticeshipUnit;
+
+        sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var result = sut.AddShortCourseContactDetails(submitModel, courseType);
+
+        // Assert
+        var redirectResult = result as RedirectToRouteResult;
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ContactInformation.ContactUsEmail == submitModel.ContactUsEmail && m.ContactInformation.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber && m.ContactInformation.StandardInfoUrl == submitModel.StandardInfoUrl)), Times.Once);
+    }
 }
