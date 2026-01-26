@@ -1,9 +1,9 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddAShortCourse;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ShortCourses.AddAShortCourse;
 public class ConfirmSavedContactDetailsSubmitModelValidatorTests
 {
     [TestCase(true)]

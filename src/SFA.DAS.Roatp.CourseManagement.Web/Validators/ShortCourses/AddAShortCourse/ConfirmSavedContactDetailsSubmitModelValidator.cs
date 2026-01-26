@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAShortCourse;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
 
 public class ConfirmSavedContactDetailsSubmitModelValidator : AbstractValidator<ConfirmSavedContactDetailsSubmitModel>
 {

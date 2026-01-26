@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
 public class ConfirmSavedContactDetailsViewModel : ConfirmSavedContactDetailsSubmitModel, IBackLink
 {
