@@ -1,7 +1,7 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
 public class ManageShortCoursesViewModel : IBackLink
 {

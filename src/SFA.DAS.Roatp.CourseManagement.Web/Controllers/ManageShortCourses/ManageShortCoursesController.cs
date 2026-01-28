@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
 using System.Threading.Tasks;

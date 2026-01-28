@@ -7,7 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;

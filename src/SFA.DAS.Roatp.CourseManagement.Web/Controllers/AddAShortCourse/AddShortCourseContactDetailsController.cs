@@ -5,8 +5,8 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
@@ -67,6 +67,6 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         _logger.LogInformation("Add {CourseType}: Contact details added for ukprn:{Ukprn} larscode:{Larscode}", courseType, Ukprn, sessionModel.LarsCode);
 
-        return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.SelectShortCourseLocation, new { ukprn = Ukprn, courseType });
     }
 }
