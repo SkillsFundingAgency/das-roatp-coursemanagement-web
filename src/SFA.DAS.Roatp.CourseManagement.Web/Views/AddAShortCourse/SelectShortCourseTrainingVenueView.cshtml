@@ -1,0 +1,47 @@
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+@model SelectShortCourseTrainingVenueViewModel
+@{
+    ViewBag.Title = $"Choose a training venue";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</div>
+
+        <form method="post" asp-route="@RouteNames.SelectShortCourseTrainingVenue" enctype="multipart/form-data" novalidate>
+
+            <div esfa-validation-marker-for="ProviderLocations" class="govuk-form-group">
+                <fieldset class="govuk-fieldset" id="ProviderLocations" aria-describedby="select-hint ProviderLocations-error">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-margin-bottom-6">
+                        <h1 class="govuk-fieldset__heading">
+                            Choose a training venue
+                        </h1>
+                    </legend>
+                    <div id="select-hint" class="govuk-hint govuk-!-margin-bottom-6">
+                        Select which of your existing training venues you can deliver this apprenticeship unit from
+                    </div>
+                    <span asp-validation-for="ProviderLocations" id="ProviderLocations-error" class="govuk-error-message"></span>
+                    <div class="govuk-checkboxes">
+                        @foreach (var location in Model.ProviderLocations)
+                        {
+                            var id = $"ProviderLocations_{location.NavigationId}";
+
+                            <div class="govuk-checkboxes__item">
+                                <input class="govuk-checkboxes__input" id="@id" name="ProviderLocations" type="checkbox" value="@location.NavigationId" @(Model.SelectedProviderLocationIds?.Contains(location.NavigationId) == true ? "checked" : "") />
+                                <label class="govuk-label govuk-checkboxes__label" for="@id">
+                                    @location.LocationName.Humanize(LetterCasing.Title)
+                                </label>
+                            </div>
+                        }    
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>

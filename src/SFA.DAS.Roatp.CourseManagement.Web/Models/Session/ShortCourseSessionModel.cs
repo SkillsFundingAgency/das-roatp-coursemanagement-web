@@ -14,4 +14,6 @@ public class ShortCourseSessionModel
     public ContactInformationSessionModel ContactInformation { get; set; } = new ContactInformationSessionModel();
     public List<ShortCourseLocationOption> ShortCourseLocations { get; set; } = new List<ShortCourseLocationOption>();
     public bool HasOnlineDeliveryOption { get; set; }
+    public List<ProviderLocation> ProviderLocations { get; set; } = new List<ProviderLocation>();
+    public List<TrainingVenueLocationSessionModel> TrainingVenueLocations { get; set; } = new List<TrainingVenueLocationSessionModel>();
 }
