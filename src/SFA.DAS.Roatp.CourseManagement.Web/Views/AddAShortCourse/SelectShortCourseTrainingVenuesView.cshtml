@@ -1,0 +1,56 @@
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+@model SelectShortCourseTrainingVenuesViewModel
+@{
+    ViewBag.Title = $"Choose a training venue";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</div>
+
+        <form method="post" asp-route="@RouteNames.SelectShortCourseTrainingVenue" enctype="multipart/form-data" novalidate>
+
+            <div esfa-validation-marker-for="SelectedProviderLocationIds" class="govuk-form-group">
+                <fieldset class="govuk-fieldset" id="SelectedProviderLocationIds" aria-describedby="select-hint SelectedProviderLocationIds-error">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-margin-bottom-6">
+                        <h1 class="govuk-fieldset__heading">
+                            Choose a training venue
+                        </h1>
+                    </legend>
+                    <div id="select-hint" class="govuk-hint govuk-!-margin-bottom-6">
+                        Select which of your existing training venues you can deliver this @Model.CourseType.Humanize(LetterCasing.LowerCase) from
+                    </div>
+                    <span asp-validation-for="SelectedProviderLocationIds" id="SelectedProviderLocationIds-error" class="govuk-error-message"></span>
+                    <div class="govuk-checkboxes">
+                        @foreach (var trainingVenue in Model.TrainingVenues.OrderBy(x => x.LocationName))
+                        {
+                            <div class="govuk-checkboxes__item  govuk-checkboxes">
+                                <input class="govuk-checkboxes__input providerVenues" id="providerLocationId-@trainingVenue.ProviderLocationId" name="SelectedProviderLocationIds" type="checkbox" value="@trainingVenue.ProviderLocationId" checked="@trainingVenue.IsSelected">
+                                <label class="govuk-label govuk-checkboxes__label" for="providerLocationId-@trainingVenue.ProviderLocationId">
+                                    @trainingVenue.LocationName.Humanize(LetterCasing.Title)
+                                </label>
+                            </div>
+                        }    
+                    </div>
+                    <details class="govuk-details govuk-!-margin-top-3 govuk-!-margin-bottom-3">
+                        <summary class="govuk-details__summary">
+                            <span class="govuk-details__summary-text">
+                                What if I want to add a training venue that isn’t on the list?
+                            </span>
+                        </summary>
+                        <div class="govuk-details__text">
+                            You can only choose venues you have already registered when adding new training.<br><br>
+                            If you want to use a venue that’s not in this list, you will need to register it after you finish adding this training.
+                        </div>
+                    </details>
+                </fieldset>
+            </div>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,7 +1,7 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 public class ProviderCourseTypeSessionModel
 {

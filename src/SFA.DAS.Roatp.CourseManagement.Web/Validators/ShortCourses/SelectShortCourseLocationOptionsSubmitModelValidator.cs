@@ -3,13 +3,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses;
 
-public class SelectShortCourseLocationSubmitModelValidator : AbstractValidator<SelectShortCourseLocationSubmitModel>
+public class SelectShortCourseLocationOptionsSubmitModelValidator : AbstractValidator<SelectShortCourseLocationOptionsSubmitModel>
 {
     public const string NoneSelectedErrorMessage = "Select at least one delivery method";
 
-    public SelectShortCourseLocationSubmitModelValidator()
+    public SelectShortCourseLocationOptionsSubmitModelValidator()
     {
-        RuleFor(m => m.ShortCourseLocations)
+        RuleFor(m => m.SelectedLocationOptions)
             .NotEmpty()
             .WithMessage(NoneSelectedErrorMessage);
     }

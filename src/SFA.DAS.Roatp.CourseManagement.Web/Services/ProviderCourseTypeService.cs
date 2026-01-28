@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseType.Queries.GetProviderCourseType;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

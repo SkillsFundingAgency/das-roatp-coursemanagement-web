@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -61,7 +60,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         var redirectResult = response as RedirectToRouteResult;
         redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails && m.ContactInformation!.ContactUsEmail == sessionModel.LatestProviderContactModel.EmailAddress && m.ContactInformation!.ContactUsPhoneNumber == sessionModel.LatestProviderContactModel.PhoneNumber)), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails && m.ContactInformation!.ContactUsEmail == sessionModel.SavedProviderContactModel.EmailAddress && m.ContactInformation!.ContactUsPhoneNumber == sessionModel.SavedProviderContactModel.PhoneNumber)), Times.Once);
     }
 
     [Test, MoqAutoData]
@@ -87,7 +86,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails)), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails && m.ContactInformation!.ContactUsEmail == sessionModel.LatestProviderContactModel.EmailAddress && m.ContactInformation!.ContactUsPhoneNumber == sessionModel.LatestProviderContactModel.PhoneNumber)), Times.Never);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails && m.ContactInformation!.ContactUsEmail == sessionModel.SavedProviderContactModel.EmailAddress && m.ContactInformation!.ContactUsPhoneNumber == sessionModel.SavedProviderContactModel.PhoneNumber)), Times.Never);
     }
 
     [Test, MoqAutoData]

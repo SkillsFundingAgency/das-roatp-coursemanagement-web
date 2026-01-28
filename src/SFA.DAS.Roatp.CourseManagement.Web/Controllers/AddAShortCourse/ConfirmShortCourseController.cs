@@ -5,7 +5,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardIn
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Threading.Tasks;
@@ -59,7 +58,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
             return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType });
         }
 
-        if (sessionModel.LatestProviderContactModel == null || (sessionModel.LatestProviderContactModel.EmailAddress == null && sessionModel.LatestProviderContactModel.PhoneNumber == null))
+        if (sessionModel.SavedProviderContactModel == null || (sessionModel.SavedProviderContactModel.EmailAddress == null && sessionModel.SavedProviderContactModel.PhoneNumber == null))
         {
             return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
         }

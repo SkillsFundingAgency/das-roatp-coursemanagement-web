@@ -3,22 +3,23 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmSavedContactDetailsControllerTests;
-public class ConfirmSavedContactDetailsControllerGetTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseTrainingVenuesControllerTests;
+public class SelectShortCourseTrainingVenuesControllerGetTests
 {
     [Test, MoqAutoData]
-    public void ConfirmSavedContactDetails_SessionIsValid_ReturnsView(
+    public void SelectShortCourseTrainingVenue_SessionIsValid_ReturnsView(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmSavedContactDetailsController sut,
+        [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel
     )
     {
@@ -30,24 +31,20 @@ public class ConfirmSavedContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.SelectShortCourseTrainingVenue(courseType);
 
         // Assert
         var viewResult = result as ViewResult;
-        var model = viewResult!.Model as ConfirmSavedContactDetailsViewModel;
-        model!.EmailAddress.Should().Be(sessionModel.SavedProviderContactModel.EmailAddress);
-        model.PhoneNumber.Should().Be(sessionModel.SavedProviderContactModel.PhoneNumber);
-        model.ShowEmail.Should().Be(!string.IsNullOrWhiteSpace(sessionModel.SavedProviderContactModel.EmailAddress));
-        model.ShowPhone.Should()
-            .Be(!string.IsNullOrWhiteSpace(sessionModel.SavedProviderContactModel.PhoneNumber));
-        model.IsUsingSavedContactDetails.Should().Be(sessionModel.IsUsingSavedContactDetails);
+        var model = viewResult!.Model as SelectShortCourseTrainingVenuesViewModel;
+        model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
+        model.CourseType.Should().Be(courseType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void ConfirmSavedContactDetails_SessionIsNull_RedirectsToReviewYourDetails(
+    public void SelectShortCourseTrainingVenue_SessionIsNull_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmSavedContactDetailsController sut)
+        [Greedy] SelectShortCourseTrainingVenuesController sut)
     {
         // Arrange
         var courseType = CourseType.ApprenticeshipUnit;
@@ -56,7 +53,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.SelectShortCourseTrainingVenue(courseType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -65,21 +62,23 @@ public class ConfirmSavedContactDetailsControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmSavedContactDetails_LatestProviderContactIsNullInSession_RedirectsToReviewYourDetails(
+    public void SelectShortCourseTrainingVenue_AtProviderLocationNotSelected_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmSavedContactDetailsController sut,
-        ShortCourseSessionModel sessionModel)
+        [Greedy] SelectShortCourseTrainingVenuesController sut,
+        ShortCourseSessionModel sessionModel
+    )
     {
         // Arrange
         var courseType = CourseType.ApprenticeshipUnit;
 
-        sessionModel.SavedProviderContactModel = null;
+        sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online };
 
         sut.AddDefaultContextWithUser();
+
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.SelectShortCourseTrainingVenue(courseType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -88,29 +87,29 @@ public class ConfirmSavedContactDetailsControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmSavedContactDetails_EmailAddressAndPhoneNumberAreNullInSession_RedirectsToAddShortCourseContactDetails(
+    public void SelectShortCourseTrainingVenue_ProviderLocationsIsEmpty_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmSavedContactDetailsController sut,
-        ShortCourseSessionModel sessionModel)
+        [Greedy] SelectShortCourseTrainingVenuesController sut,
+        ShortCourseSessionModel sessionModel
+    )
     {
         // Arrange
         var courseType = CourseType.ApprenticeshipUnit;
 
-        sessionModel.SavedProviderContactModel = new ProviderContactModel()
-        {
-            EmailAddress = null,
-            PhoneNumber = null
-        };
+        sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation };
+
+        sessionModel.TrainingVenues = new List<TrainingVenueModel>();
 
         sut.AddDefaultContextWithUser();
+
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.SelectShortCourseTrainingVenue(courseType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 }

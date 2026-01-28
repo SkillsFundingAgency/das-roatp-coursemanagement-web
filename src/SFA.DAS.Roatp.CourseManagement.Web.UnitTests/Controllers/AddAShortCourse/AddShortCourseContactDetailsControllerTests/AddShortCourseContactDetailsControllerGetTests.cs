@@ -6,7 +6,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -53,7 +52,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         // Arrange
         var courseType = CourseType.ApprenticeshipUnit;
 
-        sessionModel.ContactInformation = new ContactInformationSessionModel();
+        sessionModel.ContactInformation = new ContactInformationModel();
 
         sut.AddDefaultContextWithUser();
 

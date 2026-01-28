@@ -1,6 +1,6 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
-public class ContactInformationSessionModel
+public class ContactInformationModel
 {
     public string StandardInfoUrl { get; set; }
     public string ContactUsPhoneNumber { get; set; }

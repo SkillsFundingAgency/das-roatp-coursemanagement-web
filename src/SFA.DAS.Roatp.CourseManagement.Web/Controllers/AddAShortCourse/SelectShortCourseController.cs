@@ -9,7 +9,6 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
@@ -49,7 +48,7 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
 
         if (providerContactResponse != null)
         {
-            sessionModel.LatestProviderContactModel = new ProviderContactModel
+            sessionModel.SavedProviderContactModel = new ProviderContactModel
             {
                 EmailAddress = providerContactResponse.EmailAddress,
                 PhoneNumber = providerContactResponse.PhoneNumber
