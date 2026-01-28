@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.CourseManagement.Application.Services;
 using SFA.DAS.Roatp.CourseManagement.Domain;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
@@ -9,12 +10,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
         public CourseContactDetailsSubmitModelValidator()
         {
             RuleFor(p => p.ContactUsEmail)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .WithMessage(CommonValidationErrorMessage.EmailMissingMessage)
                 .MaximumLength(256)
                 .WithMessage(CommonValidationErrorMessage.EmailLengthMessage)
                 .Matches(Constants.RegularExpressions.EmailRegex)
-                .WithMessage(CommonValidationErrorMessage.EmailInvalidMessage);
+                .WithMessage(CommonValidationErrorMessage.EmailInvalidMessage)
+                .Must(EmailCheckingService.IsValidDomain)
+                .WithMessage(CommonValidationErrorMessage.EmailInvalidDomainMessage);
 
             RuleFor(p => p.ContactUsPhoneNumber)
                 .Cascade(CascadeMode.Stop)

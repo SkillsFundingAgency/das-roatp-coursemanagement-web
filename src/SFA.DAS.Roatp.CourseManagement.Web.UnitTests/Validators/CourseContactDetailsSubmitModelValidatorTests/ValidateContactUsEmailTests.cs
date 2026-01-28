@@ -60,9 +60,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
             result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailInvalidMessage);
         }
 
-        [TestCase("q@q.q")]
+        [Test]
+        public void WhenDomainInvalid_ProducesValidationError()
+        {
+            string email = "aaaa@NonExistentDomain50c2413d-e8e4-4330-9859-222567ad0f64.co.uk";
+
+            var sut = new CourseContactDetailsSubmitModelValidator();
+
+            var command = new EditCourseContactDetailsViewModel()
+            {
+                ContactUsEmail = email
+            };
+
+            var result = sut.TestValidate(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailInvalidDomainMessage);
+        }
+
+        [TestCase("q@q.com")]
         [TestCase("2@3.4")]
-        [TestCase("helpdesk@20_apprenticeships.service.gov.uk")]
+        [TestCase("test@account.com")]
+        [TestCase("test//@account.com")]
         public void WhenValid_ShouldNotHaveErrorForEmail(string email)
         {
             var sut = new CourseContactDetailsSubmitModelValidator();

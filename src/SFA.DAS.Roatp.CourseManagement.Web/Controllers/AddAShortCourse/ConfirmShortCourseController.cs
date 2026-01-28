@@ -59,9 +59,9 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
             return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType });
         }
 
-        if (sessionModel.LatestProviderContactModel == null)
+        if (sessionModel.LatestProviderContactModel == null || (sessionModel.LatestProviderContactModel.EmailAddress == null && sessionModel.LatestProviderContactModel.PhoneNumber == null))
         {
-            return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, courseType });
+            return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
         }
 
         return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, courseType });

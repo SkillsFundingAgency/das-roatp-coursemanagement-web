@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
 
             result
                 .ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber)
-                .WithErrorMessage("Enter a UK telephone number");
+                .WithErrorMessage(CommonValidationErrorMessage.TelephoneMissingMessage);
         }
 
         [Test]

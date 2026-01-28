@@ -40,7 +40,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmSavedContactDetails_ValidState_UseContactDetailsIsTrue_SetsContactDetailsInSessionAndRedirectsToConfirmSavedContactDetailsForShortCourse(
+    public void ConfirmSavedContactDetails_ValidState_UseContactDetailsIsTrue_SetsContactDetailsInSessionAndRedirectsToAddShortCourseContactDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmSavedContactDetailsController sut,
         ShortCourseSessionModel sessionModel)
@@ -59,13 +59,13 @@ public class ConfirmSavedContactDetailsControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmSavedContactDetailsForShortCourse);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails && m.ContactInformation!.ContactUsEmail == sessionModel.LatestProviderContactModel.EmailAddress && m.ContactInformation!.ContactUsPhoneNumber == sessionModel.LatestProviderContactModel.PhoneNumber)), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void ConfirmSavedContactDetails_ValidState_UseContactDetailsIsFalse_DoesNotSetContactDetailsInSessionAndRedirectsToConfirmSavedContactDetailsForShortCourse(
+    public void ConfirmSavedContactDetails_ValidState_UseContactDetailsIsFalse_DoesNotSetContactDetailsInSessionAndRedirectsToAddShortCourseContactDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmSavedContactDetailsController sut,
         ShortCourseSessionModel sessionModel)
@@ -84,7 +84,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmSavedContactDetailsForShortCourse);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails)), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.IsUsingSavedContactDetails == submitModel.IsUsingSavedContactDetails && m.ContactInformation!.ContactUsEmail == sessionModel.LatestProviderContactModel.EmailAddress && m.ContactInformation!.ContactUsPhoneNumber == sessionModel.LatestProviderContactModel.PhoneNumber)), Times.Never);
