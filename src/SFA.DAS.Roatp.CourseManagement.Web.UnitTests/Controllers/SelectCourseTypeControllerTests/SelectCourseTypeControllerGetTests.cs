@@ -44,7 +44,7 @@ public class SelectCourseTypeControllerGetTests
         var manageApprenticeshipUnitsLink = Guid.NewGuid().ToString();
         sut.AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ViewStandards, viewStandardsLink)
-            .AddUrlForRoute(RouteNames.ManageApprenticeshipUnits, manageApprenticeshipUnitsLink);
+            .AddUrlForRoute(RouteNames.ManageShortCourses, manageApprenticeshipUnitsLink);
 
         // Act
         var result = await sut.Index() as ViewResult;
@@ -110,7 +110,7 @@ public class SelectCourseTypeControllerGetTests
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ManageApprenticeshipUnits);
+        redirectResult!.RouteName.Should().Be(RouteNames.ManageShortCourses);
         providerCourseTypeService.Verify(c => c.GetProviderCourseType(It.IsAny<int>()), Times.Once);
     }
 
