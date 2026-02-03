@@ -87,7 +87,7 @@ public class SelectShortCourseLocationOptionsController(IMediator _mediator, ISe
 
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.TrainingVenues.Count > 0 && submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation))
+        if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation))
         {
             return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, courseType });
         }
