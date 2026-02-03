@@ -9,8 +9,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAv
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -73,6 +72,6 @@ public class SelectShortCourseControllerPostTests
         redirectResult!.RouteName.Should().Be(RouteNames.ConfirmShortCourse);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>()), Times.Never());
         mediatorMock.Verify(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode && m.LatestProviderContactModel!.EmailAddress == queryResult.EmailAddress && m.LatestProviderContactModel!.PhoneNumber == queryResult.PhoneNumber)), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode && m.SavedProviderContactModel!.EmailAddress == queryResult.EmailAddress && m.SavedProviderContactModel!.PhoneNumber == queryResult.PhoneNumber)), Times.Once);
     }
 }

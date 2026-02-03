@@ -5,7 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseType.Queries.GetProviderCourseType;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;

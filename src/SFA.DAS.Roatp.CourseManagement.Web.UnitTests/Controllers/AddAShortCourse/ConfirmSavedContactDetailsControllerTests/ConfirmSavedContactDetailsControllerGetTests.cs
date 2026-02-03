@@ -7,8 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Session;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -36,11 +35,11 @@ public class ConfirmSavedContactDetailsControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ConfirmSavedContactDetailsViewModel;
-        model!.EmailAddress.Should().Be(sessionModel.LatestProviderContactModel.EmailAddress);
-        model.PhoneNumber.Should().Be(sessionModel.LatestProviderContactModel.PhoneNumber);
-        model.ShowEmail.Should().Be(!string.IsNullOrWhiteSpace(sessionModel.LatestProviderContactModel.EmailAddress));
+        model!.EmailAddress.Should().Be(sessionModel.SavedProviderContactModel.EmailAddress);
+        model.PhoneNumber.Should().Be(sessionModel.SavedProviderContactModel.PhoneNumber);
+        model.ShowEmail.Should().Be(!string.IsNullOrWhiteSpace(sessionModel.SavedProviderContactModel.EmailAddress));
         model.ShowPhone.Should()
-            .Be(!string.IsNullOrWhiteSpace(sessionModel.LatestProviderContactModel.PhoneNumber));
+            .Be(!string.IsNullOrWhiteSpace(sessionModel.SavedProviderContactModel.PhoneNumber));
         model.IsUsingSavedContactDetails.Should().Be(sessionModel.IsUsingSavedContactDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
@@ -74,7 +73,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         // Arrange
         var courseType = CourseType.ApprenticeshipUnit;
 
-        sessionModel.LatestProviderContactModel = null;
+        sessionModel.SavedProviderContactModel = null;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
@@ -97,7 +96,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         // Arrange
         var courseType = CourseType.ApprenticeshipUnit;
 
-        sessionModel.LatestProviderContactModel = new ProviderContactModel()
+        sessionModel.SavedProviderContactModel = new ProviderContactModel()
         {
             EmailAddress = null,
             PhoneNumber = null
