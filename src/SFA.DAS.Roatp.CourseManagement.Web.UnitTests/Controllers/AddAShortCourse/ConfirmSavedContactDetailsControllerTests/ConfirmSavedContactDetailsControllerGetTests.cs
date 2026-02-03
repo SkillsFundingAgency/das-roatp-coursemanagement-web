@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -85,5 +86,32 @@ public class ConfirmSavedContactDetailsControllerGetTests
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+    }
+
+    [Test, MoqAutoData]
+    public void ConfirmSavedContactDetails_EmailAddressAndPhoneNumberAreNullInSession_RedirectsToAddShortCourseContactDetails(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ConfirmSavedContactDetailsController sut,
+        ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        var courseType = CourseType.ApprenticeshipUnit;
+
+        sessionModel.LatestProviderContactModel = new ProviderContactModel()
+        {
+            EmailAddress = null,
+            PhoneNumber = null
+        };
+
+        sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var result = sut.ConfirmSavedContactDetails(courseType);
+
+        // Assert
+        var redirectResult = result as RedirectToRouteResult;
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddShortCourseContactDetails);
     }
 }

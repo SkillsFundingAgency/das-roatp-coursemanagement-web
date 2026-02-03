@@ -22,6 +22,8 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
 
         if (sessionModel == null || sessionModel.LatestProviderContactModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
+        if (sessionModel.LatestProviderContactModel.EmailAddress == null && sessionModel.LatestProviderContactModel.PhoneNumber == null) return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
+
         var model = GetViewModel(sessionModel, Ukprn, courseType);
 
         return View(ViewPath, model);
@@ -42,18 +44,15 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
 
         sessionModel.IsUsingSavedContactDetails = submitModel.IsUsingSavedContactDetails;
 
-        if (submitModel.IsUsingSavedContactDetails == true)
+        sessionModel.ContactInformation = submitModel.IsUsingSavedContactDetails == true ? new ContactInformationSessionModel()
         {
-            sessionModel.ContactInformation = new ContactInformationSessionModel()
-            {
-                ContactUsEmail = sessionModel.LatestProviderContactModel.EmailAddress,
-                ContactUsPhoneNumber = sessionModel.LatestProviderContactModel.PhoneNumber,
-            };
-        }
+            ContactUsEmail = sessionModel.LatestProviderContactModel.EmailAddress,
+            ContactUsPhoneNumber = sessionModel.LatestProviderContactModel.PhoneNumber,
+        } : new ContactInformationSessionModel();
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
     }
 
     private static ConfirmSavedContactDetailsViewModel GetViewModel(ShortCourseSessionModel sessionModel, int ukprn, CourseType courseType)
