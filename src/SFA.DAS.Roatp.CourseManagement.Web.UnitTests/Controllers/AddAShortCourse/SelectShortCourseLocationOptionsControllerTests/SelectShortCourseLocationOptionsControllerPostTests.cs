@@ -109,7 +109,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public async Task SelectShortCourseLocation_ProviderLocationOptionIsSelectedAndProviderLocationsExist_SetsSessionCorrectlyAndRedirectsToSelectShortCourseTrainingVenue(
+    public async Task SelectShortCourseLocation_ProviderLocationOptionIsSelected_SetsSessionCorrectlyAndRedirectsToSelectShortCourseTrainingVenue(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseLocationOptionsController sut,
@@ -138,38 +138,6 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         sessionModel.HasOnlineDeliveryOption.Should().BeFalse();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online) && m.TrainingVenues.FirstOrDefault().ProviderLocationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId)), Times.Once);
-        mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
-    }
-
-    [Test, MoqAutoData]
-    public async Task SelectShortCourseLocation_ProviderLocationOptionIsSelectedAndProviderLocationsDoesNotExist_SetsSessionCorrectlyAndRedirectsToSelectShortCourseLocation(
-        [Frozen] Mock<IMediator> mediatorMock,
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] SelectShortCourseLocationOptionsController sut,
-        ShortCourseSessionModel sessionModel)
-    {
-        // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
-
-        var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation } };
-
-        sessionModel.TrainingVenues = new List<TrainingVenueModel>();
-
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-
-        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
-
-        sut.AddDefaultContextWithUser();
-
-        // Act
-        var response = await sut.SelectShortCourseLocation(submitModel, courseType);
-
-        // Assert
-        var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseLocationOption);
-        sessionModel.HasOnlineDeliveryOption.Should().BeFalse();
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online))), Times.Once());
         mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
     }
 

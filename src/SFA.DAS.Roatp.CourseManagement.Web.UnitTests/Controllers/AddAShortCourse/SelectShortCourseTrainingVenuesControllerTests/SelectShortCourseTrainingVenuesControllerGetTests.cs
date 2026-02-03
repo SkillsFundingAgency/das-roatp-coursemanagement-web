@@ -87,7 +87,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public void SelectShortCourseTrainingVenue_ProviderLocationsIsEmpty_RedirectsToReviewYourDetails(
+    public void SelectShortCourseTrainingVenue_TrainingVenuesIsEmptyInSession_RedirectsToGetAddTrainingVenue(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel
@@ -110,6 +110,6 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.GetAddTrainingVenue);
     }
 }

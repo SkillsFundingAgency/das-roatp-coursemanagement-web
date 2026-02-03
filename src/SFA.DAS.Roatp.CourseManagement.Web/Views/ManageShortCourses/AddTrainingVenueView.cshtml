@@ -1,0 +1,48 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
+@model AddTrainingVenueViewModel
+@{
+    ViewBag.Title = "Select an address";
+    ViewBag.Description = "";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <form method="post" asp-route="@RouteNames.PostAddTrainingVenue" enctype="multipart/form-data" novalidate>
+
+            <input asp-for="AddressLine1" id="AddressLine1" type="hidden" />
+            <input asp-for="AddressLine2" id="AddressLine2" type="hidden" />
+            <input asp-for="Town" id="Town" type="hidden" />
+            <input asp-for="County" id="County" type="hidden" />
+            <input asp-for="Postcode" id="Postcode" type="hidden" />
+            <input asp-for="Longitude" id="Longitude" type="hidden" />
+            <input asp-for="Latitude" id="Latitude" type="hidden" />
+
+            <span class="govuk-caption-l">Add an @(Model.CourseTypeLower)</span>
+
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--xl" asp-for="SearchTerm">
+                    You don't have any training venues registered yet. Add a training venue.
+                </label>
+            </h1>
+
+            <p>This venue will be added to your account. It will show up as an option when adding new standards or @(Model.CourseTypeLowerPlural).</p>
+
+            <div class="govuk-label govuk-label--m govuk-!-margin-top-6">
+                Add venue address
+            </div>
+
+            <div id="LocationName-hint" class="govuk-hint">
+                Start typing an address or postcode.
+            </div>
+            <div esfa-validation-marker-for="SearchTerm" class="govuk-form-group">
+                <span asp-validation-for="SearchTerm" class="govuk-error-message"></span>
+                <input type="text" name="SearchTerm" asp-for="SearchTerm" class="govuk-input" sfa-validationerror-class="form-control-error" maxlength="200" data-module="autoComplete" />
+            </div>
+            <div class="govuk-button-group">
+                <button id="continue" type="submit" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true">
+                    Continue
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

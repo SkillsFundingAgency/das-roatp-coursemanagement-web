@@ -23,11 +23,16 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        if (!sessionModel.LocationOptions.Contains(ShortCourseLocationOption.ProviderLocation) || sessionModel.TrainingVenues.Count == 0)
+        if (!sessionModel.LocationOptions.Contains(ShortCourseLocationOption.ProviderLocation))
         {
-            _logger.LogWarning("User: {UserId} unexpectedly landed on select a training venue page when location options does not contain provider or there are no available training venues.", UserId);
+            _logger.LogWarning("User: {UserId} unexpectedly landed on select a training venue page when location options does not contain provider.", UserId);
 
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+        }
+
+        if (sessionModel.TrainingVenues.Count == 0)
+        {
+            return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, courseType });
         }
 
         var model = new SelectShortCourseTrainingVenuesViewModel()
