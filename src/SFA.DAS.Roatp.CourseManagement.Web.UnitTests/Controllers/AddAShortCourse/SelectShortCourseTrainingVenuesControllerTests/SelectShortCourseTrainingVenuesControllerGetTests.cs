@@ -24,7 +24,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
 
@@ -47,7 +47,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         [Greedy] SelectShortCourseTrainingVenuesController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
@@ -69,7 +69,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online };
 
@@ -94,7 +94,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation };
 

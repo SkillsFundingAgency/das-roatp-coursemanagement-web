@@ -32,7 +32,7 @@ public class SelectCourseTypeControllerGetTests
             },
             new CourseTypeModel()
             {
-                CourseType = CourseType.ApprenticeshipUnit
+                CourseType = CourseType.ShortCourse
             }
         };
 
@@ -97,7 +97,7 @@ public class SelectCourseTypeControllerGetTests
         {
             new CourseTypeModel()
             {
-                CourseType = CourseType.ApprenticeshipUnit
+                CourseType = CourseType.ShortCourse
             }
         };
 

@@ -23,7 +23,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         List<ShortCourseLocationOptionModel> locationOptions = new()
         {
@@ -55,7 +55,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         [Greedy] SelectShortCourseLocationOptionsController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);

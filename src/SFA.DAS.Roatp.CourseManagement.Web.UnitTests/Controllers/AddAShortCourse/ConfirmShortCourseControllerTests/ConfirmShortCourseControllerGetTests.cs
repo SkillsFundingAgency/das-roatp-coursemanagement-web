@@ -27,7 +27,7 @@ public class ConfirmShortCourseControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var expectedCourseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
 
@@ -58,7 +58,7 @@ public class ConfirmShortCourseControllerGetTests
     ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var expectedCourseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
 

@@ -3,5 +3,5 @@
 public enum CourseType
 {
     Apprenticeship,
-    ApprenticeshipUnit
+    ShortCourse
 }

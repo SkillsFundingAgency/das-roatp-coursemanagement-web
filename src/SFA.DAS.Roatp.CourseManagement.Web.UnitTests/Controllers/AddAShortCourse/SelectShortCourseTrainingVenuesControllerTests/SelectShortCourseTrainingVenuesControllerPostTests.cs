@@ -24,7 +24,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         SelectShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
@@ -50,7 +50,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
         var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
@@ -75,7 +75,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         SelectShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);

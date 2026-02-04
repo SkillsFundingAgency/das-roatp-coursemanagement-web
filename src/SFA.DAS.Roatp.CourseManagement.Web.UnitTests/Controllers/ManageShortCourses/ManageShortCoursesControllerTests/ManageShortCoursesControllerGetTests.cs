@@ -27,11 +27,11 @@ public class ManageShortCoursesControllerGetTests
         {
             new CourseTypeModel()
             {
-                CourseType = CourseType.ApprenticeshipUnit
+                CourseType = CourseType.ShortCourse
             }
         };
 
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var expectedCourseType = CourseType.ShortCourse;
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
@@ -67,7 +67,7 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var expectedCourseType = CourseType.ShortCourse;
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
