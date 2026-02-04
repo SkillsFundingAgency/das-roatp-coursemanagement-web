@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -37,7 +38,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().Be(sessionModel.ContactInformation.ContactUsEmail);
         model!.ContactUsPhoneNumber.Should().Be(sessionModel.ContactInformation.ContactUsPhoneNumber);
         model!.StandardInfoUrl.Should().Be(sessionModel.ContactInformation.StandardInfoUrl);
-        model!.CourseType.Should().Be(courseType);
+        model!.CourseType.Should().Be(courseType.Humanize(LetterCasing.LowerCase));
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
@@ -67,7 +68,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().BeNull();
         model!.ContactUsPhoneNumber.Should().BeNull();
         model!.StandardInfoUrl.Should().BeNull();
-        model!.CourseType.Should().Be(courseType);
+        model!.CourseType.Should().Be(courseType.Humanize(LetterCasing.LowerCase));
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }

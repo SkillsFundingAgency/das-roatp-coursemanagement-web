@@ -1,5 +1,6 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -35,7 +36,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         Assert.IsNotNull(viewResult);
         var model = viewResult.Model as AddShortCourseContactDetailsViewModel;
         model.Should().NotBeNull();
-        model!.CourseType.Should().Be(courseType);
+        model!.CourseType.Should().Be(courseType.Humanize(LetterCasing.LowerCase));
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 

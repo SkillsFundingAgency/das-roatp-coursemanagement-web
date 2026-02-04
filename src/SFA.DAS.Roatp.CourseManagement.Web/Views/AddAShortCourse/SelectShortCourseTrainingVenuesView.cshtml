@@ -1,5 +1,5 @@
-﻿@using Humanizer
-@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+@using System.Globalization
 @model SelectShortCourseTrainingVenuesViewModel
 @{
     ViewBag.Title = $"Choose a training venue";
@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</div>
+        <div class="govuk-caption-l">Add an @Model.CourseTypeLower</div>
 
         <form method="post" asp-route="@RouteNames.SelectShortCourseTrainingVenue" enctype="multipart/form-data" novalidate>
 
@@ -20,7 +20,7 @@
                         </h1>
                     </legend>
                     <div id="select-hint" class="govuk-hint govuk-!-margin-bottom-6">
-                        Select which of your existing training venues you can deliver this @Model.CourseType.Humanize(LetterCasing.LowerCase) from
+                        Select which of your existing training venues you can deliver this @Model.CourseTypeLower from
                     </div>
                     <span asp-validation-for="SelectedProviderLocationIds" id="SelectedProviderLocationIds-error" class="govuk-error-message"></span>
                     <div class="govuk-checkboxes">
@@ -29,7 +29,7 @@
                             <div class="govuk-checkboxes__item  govuk-checkboxes">
                                 <input class="govuk-checkboxes__input providerVenues" id="providerLocationId-@trainingVenue.ProviderLocationId" name="SelectedProviderLocationIds" type="checkbox" value="@trainingVenue.ProviderLocationId" checked="@trainingVenue.IsSelected">
                                 <label class="govuk-label govuk-checkboxes__label" for="providerLocationId-@trainingVenue.ProviderLocationId">
-                                    @trainingVenue.LocationName.Humanize(LetterCasing.Title)
+                                    @CultureInfo.CurrentCulture.TextInfo.ToTitleCase(trainingVenue.LocationName)
                                 </label>
                             </div>
                         }    
