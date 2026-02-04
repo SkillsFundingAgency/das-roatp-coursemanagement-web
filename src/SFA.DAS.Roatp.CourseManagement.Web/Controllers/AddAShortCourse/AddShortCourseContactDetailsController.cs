@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
@@ -30,7 +31,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             model.ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail;
             model.ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber;
             model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
-            model.CourseType = courseType;
+            model.CourseType = courseType.Humanize(LetterCasing.LowerCase);
             model.ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true;
         }
 
@@ -51,7 +52,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
                 ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail,
                 ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber,
                 StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl,
-                CourseType = courseType,
+                CourseType = courseType.Humanize(LetterCasing.LowerCase),
                 ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true
             };
 

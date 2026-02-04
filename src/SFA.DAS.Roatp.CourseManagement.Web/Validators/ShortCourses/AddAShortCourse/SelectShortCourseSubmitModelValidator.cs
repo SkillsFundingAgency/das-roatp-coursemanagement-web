@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Humanizer;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
@@ -10,6 +9,6 @@ public class SelectShortCourseSubmitModelValidator : AbstractValidator<SelectSho
     {
         RuleFor(m => m.SelectedLarsCode)
             .NotEmpty()
-            .WithMessage(m => $"Select an {m.CourseType}".Humanize());
+            .WithMessage(m => $"Select an {m.CourseTypeLower}");
     }
 }

@@ -1,18 +1,17 @@
-﻿@using Humanizer
-@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
 @using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
 @model ManageShortCoursesViewModel
 @{
-    ViewData["Title"] = $"Manage your {Model.CourseType}".Humanize().Pluralize();
+    ViewData["Title"] = $"Manage your {Model.CourseTypeLowerPlural}";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your @Model.CourseType.Humanize(LetterCasing.LowerCase).Pluralize()</h1>
-        <p class="govuk-body">Use this section to add a new @Model.CourseType.Humanize(LetterCasing.LowerCase), update its details or delete it. Any changes you make will update Find apprenticeship training.</p>
+        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your @Model.CourseTypeLowerPlural</h1>
+        <p class="govuk-body">Use this section to add a new @Model.CourseTypeLower, update its details or delete it. Any changes you make will update Find apprenticeship training.</p>
         <p class="govuk-body">
             <a href="@Model.AddAShortCourseLink" class="govuk-button">
-                Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)
+                Add an @Model.CourseTypeLower
             </a>
         </p>
     </div>
