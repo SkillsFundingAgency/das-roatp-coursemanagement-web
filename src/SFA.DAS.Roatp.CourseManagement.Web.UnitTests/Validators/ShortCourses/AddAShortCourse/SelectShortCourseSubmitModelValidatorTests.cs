@@ -14,7 +14,7 @@ public class SelectShortCourseSubmitModelValidatorTests
     [TestCase(" ", false)]
     public void SelectedLarsCode_Validation(string larsCode, bool isValid)
     {
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
         var model = new SelectShortCourseSubmitModel() { SelectedLarsCode = larsCode, CourseType = courseType };
         var sut = new SelectShortCourseSubmitModelValidator();
 

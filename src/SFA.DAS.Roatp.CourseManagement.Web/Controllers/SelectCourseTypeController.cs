@@ -31,16 +31,16 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
                 return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
             }
 
-            if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ApprenticeshipUnit))
+            if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ShortCourse))
             {
-                return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit });
+                return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ShortCourse });
             }
         }
 
         var viewModel = new SelectCourseTypeViewModel()
         {
             ApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn, }),
-            ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ApprenticeshipUnit })
+            ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, courseType = CourseType.ShortCourse })
         };
 
         return View(viewModel);

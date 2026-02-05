@@ -31,7 +31,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         SelectShortCourseLocationOptionsSubmitModel submitModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
         var expectedLocationOptions = Enum.GetValues<ShortCourseLocationOption>().ToList();
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
@@ -60,7 +60,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online } };
 
@@ -88,7 +88,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation } };
 
@@ -117,7 +117,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         GetAllProviderLocationsQueryResult queryResult)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation } };
 
@@ -149,7 +149,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation } };
 
@@ -180,7 +180,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         [Greedy] SelectShortCourseLocationOptionsController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);

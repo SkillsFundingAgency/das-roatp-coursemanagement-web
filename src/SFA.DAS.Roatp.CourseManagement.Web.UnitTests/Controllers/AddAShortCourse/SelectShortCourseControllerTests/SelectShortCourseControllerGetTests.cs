@@ -23,11 +23,11 @@ public class SelectShortCourseControllerGetTests
         GetAvailableProviderStandardsQueryResult queryResult)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
         var response = await sut.SelectShortCourse(courseType);
@@ -39,6 +39,6 @@ public class SelectShortCourseControllerGetTests
         model.Should().NotBeNull();
         model!.ShortCourses.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
         model!.CourseType.Should().Be(courseType);
-        mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ApprenticeshipUnit), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Once());
     }
 }

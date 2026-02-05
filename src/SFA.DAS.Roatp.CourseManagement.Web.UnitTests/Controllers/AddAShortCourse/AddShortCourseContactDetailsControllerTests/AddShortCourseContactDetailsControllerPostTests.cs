@@ -22,7 +22,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
@@ -45,7 +45,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     [Greedy] AddShortCourseContactDetailsController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
@@ -67,7 +67,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     CourseContactDetailsSubmitModel submitModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);

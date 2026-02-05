@@ -23,7 +23,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
 
@@ -50,7 +50,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         [Greedy] ConfirmSavedContactDetailsController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
@@ -71,7 +71,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sessionModel.SavedProviderContactModel = null;
 
@@ -94,7 +94,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var courseType = CourseType.ShortCourse;
 
         sessionModel.SavedProviderContactModel = new ProviderContactModel()
         {
