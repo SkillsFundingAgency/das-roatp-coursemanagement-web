@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using Humanizer;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
@@ -10,6 +9,6 @@ public class ConfirmShortCourseSubmitModelValidator : AbstractValidator<ConfirmS
     {
         RuleFor(c => c.IsCorrectShortCourse)
             .NotEmpty()
-            .WithMessage(c => $"You must select if this is the right {c.CourseType} or not".Humanize());
+            .WithMessage(c => $"You must select if this is the right {c.ApprenticeshipTypeLower} or not");
     }
 }

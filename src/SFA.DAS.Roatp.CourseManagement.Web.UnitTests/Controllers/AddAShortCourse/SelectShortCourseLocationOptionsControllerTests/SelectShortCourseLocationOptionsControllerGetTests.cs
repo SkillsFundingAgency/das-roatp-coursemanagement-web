@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -23,7 +23,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         List<ShortCourseLocationOptionModel> locationOptions = new()
         {
@@ -39,13 +39,13 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.SelectShortCourseLocation(courseType);
+        var result = sut.SelectShortCourseLocation(apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseLocationOptionsViewModel;
         model!.LocationOptions.Should().BeEquivalentTo(locationOptions);
-        model.CourseType.Should().Be(courseType);
+        model.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
@@ -55,13 +55,13 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         [Greedy] SelectShortCourseLocationOptionsController sut)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.SelectShortCourseLocation(courseType);
+        var result = sut.SelectShortCourseLocation(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

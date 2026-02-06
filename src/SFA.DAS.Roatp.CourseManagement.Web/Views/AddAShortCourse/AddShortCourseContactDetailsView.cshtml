@@ -1,5 +1,4 @@
-﻿@using Humanizer
-@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
 @model AddShortCourseContactDetailsViewModel
 @{
     ViewBag.Title = "Add short course contact details";
@@ -8,10 +7,10 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</div>
-        <h1 class="govuk-heading-xl margin-bottom-30">Your contact details for this @Model.CourseType.Humanize(LetterCasing.LowerCase)</h1>
-        <p asp-show="!Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training. Employers will use these details to contact you about this @Model.CourseType.Humanize(LetterCasing.LowerCase). </p>
-        <p asp-show="Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this @Model.CourseType.Humanize(LetterCasing.LowerCase). Changing your contact details here will not affect your primary set of contact details.</p>
+        <div class="govuk-caption-l">Add an @Model.ApprenticeshipType</div>
+        <h1 class="govuk-heading-xl margin-bottom-30">Your contact details for this @Model.ApprenticeshipType</h1>
+        <p asp-show="!Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training. Employers will use these details to contact you about this @Model.ApprenticeshipType. </p>
+        <p asp-show="Model.ShowSavedContactDetailsText">These contact details show on Find apprenticeship training, and are how employers will contact you about this @Model.ApprenticeshipType. Changing your contact details here will not affect your primary set of contact details.</p>
 
         <p>All fields must be filled in before you can continue.</p>
 
@@ -21,7 +20,7 @@
                     Email address
                 </label>
                 <div id="ContactUsEmail-hint" class="govuk-hint">
-                    An email address for a person or team to speak to about this @Model.CourseType.Humanize(LetterCasing.LowerCase).
+                    An email address for a person or team to speak to about this @Model.ApprenticeshipType.
                 </div>
                 <span asp-validation-for="ContactUsEmail" class="govuk-error-message"></span>
                 <input asp-for="ContactUsEmail" id="ContactUsEmail" class="govuk-input" type="text" aria-describedby="ContactUsEmail-hint" maxlength="254">
@@ -32,7 +31,7 @@
                     Phone number
                 </label>
                 <div id="ContactUsPhoneNumber-hint" class="govuk-hint">
-                    A phone number for a person or team to speak to about this @Model.CourseType.Humanize(LetterCasing.LowerCase).
+                    A phone number for a person or team to speak to about this @Model.ApprenticeshipType.
                 </div>
                 <span asp-validation-for="ContactUsPhoneNumber" class="govuk-error-message"></span>
                 <input asp-for="ContactUsPhoneNumber" id="ContactUsPhoneNumber" class="govuk-input govuk-input--width-10" type="text" aria-describedby="ContactUsPhoneNumber-hint" maxlength="50">
@@ -43,7 +42,7 @@
                     Website
                 </label>
                 <div id="StandardInfoUrl-hint" class="govuk-hint">
-                    A link to a page on your website for this @Model.CourseType.Humanize(LetterCasing.LowerCase).
+                    A link to a page on your website for this @Model.ApprenticeshipType.
                 </div>
                 <span asp-validation-for="StandardInfoUrl" class="govuk-error-message"></span>
                 <input asp-for="StandardInfoUrl" id="StandardInfoUrl" class="govuk-input" type="text" aria-describedby="StandardInfoUrl-hint" maxlength="1000">

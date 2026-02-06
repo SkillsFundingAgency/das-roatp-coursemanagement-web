@@ -1,9 +1,10 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -22,14 +23,14 @@ public class AddShortCourseContactDetailsControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(courseType);
+        var result = sut.AddShortCourseContactDetails(apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -37,7 +38,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().Be(sessionModel.ContactInformation.ContactUsEmail);
         model!.ContactUsPhoneNumber.Should().Be(sessionModel.ContactInformation.ContactUsPhoneNumber);
         model!.StandardInfoUrl.Should().Be(sessionModel.ContactInformation.StandardInfoUrl);
-        model!.CourseType.Should().Be(courseType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType.Humanize(LetterCasing.LowerCase));
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
@@ -50,7 +51,7 @@ public class AddShortCourseContactDetailsControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.ContactInformation = new ContactInformationModel();
 
@@ -59,7 +60,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(courseType);
+        var result = sut.AddShortCourseContactDetails(apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -67,7 +68,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().BeNull();
         model!.ContactUsPhoneNumber.Should().BeNull();
         model!.StandardInfoUrl.Should().BeNull();
-        model!.CourseType.Should().Be(courseType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType.Humanize(LetterCasing.LowerCase));
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
@@ -78,13 +79,13 @@ public class AddShortCourseContactDetailsControllerGetTests
     [Greedy] AddShortCourseContactDetailsController sut)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(courseType);
+        var result = sut.AddShortCourseContactDetails(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

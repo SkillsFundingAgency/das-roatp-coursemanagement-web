@@ -3,6 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -18,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCo
 public class ManageShortCoursesControllerGetTests
 {
     [Test, MoqAutoData]
-    public async Task Index_CourseTypeReturnsApprenticeshipUnit_ReturnsView(
+    public async Task Index_CourseTypeReturnsShortCourse_ReturnsView(
         [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
         [Greedy] ManageShortCoursesController sut)
     {
@@ -31,7 +32,7 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
-        var expectedCourseType = CourseType.ShortCourse;
+        var expectedApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
@@ -42,19 +43,19 @@ public class ManageShortCoursesControllerGetTests
             .AddUrlForRoute(RouteNames.SelectShortCourse, selectShortCourseUrl);
 
         // Act
-        var result = await sut.Index(expectedCourseType) as ViewResult;
+        var result = await sut.Index(expectedApprenticeshipType) as ViewResult;
 
         // Assert
         result.Should().NotBeNull();
         result!.Model.Should().NotBeNull();
         var model = result!.Model as ManageShortCoursesViewModel;
         model!.AddAShortCourseLink.Should().Be(selectShortCourseUrl);
-        model!.CourseType.Should().Be(expectedCourseType);
+        model!.ApprenticeshipType.Should().Be(expectedApprenticeshipType);
         providerCourseTypeService.Verify(c => c.GetProviderCourseType(It.IsAny<int>()), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public async Task Index_CourseTypeDoesNotReturnApprenticeshipUnit_RedirectsToReviewYourDetails(
+    public async Task Index_CourseTypeDoesNotReturnShortCourse_RedirectsToReviewYourDetails(
         [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
         [Greedy] ManageShortCoursesController sut)
     {
@@ -67,14 +68,14 @@ public class ManageShortCoursesControllerGetTests
             }
         };
 
-        var expectedCourseType = CourseType.ShortCourse;
+        var expectedApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         providerCourseTypeService.Setup(c => c.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(courseTypes);
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.Index(expectedCourseType);
+        var result = await sut.Index(expectedApprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
