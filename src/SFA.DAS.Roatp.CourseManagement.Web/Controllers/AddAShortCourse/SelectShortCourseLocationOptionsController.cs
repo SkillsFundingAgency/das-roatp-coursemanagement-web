@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -12,13 +12,13 @@ using System.Collections.Generic;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/courses/{courseType}/new/select-course-locations", Name = RouteNames.SelectShortCourseLocationOption)]
+[Route("{ukprn}/courses/{apprenticeshipType}/new/select-course-locations", Name = RouteNames.SelectShortCourseLocationOption)]
 public class SelectShortCourseLocationOptionsController(ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseLocationOptionsView.cshtml";
 
     [HttpGet]
-    public IActionResult SelectShortCourseLocation(CourseType courseType)
+    public IActionResult SelectShortCourseLocation(ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -34,14 +34,14 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
         var model = new SelectShortCourseLocationOptionsViewModel()
         {
             LocationOptions = locationOptions,
-            CourseType = courseType,
+            ApprenticeshipType = apprenticeshipType,
         };
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public IActionResult SelectShortCourseLocation(SelectShortCourseLocationOptionsSubmitModel submitModel, CourseType courseType)
+    public IActionResult SelectShortCourseLocation(SelectShortCourseLocationOptionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -59,7 +59,7 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
             var model = new SelectShortCourseLocationOptionsViewModel()
             {
                 LocationOptions = locationOptions,
-                CourseType = courseType,
+                ApprenticeshipType = apprenticeshipType,
             };
 
             return View(ViewPath, model);
@@ -78,9 +78,9 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation))
         {
-            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, courseType });
+            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
     }
 }

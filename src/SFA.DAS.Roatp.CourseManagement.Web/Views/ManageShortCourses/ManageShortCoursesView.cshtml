@@ -2,16 +2,16 @@
 @using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
 @model ManageShortCoursesViewModel
 @{
-    ViewData["Title"] = $"Manage your {Model.CourseTypeLowerPlural}";
+    ViewData["Title"] = $"Manage your {Model.ApprenticeshipTypeLowerPlural}";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your @Model.CourseTypeLowerPlural</h1>
-        <p class="govuk-body">Use this section to add a new @Model.CourseTypeLower, update its details or delete it. Any changes you make will update Find apprenticeship training.</p>
+        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your @Model.ApprenticeshipTypeLowerPlural</h1>
+        <p class="govuk-body">Use this section to add a new @Model.ApprenticeshipTypeLower, update its details or delete it. Any changes you make will update Find apprenticeship training.</p>
         <p class="govuk-body">
             <a href="@Model.AddAShortCourseLink" class="govuk-button">
-                Add an @Model.CourseTypeLower
+                Add an @Model.ApprenticeshipTypeLower
             </a>
         </p>
     </div>

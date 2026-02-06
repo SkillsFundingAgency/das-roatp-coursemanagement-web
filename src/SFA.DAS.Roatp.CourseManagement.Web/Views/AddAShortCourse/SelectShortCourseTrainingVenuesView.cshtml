@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Add an @Model.CourseTypeLower</div>
+        <div class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
 
         <form method="post" asp-route="@RouteNames.SelectShortCourseTrainingVenue" enctype="multipart/form-data" novalidate>
 
@@ -20,7 +20,7 @@
                         </h1>
                     </legend>
                     <div id="select-hint" class="govuk-hint govuk-!-margin-bottom-6">
-                        Select which of your existing training venues you can deliver this @Model.CourseTypeLower from
+                        Select which of your existing training venues you can deliver this @Model.ApprenticeshipTypeLower from
                     </div>
                     <span asp-validation-for="SelectedProviderLocationIds" id="SelectedProviderLocationIds-error" class="govuk-error-message"></span>
                     <div class="govuk-checkboxes">

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -12,19 +12,19 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/courses/{courseType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
+[Route("{ukprn}/courses/{apprenticeshipType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
 public class ConfirmShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/ConfirmShortCourseView.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> ConfirmShortCourse(CourseType courseType)
+    public async Task<IActionResult> ConfirmShortCourse(ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = await GetViewModel(sessionModel.LarsCode, courseType);
+        var model = await GetViewModel(sessionModel.LarsCode, apprenticeshipType);
 
         sessionModel.ShortCourseInformation = model.ShortCourseInformation;
 
@@ -34,7 +34,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
     }
 
     [HttpPost]
-    public IActionResult ConfirmShortCourse(ConfirmShortCourseSubmitModel submitModel, CourseType courseType)
+    public IActionResult ConfirmShortCourse(ConfirmShortCourseSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -45,7 +45,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
             var model = new ConfirmShortCourseViewModel()
             {
                 ShortCourseInformation = sessionModel.ShortCourseInformation,
-                CourseType = courseType
+                ApprenticeshipType = apprenticeshipType
             };
 
             return View(ViewPath, model);
@@ -55,24 +55,24 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
         {
             _sessionService.Delete(nameof(ShortCourseSessionModel));
 
-            return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, courseType });
+            return RedirectToRoute(RouteNames.SelectShortCourse, new { ukprn = Ukprn, apprenticeshipType });
         }
 
         if (sessionModel.SavedProviderContactModel == null || (sessionModel.SavedProviderContactModel.EmailAddress == null && sessionModel.SavedProviderContactModel.PhoneNumber == null))
         {
-            return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
+            return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode, CourseType courseType)
+    private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode, ApprenticeshipType apprenticeshipType)
     {
         var shortCourseInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
         var model = new ConfirmShortCourseViewModel()
         {
             ShortCourseInformation = shortCourseInfo,
-            CourseType = courseType
+            ApprenticeshipType = apprenticeshipType
         };
         return model;
     }

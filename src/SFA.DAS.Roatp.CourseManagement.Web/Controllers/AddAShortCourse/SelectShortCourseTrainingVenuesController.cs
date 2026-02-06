@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -17,13 +16,13 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/courses/{courseType}/new/select-training-venues", Name = RouteNames.SelectShortCourseTrainingVenue)]
+[Route("{ukprn}/courses/{apprenticeshipType}/new/select-training-venues", Name = RouteNames.SelectShortCourseTrainingVenue)]
 public class SelectShortCourseTrainingVenuesController(ISessionService _sessionService, IMediator _mediator, ILogger<SelectShortCourseTrainingVenuesController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseTrainingVenuesView.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> SelectShortCourseTrainingVenue(CourseType courseType)
+    public async Task<IActionResult> SelectShortCourseTrainingVenue(ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -44,20 +43,20 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         if (!sessionModel.LocationsAvailable)
         {
-            return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, courseType });
+            return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }
 
         var model = new SelectShortCourseTrainingVenuesViewModel()
         {
             TrainingVenues = sessionModel.TrainingVenues,
-            CourseType = courseType
+            ApprenticeshipType = apprenticeshipType
         };
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public IActionResult SelectShortCourseTrainingVenue(SelectShortCourseTrainingVenuesSubmitModel submitModel, CourseType courseType)
+    public IActionResult SelectShortCourseTrainingVenue(SelectShortCourseTrainingVenuesSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -73,7 +72,7 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
             var model = new SelectShortCourseTrainingVenuesViewModel()
             {
                 TrainingVenues = sessionModel.TrainingVenues,
-                CourseType = courseType
+                ApprenticeshipType = apprenticeshipType
             };
 
             return View(ViewPath, model);
@@ -92,7 +91,7 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
     }
 
     private async Task<List<TrainingVenueModel>> GetTrainingVenues(ShortCourseSessionModel sessionModel)

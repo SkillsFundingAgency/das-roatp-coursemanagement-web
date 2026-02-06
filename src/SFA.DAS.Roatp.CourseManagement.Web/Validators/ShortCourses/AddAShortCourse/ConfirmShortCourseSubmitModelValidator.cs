@@ -9,6 +9,6 @@ public class ConfirmShortCourseSubmitModelValidator : AbstractValidator<ConfirmS
     {
         RuleFor(c => c.IsCorrectShortCourse)
             .NotEmpty()
-            .WithMessage(c => $"You must select if this is the right {c.CourseTypeLower} or not");
+            .WithMessage(c => $"You must select if this is the right {c.ApprenticeshipTypeLower} or not");
     }
 }

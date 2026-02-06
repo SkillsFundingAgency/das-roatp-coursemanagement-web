@@ -8,9 +8,9 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Add an @(Model.CourseTypeLower)</div>
+        <div class="govuk-caption-l">Add an @(Model.ApprenticeshipTypeLower)</div>
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">You don't have any training venues registered yet. Add a training venue.</h1>
-        <p>This venue will be added to your account. It will show up as an option when adding new standards or @(Model.CourseTypeLowerPlural).</p>
+        <p>This venue will be added to your account. It will show up as an option when adding new standards or @(Model.ApprenticeshipTypeLowerPlural).</p>
 
         <form method="post" asp-route="@RouteNames.PostAddProviderLocationDetails" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="LocationName" class="govuk-form-group">

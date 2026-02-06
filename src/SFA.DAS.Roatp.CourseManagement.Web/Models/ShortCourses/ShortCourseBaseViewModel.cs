@@ -1,11 +1,11 @@
 ﻿using Humanizer;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 public class ShortCourseBaseViewModel
 {
-    public CourseType? CourseType { get; set; }
-    public string CourseTypeLower => CourseType?.Humanize(LetterCasing.LowerCase);
-    public string CourseTypeLowerPlural => CourseType?.Humanize(LetterCasing.LowerCase).Pluralize();
+    public ApprenticeshipType? ApprenticeshipType { get; set; }
+    public string ApprenticeshipTypeLower => ApprenticeshipType?.Humanize(LetterCasing.LowerCase);
+    public string ApprenticeshipTypeLowerPlural => ApprenticeshipType?.Humanize(LetterCasing.LowerCase).Pluralize();
 }

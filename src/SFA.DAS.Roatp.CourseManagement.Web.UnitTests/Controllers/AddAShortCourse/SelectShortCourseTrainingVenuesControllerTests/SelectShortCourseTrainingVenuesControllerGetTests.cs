@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -31,7 +31,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -40,13 +40,13 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(courseType);
+        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseTrainingVenuesViewModel;
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
-        model.CourseType.Should().Be(courseType);
+        model.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Once);
         mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
@@ -60,13 +60,13 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         GetAllProviderLocationsQueryResult queryResult)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(courseType);
+        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -85,7 +85,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online };
 
@@ -94,7 +94,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(courseType);
+        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -113,7 +113,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         GetAllProviderLocationsQueryResult queryResult = new();
 
@@ -130,7 +130,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(courseType);
+        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

@@ -1,20 +1,20 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
 @model ConfirmShortCourseViewModel
 @{
-    ViewBag.Title = $"Confirm {Model.CourseTypeLower}";
+    ViewBag.Title = $"Confirm {Model.ApprenticeshipTypeLower}";
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <span class="govuk-caption-l">Add an @Model.CourseTypeLower</span>
+        <span class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</span>
         <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
         
         <form method="post" asp-route="@RouteNames.ConfirmShortCourse" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsCorrectShortCourse" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectShortCourse" class="govuk-error-message"></span>
-                <input type="hidden" asp-for="CourseType" />
+                <input type="hidden" asp-for="ApprenticeshipType" />
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right @Model.CourseTypeLower?</legend>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right @Model.ApprenticeshipTypeLower?</legend>
                     <div id="IsCorrectShortCourse" class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="is-correct-shortcourse-yes" type="radio" value="true"

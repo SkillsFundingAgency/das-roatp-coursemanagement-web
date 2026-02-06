@@ -1,42 +1,42 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ShortCourses;
 public class ShortCourseBaseViewModelTests
 {
     [Test]
-    public void CourseTypeLower_IsHumanizedLowerCase()
+    public void ApprenticeshipTypeLower_IsHumanizedLowerCase()
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            CourseType = CourseType.ApprenticeshipUnit,
+            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
         };
 
-        sut.CourseTypeLower.Should().Be("apprenticeship unit");
+        sut.ApprenticeshipTypeLower.Should().Be("apprenticeship unit");
     }
 
     [Test]
-    public void CourseTypeLowerPlural_IsHumanizedLowerCasePlural()
+    public void ApprenticeshipTypeLowerPlural_IsHumanizedLowerCasePlural()
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            CourseType = CourseType.ApprenticeshipUnit,
+            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
         };
 
-        sut.CourseTypeLowerPlural.Should().Be("apprenticeship units");
+        sut.ApprenticeshipTypeLowerPlural.Should().Be("apprenticeship units");
     }
 
     [Test]
-    public void NullCheck_CourseTypeIsNull_ReturnsNull()
+    public void NullCheck_ApprenticeshipTypeIsNull_ReturnsNull()
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            CourseType = null
+            ApprenticeshipType = null
         };
 
-        sut.CourseTypeLower.Should().BeNull();
-        sut.CourseTypeLowerPlural.Should().BeNull();
+        sut.ApprenticeshipTypeLower.Should().BeNull();
+        sut.ApprenticeshipTypeLowerPlural.Should().BeNull();
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -25,14 +25,14 @@ public class AddTrainingVenueControllerGetTests
         [Greedy] AddTrainingVenueController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sut.TempData = tempDataMock.Object;
 
         // Act
-        var addressSearch = sut.LookupAddress(courseType, larsCode);
+        var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
 
         // Assert
         addressSearch.Result.As<ViewResult>().Should().NotBeNull();
@@ -46,7 +46,7 @@ public class AddTrainingVenueControllerGetTests
         [Greedy] AddTrainingVenueController sut)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -55,7 +55,7 @@ public class AddTrainingVenueControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.LookupAddress(courseType, "") as RedirectToRouteResult;
+        var result = await sut.LookupAddress(apprenticeshipType, "") as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -71,7 +71,7 @@ public class AddTrainingVenueControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.LocationsAvailable = true;
 
@@ -82,7 +82,7 @@ public class AddTrainingVenueControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.LookupAddress(courseType, "") as RedirectToRouteResult;
+        var result = await sut.LookupAddress(apprenticeshipType, "") as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();

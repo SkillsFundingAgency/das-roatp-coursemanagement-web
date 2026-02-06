@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -28,14 +27,14 @@ public class AddTrainingVenueControllerPostTests
        AddTrainingVenueSubmitModel model)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "errorMessage");
 
         // Act
-        var result = sut.LookupAddress(model, courseType, larsCode);
+        var result = sut.LookupAddress(model, apprenticeshipType, larsCode);
 
         // Assert
         var viewResult = result.Result as ViewResult;
@@ -54,7 +53,7 @@ public class AddTrainingVenueControllerPostTests
         Mock<ITempDataDictionary> tempDataMock)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         AddressItem selectedAddress = new AddressItem
         {
@@ -73,14 +72,14 @@ public class AddTrainingVenueControllerPostTests
         sut.TempData = tempDataMock.Object;
 
         // Act
-        var response = sut.LookupAddress(submitModel, courseType, larsCode);
+        var response = sut.LookupAddress(submitModel, apprenticeshipType, larsCode);
 
         // Assert
         var result = response.Result as RedirectToRouteResult;
         Assert.IsNotNull(result);
         result.RouteName.Should().Be(RouteNames.GetConfirmAddTrainingVenue);
-        tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedAddressTempDataKey));
-        tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedAddressTempDataKey, expectedValueInTempData));
+        tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
+        tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, expectedValueInTempData));
     }
 
     [Test, MoqAutoData]
@@ -91,7 +90,7 @@ public class AddTrainingVenueControllerPostTests
         AddTrainingVenueSubmitModel submitMode)
     {
         // Arrange
-        var courseType = CourseType.ApprenticeshipUnit;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -100,7 +99,7 @@ public class AddTrainingVenueControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.LookupAddress(submitMode, courseType, "") as RedirectToRouteResult;
+        var result = await sut.LookupAddress(submitMode, apprenticeshipType, "") as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();

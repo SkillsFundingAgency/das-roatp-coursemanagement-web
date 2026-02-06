@@ -3,13 +3,13 @@
 @using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
 @model SelectShortCourseLocationOptionsViewModel
 @{
-    ViewBag.Title = $"Where can you deliver this {Model.CourseTypeLower}";
+    ViewBag.Title = $"Where can you deliver this {Model.ApprenticeshipTypeLower}";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Add an @Model.CourseTypeLower</div>
+        <div class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
 
         <form method="post" asp-route="@RouteNames.SelectShortCourseLocationOption" enctype="multipart/form-data" novalidate>
 
@@ -17,7 +17,7 @@
                 <fieldset class="govuk-fieldset" id="SelectedLocationOptions" aria-describedby="select-hint SelectedLocationOptions-error">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--xl govuk-!-margin-bottom-9">
                         <h1 class="govuk-fieldset__heading">
-                            Where can you deliver this @Model.CourseTypeLower?
+                            Where can you deliver this @Model.ApprenticeshipTypeLower?
                         </h1>
                     </legend>
                     <div id="select-hint" class="govuk-hint">

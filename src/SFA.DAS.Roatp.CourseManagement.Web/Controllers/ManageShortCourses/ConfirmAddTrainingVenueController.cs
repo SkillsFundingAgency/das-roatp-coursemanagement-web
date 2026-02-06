@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -18,14 +17,14 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/courses/{courseType}")]
+[Route("{ukprn}/courses/{apprenticeshipType}")]
 public class ConfirmAddTrainingVenueController(ISessionService _sessionService, ILogger<ConfirmAddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ManageShortCourses/ConfirmAddTrainingVenueView.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
-    public IActionResult ConfirmVenue(CourseType courseType, [FromRoute] string larsCode)
+    public IActionResult ConfirmVenue(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var isAddJourney = IsAddJourney(larsCode);
 
@@ -39,7 +38,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
             {
                 _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
 
-                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, courseType });
+                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
             }
         }
 
@@ -47,13 +46,13 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = GetViewModel(addressItem, courseType);
+        var model = GetViewModel(addressItem, apprenticeshipType);
         return View(ViewPath, model);
     }
 
     [Route("new/add-training-venue/confirm-venue", Name = RouteNames.PostConfirmAddTrainingVenue)]
     [HttpPost]
-    public async Task<IActionResult> ConfirmVenue(ConfirmAddTrainingVenueSubmitModel submitModel, CourseType courseType, [FromRoute] string larsCode)
+    public async Task<IActionResult> ConfirmVenue(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var isAddJourney = IsAddJourney(larsCode);
 
@@ -71,7 +70,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (!ModelState.IsValid)
         {
-            var model = GetViewModel(addressItem, courseType);
+            var model = GetViewModel(addressItem, apprenticeshipType);
 
             model.LocationName = submitModel.LocationName;
             return View(ViewPath, model);
@@ -79,7 +78,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         var command = GetCommand(submitModel, addressItem);
 
-        TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
+        TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
         await _mediator.Send(command);
 
@@ -87,18 +86,18 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         {
             await SetTrainingVenueInSession();
 
-            return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, courseType });
+            return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
     }
 
     [HttpGet("new/add-training-venue/confirm-venue/cancel", Name = RouteNames.CancelAddTrainingVenue)]
-    public IActionResult CancelAddTrainingVenue(int ukprn, CourseType courseType)
+    public IActionResult CancelAddTrainingVenue(int ukprn, ApprenticeshipType apprenticeshipType)
     {
-        TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
+        TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
-        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
     }
 
     private CreateProviderLocationCommand GetCommand(ConfirmAddTrainingVenueSubmitModel submitModel, AddressItem addressItem)
@@ -120,25 +119,25 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return command;
     }
 
-    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, CourseType courseType)
+    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType)
     {
         var model = new ConfirmAddTrainingVenueViewModel(addressItem)
         {
-            CourseType = courseType,
-            CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, courseType })
+            ApprenticeshipType = apprenticeshipType,
+            CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType })
         };
         return model;
     }
 
     private AddressItem GetAddressFromTempData(bool keepTempData)
     {
-        TempData.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out var address);
+        TempData.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out var address);
         if (address == null)
         {
             _logger.LogWarning("Selected address not found in the Temp Data, navigating user back to the select training venues page");
             return null;
         }
-        if (keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
+        if (keepTempData) TempData.Keep(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
         return JsonSerializer.Deserialize<AddressItem>(address.ToString()!);
     }
 

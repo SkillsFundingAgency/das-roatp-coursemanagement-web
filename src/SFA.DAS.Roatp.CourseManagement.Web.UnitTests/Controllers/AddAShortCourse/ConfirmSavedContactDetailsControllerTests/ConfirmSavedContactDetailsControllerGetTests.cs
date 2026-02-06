@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -23,14 +22,14 @@ public class ConfirmSavedContactDetailsControllerGetTests
     )
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.ConfirmSavedContactDetails(apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -50,13 +49,13 @@ public class ConfirmSavedContactDetailsControllerGetTests
         [Greedy] ConfirmSavedContactDetailsController sut)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.ConfirmSavedContactDetails(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -71,7 +70,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.SavedProviderContactModel = null;
 
@@ -79,7 +78,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.ConfirmSavedContactDetails(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -94,7 +93,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.SavedProviderContactModel = new ProviderContactModel()
         {
@@ -106,7 +105,7 @@ public class ConfirmSavedContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(courseType);
+        var result = sut.ConfirmSavedContactDetails(apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
