@@ -1,0 +1,46 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
+@model ConfirmAddTrainingVenueViewModel
+@{
+    ViewBag.Title = "Add venue name";
+    ViewBag.Description = "";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-l">Add an @(Model.ApprenticeshipTypeLower)</div>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">You don't have any training venues registered yet. Add a training venue.</h1>
+        <p>This venue will be added to your account. It will show up as an option when adding new standards or @(Model.ApprenticeshipTypeLowerPlural).</p>
+
+        <form method="post" asp-route="@RouteNames.PostAddProviderLocationDetails" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="LocationName" class="govuk-form-group">
+                <label class="govuk-label govuk-label--m govuk-!-margin-top-6" asp-for="LocationName">
+                    Add venue name
+                </label>
+                <div id="LocationName-hint" class="govuk-hint">
+                    This should be the name of where you’ll deliver training. It will not be shown to employers.
+                </div>
+                <span asp-validation-for="LocationName" class="govuk-error-message"></span>
+                <input asp-for="LocationName" id="LocationName" class="govuk-input" type="text" maxlength="50">
+            </div>
+
+
+            <h2 class="govuk-heading-m">
+                Venue address
+            </h2>
+            <p class="govuk-body">
+                @foreach (var addressLine in Model.AddressDetails)
+                {
+                    <span>@addressLine</span>
+                
+                    <br />
+                }
+            </p>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Confirm</button>
+                <a class="govuk-link" href="@Model.CancelLink">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -58,6 +58,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string AddShortCourseContactDetails = "AddShortCourseContactDetails";
         public const string SelectShortCourseLocationOption = "SelectShortCourseLocationOption";
         public const string SelectShortCourseTrainingVenue = "SelectShortCourseTrainingVenue";
+        public const string GetAddTrainingVenue = "GetAddTrainingVenue";
+        public const string PostAddTrainingVenue = "PostAddTrainingVenue";
+        public const string GetConfirmAddTrainingVenue = "GetConfirmAddTrainingVenue";
+        public const string PostConfirmAddTrainingVenue = "PostConfirmAddTrainingVenue";
+        public const string CancelAddTrainingVenue = "CancelAddTrainingVenue";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";

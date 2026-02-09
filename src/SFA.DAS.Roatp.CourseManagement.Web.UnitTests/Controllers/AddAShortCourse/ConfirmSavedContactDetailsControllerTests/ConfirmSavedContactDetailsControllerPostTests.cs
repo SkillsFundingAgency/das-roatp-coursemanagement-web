@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -21,20 +21,20 @@ public class ConfirmSavedContactDetailsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.ConfirmSavedContactDetails(new ConfirmSavedContactDetailsSubmitModel(), courseType);
+        var response = sut.ConfirmSavedContactDetails(new ConfirmSavedContactDetailsSubmitModel(), apprenticeshipType);
 
         // Assert
         var viewResult = response as ViewResult;
         Assert.IsNotNull(viewResult);
         var model = viewResult.Model as ConfirmSavedContactDetailsViewModel;
         model.Should().NotBeNull();
-        model!.CourseType.Should().Be(courseType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
@@ -45,7 +45,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         var submitModel = new ConfirmSavedContactDetailsSubmitModel() { IsUsingSavedContactDetails = true };
 
@@ -54,7 +54,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = sut.ConfirmSavedContactDetails(submitModel, courseType);
+        var response = sut.ConfirmSavedContactDetails(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -70,7 +70,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         var submitModel = new ConfirmSavedContactDetailsSubmitModel() { IsUsingSavedContactDetails = false };
 
@@ -79,7 +79,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = sut.ConfirmSavedContactDetails(submitModel, courseType);
+        var response = sut.ConfirmSavedContactDetails(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -95,13 +95,13 @@ public class ConfirmSavedContactDetailsControllerPostTests
         [Greedy] ConfirmSavedContactDetailsController sut)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.ConfirmSavedContactDetails(new ConfirmSavedContactDetailsSubmitModel(), courseType);
+        var result = sut.ConfirmSavedContactDetails(new ConfirmSavedContactDetailsSubmitModel(), apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

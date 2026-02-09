@@ -1,6 +1,6 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
 
@@ -14,8 +14,8 @@ public class SelectShortCourseSubmitModelValidatorTests
     [TestCase(" ", false)]
     public void SelectedLarsCode_Validation(string larsCode, bool isValid)
     {
-        var courseType = CourseType.ShortCourse;
-        var model = new SelectShortCourseSubmitModel() { SelectedLarsCode = larsCode, CourseType = courseType };
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var model = new SelectShortCourseSubmitModel() { SelectedLarsCode = larsCode, ApprenticeshipType = apprenticeshipType };
         var sut = new SelectShortCourseSubmitModelValidator();
 
         var result = sut.TestValidate(model);

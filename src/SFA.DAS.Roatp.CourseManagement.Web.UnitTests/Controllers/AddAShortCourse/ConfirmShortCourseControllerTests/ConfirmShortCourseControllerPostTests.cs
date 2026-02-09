@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -22,7 +21,7 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sut.ModelState.AddModelError("key", "message");
@@ -30,7 +29,7 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -38,7 +37,7 @@ public class ConfirmShortCourseControllerPostTests
         var model = viewResult.Model as ConfirmShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourseInformation.Should().BeEquivalentTo(sessionModel.ShortCourseInformation, o => o.ExcludingMissingMembers());
-        model!.CourseType.Should().Be(courseType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Never);
     }
@@ -50,14 +49,14 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false, CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -73,14 +72,14 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -96,14 +95,14 @@ public class ConfirmShortCourseControllerPostTests
     ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
 
         // Act
-        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -119,7 +118,7 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.SavedProviderContactModel = null;
 
@@ -128,7 +127,7 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -144,7 +143,7 @@ public class ConfirmShortCourseControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.SavedProviderContactModel = new ProviderContactModel()
         {
@@ -157,7 +156,7 @@ public class ConfirmShortCourseControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, CourseType = courseType }, courseType);
+        var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

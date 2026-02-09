@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -27,7 +27,7 @@ public class ConfirmShortCourseControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ShortCourse;
+        var expectedApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -36,7 +36,7 @@ public class ConfirmShortCourseControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = await sut.ConfirmShortCourse(expectedCourseType);
+        var response = await sut.ConfirmShortCourse(expectedApprenticeshipType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -44,7 +44,7 @@ public class ConfirmShortCourseControllerGetTests
         var model = viewResult.Model as ConfirmShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourseInformation.Should().BeEquivalentTo(queryResult, o => o.ExcludingMissingMembers());
-        model!.CourseType.Should().Be(expectedCourseType);
+        model!.ApprenticeshipType.Should().Be(expectedApprenticeshipType);
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>()), Times.Once);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ShortCourseInformation == model.ShortCourseInformation)), Times.Once);
@@ -58,14 +58,14 @@ public class ConfirmShortCourseControllerGetTests
     ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var expectedCourseType = CourseType.ShortCourse;
+        var expectedApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(() => null);
 
         // Act
-        var response = await sut.ConfirmShortCourse(expectedCourseType);
+        var response = await sut.ConfirmShortCourse(expectedApprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

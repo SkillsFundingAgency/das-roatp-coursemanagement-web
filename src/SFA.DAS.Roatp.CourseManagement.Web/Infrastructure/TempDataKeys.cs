@@ -8,5 +8,6 @@
         public const string ShowVenueAddBannerTempDataKey = "ShowVenueAddBannerTempDataKey";
         public const string ProviderLocationTempDataKey = "ProviderLocationTempDataKey";
         public const string ProviderLocationDeletedBannerTempDataKey = "ProviderLocationDeletedBannerTempDataKey";
+        public const string SelectedTrainingVenueAddressTempDataKey = "SelectedTrainingVenueAddressTempDataKey";
     }
 }

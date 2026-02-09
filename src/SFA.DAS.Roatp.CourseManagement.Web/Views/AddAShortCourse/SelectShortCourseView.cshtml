@@ -1,25 +1,24 @@
-﻿@using Humanizer
-@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
 @model SelectShortCourseViewModel
 @{
-    ViewBag.Title = $"Select an {Model.CourseType}".Humanize();
+    ViewBag.Title = $"Select an {Model.ApprenticeshipTypeLower}";
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
         <form method="post" asp-route="@RouteNames.SelectShortCourse" enctype="multipart/form-data" novalidate>
 
-            <input type="hidden" asp-for="CourseType" />
-            <span class="govuk-caption-l">Add an @Model.CourseType.Humanize(LetterCasing.LowerCase)</span>
+            <input type="hidden" asp-for="ApprenticeshipType" />
+            <span class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</span>
             <h1 class="govuk-label-wrapper govuk-!-margin-bottom-9">
                 <label class="govuk-label govuk-label--xl" asp-for="SelectedLarsCode">
-                    Select an @Model.CourseType.Humanize(LetterCasing.LowerCase)
+                    Select an @Model.ApprenticeshipTypeLower
                 </label>
             </h1>
 
             <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
                 <div class="govuk-hint">
-                    To add an @Model.CourseType.Humanize(LetterCasing.LowerCase), start typing in the box and its name will appear.
+                    To add an @Model.ApprenticeshipTypeLower, start typing in the box and its name will appear.
                 </div>
                 <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
                 <select asp-for="SelectedLarsCode" asp-items="@Model.ShortCourses" class="govuk-select app-autocomplete">

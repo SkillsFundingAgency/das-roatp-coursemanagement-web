@@ -3,7 +3,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -24,13 +24,13 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         SelectShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.SelectShortCourseTrainingVenue(submitModel, courseType);
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -38,7 +38,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         var model = viewResult.Model as SelectShortCourseTrainingVenuesViewModel;
         model.Should().NotBeNull();
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
-        model!.CourseType.Should().Be(courseType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
     }
@@ -50,7 +50,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
@@ -59,7 +59,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var response = sut.SelectShortCourseTrainingVenue(submitModel, courseType);
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -75,13 +75,13 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         SelectShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.SelectShortCourseTrainingVenue(submitModel, courseType);
+        var result = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

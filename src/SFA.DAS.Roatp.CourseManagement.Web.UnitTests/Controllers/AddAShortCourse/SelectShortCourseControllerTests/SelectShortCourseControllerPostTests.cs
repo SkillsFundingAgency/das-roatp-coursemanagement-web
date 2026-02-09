@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -27,7 +28,7 @@ public class SelectShortCourseControllerPostTests
             GetAvailableProviderStandardsQueryResult queryResult)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sut.ModelState.AddModelError("key", "message");
@@ -35,7 +36,7 @@ public class SelectShortCourseControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var response = await sut.SelectShortCourse(new SelectShortCourseSubmitModel() { CourseType = courseType }, courseType);
+        var response = await sut.SelectShortCourse(new SelectShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -43,7 +44,7 @@ public class SelectShortCourseControllerPostTests
         var model = viewResult.Model as SelectShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourses.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
-        model!.CourseType.Should().Be(courseType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Once());
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
     }
@@ -56,16 +57,16 @@ public class SelectShortCourseControllerPostTests
             GetLatestProviderContactQueryResult queryResult)
     {
         // Arrange
-        var courseType = CourseType.ShortCourse;
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        var submitModel = new SelectShortCourseSubmitModel() { CourseType = courseType };
+        var submitModel = new SelectShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType };
 
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var response = await sut.SelectShortCourse(submitModel, courseType);
+        var response = await sut.SelectShortCourse(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

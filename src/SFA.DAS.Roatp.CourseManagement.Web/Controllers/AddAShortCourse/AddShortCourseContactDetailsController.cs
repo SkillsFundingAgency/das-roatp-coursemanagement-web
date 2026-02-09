@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Humanizer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -11,13 +12,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/courses/{courseType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
+[Route("{ukprn}/courses/{apprenticeshipType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
 public class AddShortCourseContactDetailsController(ISessionService _sessionService, ILogger<AddShortCourseContactDetailsController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/AddShortCourseContactDetailsView.cshtml";
 
     [HttpGet]
-    public IActionResult AddShortCourseContactDetails(CourseType courseType)
+    public IActionResult AddShortCourseContactDetails(ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -30,7 +31,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             model.ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail;
             model.ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber;
             model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
-            model.CourseType = courseType;
+            model.ApprenticeshipType = apprenticeshipType.Humanize(LetterCasing.LowerCase);
             model.ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true;
         }
 
@@ -38,7 +39,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
     }
 
     [HttpPost]
-    public IActionResult AddShortCourseContactDetails(CourseContactDetailsSubmitModel submitModel, CourseType courseType)
+    public IActionResult AddShortCourseContactDetails(CourseContactDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -51,7 +52,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
                 ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail,
                 ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber,
                 StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl,
-                CourseType = courseType,
+                ApprenticeshipType = apprenticeshipType.Humanize(LetterCasing.LowerCase),
                 ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true
             };
 
@@ -64,8 +65,8 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         _sessionService.Set(sessionModel);
 
-        _logger.LogInformation("Add {CourseType}: Contact details added for ukprn:{Ukprn} larscode:{Larscode}", courseType, Ukprn, sessionModel.LarsCode);
+        _logger.LogInformation("Add {ApprenticeshipType}: Contact details added for ukprn:{Ukprn} larscode:{Larscode}", apprenticeshipType, Ukprn, sessionModel.LarsCode);
 
-        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
     }
 }

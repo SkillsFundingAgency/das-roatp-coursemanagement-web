@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -10,13 +10,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-[Route("{ukprn}/courses/{courseType}/new/use-provider-contact", Name = RouteNames.ConfirmSavedContactDetailsForShortCourse)]
+[Route("{ukprn}/courses/{apprenticeshipType}/new/use-provider-contact", Name = RouteNames.ConfirmSavedContactDetailsForShortCourse)]
 public class ConfirmSavedContactDetailsController(ISessionService _sessionService, ILogger<ConfirmSavedContactDetailsController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/ConfirmSavedContactDetailsView.cshtml";
 
     [HttpGet]
-    public IActionResult ConfirmSavedContactDetails(CourseType courseType)
+    public IActionResult ConfirmSavedContactDetails(ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -29,15 +29,15 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        if (sessionModel.SavedProviderContactModel.EmailAddress == null && sessionModel.SavedProviderContactModel.PhoneNumber == null) return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
+        if (sessionModel.SavedProviderContactModel.EmailAddress == null && sessionModel.SavedProviderContactModel.PhoneNumber == null) return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
 
-        var model = GetViewModel(sessionModel, Ukprn, courseType);
+        var model = GetViewModel(sessionModel, Ukprn, apprenticeshipType);
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public IActionResult ConfirmSavedContactDetails(ConfirmSavedContactDetailsSubmitModel submitModel, CourseType courseType)
+    public IActionResult ConfirmSavedContactDetails(ConfirmSavedContactDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -45,7 +45,7 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
 
         if (!ModelState.IsValid)
         {
-            var viewModel = GetViewModel(sessionModel, Ukprn, courseType);
+            var viewModel = GetViewModel(sessionModel, Ukprn, apprenticeshipType);
             return View(ViewPath, viewModel);
         }
 
@@ -59,10 +59,10 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, courseType });
+        return RedirectToRoute(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private static ConfirmSavedContactDetailsViewModel GetViewModel(ShortCourseSessionModel sessionModel, int ukprn, CourseType courseType)
+    private static ConfirmSavedContactDetailsViewModel GetViewModel(ShortCourseSessionModel sessionModel, int ukprn, ApprenticeshipType apprenticeshipType)
     {
         return new ConfirmSavedContactDetailsViewModel
         {
@@ -72,7 +72,7 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
             ShowEmail = !string.IsNullOrWhiteSpace(sessionModel.SavedProviderContactModel.EmailAddress),
             ShowPhone = !string.IsNullOrWhiteSpace(sessionModel.SavedProviderContactModel.PhoneNumber),
             IsUsingSavedContactDetails = sessionModel.IsUsingSavedContactDetails,
-            CourseType = courseType
+            ApprenticeshipType = apprenticeshipType
         };
     }
 }
