@@ -14,8 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 [Route("providers/{ukprn}/locations")]
 public class ProviderLocationDeleteController : ControllerBase
 {

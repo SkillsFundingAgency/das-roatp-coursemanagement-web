@@ -1,101 +1,100 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
+
+[AuthorizeCourseType(CourseType.Apprenticeship)]
+public class AddStandardTrainingLocationController : AddAStandardControllerBase
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class AddStandardTrainingLocationController : AddAStandardControllerBase
+    public const string ViewPath = "~/Views/AddAStandard/AddStandardTrainingLocation.cshtml";
+    private readonly ILogger<AddStandardTrainingLocationController> _logger;
+    private readonly IMediator _mediator;
+
+    public AddStandardTrainingLocationController(IMediator mediator, ISessionService sessionService, ILogger<AddStandardTrainingLocationController> logger) : base(sessionService)
     {
-        public const string ViewPath = "~/Views/AddAStandard/AddStandardTrainingLocation.cshtml";
-        private readonly ILogger<AddStandardTrainingLocationController> _logger;
-        private readonly IMediator _mediator;
+        _mediator = mediator;
+        _logger = logger;
+    }
 
-        public AddStandardTrainingLocationController(IMediator mediator, ISessionService sessionService, ILogger<AddStandardTrainingLocationController> logger) : base(sessionService)
+    [Route("{ukprn}/standards/add/locations/add", Name = RouteNames.GetAddStandardTrainingLocation)]
+    [HttpGet]
+    public async Task<IActionResult> SelectAProviderlocation()
+    {
+        var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+        if (sessionModel == null) return redirectResult;
+
+        var model = await GetModel(sessionModel);
+
+        return View(ViewPath, model);
+    }
+
+    [Route("{ukprn}/standards/add/locations/add", Name = RouteNames.PostAddStandardTrainingLocation)]
+    [HttpPost]
+    public async Task<IActionResult> SubmitAProviderlocation(CourseLocationAddSubmitModel submitModel)
+    {
+        var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+        if (sessionModel == null) return redirectResult;
+        var model = await GetModel(sessionModel);
+        if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
+        if (!ModelState.IsValid)
         {
-            _mediator = mediator;
-            _logger = logger;
-        }
-
-        [Route("{ukprn}/standards/add/locations/add", Name = RouteNames.GetAddStandardTrainingLocation)]
-        [HttpGet]
-        public async Task<IActionResult> SelectAProviderlocation()
-        {
-            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redirectResult;
-
-            var model = await GetModel(sessionModel);
-
             return View(ViewPath, model);
         }
 
-        [Route("{ukprn}/standards/add/locations/add", Name = RouteNames.PostAddStandardTrainingLocation)]
-        [HttpPost]
-        public async Task<IActionResult> SubmitAProviderlocation(CourseLocationAddSubmitModel submitModel)
+        sessionModel.CourseLocations ??= new List<CourseLocationModel>();
+
+        sessionModel.CourseLocations.Add(new CourseLocationModel
         {
-            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redirectResult;
-            var model = await GetModel(sessionModel);
-            if (model == null) return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectStandard);
-            if (!ModelState.IsValid)
+            LocationType = LocationType.Provider,
+            ProviderLocationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
+            LocationName = model.TrainingVenues.First(x => x.Value == submitModel.TrainingVenueNavigationId).Text,
+            DeliveryMethod = new DeliveryMethodModel
             {
-                return View(ViewPath, model);
+                HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption,
+                HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption
             }
+        });
 
-            sessionModel.CourseLocations ??= new List<CourseLocationModel>();
+        _sessionService.Set(sessionModel);
 
-            sessionModel.CourseLocations.Add(new CourseLocationModel
-            {
-                LocationType = LocationType.Provider,
-                ProviderLocationId = Guid.Parse(submitModel.TrainingVenueNavigationId),
-                LocationName = model.TrainingVenues.First(x => x.Value == submitModel.TrainingVenueNavigationId).Text,
-                DeliveryMethod = new DeliveryMethodModel
-                {
-                    HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption,
-                    HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption
-                }
-            });
+        return RedirectToRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
+    }
 
-            _sessionService.Set(sessionModel);
+    private async Task<CourseLocationAddViewModel> GetModel(StandardSessionModel sessionModel)
+    {
+        _logger.LogInformation("Getting provider course locations for ukprn {ukprn} for larsCode {larsCode}", Ukprn, sessionModel.LarsCode);
 
-            return RedirectToRoute(RouteNames.GetNewStandardViewTrainingLocationOptions, new { ukprn = Ukprn });
+        var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+        var allProviderLocations = result.ProviderLocations;
+
+        var availableProviderLocations = new List<ProviderLocation>();
+
+        foreach (var location in allProviderLocations.Where(x => x.LocationType == LocationType.Provider))
+        {
+            if (!sessionModel.ProviderLocations.Any(x => x.LocationType == LocationType.Provider && x.LocationName == location.LocationName))
+                availableProviderLocations.Add(location);
         }
 
-        private async Task<CourseLocationAddViewModel> GetModel(StandardSessionModel sessionModel)
+        var model = new CourseLocationAddViewModel
         {
-            _logger.LogInformation("Getting provider course locations for ukprn {ukprn} for larsCode {larsCode}", Ukprn, sessionModel.LarsCode);
+            TrainingVenues = availableProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString())),
+            LarsCode = sessionModel.LarsCode
+        };
 
-            var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
-            var allProviderLocations = result.ProviderLocations;
-
-            var availableProviderLocations = new List<ProviderLocation>();
-
-            foreach (var location in allProviderLocations.Where(x => x.LocationType == LocationType.Provider))
-            {
-                if (!sessionModel.ProviderLocations.Any(x => x.LocationType == LocationType.Provider && x.LocationName == location.LocationName))
-                    availableProviderLocations.Add(location);
-            }
-
-            var model = new CourseLocationAddViewModel
-            {
-                TrainingVenues = availableProviderLocations.OrderBy(c => c.LocationName).Select(s => new SelectListItem($"{s.LocationName}", s.NavigationId.ToString())),
-                LarsCode = sessionModel.LarsCode
-            };
-
-            return model;
-        }
+        return model;
     }
 }

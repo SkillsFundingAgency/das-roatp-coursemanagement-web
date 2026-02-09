@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Linq;
@@ -11,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 [Route("{ukprn}/select-course-type", Name = RouteNames.SelectCourseType)]
 public class SelectCourseTypeController(IProviderCourseTypeService _providerCourseTypeService) : ControllerBase
 {

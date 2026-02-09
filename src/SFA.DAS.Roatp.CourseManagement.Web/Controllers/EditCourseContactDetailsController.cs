@@ -1,72 +1,71 @@
-﻿using System;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using System;
+using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+
+[AuthorizeCourseType(CourseType.Apprenticeship)]
+public class EditCourseContactDetailsController : ControllerBase
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class EditCourseContactDetailsController : ControllerBase
+    private readonly IMediator _mediator;
+    private readonly ILogger<EditCourseContactDetailsController> _logger;
+
+    public EditCourseContactDetailsController(IMediator mediator, ILogger<EditCourseContactDetailsController> logger)
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<EditCourseContactDetailsController> _logger;
+        _mediator = mediator;
+        _logger = logger;
+    }
 
-        public EditCourseContactDetailsController(IMediator mediator, ILogger<EditCourseContactDetailsController> logger)
+    [Route("{ukprn}/standards/{larsCode}/edit-contact-details", Name = RouteNames.GetCourseContactDetails)]
+    [HttpGet]
+    public async Task<IActionResult> Index([FromRoute] string larsCode)
+    {
+        EditCourseContactDetailsViewModel model = await GetViewModel(larsCode);
+
+        return View(model);
+    }
+
+    [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
+    [HttpPost]
+    public async Task<IActionResult> Index([FromRoute] string larsCode, CourseContactDetailsSubmitModel submitModel)
+    {
+        if (!ModelState.IsValid)
         {
-            _mediator = mediator;
-            _logger = logger;
+            var viewModel = await GetViewModel(larsCode);
+            return View(viewModel);
         }
 
-        [Route("{ukprn}/standards/{larsCode}/edit-contact-details", Name = RouteNames.GetCourseContactDetails)]
-        [HttpGet]
-        public async Task<IActionResult> Index([FromRoute] string larsCode)
-        {
-            EditCourseContactDetailsViewModel model = await GetViewModel(larsCode);
+        var command = (UpdateProviderCourseContactDetailsCommand)submitModel;
+        command.LarsCode = larsCode;
+        command.Ukprn = Ukprn;
+        command.UserId = UserId;
+        command.UserDisplayName = UserDisplayName;
 
-            return View(model);
+        await _mediator.Send(command);
+
+        return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
+    }
+
+    private async Task<EditCourseContactDetailsViewModel> GetViewModel(string larsCode)
+    {
+        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+
+        if (result == null)
+        {
+            _logger.LogError("Standard details not found for ukprn {ukprn} and larscode {larsCode}", Ukprn, larsCode);
+            throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
         }
 
-        [Route("{ukprn}/standards/{larscode}/edit-contact-details", Name = RouteNames.PostCourseContactDetails)]
-        [HttpPost]
-        public async Task<IActionResult> Index([FromRoute] string larsCode, CourseContactDetailsSubmitModel submitModel)
-        {
-            if (!ModelState.IsValid)
-            {
-                var viewModel = await GetViewModel(larsCode);
-                return View(viewModel);
-            }
+        var model = (EditCourseContactDetailsViewModel)result;
 
-            var command = (UpdateProviderCourseContactDetailsCommand)submitModel;
-            command.LarsCode = larsCode;
-            command.Ukprn = Ukprn;
-            command.UserId = UserId;
-            command.UserDisplayName = UserDisplayName;
-
-            await _mediator.Send(command);
-
-            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
-        }
-
-        private async Task<EditCourseContactDetailsViewModel> GetViewModel(string larsCode)
-        {
-            var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
-
-            if (result == null)
-            {
-                _logger.LogError("Standard details not found for ukprn {ukprn} and larscode {larsCode}", Ukprn, larsCode);
-                throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
-            }
-
-            var model = (EditCourseContactDetailsViewModel)result;
-
-            return model;
-        }
+        return model;
     }
 }

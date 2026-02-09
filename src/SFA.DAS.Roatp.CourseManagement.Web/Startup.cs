@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +24,9 @@ using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -164,6 +165,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
 #if DEBUG
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+            services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AuthorizeFilter(
+                    new AuthorizationPolicyBuilder()
+                    .RequireAuthenticatedUser()
+                    .AddRequirements(new ProviderUkPrnRequirement())
+                    .Build()));
+            });
 #endif
         }
 

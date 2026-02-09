@@ -1,65 +1,64 @@
-﻿using System;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using System;
+using System.Threading.Tasks;
 
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+
+[AuthorizeCourseType(CourseType.Apprenticeship)]
+public class ProviderCourseDeleteController : ControllerBase
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class ProviderCourseDeleteController : ControllerBase
+    public const string ViewPath = "~/Views/Standards/ConfirmDeleteStandard.cshtml";
+    private readonly IMediator _mediator;
+    private readonly ILogger<ProviderCourseDeleteController> _logger;
+
+    public ProviderCourseDeleteController(IMediator mediator, ILogger<ProviderCourseDeleteController> logger)
     {
-        public const string ViewPath = "~/Views/Standards/ConfirmDeleteStandard.cshtml";
-        private readonly IMediator _mediator;
-        private readonly ILogger<ProviderCourseDeleteController> _logger;
+        _mediator = mediator;
+        _logger = logger;
+    }
 
-        public ProviderCourseDeleteController(IMediator mediator, ILogger<ProviderCourseDeleteController> logger)
+    [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.GetConfirmDeleteStandard)]
+    [HttpGet]
+    public async Task<IActionResult> GetProviderCourse(string larsCode)
+    {
+        _logger.LogInformation("Getting Standard information for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
+
+        var result = await _mediator.Send(new GetStandardInformationQuery(larsCode));
+
+        if (result == null)
         {
-            _mediator = mediator;
-            _logger = logger;
+            var message = $"Standard Standard information found for larscode {larsCode}";
+            _logger.LogError("Standard Standard information found for larscode {LarsCode}", larsCode);
+            throw new InvalidOperationException(message);
         }
 
-        [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.GetConfirmDeleteStandard)]
-        [HttpGet]
-        public async Task<IActionResult> GetProviderCourse(string larsCode)
-        {
-            _logger.LogInformation("Getting Standard information for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
+        var standardResult = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
-            var result = await _mediator.Send(new GetStandardInformationQuery(larsCode));
+        if (standardResult == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-            if (result == null)
-            {
-                var message = $"Standard Standard information found for larscode {larsCode}";
-                _logger.LogError("Standard Standard information found for larscode {LarsCode}", larsCode);
-                throw new InvalidOperationException(message);
-            }
+        var model = (ConfirmDeleteStandardViewModel)result;
 
-            var standardResult = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        return View(ViewPath, model);
+    }
 
-            if (standardResult == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+    [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.PostConfirmDeleteStandard)]
+    [HttpPost]
+    public async Task<IActionResult> DeleteProviderCourse(ConfirmDeleteStandardViewModel model)
+    {
+        var command = new DeleteProviderCourseCommand(Ukprn, model.StandardInformation.LarsCode, UserId, UserDisplayName);
+        await _mediator.Send(command);
+        TempData.Add(TempDataKeys.ShowStandardDeletedBannerTempDataKey, true);
 
-            var model = (ConfirmDeleteStandardViewModel)result;
-
-            return View(ViewPath, model);
-        }
-
-        [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.PostConfirmDeleteStandard)]
-        [HttpPost]
-        public async Task<IActionResult> DeleteProviderCourse(ConfirmDeleteStandardViewModel model)
-        {
-            var command = new DeleteProviderCourseCommand(Ukprn, model.StandardInformation.LarsCode, UserId, UserDisplayName);
-            await _mediator.Send(command);
-            TempData.Add(TempDataKeys.ShowStandardDeletedBannerTempDataKey, true);
-
-            return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
-        }
+        return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
     }
 }
