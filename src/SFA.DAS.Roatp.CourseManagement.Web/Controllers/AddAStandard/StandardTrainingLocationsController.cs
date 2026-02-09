@@ -1,96 +1,94 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
+using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
+
+[AuthorizeCourseType(CourseType.Apprenticeship)]
+public class StandardTrainingLocationsController : AddAStandardControllerBase
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
+    public const string ViewPath = "~/Views/AddAStandard/StandardTrainingLocations.cshtml";
+    private readonly ILogger<StandardTrainingLocationsController> _logger;
 
-    public class StandardTrainingLocationsController : AddAStandardControllerBase
+
+    public StandardTrainingLocationsController(
+        ISessionService sessionService,
+        ILogger<StandardTrainingLocationsController> logger) : base(sessionService)
     {
-        public const string ViewPath = "~/Views/AddAStandard/StandardTrainingLocations.cshtml";
-        private readonly ILogger<StandardTrainingLocationsController> _logger;
+        _logger = logger;
+    }
 
+    [HttpGet]
+    [Route("{ukprn}/standards/add/locations", Name = RouteNames.GetNewStandardViewTrainingLocationOptions)]
+    public IActionResult ViewTrainingLocations()
+    {
+        var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+        if (sessionModel == null) return redirectResult;
 
-        public StandardTrainingLocationsController(
-            ISessionService sessionService,
-            ILogger<StandardTrainingLocationsController> logger) : base(sessionService)
+        //this is protective code as well as allows post method to avoid this check
+        if (sessionModel.LocationOption == LocationOption.EmployerLocation)
         {
-            _logger = logger;
+            _logger.LogWarning($"User: {UserId} unexpectedly landed on provider location page when location option is set to employers.");
+            return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
         }
 
-        [HttpGet]
-        [Route("{ukprn}/standards/add/locations", Name = RouteNames.GetNewStandardViewTrainingLocationOptions)]
-        public IActionResult ViewTrainingLocations()
+        var model = GetModel();
+        model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
+
+        return View(ViewPath, model);
+    }
+
+    [HttpPost]
+    [Route("{ukprn}/standards/add/locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
+    public IActionResult SubmitTrainingLocations(TrainingLocationListViewModel model)
+    {
+        var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
+        if (sessionModel == null) return redirectResult;
+
+        model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
+
+        var validator = new TrainingLocationListViewModelValidator();
+        var validatorResult = validator.Validate(model);
+        if (!validatorResult.IsValid)
         {
-            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redirectResult;
-
-            //this is protective code as well as allows post method to avoid this check
-            if (sessionModel.LocationOption == LocationOption.EmployerLocation)
-            {
-                _logger.LogWarning($"User: {UserId} unexpectedly landed on provider location page when location option is set to employers.");
-                return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
-            }
-
-            var model = GetModel();
-            model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
-
             return View(ViewPath, model);
         }
 
-        [HttpPost]
-        [Route("{ukprn}/standards/add/locations", Name = RouteNames.PostNewStandardConfirmTrainingLocationOptions)]
-        public IActionResult SubmitTrainingLocations(TrainingLocationListViewModel model)
+        if (sessionModel.LocationOption == LocationOption.ProviderLocation)
         {
-            var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
-            if (sessionModel == null) return redirectResult;
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
+        }
+        //if location option is set to both
+        return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNationalProvider);
+    }
 
-            model.ProviderCourseLocations = MapProviderLocationsToProviderCourseLocations(sessionModel.ProviderLocations);
+    private TrainingLocationListViewModel GetModel() => new TrainingLocationListViewModel
+    {
+        AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn })
+    };
 
-            var validator = new TrainingLocationListViewModelValidator();
-            var validatorResult = validator.Validate(model);
-            if (!validatorResult.IsValid)
+    private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
+    {
+        var providerCourseLocations = new List<ProviderCourseLocationViewModel>();
+        foreach (var location in sessionModelProviderLocations)
+        {
+            providerCourseLocations.Add(new ProviderCourseLocationViewModel
             {
-                return View(ViewPath, model);
-            }
-
-            if (sessionModel.LocationOption == LocationOption.ProviderLocation)
-            {
-                return RedirectToRouteWithUkprn(RouteNames.GetAddStandardReviewStandard);
-            }
-            //if location option is set to both
-            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNationalProvider);
+                DeliveryMethod = location.DeliveryMethod,
+                LocationName = location.LocationName,
+                LocationType = location.LocationType,
+                RemoveUrl = Url.RouteUrl(RouteNames.GetAddStandardRemoveProviderCourseLocation, new { ukprn = Ukprn, providerLocationId = location.ProviderLocationId })
+            });
         }
 
-        private TrainingLocationListViewModel GetModel() => new TrainingLocationListViewModel
-        {
-            AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddStandardTrainingLocation, new { Ukprn })
-        };
-
-        private List<ProviderCourseLocationViewModel> MapProviderLocationsToProviderCourseLocations(IEnumerable<CourseLocationModel> sessionModelProviderLocations)
-        {
-            var providerCourseLocations = new List<ProviderCourseLocationViewModel>();
-            foreach (var location in sessionModelProviderLocations)
-            {
-                providerCourseLocations.Add(new ProviderCourseLocationViewModel
-                {
-                    DeliveryMethod = location.DeliveryMethod,
-                    LocationName = location.LocationName,
-                    LocationType = location.LocationType,
-                    RemoveUrl = Url.RouteUrl(RouteNames.GetAddStandardRemoveProviderCourseLocation, new { ukprn = Ukprn, providerLocationId = location.ProviderLocationId })
-                });
-            }
-
-            return providerCourseLocations;
-        }
+        return providerCourseLocations;
     }
 }

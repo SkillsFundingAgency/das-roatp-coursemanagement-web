@@ -1,13 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 [Route("{ukprn}/contact-select-standards", Name = RouteNames.AddProviderContactSelectStandardsForUpdate)]
 public class SelectStandardsForUpdateController(ISessionService _sessionService) : ControllerBase
 {

@@ -1,11 +1,11 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
 {

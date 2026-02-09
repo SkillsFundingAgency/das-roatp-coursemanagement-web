@@ -1,18 +1,15 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 [Route("{ukprn}/add-provider-contact", Name = RouteNames.AddProviderContactDetails)]
 public class ProviderContactController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {

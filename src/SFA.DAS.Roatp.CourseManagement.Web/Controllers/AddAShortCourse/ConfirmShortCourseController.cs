@@ -1,17 +1,17 @@
 ﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
+[AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
 public class ConfirmShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
