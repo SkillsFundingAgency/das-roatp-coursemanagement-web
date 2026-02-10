@@ -50,6 +50,10 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
+        sessionModel.LocationOptions =
+        [
+            ShortCourseLocationOption.ProviderLocation
+        ];
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
         {
@@ -64,6 +68,36 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         // Assert
         var redirectResult = response as RedirectToRouteResult;
         redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == submitModel.SelectedProviderLocationIds.FirstOrDefault())), Times.Once());
+    }
+
+    [Test, MoqAutoData]
+    public void SelectShortCourseTrainingVenue_SessionContainsEmployerLocationOption_SetsSessionCorrectlyAndRedirectsToConfirmNationalProviderDelivery(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] SelectShortCourseTrainingVenuesController sut,
+        ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        sessionModel.LocationOptions =
+        [
+            ShortCourseLocationOption.ProviderLocation,
+            ShortCourseLocationOption.EmployerLocation
+        ];
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
+        {
+            SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
+        };
+        sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+
+        // Assert
+        var redirectResult = response as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == submitModel.SelectedProviderLocationIds.FirstOrDefault())), Times.Once());
     }

@@ -73,7 +73,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void SelectShortCourseLocation_OnlineOptionIsNotSelected_SetsSessionCorrectlyAndRedirectsToSelectShortCourseLocation(
+    public void SelectShortCourseLocation_EmployerLocationOptionIsSelected_SetsSessionCorrectlyAndRedirectsToConfirmNationalProviderDelivery(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
@@ -92,7 +92,7 @@ public class SelectShortCourseLocationOptionsControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseLocationOption);
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
         sessionModel.HasOnlineDeliveryOption.Should().BeFalse();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online) && !m.TrainingVenues.FirstOrDefault().IsSelected)), Times.Once());

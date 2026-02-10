@@ -14,4 +14,5 @@ public class ShortCourseSessionModel
     public bool HasOnlineDeliveryOption { get; set; }
     public List<TrainingVenueModel> TrainingVenues { get; set; } = new List<TrainingVenueModel>();
     public bool LocationsAvailable { get; set; }
+    public bool? HasNationalDeliveryOption { get; set; }
 }
