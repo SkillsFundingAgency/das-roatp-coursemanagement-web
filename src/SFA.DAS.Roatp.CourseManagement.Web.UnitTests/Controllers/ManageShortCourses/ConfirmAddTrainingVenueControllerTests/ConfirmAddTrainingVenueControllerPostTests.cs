@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -80,7 +81,7 @@ public class ConfirmAddTrainingVenueControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_IsNotAddJourney_ModelStateIsValid_InvokesMediatorWithCreateCommand(
+    public void ConfirmVenue_IsNotAddJourney_ModelStateIsValid_InvokesMediatorWithCreateCommandndRedirectsToGetConfirmAddTrainingVenue(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -122,7 +123,7 @@ public class ConfirmAddTrainingVenueControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_IsAddJourney_ModelStateIsValid_InvokesMediatorWithCreateCommandSetsSession(
+    public void ConfirmVenue_IsAddJourney_InvokesMediatorWithCreateCommandSetsSessionAndRedirectsToGetConfirmAddTrainingVenue(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -132,8 +133,14 @@ public class ConfirmAddTrainingVenueControllerPostTests
         GetAllProviderLocationsQueryResult queryResult)
     {
         // Arrange
+        var sessionModel = new ShortCourseSessionModel();
+        sessionModel.LocationOptions =
+        [
+            ShortCourseLocationOption.ProviderLocation
+        ];
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         object address = JsonSerializer.Serialize(addressItem);
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
@@ -159,7 +166,56 @@ public class ConfirmAddTrainingVenueControllerPostTests
             c.Longitude == addressItem.Longitude
         ), It.IsAny<CancellationToken>()));
         mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Exactly(2));
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(2));
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(3));
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().LocationName == queryResult.ProviderLocations.FirstOrDefault().LocationName && m.LocationsAvailable)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public void ConfirmVenue_IsAddJourney_SessionContainsEmployerLocationOption_InvokesMediatorWithCreateCommandSetsSessionAndRedirectsToConfirmNationalProviderDelivery(
+        Mock<ITempDataDictionary> tempDataMock,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ConfirmAddTrainingVenueController sut,
+        ConfirmAddTrainingVenueSubmitModel submitModel,
+        AddressItem addressItem,
+        GetAllProviderLocationsQueryResult queryResult)
+    {
+        // Arrange
+        var sessionModel = new ShortCourseSessionModel();
+        sessionModel.LocationOptions =
+        [
+            ShortCourseLocationOption.ProviderLocation,
+            ShortCourseLocationOption.EmployerLocation,
+        ];
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        object address = JsonSerializer.Serialize(addressItem);
+        sut.AddDefaultContextWithUser();
+        sut.TempData = tempDataMock.Object;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
+
+        // Act
+        var result = sut.ConfirmVenue(submitModel, apprenticeshipType, "").Result as RedirectToRouteResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        result.RouteName.Should().Be(RouteNames.ConfirmNationalProviderDelivery);
+        tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
+        mediatorMock.Verify(m => m.Send(It.Is<CreateProviderLocationCommand>(c =>
+            c.Ukprn.ToString() == TestConstants.DefaultUkprn &&
+            c.UserId == TestConstants.DefaultUserId &&
+            c.LocationName == submitModel.LocationName &&
+            c.AddressLine1 == addressItem.AddressLine1 &&
+            c.AddressLine2 == addressItem.AddressLine2 &&
+            c.Town == addressItem.Town &&
+            c.Postcode == addressItem.Postcode &&
+            c.County == addressItem.County &&
+            c.Latitude == addressItem.Latitude &&
+            c.Longitude == addressItem.Longitude
+        ), It.IsAny<CancellationToken>()));
+        mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Exactly(2));
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(3));
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().LocationName == queryResult.ProviderLocations.FirstOrDefault().LocationName && m.LocationsAvailable)), Times.Once);
     }
 
