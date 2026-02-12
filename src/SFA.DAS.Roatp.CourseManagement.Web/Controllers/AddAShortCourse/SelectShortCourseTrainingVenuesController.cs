@@ -35,9 +35,11 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var trainingVenues = await GetTrainingVenues(sessionModel);
+        var providerLocationsResponse = await GetProviderLocations();
 
-        sessionModel.LocationsAvailable = trainingVenues.Count != 0;
+        sessionModel.LocationsAvailable = providerLocationsResponse.Count != 0;
+
+        sessionModel.ProviderLocations = providerLocationsResponse;
 
         _sessionService.Set(sessionModel);
 
@@ -46,11 +48,12 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
             return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        var model = new SelectShortCourseTrainingVenuesViewModel()
+        SelectShortCourseTrainingVenuesViewModel model = GetViewModel(sessionModel, apprenticeshipType);
+
+        foreach (var trainingVenue in model.TrainingVenues)
         {
-            TrainingVenues = sessionModel.TrainingVenues,
-            ApprenticeshipType = apprenticeshipType
-        };
+            trainingVenue.IsSelected = sessionModel.TrainingVenues.Any(t => t.ProviderLocationId == trainingVenue.ProviderLocationId);
+        }
 
         return View(ViewPath, model);
     }
@@ -62,32 +65,14 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        foreach (var trainingVenue in sessionModel.TrainingVenues)
-        {
-            trainingVenue.IsSelected = false;
-        }
-
         if (!ModelState.IsValid)
         {
-            var model = new SelectShortCourseTrainingVenuesViewModel()
-            {
-                TrainingVenues = sessionModel.TrainingVenues,
-                ApprenticeshipType = apprenticeshipType
-            };
+            SelectShortCourseTrainingVenuesViewModel model = GetViewModel(sessionModel, apprenticeshipType);
 
             return View(ViewPath, model);
         }
 
-        foreach (var selectedProviderLocationId in submitModel.SelectedProviderLocationIds)
-        {
-            foreach (var trainingVenue in sessionModel.TrainingVenues)
-            {
-                if (selectedProviderLocationId == trainingVenue.ProviderLocationId)
-                {
-                    trainingVenue.IsSelected = true;
-                }
-            }
-        }
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Where(p => submitModel.SelectedProviderLocationIds.Contains(p.NavigationId)).Select(p => (TrainingVenueModel)p).ToList();
 
         _sessionService.Set(sessionModel);
 
@@ -99,18 +84,27 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
         return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private async Task<List<TrainingVenueModel>> GetTrainingVenues(ShortCourseSessionModel sessionModel)
+    private async Task<List<ProviderLocation>> GetProviderLocations()
     {
         _logger.LogInformation("Getting provider course locations for ukprn {Ukprn}", Ukprn);
 
         var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
 
-        var trainingVenues = result.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).OrderBy(l => l.LocationName).ToList();
+        var providerLocations = result.ProviderLocations.ToList();
 
-        sessionModel.TrainingVenues.RemoveAll(s => !trainingVenues.Any(p => p.ProviderLocationId == s.ProviderLocationId));
+        return providerLocations;
+    }
 
-        sessionModel.TrainingVenues.AddRange(trainingVenues.Where(p => !sessionModel.TrainingVenues.Any(t => t.ProviderLocationId == p.ProviderLocationId)));
+    private static SelectShortCourseTrainingVenuesViewModel GetViewModel(ShortCourseSessionModel sessionModel, ApprenticeshipType apprenticeshipType)
+    {
+        List<TrainingVenueModel> trainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).OrderBy(l => l.LocationName).ToList();
 
-        return trainingVenues;
+        var model = new SelectShortCourseTrainingVenuesViewModel()
+        {
+            TrainingVenues = trainingVenues,
+            ApprenticeshipType = apprenticeshipType
+        };
+
+        return model;
     }
 }

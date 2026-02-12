@@ -32,6 +32,12 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.ProviderLocations = queryResult.ProviderLocations;
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
+        foreach (var trainingVenue in sessionModel.TrainingVenues)
+        {
+            trainingVenue.IsSelected = true;
+        }
 
         sut.AddDefaultContextWithUser();
 
@@ -48,7 +54,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.FirstOrDefault().NavigationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Once);
         mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
     }
 
@@ -71,7 +77,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Never);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.FirstOrDefault().NavigationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Never);
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 
@@ -99,7 +105,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Never);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.FirstOrDefault().NavigationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Never);
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 
@@ -135,7 +141,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.SequenceEqual(new List<TrainingVenueModel>()) && !m.LocationsAvailable)), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.SequenceEqual(new List<ProviderLocation>()) && !m.LocationsAvailable)), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.GetAddTrainingVenue);
     }
 }

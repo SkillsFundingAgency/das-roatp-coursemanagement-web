@@ -67,12 +67,9 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         sessionModel.LocationOptions = submitModel.SelectedLocationOptions;
 
-        sessionModel.HasOnlineDeliveryOption = submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online);
+        sessionModel.ResetModel();
 
-        foreach (var trainingVenue in sessionModel.TrainingVenues)
-        {
-            trainingVenue.IsSelected = false;
-        }
+        sessionModel.HasOnlineDeliveryOption = submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online);
 
         _sessionService.Set(sessionModel);
 
