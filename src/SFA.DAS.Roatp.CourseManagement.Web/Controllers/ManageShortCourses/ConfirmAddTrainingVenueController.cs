@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -85,6 +86,13 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         if (isAddJourney)
         {
             await SetTrainingVenueInSession();
+
+            var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+
+            if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
+            {
+                return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+            }
 
             return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }

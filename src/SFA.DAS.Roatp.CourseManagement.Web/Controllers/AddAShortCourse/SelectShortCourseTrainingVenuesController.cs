@@ -91,6 +91,11 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
+        {
+            return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+        }
+
         return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
     }
 
