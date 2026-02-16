@@ -1,116 +1,112 @@
-﻿using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
-using MediatR;
-using Microsoft.AspNetCore.Authorization;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
+using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation;
+
+public class AddProviderLocationDetailsController : ControllerBase
 {
-    [Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
-    public class AddProviderLocationDetailsController : ControllerBase
+    public const string ViewPath = "~/Views/AddTrainingLocation/AddTrainingLocationDetails.cshtml";
+    public const string LocationNameNotAvailable = "A location with this name already exists";
+    private readonly ILogger<AddProviderLocationDetailsController> _logger;
+    private readonly IMediator _mediator;
+
+    public AddProviderLocationDetailsController(ILogger<AddProviderLocationDetailsController> logger, IMediator mediator)
     {
-        public const string ViewPath = "~/Views/AddTrainingLocation/AddTrainingLocationDetails.cshtml";
-        public const string LocationNameNotAvailable = "A location with this name already exists";
-        private readonly ILogger<AddProviderLocationDetailsController> _logger;
-        private readonly IMediator _mediator;
+        _logger = logger;
+        _mediator = mediator;
+    }
 
-        public AddProviderLocationDetailsController(ILogger<AddProviderLocationDetailsController> logger, IMediator mediator)
+    [Route("{ukprn}/add-training-location/details", Name = RouteNames.GetAddProviderLocationDetails)]
+    [HttpGet]
+    public IActionResult GetLocationDetails()
+    {
+        var addressItem = GetAddressFromTempData(true);
+
+        if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+        var model = GetViewModel(addressItem);
+        return View(ViewPath, model);
+    }
+
+    [Route("{ukprn}/add-training-location/details", Name = RouteNames.PostAddProviderLocationDetails)]
+    [HttpPost]
+    public async Task<IActionResult> SubmitLocationDetails(ProviderLocationDetailsSubmitModel submitModel)
+    {
+        var addressItem = GetAddressFromTempData(true);
+        if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
+
+        if (ModelState.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+
+        if (!ModelState.IsValid)
         {
-            _logger = logger;
-            _mediator = mediator;
-        }
-
-        [Route("{ukprn}/add-training-location/details", Name = RouteNames.GetAddProviderLocationDetails)]
-        [HttpGet]
-        public IActionResult GetLocationDetails()
-        {
-            var addressItem = GetAddressFromTempData(true);
-
-            if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
             var model = GetViewModel(addressItem);
+
+            model.LocationName = submitModel.LocationName;
             return View(ViewPath, model);
         }
 
-        [Route("{ukprn}/add-training-location/details", Name = RouteNames.PostAddProviderLocationDetails)]
-        [HttpPost]
-        public async Task<IActionResult> SubmitLocationDetails(ProviderLocationDetailsSubmitModel submitModel)
+        var command = GetCommand(submitModel, addressItem);
+
+        TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
+        TempData.Add(TempDataKeys.ShowVenueAddBannerTempDataKey, true);
+
+        await _mediator.Send(command);
+
+        return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
+    }
+
+    private CreateProviderLocationCommand GetCommand(ProviderLocationDetailsSubmitModel submitModel, AddressItem addressItem)
+    {
+        var command = new CreateProviderLocationCommand()
         {
-            var addressItem = GetAddressFromTempData(true);
-            if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
+            Ukprn = base.Ukprn,
+            UserId = base.UserId,
+            UserDisplayName = base.UserDisplayName,
+            LocationName = submitModel.LocationName,
+            AddressLine1 = addressItem.AddressLine1,
+            AddressLine2 = addressItem.AddressLine2 ?? string.Empty,
+            Town = addressItem.Town ?? string.Empty,
+            Postcode = addressItem.Postcode,
+            County = addressItem.County ?? string.Empty,
+            Latitude = addressItem.Latitude,
+            Longitude = addressItem.Longitude
+        };
+        return command;
+    }
 
-            if (ModelState.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+    private static ProviderLocationDetailsViewModel GetViewModel(AddressItem addressItem)
+    {
+        var model = new ProviderLocationDetailsViewModel(addressItem);
+        return model;
+    }
 
-            if (!ModelState.IsValid)
-            {
-                var model = GetViewModel(addressItem);
-
-                model.LocationName = submitModel.LocationName;
-                return View(ViewPath, model);
-            }
-
-            var command = GetCommand(submitModel, addressItem);
-
-            TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
-            TempData.Add(TempDataKeys.ShowVenueAddBannerTempDataKey, true);
-
-            await _mediator.Send(command);
-
-            return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
+    private AddressItem GetAddressFromTempData(bool keepTempData)
+    {
+        TempData.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out var address);
+        if (address == null)
+        {
+            _logger.LogWarning("Selected address not found in the Temp Data, navigating user back to the locations list page");
+            return null;
         }
+        if (keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
+        return JsonSerializer.Deserialize<AddressItem>(address.ToString()!);
+    }
 
-        private CreateProviderLocationCommand GetCommand(ProviderLocationDetailsSubmitModel submitModel, AddressItem addressItem)
+    private async Task CheckIfNameIsAvailable(string locationName)
+    {
+        var locations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+        if (locations.ProviderLocations.Any(l => l.LocationName.ToLower() == locationName.Trim().ToLower()))
         {
-            var command = new CreateProviderLocationCommand()
-            {
-                Ukprn = base.Ukprn,
-                UserId = base.UserId,
-                UserDisplayName = base.UserDisplayName,
-                LocationName = submitModel.LocationName,
-                AddressLine1 = addressItem.AddressLine1,
-                AddressLine2 = addressItem.AddressLine2 ?? string.Empty,
-                Town = addressItem.Town ?? string.Empty,
-                Postcode = addressItem.Postcode,
-                County = addressItem.County ?? string.Empty,
-                Latitude = addressItem.Latitude,
-                Longitude = addressItem.Longitude
-            };
-            return command;
-        }
-
-        private static ProviderLocationDetailsViewModel GetViewModel(AddressItem addressItem)
-        {
-            var model = new ProviderLocationDetailsViewModel(addressItem);
-            return model;
-        }
-
-        private AddressItem GetAddressFromTempData(bool keepTempData)
-        {
-            TempData.TryGetValue(TempDataKeys.SelectedAddressTempDataKey, out var address);
-            if (address == null)
-            {
-                _logger.LogWarning("Selected address not found in the Temp Data, navigating user back to the locations list page");
-                return null;
-            }
-            if (keepTempData) TempData.Keep(TempDataKeys.SelectedAddressTempDataKey);
-            return JsonSerializer.Deserialize<AddressItem>(address.ToString()!);
-        }
-
-        private async Task CheckIfNameIsAvailable(string locationName)
-        {
-            var locations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
-            if (locations.ProviderLocations.Any(l => l.LocationName.ToLower() == locationName.Trim().ToLower()))
-            {
-                ModelState.AddModelError("LocationName", LocationNameNotAvailable);
-            }
+            ModelState.AddModelError("LocationName", LocationNameNotAvailable);
         }
     }
 }

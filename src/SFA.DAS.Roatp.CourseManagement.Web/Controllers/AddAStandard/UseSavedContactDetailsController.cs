@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
+[AuthorizeCourseType(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/add/use-provider-contact", Name = RouteNames.GetAddStandardUseSavedContactDetails)]
 public class UseSavedContactDetailsController : AddAStandardControllerBase
 {

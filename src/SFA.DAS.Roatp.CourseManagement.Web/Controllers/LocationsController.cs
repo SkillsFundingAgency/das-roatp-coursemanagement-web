@@ -1,16 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAddresses;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [Route("/locations")]
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
 public class LocationsController(IApiClient _apiClient) : Controller
 {
     [HttpGet]

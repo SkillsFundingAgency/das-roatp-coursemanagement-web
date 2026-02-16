@@ -1,17 +1,17 @@
 ﻿using Humanizer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
-[Authorize(Policy = nameof(PolicyNames.HasProviderAccount))]
+[AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
 public class AddShortCourseContactDetailsController(ISessionService _sessionService, ILogger<AddShortCourseContactDetailsController> _logger) : ControllerBase
 {

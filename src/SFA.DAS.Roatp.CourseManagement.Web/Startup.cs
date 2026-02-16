@@ -1,6 +1,3 @@
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -8,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +24,9 @@ using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -101,20 +102,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.AddAuthorization<AuthorizationContextProvider>();
             services.Configure<RouteOptions>(options =>
+            {
+                options.LowercaseUrls = true;
+            }).AddMvc(options =>
+            {
+                options.AddAuthorization();
+
+                options.Filters.Add(
+                    new AuthorizeFilter(
+                        new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .AddRequirements(new ProviderUkPrnRequirement())
+                        .Build()));
+
+                if (!_configuration.IsDev())
                 {
-                    options.LowercaseUrls = true;
-                }).AddMvc(options =>
-                {
-                    options.AddAuthorization();
-                    if (!_configuration.IsDev())
-                    {
-                        options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-                    }
-                })
-                .AddSessionStateTempDataProvider()
-                .SetDefaultNavigationSection(NavigationSection.StandardsAndTrainingVenues)
-                .ShowBetaPhaseBanner()
-                .EnableGoogleAnalytics();
+                    options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+                }
+            })
+            .AddSessionStateTempDataProvider()
+            .SetDefaultNavigationSection(NavigationSection.StandardsAndTrainingVenues)
+            .ShowBetaPhaseBanner()
+            .EnableGoogleAnalytics();
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
 
             services

@@ -1,17 +1,14 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+
+public class HomeController : Controller
 {
-    [Authorize( Policy = nameof(PolicyNames.HasProviderAccount) )]
-    public class HomeController : Controller
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-            var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-            return new RedirectToRouteResult(RouteNames.ReviewYourDetails, new { ukprn });
-        }
+        var ukprn = HttpContext.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
+        return new RedirectToRouteResult(RouteNames.ReviewYourDetails, new { ukprn });
     }
 }
