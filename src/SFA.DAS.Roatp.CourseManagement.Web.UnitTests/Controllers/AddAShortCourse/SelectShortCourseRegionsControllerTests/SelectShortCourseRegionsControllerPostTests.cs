@@ -46,7 +46,7 @@ public class SelectShortCourseRegionsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public async Task SelectShortCourseRegions_IsValidState_SetsSessionCorrectlyAndRedirectsToSelectShortCourseRegions(
+    public async Task SelectShortCourseRegions_IsValidState_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IRegionsService> regionsService,
         [Greedy] SelectShortCourseRegionsController sut,
@@ -73,7 +73,7 @@ public class SelectShortCourseRegionsControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseRegions);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingRegions.FirstOrDefault().SubregionId.ToString() == submitModel.SelectedSubRegions.FirstOrDefault())), Times.Once());
         regionsService.Verify(m => m.GetRegions(), Times.Once());

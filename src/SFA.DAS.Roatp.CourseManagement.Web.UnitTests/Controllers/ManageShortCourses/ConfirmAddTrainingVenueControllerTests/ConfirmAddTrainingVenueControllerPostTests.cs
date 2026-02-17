@@ -123,7 +123,7 @@ public class ConfirmAddTrainingVenueControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_IsAddJourney_InvokesMediatorWithCreateCommandSetsSessionAndRedirectsToGetConfirmAddTrainingVenue(
+    public void ConfirmVenue_IsAddJourney_InvokesMediatorWithCreateCommandSetsSessionAndRedirectsToReviewShortCourseDetails(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -151,7 +151,7 @@ public class ConfirmAddTrainingVenueControllerPostTests
 
         // Assert
         result.Should().NotBeNull();
-        result.RouteName.Should().Be(RouteNames.GetConfirmAddTrainingVenue);
+        result.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
         mediatorMock.Verify(m => m.Send(It.Is<CreateProviderLocationCommand>(c =>
             c.Ukprn.ToString() == TestConstants.DefaultUkprn &&

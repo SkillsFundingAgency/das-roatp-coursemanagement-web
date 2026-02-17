@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
@@ -65,9 +66,12 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
             return View(ViewPath, model);
         }
 
-        sessionModel.LocationOptions = submitModel.SelectedLocationOptions;
+        if (!sessionModel.LocationOptions.OrderBy(x => x).SequenceEqual(submitModel.SelectedLocationOptions.OrderBy(x => x)))
+        {
+            sessionModel.ResetModel();
+        }
 
-        sessionModel.ResetModel();
+        sessionModel.LocationOptions = submitModel.SelectedLocationOptions;
 
         sessionModel.HasOnlineDeliveryOption = submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online);
 
@@ -84,6 +88,6 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 }

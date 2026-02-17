@@ -81,7 +81,7 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
     private async Task<List<ProviderLocation>> GetProviderLocations()
