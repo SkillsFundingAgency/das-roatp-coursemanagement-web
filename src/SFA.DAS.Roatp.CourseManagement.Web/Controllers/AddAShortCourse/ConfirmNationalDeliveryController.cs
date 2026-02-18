@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
@@ -53,11 +54,15 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
 
         sessionModel.HasNationalDeliveryOption = submitModel.HasNationalDeliveryOption;
 
+        if (submitModel.HasNationalDeliveryOption == true)
+        {
+            sessionModel.TrainingRegions = new List<TrainingRegionModel>();
+        }
         _sessionService.Set(sessionModel);
 
         if (submitModel.HasNationalDeliveryOption == false)
         {
-            return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
         }
 
         return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });

@@ -12,7 +12,16 @@ public class ShortCourseSessionModel
     public ContactInformationModel ContactInformation { get; set; } = new ContactInformationModel();
     public List<ShortCourseLocationOption> LocationOptions { get; set; } = new List<ShortCourseLocationOption>();
     public bool HasOnlineDeliveryOption { get; set; }
+    public List<ProviderLocation> ProviderLocations { get; set; } = new List<ProviderLocation>();
     public List<TrainingVenueModel> TrainingVenues { get; set; } = new List<TrainingVenueModel>();
     public bool LocationsAvailable { get; set; }
     public bool? HasNationalDeliveryOption { get; set; }
+    public List<TrainingRegionModel> TrainingRegions { get; set; } = new List<TrainingRegionModel>();
+    public void ResetModel()
+    {
+        TrainingVenues = new List<TrainingVenueModel>();
+        TrainingRegions = new List<TrainingRegionModel>();
+        HasOnlineDeliveryOption = false;
+        HasNationalDeliveryOption = null;
+    }
 }

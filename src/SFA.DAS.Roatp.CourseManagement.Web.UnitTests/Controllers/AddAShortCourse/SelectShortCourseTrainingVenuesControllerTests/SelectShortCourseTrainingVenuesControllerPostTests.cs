@@ -25,6 +25,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
@@ -50,6 +51,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
             ShortCourseLocationOption.ProviderLocation
@@ -79,6 +81,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
             ShortCourseLocationOption.ProviderLocation,

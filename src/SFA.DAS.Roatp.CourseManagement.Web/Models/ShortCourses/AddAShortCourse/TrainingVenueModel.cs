@@ -10,11 +10,10 @@ public class TrainingVenueModel
     public string LocationName { get; set; }
     public bool IsSelected { get; set; }
 
-    public static implicit operator TrainingVenueModel(ProviderLocation source)
-            => new TrainingVenueModel
-            {
-                LocationType = source.LocationType,
-                ProviderLocationId = source.NavigationId,
-                LocationName = source.LocationName
-            };
+    public static implicit operator TrainingVenueModel(ProviderLocation source) => new()
+    {
+        LocationType = source.LocationType,
+        ProviderLocationId = source.NavigationId,
+        LocationName = source.LocationName
+    };
 }

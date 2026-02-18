@@ -11,6 +11,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmNationalDeliveryControllerTests;
 public class ConfirmNationalDeliveryControllerPostTests
@@ -80,11 +82,11 @@ public class ConfirmNationalDeliveryControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption)), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void ConfirmNationalProviderDelivery_HasNationalDeliveryOptionIsFalse_SetsSessionAndRedirectsToConfirmNationalProviderDelivery(
+    public void ConfirmNationalProviderDelivery_HasNationalDeliveryOptionIsFalse_SetsSessionAndRedirectsToSelectShortCourseRegions(
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Greedy] ConfirmNationalDeliveryController sut,
     ShortCourseSessionModel sessionModel,
@@ -103,7 +105,7 @@ public class ConfirmNationalDeliveryControllerPostTests
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
+        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseRegions);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption)), Times.Once);
     }
 }
