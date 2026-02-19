@@ -1,6 +1,5 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -15,8 +14,12 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.AddShortCourseContactDetailsControllerTests;
 public class AddShortCourseContactDetailsControllerGetTests
 {
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(false, "Continue")]
+    [MoqInlineAutoData(true, "Confirm")]
     public void AddShortCourseContactDetails_ProviderContactDetailsHasValueInSession_ReturnsViewWithContactDetails(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddShortCourseContactDetailsController sut,
         ShortCourseSessionModel sessionModel
@@ -24,6 +27,7 @@ public class AddShortCourseContactDetailsControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
         sut.AddDefaultContextWithUser();
 
@@ -38,8 +42,9 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().Be(sessionModel.ContactInformation.ContactUsEmail);
         model!.ContactUsPhoneNumber.Should().Be(sessionModel.ContactInformation.ContactUsPhoneNumber);
         model!.StandardInfoUrl.Should().Be(sessionModel.ContactInformation.StandardInfoUrl);
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType.Humanize(LetterCasing.LowerCase));
+        model!.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
+        model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
@@ -68,7 +73,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().BeNull();
         model!.ContactUsPhoneNumber.Should().BeNull();
         model!.StandardInfoUrl.Should().BeNull();
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType.Humanize(LetterCasing.LowerCase));
+        model!.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
