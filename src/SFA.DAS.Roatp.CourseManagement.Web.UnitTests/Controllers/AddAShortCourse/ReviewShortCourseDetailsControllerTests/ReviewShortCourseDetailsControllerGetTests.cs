@@ -34,6 +34,7 @@ public class ReviewShortCourseDetailsControllerGetTests
 
         string cancelLink = Guid.NewGuid().ToString();
         string contactDetailsChangeLink = Guid.NewGuid().ToString();
+        string regionsChangeLink = Guid.NewGuid().ToString();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
@@ -46,7 +47,8 @@ public class ReviewShortCourseDetailsControllerGetTests
 
         sut.AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ReviewYourDetails, cancelLink)
-            .AddUrlForRoute(RouteNames.AddShortCourseContactDetails, contactDetailsChangeLink);
+            .AddUrlForRoute(RouteNames.AddShortCourseContactDetails, contactDetailsChangeLink)
+            .AddUrlForRoute(RouteNames.SelectShortCourseRegions, regionsChangeLink); ;
 
         // Act
         var result = sut.ReviewShortCourseDetails(apprenticeshipType);
