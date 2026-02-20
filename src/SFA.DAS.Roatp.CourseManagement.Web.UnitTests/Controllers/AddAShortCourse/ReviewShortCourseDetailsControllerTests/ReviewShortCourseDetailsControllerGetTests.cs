@@ -35,6 +35,7 @@ public class ReviewShortCourseDetailsControllerGetTests
         string cancelLink = Guid.NewGuid().ToString();
         string contactDetailsChangeLink = Guid.NewGuid().ToString();
         string regionsChangeLink = Guid.NewGuid().ToString();
+        string trainingVenueChangeLink = Guid.NewGuid().ToString();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
@@ -48,7 +49,8 @@ public class ReviewShortCourseDetailsControllerGetTests
         sut.AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ReviewYourDetails, cancelLink)
             .AddUrlForRoute(RouteNames.AddShortCourseContactDetails, contactDetailsChangeLink)
-            .AddUrlForRoute(RouteNames.SelectShortCourseRegions, regionsChangeLink); ;
+            .AddUrlForRoute(RouteNames.SelectShortCourseRegions, regionsChangeLink)
+            .AddUrlForRoute(RouteNames.SelectShortCourseTrainingVenue, trainingVenueChangeLink);
 
         // Act
         var result = sut.ReviewShortCourseDetails(apprenticeshipType);
@@ -60,6 +62,8 @@ public class ReviewShortCourseDetailsControllerGetTests
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model.CancelLink.Should().Be(cancelLink);
         model.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
+        model.TrainingRegionsChangeLink.Should().Be(regionsChangeLink);
+        model.TrainingVenuesChangeLink.Should().Be(trainingVenueChangeLink);
         sut.ModelState.ErrorCount.Should().Be(0);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasSeenSummaryPage)), Times.Once());

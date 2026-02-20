@@ -20,6 +20,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class SelectShortCourseTrainingVenuesController(ISessionService _sessionService, IMediator _mediator, ILogger<SelectShortCourseTrainingVenuesController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseTrainingVenuesView.cshtml";
+    public const string ConfirmButtonText = "Confirm";
+    public const string ContinueButtonText = "Continue";
 
     [HttpGet]
     public async Task<IActionResult> SelectShortCourseTrainingVenue(ApprenticeshipType apprenticeshipType)
@@ -76,6 +78,11 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         _sessionService.Set(sessionModel);
 
+        if (sessionModel.HasSeenSummaryPage)
+        {
+            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+        }
+
         if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
         {
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
@@ -102,7 +109,8 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
         var model = new SelectShortCourseTrainingVenuesViewModel()
         {
             TrainingVenues = trainingVenues,
-            ApprenticeshipType = apprenticeshipType
+            ApprenticeshipType = apprenticeshipType,
+            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
         };
 
         return model;

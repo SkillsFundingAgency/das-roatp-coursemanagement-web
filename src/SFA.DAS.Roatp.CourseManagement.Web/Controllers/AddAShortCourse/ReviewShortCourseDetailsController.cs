@@ -30,6 +30,7 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
         model.CancelLink = Url.RouteUrl(RouteNames.ReviewYourDetails, new { Ukprn });
         model.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
         model.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
+        model.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
 
         var result = _validator.Validate(model);
 
