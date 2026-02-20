@@ -2,4 +2,5 @@
 
 public class ConfirmNationalDeliveryViewModel : ConfirmNationalDeliverySubmitModel, IBackLink
 {
+    public string SubmitButtonText { get; set; }
 }

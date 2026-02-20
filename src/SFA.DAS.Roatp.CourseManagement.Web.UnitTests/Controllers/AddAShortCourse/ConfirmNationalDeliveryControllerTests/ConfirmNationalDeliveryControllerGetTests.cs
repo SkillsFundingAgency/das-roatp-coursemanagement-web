@@ -15,8 +15,12 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmNationalDeliveryControllerTests;
 public class ConfirmNationalDeliveryControllerGetTests
 {
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(false, "Continue")]
+    [MoqInlineAutoData(true, "Confirm")]
     public void ConfirmNationalProviderDelivery_SessionIsValid_ReturnsView(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmNationalDeliveryController sut,
         ShortCourseSessionModel sessionModel
@@ -24,6 +28,7 @@ public class ConfirmNationalDeliveryControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
         sut.AddDefaultContextWithUser();
 
@@ -37,6 +42,7 @@ public class ConfirmNationalDeliveryControllerGetTests
         var model = viewResult!.Model as ConfirmNationalDeliveryViewModel;
         model!.HasNationalDeliveryOption.Should().Be(sessionModel.HasNationalDeliveryOption);
         model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 

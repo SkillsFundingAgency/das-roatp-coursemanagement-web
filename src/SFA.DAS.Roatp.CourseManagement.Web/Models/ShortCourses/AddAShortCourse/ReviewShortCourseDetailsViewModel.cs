@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
-public class ReviewShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBackLink
+public class ReviewShortCourseDetailsViewModel : ShortCourseBaseViewModel
 {
     public ShortCourseInformationViewModel ShortCourseInformation { get; set; }
     public string ContactUsEmail { get; set; }

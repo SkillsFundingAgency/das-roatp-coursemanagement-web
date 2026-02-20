@@ -16,6 +16,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class ConfirmNationalDeliveryController(ISessionService _sessionService, ILogger<ConfirmNationalDeliveryController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/ConfirmNationalDeliveryView.cshtml";
+    public const string ConfirmButtonText = "Confirm";
+    public const string ContinueButtonText = "Continue";
 
     [HttpGet]
     public IActionResult ConfirmNationalProviderDelivery(ApprenticeshipType apprenticeshipType)
@@ -34,7 +36,8 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
         var model = new ConfirmNationalDeliveryViewModel()
         {
             ApprenticeshipType = apprenticeshipType,
-            HasNationalDeliveryOption = sessionModel.HasNationalDeliveryOption
+            HasNationalDeliveryOption = sessionModel.HasNationalDeliveryOption,
+            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
         };
 
         return View(ViewPath, model);
@@ -49,7 +52,11 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
 
         if (!ModelState.IsValid)
         {
-            return View(ViewPath, new ConfirmNationalDeliveryViewModel() { ApprenticeshipType = apprenticeshipType });
+            return View(ViewPath, new ConfirmNationalDeliveryViewModel()
+            {
+                ApprenticeshipType = apprenticeshipType,
+                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
+            });
         }
 
         sessionModel.HasNationalDeliveryOption = submitModel.HasNationalDeliveryOption;
@@ -59,6 +66,16 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
             sessionModel.TrainingRegions = new List<TrainingRegionModel>();
         }
         _sessionService.Set(sessionModel);
+
+        if (sessionModel.HasSeenSummaryPage && submitModel.HasNationalDeliveryOption == false && sessionModel.TrainingRegions.Count == 0)
+        {
+            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
+        }
+
+        if (sessionModel.HasSeenSummaryPage && sessionModel.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption)
+        {
+            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+        }
 
         if (submitModel.HasNationalDeliveryOption == false)
         {
