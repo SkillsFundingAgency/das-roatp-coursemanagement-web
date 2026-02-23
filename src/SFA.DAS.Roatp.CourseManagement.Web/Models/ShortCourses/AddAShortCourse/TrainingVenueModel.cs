@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using System;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -15,5 +16,12 @@ public class TrainingVenueModel
         LocationType = source.LocationType,
         ProviderLocationId = source.NavigationId,
         LocationName = source.LocationName
+    };
+
+    public static implicit operator ProviderCourseLocationCommandModel(TrainingVenueModel source) => new()
+    {
+        ProviderLocationId = source.ProviderLocationId,
+        HasBlockReleaseDeliveryOption = false,
+        HasDayReleaseDeliveryOption = false
     };
 }

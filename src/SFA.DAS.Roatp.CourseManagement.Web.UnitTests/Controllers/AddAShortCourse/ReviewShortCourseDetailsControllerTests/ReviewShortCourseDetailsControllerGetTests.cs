@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -16,6 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ReviewShortCourseDetailsControllerTests;
 public class ReviewShortCourseDetailsControllerGetTests
@@ -134,5 +136,64 @@ public class ReviewShortCourseDetailsControllerGetTests
         redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasSeenSummaryPage)), Times.Never());
+    }
+
+    [Test, MoqAutoData]
+    public void SaveShortCourseConfirmation_TempDataExists_ReturnsView(
+        [Frozen] Mock<ITempDataDictionary> tempDataMock,
+        [Greedy] ReviewShortCourseDetailsController sut,
+        ShortCourseSessionModel sessionModel,
+        string dashboardLink,
+        string manageTrainingTypeLink)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        SaveShortCourseConfirmationViewModel viewModel = new SaveShortCourseConfirmationViewModel
+        {
+            CourseName = sessionModel.ShortCourseInformation.CourseName,
+            ApprenticeshipType = apprenticeshipType
+        };
+
+        string json = JsonSerializer.Serialize(viewModel);
+        object serialisedViewModel = json;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SaveShortCourseBannerTempDataKey, out serialisedViewModel)).Returns(true);
+
+        sut.TempData = tempDataMock.Object;
+        sut.AddDefaultContextWithUser();
+        sut.AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ReviewYourDetails, dashboardLink)
+            .AddUrlForRoute(RouteNames.ManageShortCourses, manageTrainingTypeLink);
+
+        // Act
+        var result = sut.SaveShortCourseConfirmation() as ViewResult;
+
+        // Assert
+        Assert.IsNotNull(result);
+        result.ViewName.Should().Be(ReviewShortCourseDetailsController.ConfirmationPageViewPath);
+        var model = result.Model as SaveShortCourseConfirmationViewModel;
+        model!.DashboardLink.Should().Be(dashboardLink);
+        model!.ManageTrainingTypeLink.Should().Be(manageTrainingTypeLink);
+        tempDataMock.Verify(t => t.Remove(TempDataKeys.SaveShortCourseBannerTempDataKey));
+    }
+
+    [Test, MoqAutoData]
+    public void SaveShortCourseConfirmation_TempDataDoesNotExist_RedirectsToReviewYourDetails(
+        string larsCode,
+        Mock<ITempDataDictionary> tempDataMock,
+        [Greedy] ReviewShortCourseDetailsController sut)
+    {
+        // Arrange
+        object viewModel = null;
+        sut.AddDefaultContextWithUser();
+        sut.TempData = tempDataMock.Object;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SaveShortCourseBannerTempDataKey, out viewModel));
+
+        // Act
+        var result = sut.SaveShortCourseConfirmation() as RedirectToRouteResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
     }
 }

@@ -32,7 +32,7 @@ public class StandardsController : ControllerBase
     {
         _logger.LogInformation("Getting standards for {ukprn}", Ukprn);
 
-        var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn));
+        var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.Apprenticeship));
 
         var model = new StandardListViewModel
         {

@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using MediatR;
+﻿using MediatR;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse
 {
@@ -14,6 +14,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public bool HasNationalDeliveryOption { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; }
         public List<ProviderCourseLocationCommandModel> ProviderLocations { get; set; }
         public List<int> SubregionIds { get; set; }
     }
