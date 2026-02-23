@@ -27,9 +27,9 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        if (!sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
+        if (!sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) || sessionModel.HasNationalDeliveryOption == true)
         {
-            _logger.LogWarning("User: {UserId} unexpectedly landed on select regions page when location options does not contain employer.", UserId);
+            _logger.LogWarning("User: {UserId} unexpectedly landed on select regions page when location options does not contain employer or user has selected national delivery.", UserId);
 
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
@@ -68,7 +68,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
     private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, ApprenticeshipType apprenticeshipType)

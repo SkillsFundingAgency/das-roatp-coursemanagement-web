@@ -45,7 +45,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void SelectShortCourseTrainingVenue_SetsSessionCorrectlyAndRedirectsToSelectShortCourseTrainingVenue(
+    public void SelectShortCourseTrainingVenue_SetsSessionCorrectlyAndRedirectsToSelectReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel)
@@ -69,7 +69,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == submitModel.SelectedProviderLocationIds.FirstOrDefault())), Times.Once());
     }

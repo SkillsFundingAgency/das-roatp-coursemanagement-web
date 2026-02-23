@@ -62,7 +62,7 @@ public class ConfirmNationalDeliveryControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmNationalProviderDelivery_HasNationalDeliveryOptionIsTrue_SetsSessionAndRedirectsToConfirmNationalProviderDelivery(
+    public void ConfirmNationalProviderDelivery_HasNationalDeliveryOptionIsTrue_SetsSessionAndRedirectsToReviewShortCourseDetails(
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Greedy] ConfirmNationalDeliveryController sut,
     ShortCourseSessionModel sessionModel,
@@ -81,7 +81,7 @@ public class ConfirmNationalDeliveryControllerPostTests
         // Assert
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once);
     }
 

@@ -17,6 +17,7 @@ public class ShortCourseSessionModel
     public bool LocationsAvailable { get; set; }
     public bool? HasNationalDeliveryOption { get; set; }
     public List<TrainingRegionModel> TrainingRegions { get; set; } = new List<TrainingRegionModel>();
+    public bool HasSeenSummaryPage { get; set; }
     public void ResetModel()
     {
         TrainingVenues = new List<TrainingVenueModel>();

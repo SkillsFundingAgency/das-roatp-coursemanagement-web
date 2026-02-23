@@ -65,6 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string CancelAddTrainingVenue = "CancelAddTrainingVenue";
         public const string ConfirmNationalDelivery = "ConfirmNationalDelivery";
         public const string SelectShortCourseRegions = "SelectShortCourseRegions";
+        public const string ReviewShortCourseDetails = "ReviewShortCourseDetails";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";

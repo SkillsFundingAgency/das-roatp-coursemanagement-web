@@ -31,6 +31,8 @@ public class SelectShortCourseRegionsControllerGetTests
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation };
 
+        sessionModel.HasNationalDeliveryOption = false;
+
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
@@ -83,6 +85,35 @@ public class SelectShortCourseRegionsControllerGetTests
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online };
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var result = await sut.SelectShortCourseRegions(apprenticeshipType);
+
+        // Assert
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        regionsService.Verify(m => m.GetRegions(), Times.Never());
+    }
+
+    [Test, MoqAutoData]
+    public async Task SelectShortCourseRegions_HasNationalDeliveryOptionIsTrueInSession_RedirectsToReviewYourDetails(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IRegionsService> regionsService,
+        [Greedy] SelectShortCourseRegionsController sut,
+        ShortCourseSessionModel sessionModel
+    )
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation };
+
+        sessionModel.HasNationalDeliveryOption = true;
 
         sut.AddDefaultContextWithUser();
 
