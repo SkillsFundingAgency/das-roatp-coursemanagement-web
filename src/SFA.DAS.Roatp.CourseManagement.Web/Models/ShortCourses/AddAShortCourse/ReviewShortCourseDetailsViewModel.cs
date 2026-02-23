@@ -15,9 +15,7 @@ public class ReviewShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
     public string HasNationalDeliveryOption { get; set; }
     public List<string> TrainingRegions { get; set; }
     public bool DeliversAtEmployerLocation { get; set; }
-    public string EmailChangeLink { get; set; } = "#";
-    public string PhoneNumberChangeLink { get; set; } = "#";
-    public string WebsiteChangeLink { get; set; } = "#";
+    public string ContactDetailsChangeLink { get; set; } = "#";
     public string LocationOptionsChangeLink { get; set; } = "#";
     public string TrainingVenuesChangeLink { get; set; } = "#";
     public string NationalProviderChangeLink { get; set; } = "#";

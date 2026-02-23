@@ -1,6 +1,5 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
-using Humanizer;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -36,7 +35,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         Assert.IsNotNull(viewResult);
         var model = viewResult.Model as AddShortCourseContactDetailsViewModel;
         model.Should().NotBeNull();
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType.Humanize(LetterCasing.LowerCase));
+        model!.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
@@ -69,6 +68,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = false;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
@@ -80,6 +80,30 @@ public class AddShortCourseContactDetailsControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseLocationOption);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ContactInformation.ContactUsEmail == submitModel.ContactUsEmail && m.ContactInformation.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber && m.ContactInformation.StandardInfoUrl == submitModel.StandardInfoUrl)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public void AddShortCourseContactDetails_HasSeenSummaryPageIsTrue_SetsSessionAndRedirectsToReviewShortCourseDetails(
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Greedy] AddShortCourseContactDetailsController sut,
+    ShortCourseSessionModel sessionModel,
+    CourseContactDetailsSubmitModel submitModel)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = true;
+
+        sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
+
+        // Assert
+        var redirectResult = result as RedirectToRouteResult;
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ContactInformation.ContactUsEmail == submitModel.ContactUsEmail && m.ContactInformation.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber && m.ContactInformation.StandardInfoUrl == submitModel.StandardInfoUrl)), Times.Once);
     }
 }
