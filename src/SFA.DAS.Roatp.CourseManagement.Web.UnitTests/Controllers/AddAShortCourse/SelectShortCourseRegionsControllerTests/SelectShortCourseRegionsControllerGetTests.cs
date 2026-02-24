@@ -17,8 +17,12 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseRegionsControllerTests;
 public class SelectShortCourseRegionsControllerGetTests
 {
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(false, "Continue")]
+    [MoqInlineAutoData(true, "Confirm")]
     public async Task SelectShortCourseRegions_SessionIsValid_ReturnsView(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IRegionsService> regionsService,
         [Greedy] SelectShortCourseRegionsController sut,
@@ -32,6 +36,7 @@ public class SelectShortCourseRegionsControllerGetTests
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation };
 
         sessionModel.HasNationalDeliveryOption = false;
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
         sut.AddDefaultContextWithUser();
 
@@ -47,6 +52,7 @@ public class SelectShortCourseRegionsControllerGetTests
         var model = viewResult!.Model as SelectShortCourseRegionsViewModel;
         model!.SubregionsGroupedByRegions.Should().NotBeEmpty();
         model.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         regionsService.Verify(m => m.GetRegions(), Times.Once());
     }

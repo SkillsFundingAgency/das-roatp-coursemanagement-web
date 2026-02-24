@@ -45,12 +45,13 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void SelectShortCourseTrainingVenue_SetsSessionCorrectlyAndRedirectsToSelectReviewShortCourseDetails(
+    public void SelectShortCourseTrainingVenue_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
+        sessionModel.HasSeenSummaryPage = false;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
@@ -81,6 +82,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
+        sessionModel.HasSeenSummaryPage = false;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
@@ -101,6 +103,37 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         // Assert
         var redirectResult = response as RedirectToRouteResult;
         redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == submitModel.SelectedProviderLocationIds.FirstOrDefault())), Times.Once());
+    }
+
+    [Test, MoqAutoData]
+    public void SelectShortCourseTrainingVenue_HasSeenSummaryPageIsTrue_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] SelectShortCourseTrainingVenuesController sut,
+        ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        sessionModel.HasSeenSummaryPage = true;
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
+        sessionModel.LocationOptions =
+        [
+            ShortCourseLocationOption.ProviderLocation
+        ];
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
+        {
+            SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
+        };
+        sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+
+        // Assert
+        var redirectResult = response as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == submitModel.SelectedProviderLocationIds.FirstOrDefault())), Times.Once());
     }

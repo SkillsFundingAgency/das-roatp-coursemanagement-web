@@ -19,6 +19,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegionsController> _logger, ISessionService _sessionService, IRegionsService _regionsService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseRegionsView.cshtml";
+    public const string ConfirmButtonText = "Confirm";
+    public const string ContinueButtonText = "Continue";
 
     [HttpGet]
     public async Task<IActionResult> SelectShortCourseRegions(ApprenticeshipType apprenticeshipType)
@@ -36,7 +38,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         var regionsResponse = await _regionsService.GetRegions();
 
-        SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType);
+        SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType, sessionModel);
 
         foreach (var subregionsGroupedByRegion in model.SubregionsGroupedByRegions)
         {
@@ -60,7 +62,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         if (!ModelState.IsValid)
         {
-            SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType);
+            SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType, sessionModel);
             return View(ViewPath, model);
         }
 
@@ -71,10 +73,11 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, ApprenticeshipType apprenticeshipType)
+    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, ApprenticeshipType apprenticeshipType, ShortCourseSessionModel sessionModel)
     {
         var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
         model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
+        model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText;
         return model;
     }
 }
