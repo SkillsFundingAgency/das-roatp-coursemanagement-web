@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -54,7 +55,7 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
         if (sessionModel.Standards == null)
         {
             GetAllProviderStandardsQueryResult standardsResult =
-                await _mediator.Send(new GetAllProviderStandardsQuery(ukprn));
+                await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, CourseType.Apprenticeship));
             sessionModel.Standards = standardsResult.Standards.Count > 0
                 ? standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList()
                 : new();

@@ -1,5 +1,7 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 
@@ -25,4 +27,17 @@ public class ShortCourseSessionModel
         HasOnlineDeliveryOption = false;
         HasNationalDeliveryOption = null;
     }
+
+    public static implicit operator AddProviderCourseCommand(ShortCourseSessionModel source) => new()
+    {
+        LarsCode = source.LarsCode,
+        IsApprovedByRegulator = source.ShortCourseInformation.IsRegulatedForProvider ? true : null,
+        StandardInfoUrl = source.ContactInformation.StandardInfoUrl,
+        ContactUsEmail = source.ContactInformation.ContactUsEmail,
+        ContactUsPhoneNumber = source.ContactInformation.ContactUsPhoneNumber,
+        HasNationalDeliveryOption = source.HasNationalDeliveryOption.GetValueOrDefault(),
+        HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
+        SubregionIds = source.TrainingRegions.Select(l => l.SubregionId.Value).ToList(),
+        ProviderLocations = source.TrainingVenues.Select(l => (ProviderCourseLocationCommandModel)l).ToList()
+    };
 }

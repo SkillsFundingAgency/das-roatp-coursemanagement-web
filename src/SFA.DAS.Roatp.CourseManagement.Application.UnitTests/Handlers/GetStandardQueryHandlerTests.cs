@@ -5,6 +5,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -15,7 +16,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
     public class GetStandardQueryHandlerTests
     {
         private const int Ukprn = 10012002;
-        private static readonly string ApiEndPoint = $"providers/{Ukprn}/courses";
+        private const CourseType CourseTypeValue = CourseType.Apprenticeship;
+        private static readonly string ApiEndPoint = $"providers/{Ukprn}/courses?courseType={CourseTypeValue}";
         private GetAllProviderStandardsQueryHandler _handler;
         private Mock<IApiClient> _apiClient;
         private Mock<ILogger<GetAllProviderStandardsQueryHandler>> _logger;
@@ -28,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         {
             var autoFixture = new Fixture();
 
-            _query = new GetAllProviderStandardsQuery(Ukprn);
+            _query = new GetAllProviderStandardsQuery(Ukprn, CourseTypeValue);
             _queryResult = autoFixture.Create<GetAllProviderStandardsQueryResult>();
             _standards = autoFixture.Create<List<Domain.ApiModels.Standard>>();
             _queryResult.Standards = _standards;
