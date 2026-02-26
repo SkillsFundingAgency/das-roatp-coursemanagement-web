@@ -17,10 +17,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 public class AddTrainingVenueController(ISessionService _sessionService, ILogger<AddTrainingVenueController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/ManageShortCourses/AddTrainingVenueView.cshtml";
+    public const string ConfirmButtonText = "Confirm";
+    public const string ContinueButtonText = "Continue";
 
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
     public Task<IActionResult> LookupAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
+        var submitButtonText = ContinueButtonText;
+
         var isAddJourney = IsAddJourney(larsCode);
 
         if (isAddJourney)
@@ -35,16 +39,23 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
                 return Task.FromResult<IActionResult>(RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType }));
             }
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ConfirmButtonText;
+            }
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType };
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText };
         return Task.FromResult<IActionResult>(View(ViewPath, model));
     }
 
     [HttpPost("new/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
     public Task<IActionResult> LookupAddress([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
+        var submitButtonText = ContinueButtonText;
+
         var isAddJourney = IsAddJourney(larsCode);
 
         if (isAddJourney)
@@ -52,9 +63,14 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
             var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
             if (sessionModel == null) return Task.FromResult<IActionResult>(RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails));
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ConfirmButtonText;
+            }
         }
 
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType };
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText };
 
         if (!ModelState.IsValid)
         {

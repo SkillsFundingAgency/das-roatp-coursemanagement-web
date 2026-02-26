@@ -67,17 +67,7 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
         }
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.HasSeenSummaryPage && submitModel.HasNationalDeliveryOption == false && sessionModel.TrainingRegions.Count == 0)
-        {
-            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
-        }
-
-        if (sessionModel.HasSeenSummaryPage && sessionModel.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption)
-        {
-            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
-        }
-
-        if (submitModel.HasNationalDeliveryOption == false)
+        if (submitModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
         {
             return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
         }

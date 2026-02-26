@@ -19,15 +19,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCo
 public class AddTrainingVenueControllerPostTests
 {
     [Test]
-    [MoqInlineAutoData("")]
-    [MoqInlineAutoData("test")]
+    [MoqInlineAutoData("", true, "Confirm")]
+    [MoqInlineAutoData("test", false, "Continue")]
     public void LookupAddress_InvalidStatus_ReturnsViewResult(
        string larsCode,
+       bool hasSeenSummaryPage,
+       string expectedSubmitButtonText,
+       [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] AddTrainingVenueController sut,
-       AddTrainingVenueSubmitModel model)
+       AddTrainingVenueSubmitModel model,
+       ShortCourseSessionModel sessionModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         sut.AddDefaultContextWithUser();
 
@@ -40,6 +48,8 @@ public class AddTrainingVenueControllerPostTests
         var viewResult = result.Result as ViewResult;
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
+        var viewModel = viewResult.Model as AddTrainingVenueViewModel;
+        viewModel.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
     [Test]

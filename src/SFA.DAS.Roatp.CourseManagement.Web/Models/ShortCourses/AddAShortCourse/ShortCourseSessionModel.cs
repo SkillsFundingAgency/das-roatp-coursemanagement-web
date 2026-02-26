@@ -20,12 +20,37 @@ public class ShortCourseSessionModel
     public bool? HasNationalDeliveryOption { get; set; }
     public List<TrainingRegionModel> TrainingRegions { get; set; } = new List<TrainingRegionModel>();
     public bool HasSeenSummaryPage { get; set; }
+    public bool IsProviderInfoMissing()
+    {
+        return TrainingVenues.Count == 0;
+    }
+    public bool IsEmployerInfoMissing()
+    {
+        return HasNationalDeliveryOption == null;
+    }
+    public bool IsEmployerRegionsMissing()
+    {
+        return TrainingRegions.Count == 0;
+    }
     public void ResetModel()
     {
         TrainingVenues = new List<TrainingVenueModel>();
         TrainingRegions = new List<TrainingRegionModel>();
         HasOnlineDeliveryOption = false;
         HasNationalDeliveryOption = null;
+    }
+    public void ResetProviderOptionModel()
+    {
+        TrainingVenues = new List<TrainingVenueModel>();
+    }
+    public void ResetEmployerOptionModel()
+    {
+        TrainingRegions = new List<TrainingRegionModel>();
+        HasNationalDeliveryOption = null;
+    }
+    public void ResetOnlineOptionModel()
+    {
+        HasOnlineDeliveryOption = false;
     }
 
     public static implicit operator AddProviderCourseCommand(ShortCourseSessionModel source) => new()

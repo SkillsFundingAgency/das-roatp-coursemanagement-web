@@ -17,22 +17,29 @@ using System.Text.Json;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.ConfirmAddTrainingVenueControllerTests;
 public class ConfirmAddTrainingVenueControllerGetTests
 {
-    [MoqInlineAutoData("")]
-    [MoqInlineAutoData("test")]
+    [Test]
+    [MoqInlineAutoData("", true, "Confirm")]
+    [MoqInlineAutoData("test", false, "Continue")]
     public void ConfirmVenue_AddressInTempData_ReturnsViewResult(
         string larsCode,
+        bool hasSeenSummaryPage,
+        string expectedSubmitButtonText,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
         Mock<ITempDataDictionary> tempDataMock,
         Mock<IUrlHelper> urlHelperMock,
         [Greedy] ConfirmAddTrainingVenueController sut,
+        ShortCourseSessionModel sessionModel,
         AddressItem addressItem,
         string cancelLinkUrl)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
         object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out serialisedAddressItem));
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         sut.AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
@@ -46,8 +53,10 @@ public class ConfirmAddTrainingVenueControllerGetTests
         var model = result.Model as ConfirmAddTrainingVenueViewModel;
         model!.AddressLine1.Should().Be(addressItem.AddressLine1);
         model!.CancelLink.Should().Be(cancelLinkUrl);
+        model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
+    [Test]
     [MoqInlineAutoData("")]
     [MoqInlineAutoData("test")]
     public void ConfirmVenue_AddressNotInTempData_RedirectsToSelectShortCourseTrainingVenue(

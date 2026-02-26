@@ -17,6 +17,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class SelectShortCourseLocationOptionsController(ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseLocationOptionsView.cshtml";
+    public const string ConfirmButtonText = "Confirm";
+    public const string ContinueButtonText = "Continue";
 
     [HttpGet]
     public IActionResult SelectShortCourseLocation(ApprenticeshipType apprenticeshipType)
@@ -25,18 +27,7 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        List<ShortCourseLocationOptionModel> locationOptions = new List<ShortCourseLocationOptionModel>();
-
-        foreach (var locationOption in Enum.GetValues<ShortCourseLocationOption>())
-        {
-            locationOptions.Add(new ShortCourseLocationOptionModel { LocationOption = locationOption, IsSelected = sessionModel.LocationOptions.Contains(locationOption) });
-        }
-
-        var model = new SelectShortCourseLocationOptionsViewModel()
-        {
-            LocationOptions = locationOptions,
-            ApprenticeshipType = apprenticeshipType,
-        };
+        var model = GetModel(sessionModel, apprenticeshipType, true);
 
         return View(ViewPath, model);
     }
@@ -50,25 +41,21 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         if (!ModelState.IsValid)
         {
-            List<ShortCourseLocationOptionModel> locationOptions = new List<ShortCourseLocationOptionModel>();
-
-            foreach (var locationOption in Enum.GetValues<ShortCourseLocationOption>())
-            {
-                locationOptions.Add(new ShortCourseLocationOptionModel { LocationOption = locationOption, IsSelected = false });
-            }
-
-            var model = new SelectShortCourseLocationOptionsViewModel()
-            {
-                LocationOptions = locationOptions,
-                ApprenticeshipType = apprenticeshipType,
-            };
+            var model = GetModel(sessionModel, apprenticeshipType, false);
 
             return View(ViewPath, model);
         }
 
-        if (!sessionModel.LocationOptions.OrderBy(x => x).SequenceEqual(submitModel.SelectedLocationOptions.OrderBy(x => x)))
+        if (!sessionModel.HasSeenSummaryPage && !sessionModel.LocationOptions.OrderBy(x => x).SequenceEqual(submitModel.SelectedLocationOptions.OrderBy(x => x)))
         {
             sessionModel.ResetModel();
+        }
+
+        var removedOptions = sessionModel.LocationOptions.Except(submitModel.SelectedLocationOptions).ToList();
+
+        if (sessionModel.HasSeenSummaryPage && removedOptions.Count != 0)
+        {
+            RemoveOptions(removedOptions, sessionModel);
         }
 
         sessionModel.LocationOptions = submitModel.SelectedLocationOptions;
@@ -77,17 +64,61 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         _sessionService.Set(sessionModel);
 
-        if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation))
+        if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation) && sessionModel.IsProviderInfoMissing())
         {
             return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
+        if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && sessionModel.IsEmployerInfoMissing())
         {
-
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
         }
 
+        if (sessionModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
+        {
+            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
+        }
+
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+    }
+
+    private static SelectShortCourseLocationOptionsViewModel GetModel(ShortCourseSessionModel sessionModel, ApprenticeshipType apprenticeshipType, bool setIsSelected)
+    {
+        List<ShortCourseLocationOptionModel> locationOptions = new List<ShortCourseLocationOptionModel>();
+
+        foreach (var locationOption in Enum.GetValues<ShortCourseLocationOption>())
+        {
+            if (setIsSelected)
+            {
+                locationOptions.Add(new ShortCourseLocationOptionModel { LocationOption = locationOption, IsSelected = sessionModel.LocationOptions.Contains(locationOption) });
+            }
+            else
+            {
+                locationOptions.Add(new ShortCourseLocationOptionModel { LocationOption = locationOption, IsSelected = false });
+            }
+        }
+
+        return new SelectShortCourseLocationOptionsViewModel()
+        {
+            LocationOptions = locationOptions,
+            ApprenticeshipType = apprenticeshipType,
+            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
+        };
+    }
+
+    private static void RemoveOptions(List<ShortCourseLocationOption> options, ShortCourseSessionModel sessionModel)
+    {
+        if (options.Contains(ShortCourseLocationOption.ProviderLocation))
+        {
+            sessionModel.ResetProviderOptionModel();
+        }
+        if (options.Contains(ShortCourseLocationOption.EmployerLocation))
+        {
+            sessionModel.ResetEmployerOptionModel();
+        }
+        if (options.Contains(ShortCourseLocationOption.Online))
+        {
+            sessionModel.ResetOnlineOptionModel();
+        }
     }
 }
