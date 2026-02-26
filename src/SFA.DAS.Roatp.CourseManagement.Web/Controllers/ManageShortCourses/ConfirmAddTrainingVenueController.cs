@@ -23,10 +23,14 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 {
     public const string ViewPath = "~/Views/ManageShortCourses/ConfirmAddTrainingVenueView.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
+    public const string ConfirmButtonText = "Confirm";
+    public const string ContinueButtonText = "Continue";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
     public IActionResult ConfirmVenue(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
+        var submitButtonText = ContinueButtonText;
+
         var isAddJourney = IsAddJourney(larsCode);
 
         if (isAddJourney)
@@ -41,13 +45,18 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
                 return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
             }
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ConfirmButtonText;
+            }
         }
 
         var addressItem = GetAddressFromTempData(true);
 
         if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = GetViewModel(addressItem, apprenticeshipType);
+        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText);
         return View(ViewPath, model);
     }
 
@@ -55,6 +64,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     [HttpPost]
     public async Task<IActionResult> ConfirmVenue(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
+        var submitButtonText = ContinueButtonText;
+
         var isAddJourney = IsAddJourney(larsCode);
 
         if (isAddJourney)
@@ -62,6 +73,11 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
             var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
             if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ConfirmButtonText;
+            }
         }
 
         var addressItem = GetAddressFromTempData(true);
@@ -71,7 +87,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (!ModelState.IsValid)
         {
-            var model = GetViewModel(addressItem, apprenticeshipType);
+            var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText);
 
             model.LocationName = submitModel.LocationName;
             return View(ViewPath, model);
@@ -89,9 +105,14 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
             var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
-            if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
+            if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && sessionModel.IsEmployerInfoMissing())
             {
                 return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+            }
+
+            if (sessionModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
+            {
+                return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
             }
 
             return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
@@ -127,11 +148,12 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return command;
     }
 
-    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType)
+    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, string buttonText)
     {
         var model = new ConfirmAddTrainingVenueViewModel(addressItem)
         {
             ApprenticeshipType = apprenticeshipType,
+            SubmitButtonText = buttonText,
             CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType })
         };
         return model;

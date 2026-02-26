@@ -16,8 +16,12 @@ using System.Collections.Generic;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseLocationOptionsControllerTests;
 public class SelectShortCourseLocationOptionsControllerGetTests
 {
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(false, "Continue")]
+    [MoqInlineAutoData(true, "Confirm")]
     public void SelectShortCourseLocation_SessionIsValid_ReturnsView(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
@@ -25,14 +29,21 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
+
+        sessionModel.LocationOptions =
+        [
+            ShortCourseLocationOption.ProviderLocation,
+            ShortCourseLocationOption.EmployerLocation,
+            ShortCourseLocationOption.Online
+        ];
+
         List<ShortCourseLocationOptionModel> locationOptions = new()
         {
-            new ShortCourseLocationOptionModel { LocationOption = ShortCourseLocationOption.ProviderLocation, IsSelected = false },
-            new ShortCourseLocationOptionModel { LocationOption = ShortCourseLocationOption.EmployerLocation, IsSelected = false },
-            new ShortCourseLocationOptionModel { LocationOption = ShortCourseLocationOption.Online, IsSelected = false },
+            new ShortCourseLocationOptionModel { LocationOption = ShortCourseLocationOption.ProviderLocation, IsSelected = true },
+            new ShortCourseLocationOptionModel { LocationOption = ShortCourseLocationOption.EmployerLocation, IsSelected = true },
+            new ShortCourseLocationOptionModel { LocationOption = ShortCourseLocationOption.Online, IsSelected = true },
         };
-
-        sessionModel.LocationOptions = new List<ShortCourseLocationOption>();
 
         sut.AddDefaultContextWithUser();
 
@@ -46,6 +57,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         var model = viewResult!.Model as SelectShortCourseLocationOptionsViewModel;
         model!.LocationOptions.Should().BeEquivalentTo(locationOptions);
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 

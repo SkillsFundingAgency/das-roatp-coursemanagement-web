@@ -5,6 +5,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCour
 
 public class ConfirmAddTrainingVenueViewModel : ConfirmAddTrainingVenueSubmitModel, IBackLink
 {
+    public string SubmitButtonText { get; set; }
     public ConfirmAddTrainingVenueViewModel(AddressItem addressItem)
     {
         AddressLine1 = addressItem.AddressLine1;

@@ -76,7 +76,6 @@ public class ConfirmNationalDeliveryControllerPostTests
     {
         // Arrange
         submitModel.HasNationalDeliveryOption = true;
-        sessionModel.HasSeenSummaryPage = false;
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
@@ -101,59 +100,6 @@ public class ConfirmNationalDeliveryControllerPostTests
     {
         // Arrange
         submitModel.HasNationalDeliveryOption = false;
-        sessionModel.HasSeenSummaryPage = false;
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-
-        sut.AddDefaultContextWithUser();
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-
-        // Act
-        var result = sut.ConfirmNationalProviderDelivery(submitModel, apprenticeshipType);
-
-        // Assert
-        var redirectResult = result as RedirectToRouteResult;
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseRegions);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption)), Times.Once);
-    }
-
-    [Test, MoqAutoData]
-    public void ConfirmNationalProviderDelivery_HasSeenSummaryPageIsTrueAndNoChangeInSelection_SetsSessionAndRedirectsToReviewShortCourseDetails(
-       [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Greedy] ConfirmNationalDeliveryController sut,
-       ShortCourseSessionModel sessionModel,
-       ConfirmNationalDeliverySubmitModel submitModel)
-    {
-        // Arrange
-        submitModel.HasNationalDeliveryOption = true;
-        sessionModel.HasNationalDeliveryOption = true;
-        sessionModel.HasSeenSummaryPage = true;
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-
-        sut.AddDefaultContextWithUser();
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-
-        // Act
-        var result = sut.ConfirmNationalProviderDelivery(submitModel, apprenticeshipType);
-
-        // Assert
-        var redirectResult = result as RedirectToRouteResult;
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once);
-    }
-
-    [Test, MoqAutoData]
-    public void ConfirmNationalProviderDelivery_HasSeenSummaryPageIsTrueAndHasNationalDeliveryOptionIsFalseAndNoRegionsInSession_SetsSessionAndRedirectsToSelectShortCourseRegions(
-       [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Greedy] ConfirmNationalDeliveryController sut,
-       ShortCourseSessionModel sessionModel,
-       ConfirmNationalDeliverySubmitModel submitModel)
-    {
-        // Arrange
-        submitModel.HasNationalDeliveryOption = false;
-        sessionModel.HasNationalDeliveryOption = false;
-        sessionModel.HasSeenSummaryPage = true;
         sessionModel.TrainingRegions = new List<TrainingRegionModel>();
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
@@ -167,6 +113,6 @@ public class ConfirmNationalDeliveryControllerPostTests
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseRegions);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasNationalDeliveryOption == submitModel.HasNationalDeliveryOption)), Times.Once);
     }
 }

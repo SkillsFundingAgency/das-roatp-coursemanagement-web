@@ -78,14 +78,14 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.HasSeenSummaryPage)
-        {
-            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
-        }
-
-        if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
+        if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && sessionModel.IsEmployerInfoMissing())
         {
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+        }
+
+        if (sessionModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
+        {
+            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
         }
 
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
