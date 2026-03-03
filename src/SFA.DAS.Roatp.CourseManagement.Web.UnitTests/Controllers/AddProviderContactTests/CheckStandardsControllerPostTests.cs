@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +12,9 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -44,6 +44,7 @@ public class CheckStandardsControllerPostTests
       [Frozen] Mock<IMediator> mediatorMock,
       [Greedy] CheckStandardsController sut,
       List<ProviderContactStandardModel> standards,
+      List<ProviderContactStandardModel> shortCourses,
       int ukprn)
     {
         var email = "test@test.com";
@@ -54,10 +55,15 @@ public class CheckStandardsControllerPostTests
             EmailAddress = email,
             PhoneNumber = phoneNumber,
             UpdateExistingStandards = true,
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses,
         };
 
         var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+        var expectedCheckedShortCourses = StandardDescriptionListService.BuildSelectedStandardsList(shortCourses);
+
+        var expectedProviderCourseIdCount = expectedCheckedStandards;
+        expectedProviderCourseIdCount.AddRange(expectedCheckedShortCourses);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -69,6 +75,6 @@ public class CheckStandardsControllerPostTests
 
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactSaved);
-        mediatorMock.Verify(m => m.Send(It.Is<AddProviderContactCommand>(c => c.Ukprn == ukprn && c.UserId == TestConstants.DefaultUserId && c.EmailAddress == email && c.PhoneNumber == phoneNumber && c.ProviderCourseIds.Count == expectedCheckedStandards.Count), It.IsAny<CancellationToken>()));
+        mediatorMock.Verify(m => m.Send(It.Is<AddProviderContactCommand>(c => c.Ukprn == ukprn && c.UserId == TestConstants.DefaultUserId && c.EmailAddress == email && c.PhoneNumber == phoneNumber && c.ProviderCourseIds.Count == expectedProviderCourseIdCount.Count), It.IsAny<CancellationToken>()));
     }
 }

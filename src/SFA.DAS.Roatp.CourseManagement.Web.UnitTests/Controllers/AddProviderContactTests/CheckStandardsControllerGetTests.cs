@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -12,6 +10,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -40,6 +40,7 @@ public class CheckStandardsControllerGetTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] CheckStandardsController sut,
         List<ProviderContactStandardModel> standards,
+        List<ProviderContactStandardModel> shortCourses,
         string reviewYourDetailsLink,
         string changeEmailPhoneUrl,
         string changeSelectedStandardsUrl,
@@ -54,7 +55,8 @@ public class CheckStandardsControllerGetTests
             EmailAddress = email,
             PhoneNumber = phoneNumber,
             UpdateExistingStandards = true,
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses,
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock()
@@ -69,12 +71,14 @@ public class CheckStandardsControllerGetTests
         var viewResult = result as ViewResult;
 
         var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+        var expectedCheckedShortCourses = StandardDescriptionListService.BuildSelectedStandardsList(shortCourses);
 
         var hasBulletedList = expectedCheckedStandards.Count > 1;
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
         model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
+        model.CheckedShortCourses.Should().BeEquivalentTo(expectedCheckedShortCourses);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
         model.ChangeEmailPhoneUrl.Should().Be(changeEmailPhoneUrl);
         model.ChangeSelectedStandardsUrl.Should().Be(changeSelectedStandardsUrl);
@@ -87,6 +91,7 @@ public class CheckStandardsControllerGetTests
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] CheckStandardsController sut,
        List<ProviderContactStandardModel> standards,
+       List<ProviderContactStandardModel> shortCourses,
        string reviewYourDetailsLink,
        string changeEmailPhoneUrl,
        string changeSelectedStandardsUrl,
@@ -109,7 +114,8 @@ public class CheckStandardsControllerGetTests
             EmailAddress = email,
             PhoneNumber = phone,
             UpdateExistingStandards = true,
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses,
         };
 
         sut.AddDefaultContextWithUser();

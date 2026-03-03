@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +11,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -25,6 +25,7 @@ public class SelectStandardsForUpdateControllerPostTests
          [Frozen] Mock<IMediator> mediatorMock,
          [Greedy] SelectStandardsForUpdateController sut,
          List<ProviderContactStandardModel> standards,
+         List<ProviderContactStandardModel> shortCourses,
          int ukprn)
     {
         var submitViewModel = new AddProviderContactStandardsSubmitViewModel
@@ -34,7 +35,8 @@ public class SelectStandardsForUpdateControllerPostTests
 
         var sessionModel = new ProviderContactSessionModel
         {
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses,
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
@@ -47,6 +49,7 @@ public class SelectStandardsForUpdateControllerPostTests
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as AddProviderContactStandardsViewModel;
         model!.Standards.Should().BeEquivalentTo(standards);
+        model!.ShortCourses.Should().BeEquivalentTo(shortCourses);
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Once());
     }
@@ -57,16 +60,21 @@ public class SelectStandardsForUpdateControllerPostTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] SelectStandardsForUpdateController sut,
         List<ProviderContactStandardModel> standards,
+        List<ProviderContactStandardModel> shortCourses,
         int ukprn)
     {
+        var providerCourseIds = standards.Select(x => x.ProviderCourseId).ToList();
+        providerCourseIds.AddRange(shortCourses.Select(x => x.ProviderCourseId).ToList());
+
         var submitViewModel = new AddProviderContactStandardsSubmitViewModel
         {
-            SelectedProviderCourseIds = standards.Select(x => x.ProviderCourseId).ToList()
+            SelectedProviderCourseIds = providerCourseIds
         };
 
         var sessionModel = new ProviderContactSessionModel
         {
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses,
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
