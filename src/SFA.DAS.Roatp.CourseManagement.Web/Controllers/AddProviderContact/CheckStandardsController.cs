@@ -22,12 +22,14 @@ public class CheckStandardsController(IMediator _mediator, ISessionService _sess
         if (sessionModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards);
+        var checkedShortCourses = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.ShortCourses);
 
         var model = new ProviderContactCheckStandardsViewModel
         {
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
             CheckedStandards = checkedStandards,
+            CheckedShortCourses = checkedShortCourses,
             ReviewYourDetailsUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
             ChangeEmailPhoneUrl = Url.RouteUrl(RouteNames.AddProviderContactDetails, new { ukprn }),
             ChangeSelectedStandardsUrl = Url.RouteUrl(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn }),
@@ -50,6 +52,11 @@ public class CheckStandardsController(IMediator _mediator, ISessionService _sess
         foreach (var standard in providerContactModel.Standards.Where(s => s.IsSelected))
         {
             checkedProviderCourseIds.Add(standard.ProviderCourseId);
+        }
+
+        foreach (var shortCourse in providerContactModel.ShortCourses.Where(s => s.IsSelected))
+        {
+            checkedProviderCourseIds.Add(shortCourse.ProviderCourseId);
         }
 
         var command = new AddProviderContactCommand

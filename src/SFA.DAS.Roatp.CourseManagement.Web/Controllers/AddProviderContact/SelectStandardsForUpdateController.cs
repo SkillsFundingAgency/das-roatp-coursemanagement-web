@@ -18,7 +18,8 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
 
         var model = new AddProviderContactStandardsViewModel
         {
-            Standards = sessionModel.Standards
+            Standards = sessionModel.Standards,
+            ShortCourses = sessionModel.ShortCourses
         };
 
         return View(ViewPath, model);
@@ -33,18 +34,12 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
 
         foreach (var standard in sessionModel.Standards)
         {
-            standard.IsSelected = false;
+            standard.IsSelected = submitModel.SelectedProviderCourseIds.Contains(standard.ProviderCourseId);
         }
 
-        foreach (var submittedProviderCourseId in submitModel.SelectedProviderCourseIds)
+        foreach (var shortCourse in sessionModel.ShortCourses)
         {
-            foreach (var standard in sessionModel.Standards)
-            {
-                if (submittedProviderCourseId == standard.ProviderCourseId)
-                {
-                    standard.IsSelected = true;
-                }
-            }
+            shortCourse.IsSelected = submitModel.SelectedProviderCourseIds.Contains(shortCourse.ProviderCourseId);
         }
 
         _sessionService.Set(sessionModel);
@@ -53,7 +48,8 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
         {
             var viewModel = new AddProviderContactStandardsViewModel
             {
-                Standards = sessionModel.Standards
+                Standards = sessionModel.Standards,
+                ShortCourses = sessionModel.ShortCourses
             };
 
             return View(ViewPath, viewModel);

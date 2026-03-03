@@ -5,8 +5,8 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <div class="govuk-caption-l">Update multiple standards</div>
-        <h1 class="govuk-heading-xl">Select the standards you want these contact details to apply to</h1>
+        <div class="govuk-caption-l">Update multiple training types</div>
+        <h1 class="govuk-heading-xl">Select the training that you want these contact details to apply to</h1>
 
         <form method="post" asp-route="@RouteNames.AddProviderContactSelectStandardsForUpdate" enctype="multipart/form-data" novalidate>
 
@@ -16,24 +16,47 @@
 
                     <ul class="govuk-list govuk-grid-row">
                         <li class="govuk-grid-column list-item-margin-bottom-30 list-item-margin-left-20">
-                            <div class="govuk-checkboxes__item  govuk-checkboxes--small">
+                            <div class="govuk-checkboxes__item">
                                 <input class="govuk-checkboxes__input" id="providerCourseStandardsCheckAll" name="providerCourseStandardsCheckAll" type="checkbox" value="0">
                                 <label class="govuk-label govuk-checkboxes__label" for="providerCourseStandardsCheckAll">
                                     Select all
                                 </label>
                             </div>
                         </li>
-                        @foreach (var standardDetails in Model.Standards.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                        @if(Model.Standards.Any())
                         {
-                            <li class="govuk-grid-column  list-item-margin-left-20">
-                                <div class="govuk-checkboxes__item  govuk-checkboxes--small">
-                                    <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@standardDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@standardDetails.ProviderCourseId" checked="@standardDetails.IsSelected">
-                                    <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@standardDetails.ProviderCourseId">
-                                        @standardDetails.CourseName (level @standardDetails.Level)
-                                    </label>
-                                </div>
-                            </li>
+                            <li class="list-item-margin-left-20 list-heading-item">
+                            <h2 class= "govuk-heading-l">Apprenticeships</h2></li>
+                            @foreach (var standardDetails in Model.Standards.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                            {   
+                                <li class="govuk-grid-column  list-item-margin-left-20">
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@standardDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@standardDetails.ProviderCourseId" checked="@standardDetails.IsSelected">
+                                        <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@standardDetails.ProviderCourseId">
+                                            @standardDetails.CourseName (level @standardDetails.Level)
+                                        </label>
+                                    </div>
+                                </li>
+                            }
                         }
+                        @if (Model.ShortCourses.Any())
+                        {
+                            <li class="list-item-margin-left-20 list-heading-item govuk-!-margin-top-6">
+                                <h3 class="govuk-heading-l">Apprenticeship units</h3>
+                            </li>
+                            @foreach (var shortCourseDetails in Model.ShortCourses.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                            {
+                                <li class="govuk-grid-column  list-item-margin-left-20">
+                                    <div class="govuk-checkboxes__item">
+                                        <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@shortCourseDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@shortCourseDetails.ProviderCourseId" checked="@shortCourseDetails.IsSelected">
+                                        <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@shortCourseDetails.ProviderCourseId">
+                                            @shortCourseDetails.CourseName (level @shortCourseDetails.Level)
+                                        </label>
+                                    </div>
+                                </li>
+                            }
+                        }
+                        
                     </ul>
                 </fieldset>
             </div>

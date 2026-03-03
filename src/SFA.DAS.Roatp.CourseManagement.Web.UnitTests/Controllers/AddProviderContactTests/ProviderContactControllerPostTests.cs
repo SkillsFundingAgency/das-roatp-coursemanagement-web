@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +12,9 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -22,11 +22,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderCo
 public class ProviderContactControllerPostTests
 {
     [Test, MoqAutoData]
-    public async Task Post_NullStandards_RedirectsToExpectedPage(
+    public async Task Post_NullStandardsAndShortCourses_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderContactController sut,
         GetAllProviderStandardsQueryResult standardsResult,
+        GetAllProviderStandardsQueryResult shortCoursesResult,
         int ukprn)
     {
         var email = "test@test.com";
@@ -41,8 +42,10 @@ public class ProviderContactControllerPostTests
         sut.AddDefaultContextWithUser();
 
         standardsResult.Standards = new List<Standard>();
+        shortCoursesResult.Standards = new List<Standard>();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(shortCoursesResult);
 
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
@@ -98,6 +101,35 @@ public class ProviderContactControllerPostTests
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+
+        var result = await sut.PostProviderContact(ukprn, submitViewModel);
+
+        var redirectResult = result as RedirectToRouteResult;
+
+        sessionServiceMock.Verify(s => s.Set(It.Is<ProviderContactSessionModel>(v => v.PhoneNumber == phoneNumber)), Times.Once);
+        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactConfirmUpdateStandards);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Post_NoEmail_WithStandardsAndShortCourses_RedirectsToExpectedPage(
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ProviderContactController sut,
+    GetAllProviderStandardsQueryResult standardsResult,
+    GetAllProviderStandardsQueryResult shortCoursesResult,
+    int ukprn)
+    {
+        var phoneNumber = "123445";
+
+        var submitViewModel = new AddProviderContactSubmitViewModel
+        {
+            PhoneNumber = phoneNumber
+        };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(shortCoursesResult);
 
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
