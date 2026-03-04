@@ -57,14 +57,14 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
         {
             sessionModel.Standards = await GetStandards(ukprn, CourseType.Apprenticeship);
 
-            sessionModel.HasStandards = sessionModel.Standards.Any();
+            sessionModel.HasStandards = sessionModel.Standards.Count != 0;
         }
 
         if (sessionModel.ShortCourses == null)
         {
             sessionModel.ShortCourses = await GetStandards(ukprn, CourseType.ShortCourse);
 
-            sessionModel.HasShortCourses = sessionModel.ShortCourses.Any();
+            sessionModel.HasShortCourses = sessionModel.ShortCourses.Count != 0;
         }
 
         _sessionService.Set(sessionModel);
