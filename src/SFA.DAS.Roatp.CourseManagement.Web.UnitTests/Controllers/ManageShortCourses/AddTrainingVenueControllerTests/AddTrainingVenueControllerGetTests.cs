@@ -18,16 +18,43 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCo
 public class AddTrainingVenueControllerGetTests
 {
     [Test]
-    [MoqInlineAutoData("", true, "Confirm")]
-    [MoqInlineAutoData("test", false, "Continue")]
+    [MoqInlineAutoData("")]
+    [MoqInlineAutoData("test")]
     public void LookupAddress_ReturnsExpectedView(
         string larsCode,
-        bool hasSeenSummaryPage,
-        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
         [Greedy] AddTrainingVenueController sut,
         ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sut.AddDefaultContextWithUser();
+
+        sut.TempData = tempDataMock.Object;
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
+
+        // Assert
+        addressSearch.Result.As<ViewResult>().Should().NotBeNull();
+        addressSearch.Result.As<ViewResult>().ViewName.Should().Be(AddTrainingVenueController.ViewPath);
+    }
+
+    [Test]
+    [MoqInlineAutoData("", true, "Confirm")]
+    [MoqInlineAutoData("test", false, "Continue")]
+    public void LookupAddress_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+    string larsCode,
+    bool hasSeenSummaryPage,
+    string expectedSubmitButtonText,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<ITempDataDictionary> tempDataMock,
+    [Greedy] AddTrainingVenueController sut,
+    ShortCourseSessionModel sessionModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -44,8 +71,6 @@ public class AddTrainingVenueControllerGetTests
         var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
 
         // Assert
-        addressSearch.Result.As<ViewResult>().Should().NotBeNull();
-        addressSearch.Result.As<ViewResult>().ViewName.Should().Be(AddTrainingVenueController.ViewPath);
         var model = addressSearch.Result.As<ViewResult>().Model as AddTrainingVenueViewModel;
         model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }

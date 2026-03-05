@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -16,8 +17,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class AddShortCourseContactDetailsController(ISessionService _sessionService, ILogger<AddShortCourseContactDetailsController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/AddShortCourseContactDetailsView.cshtml";
-    public const string ConfirmButtonText = "Confirm";
-    public const string ContinueButtonText = "Continue";
 
     [HttpGet]
     public IActionResult AddShortCourseContactDetails(ApprenticeshipType apprenticeshipType)
@@ -35,7 +34,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
             model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
             model.ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true;
-            model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText;
+            model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
         }
 
         return View(ViewPath, model);
@@ -57,7 +56,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
                 StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl,
                 ShortCourseBaseModel = new ShortCourseBaseViewModel { ApprenticeshipType = apprenticeshipType },
                 ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true,
-                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
+                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
             };
 
             return View(ViewPath, model);

@@ -21,10 +21,47 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseTrainingVenuesControllerTests;
 public class SelectShortCourseTrainingVenuesControllerGetTests
 {
+    [Test, MoqAutoData]
+    public async Task SelectShortCourseTrainingVenue_SessionIsValid_ReturnsView(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] SelectShortCourseTrainingVenuesController sut,
+        ShortCourseSessionModel sessionModel,
+        GetAllProviderLocationsQueryResult queryResult
+    )
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.ProviderLocations = queryResult.ProviderLocations;
+        sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
+        foreach (var trainingVenue in sessionModel.TrainingVenues)
+        {
+            trainingVenue.IsSelected = true;
+        }
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        // Act
+        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as SelectShortCourseTrainingVenuesViewModel;
+        model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
+        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.FirstOrDefault().NavigationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Once);
+        mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
     [Test]
     [MoqInlineAutoData(false, "Continue")]
     [MoqInlineAutoData(true, "Confirm")]
-    public async Task SelectShortCourseTrainingVenue_SessionIsValid_ReturnsView(
+    public async Task SelectShortCourseTrainingVenue_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
         bool seenSummaryPage,
         string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -56,12 +93,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseTrainingVenuesViewModel;
-        model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.FirstOrDefault().NavigationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Once);
-        mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test, MoqAutoData]

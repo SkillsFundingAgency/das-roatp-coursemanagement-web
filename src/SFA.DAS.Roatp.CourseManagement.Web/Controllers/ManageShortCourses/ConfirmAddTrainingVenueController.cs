@@ -5,6 +5,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.Crea
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -23,13 +24,12 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 {
     public const string ViewPath = "~/Views/ManageShortCourses/ConfirmAddTrainingVenueView.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
-    public const string ConfirmButtonText = "Confirm";
-    public const string ContinueButtonText = "Continue";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
     public IActionResult ConfirmVenue(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ContinueButtonText;
+        var submitButtonText = ButtonText.Continue;
+        bool showCancelOption = true;
 
         var isAddJourney = IsAddJourney(larsCode);
 
@@ -48,7 +48,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
             if (sessionModel.HasSeenSummaryPage)
             {
-                submitButtonText = ConfirmButtonText;
+                submitButtonText = ButtonText.Confirm;
+                showCancelOption = false;
             }
         }
 
@@ -56,7 +57,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText);
+        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption);
         return View(ViewPath, model);
     }
 
@@ -64,7 +65,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     [HttpPost]
     public async Task<IActionResult> ConfirmVenue(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ContinueButtonText;
+        var submitButtonText = ButtonText.Continue;
+        bool showCancelOption = true;
 
         var isAddJourney = IsAddJourney(larsCode);
 
@@ -76,7 +78,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
             if (sessionModel.HasSeenSummaryPage)
             {
-                submitButtonText = ConfirmButtonText;
+                submitButtonText = ButtonText.Confirm;
+                showCancelOption = false;
             }
         }
 
@@ -87,7 +90,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (!ModelState.IsValid)
         {
-            var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText);
+            var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption);
 
             model.LocationName = submitModel.LocationName;
             return View(ViewPath, model);
@@ -148,12 +151,13 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return command;
     }
 
-    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, string buttonText)
+    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, string buttonText, bool showCancelOption)
     {
         var model = new ConfirmAddTrainingVenueViewModel(addressItem)
         {
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = buttonText,
+            ShowCancelOption = showCancelOption,
             CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType })
         };
         return model;

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -16,20 +17,14 @@ using System.Collections.Generic;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseLocationOptionsControllerTests;
 public class SelectShortCourseLocationOptionsControllerGetTests
 {
-    [Test]
-    [MoqInlineAutoData(false, "Continue")]
-    [MoqInlineAutoData(true, "Confirm")]
+    [Test, MoqAutoData]
     public void SelectShortCourseLocation_SessionIsValid_ReturnsView(
-        bool seenSummaryPage,
-        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-
-        sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
         sessionModel.LocationOptions =
         [
@@ -57,8 +52,35 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         var model = viewResult!.Model as SelectShortCourseLocationOptionsViewModel;
         model!.LocationOptions.Should().BeEquivalentTo(locationOptions);
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
-        model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+    }
+
+    [Test]
+    [MoqInlineAutoData(false, ButtonText.Continue)]
+    [MoqInlineAutoData(true, ButtonText.Confirm)]
+    public void SelectShortCourseLocation_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] SelectShortCourseLocationOptionsController sut,
+        ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var result = sut.SelectShortCourseLocation(apprenticeshipType);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as SelectShortCourseLocationOptionsViewModel;
+        model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
     [Test, MoqAutoData]
