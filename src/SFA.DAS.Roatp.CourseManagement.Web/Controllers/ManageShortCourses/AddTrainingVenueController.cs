@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -17,13 +18,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 public class AddTrainingVenueController(ISessionService _sessionService, ILogger<AddTrainingVenueController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/ManageShortCourses/AddTrainingVenueView.cshtml";
-    public const string ConfirmButtonText = "Confirm";
-    public const string ContinueButtonText = "Continue";
 
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
     public Task<IActionResult> LookupAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ContinueButtonText;
+        var submitButtonText = ButtonText.Continue;
 
         var isAddJourney = IsAddJourney(larsCode);
 
@@ -42,7 +41,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
             if (sessionModel.HasSeenSummaryPage)
             {
-                submitButtonText = ConfirmButtonText;
+                submitButtonText = ButtonText.Confirm;
             }
         }
 
@@ -54,7 +53,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     [HttpPost("new/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
     public Task<IActionResult> LookupAddress([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ContinueButtonText;
+        var submitButtonText = ButtonText.Continue;
 
         var isAddJourney = IsAddJourney(larsCode);
 
@@ -66,7 +65,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
             if (sessionModel.HasSeenSummaryPage)
             {
-                submitButtonText = ConfirmButtonText;
+                submitButtonText = ButtonText.Confirm;
             }
         }
 

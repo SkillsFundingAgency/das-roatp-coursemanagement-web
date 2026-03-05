@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -16,8 +17,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class ConfirmNationalDeliveryController(ISessionService _sessionService, ILogger<ConfirmNationalDeliveryController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/ConfirmNationalDeliveryView.cshtml";
-    public const string ConfirmButtonText = "Confirm";
-    public const string ContinueButtonText = "Continue";
 
     [HttpGet]
     public IActionResult ConfirmNationalProviderDelivery(ApprenticeshipType apprenticeshipType)
@@ -37,7 +36,7 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
         {
             ApprenticeshipType = apprenticeshipType,
             HasNationalDeliveryOption = sessionModel.HasNationalDeliveryOption,
-            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
+            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
         };
 
         return View(ViewPath, model);
@@ -55,7 +54,7 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
             return View(ViewPath, new ConfirmNationalDeliveryViewModel()
             {
                 ApprenticeshipType = apprenticeshipType,
-                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ConfirmButtonText : ContinueButtonText
+                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
             });
         }
 

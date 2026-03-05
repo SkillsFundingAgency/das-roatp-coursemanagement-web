@@ -3,7 +3,6 @@
 @{
     ViewBag.Title = "Add venue name";
     ViewBag.Description = "";
-    const string ContinueButtonText = "Continue";
 }
 
 <div class="govuk-grid-row">
@@ -40,7 +39,7 @@
 
             <div class="govuk-button-group">
                 <button id="submit" type="submit" class="govuk-button">@Model.SubmitButtonText</button>
-                @if (Model.SubmitButtonText == ContinueButtonText)
+                @if (Model.ShowCancelOption)
                 {
                     <a class="govuk-link" href="@Model.CancelLink">Cancel</a>
                 }               
