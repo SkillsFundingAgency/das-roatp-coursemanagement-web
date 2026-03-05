@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -15,10 +16,35 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmNationalDeliveryControllerTests;
 public class ConfirmNationalDeliveryControllerGetTests
 {
-    [Test]
-    [MoqInlineAutoData(false, "Continue")]
-    [MoqInlineAutoData(true, "Confirm")]
+    [Test, MoqAutoData]
     public void ConfirmNationalProviderDelivery_SessionIsValid_ReturnsView(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ConfirmNationalDeliveryController sut,
+        ShortCourseSessionModel sessionModel
+    )
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var result = sut.ConfirmNationalProviderDelivery(apprenticeshipType);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ConfirmNationalDeliveryViewModel;
+        model!.HasNationalDeliveryOption.Should().Be(sessionModel.HasNationalDeliveryOption);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+    }
+
+    [Test]
+    [MoqInlineAutoData(false, ButtonText.Continue)]
+    [MoqInlineAutoData(true, ButtonText.Confirm)]
+    public void ConfirmNationalProviderDelivery_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
         bool seenSummaryPage,
         string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -40,10 +66,7 @@ public class ConfirmNationalDeliveryControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ConfirmNationalDeliveryViewModel;
-        model!.HasNationalDeliveryOption.Should().Be(sessionModel.HasNationalDeliveryOption);
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
     [Test, MoqAutoData]

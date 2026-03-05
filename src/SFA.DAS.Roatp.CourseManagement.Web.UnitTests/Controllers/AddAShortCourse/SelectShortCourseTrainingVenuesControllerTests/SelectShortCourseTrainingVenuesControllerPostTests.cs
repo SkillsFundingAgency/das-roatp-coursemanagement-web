@@ -11,6 +11,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseTrainingVenuesControllerTests;
@@ -51,7 +52,6 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        sessionModel.HasSeenSummaryPage = false;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
@@ -82,7 +82,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        sessionModel.HasSeenSummaryPage = false;
+        sessionModel.HasNationalDeliveryOption = null;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
@@ -108,18 +108,21 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void SelectShortCourseTrainingVenue_HasSeenSummaryPageIsTrue_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
+    public void SelectShortCourseTrainingVenue_HasNationalDeliveryOptionIsFalseAndRegionsMissing_SetsSessionCorrectlyAndRedirectsToSelectShortCourseRegions(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        sessionModel.HasSeenSummaryPage = true;
+        sessionModel.HasNationalDeliveryOption = null;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sessionModel.LocationOptions =
         [
-            ShortCourseLocationOption.ProviderLocation
+            ShortCourseLocationOption.ProviderLocation,
+            ShortCourseLocationOption.EmployerLocation
         ];
+        sessionModel.HasNationalDeliveryOption = false;
+        sessionModel.TrainingRegions = new List<TrainingRegionModel>();
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
         {
@@ -133,7 +136,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
+        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseRegions);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().ProviderLocationId == submitModel.SelectedProviderLocationIds.FirstOrDefault())), Times.Once());
     }

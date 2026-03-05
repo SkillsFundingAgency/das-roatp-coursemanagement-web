@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -21,6 +22,8 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
     public Task<IActionResult> LookupAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
+        var submitButtonText = ButtonText.Continue;
+
         var isAddJourney = IsAddJourney(larsCode);
 
         if (isAddJourney)
@@ -35,16 +38,23 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
                 return Task.FromResult<IActionResult>(RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType }));
             }
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ButtonText.Confirm;
+            }
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType };
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText };
         return Task.FromResult<IActionResult>(View(ViewPath, model));
     }
 
     [HttpPost("new/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
     public Task<IActionResult> LookupAddress([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
+        var submitButtonText = ButtonText.Continue;
+
         var isAddJourney = IsAddJourney(larsCode);
 
         if (isAddJourney)
@@ -52,9 +62,14 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
             var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
             if (sessionModel == null) return Task.FromResult<IActionResult>(RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails));
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ButtonText.Confirm;
+            }
         }
 
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType };
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText };
 
         if (!ModelState.IsValid)
         {

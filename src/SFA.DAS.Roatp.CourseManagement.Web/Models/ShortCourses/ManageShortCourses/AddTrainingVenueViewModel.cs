@@ -2,6 +2,7 @@
 
 public class AddTrainingVenueViewModel : AddTrainingVenueSubmitModel, IBackLink
 {
+    public string SubmitButtonText { get; set; }
 }
 
 public class AddTrainingVenueSubmitModel : ShortCourseBaseViewModel

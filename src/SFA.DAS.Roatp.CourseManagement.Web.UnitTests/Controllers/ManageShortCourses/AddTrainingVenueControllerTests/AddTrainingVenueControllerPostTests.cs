@@ -23,11 +23,15 @@ public class AddTrainingVenueControllerPostTests
     [MoqInlineAutoData("test")]
     public void LookupAddress_InvalidStatus_ReturnsViewResult(
        string larsCode,
+       [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] AddTrainingVenueController sut,
-       AddTrainingVenueSubmitModel model)
+       AddTrainingVenueSubmitModel model,
+       ShortCourseSessionModel sessionModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         sut.AddDefaultContextWithUser();
 
@@ -40,6 +44,38 @@ public class AddTrainingVenueControllerPostTests
         var viewResult = result.Result as ViewResult;
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
+    }
+
+    [Test]
+    [MoqInlineAutoData("", true, "Confirm")]
+    [MoqInlineAutoData("test", false, "Continue")]
+    public void LookupAddress_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+       string larsCode,
+       bool hasSeenSummaryPage,
+       string expectedSubmitButtonText,
+       [Frozen] Mock<ISessionService> sessionServiceMock,
+       [Greedy] AddTrainingVenueController sut,
+       AddTrainingVenueSubmitModel model,
+       ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        sut.AddDefaultContextWithUser();
+
+        sut.ModelState.AddModelError("key", "errorMessage");
+
+        // Act
+        var result = sut.LookupAddress(model, apprenticeshipType, larsCode);
+
+        // Assert
+        var viewResult = result.Result as ViewResult;
+        var viewModel = viewResult.Model as AddTrainingVenueViewModel;
+        viewModel.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
     [Test]

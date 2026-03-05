@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -12,7 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseLocationOptionsControllerTests;
@@ -20,10 +20,10 @@ public class SelectShortCourseLocationOptionsControllerPostTests
 {
     [Test, MoqAutoData]
     public void SelectShortCourseLocation_InvalidState_ReturnsView(
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] SelectShortCourseLocationOptionsController sut,
-        ShortCourseSessionModel sessionModel,
-        SelectShortCourseLocationOptionsSubmitModel submitModel)
+       [Frozen] Mock<ISessionService> sessionServiceMock,
+       [Greedy] SelectShortCourseLocationOptionsController sut,
+       ShortCourseSessionModel sessionModel,
+       SelectShortCourseLocationOptionsSubmitModel submitModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -42,86 +42,33 @@ public class SelectShortCourseLocationOptionsControllerPostTests
         model.Should().NotBeNull();
         model!.LocationOptions.Select(x => x.LocationOption).Should().BeEquivalentTo(expectedLocationOptions);
         model!.ApprenticeshipType.Should().Be(apprenticeshipType);
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online) && m.TrainingVenues.SequenceEqual(new List<TrainingVenueModel>()) && m.HasNationalDeliveryOption == null && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Never());
     }
 
-    [Test, MoqAutoData]
-    public void SelectShortCourseLocation_OnlineOptionIsSelected_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
+    [Test]
+    [MoqInlineAutoData(false, ButtonText.Continue)]
+    [MoqInlineAutoData(true, ButtonText.Confirm)]
+    public void SelectShortCourseLocation_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseLocationOptionsController sut,
-        ShortCourseSessionModel sessionModel)
+        ShortCourseSessionModel sessionModel,
+        SelectShortCourseLocationOptionsSubmitModel submitModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-
-        var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online } };
-
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
         sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        sut.ModelState.AddModelError("key", "message");
 
         // Act
         var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
 
         // Assert
-        var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ReviewShortCourseDetails);
-        sessionModel.HasOnlineDeliveryOption.Should().BeTrue();
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online) && m.TrainingVenues.SequenceEqual(new List<TrainingVenueModel>()) && m.HasNationalDeliveryOption == null && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once());
-    }
-
-    [Test, MoqAutoData]
-    public void SelectShortCourseLocation_EmployerLocationOptionIsSelected_SetsSessionCorrectlyAndRedirectsToConfirmNationalProviderDelivery(
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] SelectShortCourseLocationOptionsController sut,
-        ShortCourseSessionModel sessionModel)
-    {
-        // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-
-        var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation } };
-
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-
-        sut.AddDefaultContextWithUser();
-
-        // Act
-        var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
-
-        // Assert
-        var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
-        sessionModel.HasOnlineDeliveryOption.Should().BeFalse();
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online) && m.TrainingVenues.SequenceEqual(new List<TrainingVenueModel>()) && m.HasNationalDeliveryOption == null && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once());
-    }
-
-    [Test, MoqAutoData]
-    public void SelectShortCourseLocation_ProviderLocationOptionIsSelected_SetsSessionCorrectlyAndRedirectsToSelectShortCourseTrainingVenue(
-        [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] SelectShortCourseLocationOptionsController sut,
-        ShortCourseSessionModel sessionModel)
-    {
-        // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-
-        var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation } };
-
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-
-        sut.AddDefaultContextWithUser();
-
-        // Act
-        var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
-
-        // Assert
-        var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
-        sessionModel.HasOnlineDeliveryOption.Should().BeFalse();
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
-        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LocationOptions.FirstOrDefault() == submitModel.SelectedLocationOptions.FirstOrDefault() && m.HasOnlineDeliveryOption == submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.Online) && m.TrainingVenues.SequenceEqual(new List<TrainingVenueModel>()) && m.HasNationalDeliveryOption == null && m.TrainingRegions.SequenceEqual(new List<TrainingRegionModel>()))), Times.Once());
+        var viewResult = response as ViewResult;
+        var model = viewResult.Model as SelectShortCourseLocationOptionsViewModel;
+        model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
     [Test, MoqAutoData]

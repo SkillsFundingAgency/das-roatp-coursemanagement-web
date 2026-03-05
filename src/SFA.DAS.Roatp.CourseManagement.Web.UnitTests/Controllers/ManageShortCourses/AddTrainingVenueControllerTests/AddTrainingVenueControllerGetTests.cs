@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -21,8 +22,10 @@ public class AddTrainingVenueControllerGetTests
     [MoqInlineAutoData("test")]
     public void LookupAddress_ReturnsExpectedView(
         string larsCode,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
-        [Greedy] AddTrainingVenueController sut)
+        [Greedy] AddTrainingVenueController sut,
+        ShortCourseSessionModel sessionModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -31,12 +34,45 @@ public class AddTrainingVenueControllerGetTests
 
         sut.TempData = tempDataMock.Object;
 
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
         // Act
         var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
 
         // Assert
         addressSearch.Result.As<ViewResult>().Should().NotBeNull();
         addressSearch.Result.As<ViewResult>().ViewName.Should().Be(AddTrainingVenueController.ViewPath);
+    }
+
+    [Test]
+    [MoqInlineAutoData("", true, "Confirm")]
+    [MoqInlineAutoData("test", false, "Continue")]
+    public void LookupAddress_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+    string larsCode,
+    bool hasSeenSummaryPage,
+    string expectedSubmitButtonText,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<ITempDataDictionary> tempDataMock,
+    [Greedy] AddTrainingVenueController sut,
+    ShortCourseSessionModel sessionModel)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
+
+        sut.AddDefaultContextWithUser();
+
+        sut.TempData = tempDataMock.Object;
+
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        // Act
+        var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
+
+        // Assert
+        var model = addressSearch.Result.As<ViewResult>().Model as AddTrainingVenueViewModel;
+        model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
     [Test, MoqAutoData]
