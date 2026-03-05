@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
+﻿using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+
+namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
     public class Standard
     {
@@ -10,5 +12,6 @@
         public bool? IsApprovedByRegulator { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
+        public CourseType CourseType { get; set; }
     }
 }

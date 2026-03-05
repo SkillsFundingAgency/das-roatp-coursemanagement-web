@@ -1,19 +1,18 @@
 @model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.AddProviderContactCompleteViewModel
 @{
-    var title = Model.ShowStandards ? "Contact details saved and standards updated" : "Contact details saved";
+    var title = (Model.ShowStandards || Model.ShowApprenticeshipUnits) ? "Contact details saved and training types updated" : "Contact details saved";
 
     ViewBag.Title = @title;
-    var bulletedListClass = Model.UseBulletedList ? "govuk-list--bullet" : string.Empty;
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <div class="govuk-panel govuk-panel--confirmation">
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
             <h1 class="govuk-panel__title">
                 @title
             </h1>
         </div>
         <p class="govuk-body" asp-show="@Model.ShowBoth">
-            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
+            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.EmailAddress</strong>.
         </p>
 
         <p class="govuk-body" asp-show="@Model.ShowEmailOnly">
@@ -23,13 +22,16 @@
         <p class="govuk-body" asp-show="@Model.ShowPhoneOnly">
             You have updated your contact details to <strong>@Model.PhoneNumber</strong>.
         </p>
-
-        <p class="govuk-body" asp-show="Model.ShowStandards">
-            We've updated contact details on Find apprenticeship training for these standards:  
-        </p>
+        @if(Model.ShowStandards || Model.ShowApprenticeshipUnits)
+        {
+            <p class="govuk-body">
+                We've updated contact details on Find apprenticeship training for these this training.
+            </p>
+        }    
         <div class="govuk-form-group" asp-show="Model.ShowStandards">
             <fieldset class="govuk-fieldset">
-                <ul class="govuk-list @bulletedListClass">
+                <h2 class="govuk-heading-m">Apprenticeships</h2>
+                <ul class="govuk-list govuk-list--bullet">
                     @foreach (var standardDetails in Model.CheckedStandards.OrderBy(x => x))
                     {
                         <li>@standardDetails</li>
@@ -37,8 +39,19 @@
                 </ul>
             </fieldset>
         </div>
+        <div class="govuk-form-group" asp-show="Model.ShowApprenticeshipUnits">
+            <fieldset class="govuk-fieldset">
+                <h3 class="govuk-heading-m">Apprenticeship units</h3>
+                <ul class="govuk-list govuk-list--bullet">
+                    @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits.OrderBy(x => x))
+                    {
+                        <li>@apprenticeshipUnitDetails</li>
+                    }
+                </ul>
+            </fieldset>
+        </div>
         <p class="govuk-body">
-            We've also saved your details to use next time you add a standard. Go to <a href="@Model.ReviewYourDetailsUrl" class="govuk-link">Manage your standards</a> to change contact details for individual standards.
+            We've also saved your details to use next time you add a training type. Go to <a href="@Model.ReviewYourDetailsUrl" class="govuk-link">Manage your standards</a> or <a href="@Model.ManageShortCoursesUrl" class="govuk-link">Manage your apprenticeship units</a> to change contact details for individual training types.
         </p>
     </div>
 </div>
