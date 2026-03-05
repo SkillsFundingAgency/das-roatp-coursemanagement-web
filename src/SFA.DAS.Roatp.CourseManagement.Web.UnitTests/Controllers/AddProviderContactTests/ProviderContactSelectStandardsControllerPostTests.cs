@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -25,7 +26,6 @@ public class SelectStandardsForUpdateControllerPostTests
          [Frozen] Mock<IMediator> mediatorMock,
          [Greedy] SelectStandardsForUpdateController sut,
          List<ProviderContactStandardModel> standards,
-         List<ProviderContactStandardModel> shortCourses,
          int ukprn)
     {
         var submitViewModel = new AddProviderContactStandardsSubmitViewModel
@@ -35,8 +35,7 @@ public class SelectStandardsForUpdateControllerPostTests
 
         var sessionModel = new ProviderContactSessionModel
         {
-            Standards = standards,
-            ShortCourses = shortCourses,
+            Standards = standards
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
@@ -48,8 +47,8 @@ public class SelectStandardsForUpdateControllerPostTests
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as AddProviderContactStandardsViewModel;
-        model!.Standards.Should().BeEquivalentTo(standards);
-        model!.ShortCourses.Should().BeEquivalentTo(shortCourses);
+        model!.Standards.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList());
+        model!.ApprenticeshipUnits.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList());
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Once());
     }
@@ -60,11 +59,9 @@ public class SelectStandardsForUpdateControllerPostTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] SelectStandardsForUpdateController sut,
         List<ProviderContactStandardModel> standards,
-        List<ProviderContactStandardModel> shortCourses,
         int ukprn)
     {
         var providerCourseIds = standards.Select(x => x.ProviderCourseId).ToList();
-        providerCourseIds.AddRange(shortCourses.Select(x => x.ProviderCourseId).ToList());
 
         var submitViewModel = new AddProviderContactStandardsSubmitViewModel
         {
@@ -73,8 +70,7 @@ public class SelectStandardsForUpdateControllerPostTests
 
         var sessionModel = new ProviderContactSessionModel
         {
-            Standards = standards,
-            ShortCourses = shortCourses,
+            Standards = standards
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);

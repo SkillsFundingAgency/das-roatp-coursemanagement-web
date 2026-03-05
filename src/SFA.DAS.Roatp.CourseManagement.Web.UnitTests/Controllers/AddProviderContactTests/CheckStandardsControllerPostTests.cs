@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -13,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -44,7 +46,6 @@ public class CheckStandardsControllerPostTests
       [Frozen] Mock<IMediator> mediatorMock,
       [Greedy] CheckStandardsController sut,
       List<ProviderContactStandardModel> standards,
-      List<ProviderContactStandardModel> shortCourses,
       int ukprn)
     {
         var email = "test@test.com";
@@ -55,15 +56,14 @@ public class CheckStandardsControllerPostTests
             EmailAddress = email,
             PhoneNumber = phoneNumber,
             UpdateExistingStandards = true,
-            Standards = standards,
-            ShortCourses = shortCourses,
+            Standards = standards
         };
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
-        var expectedCheckedShortCourses = StandardDescriptionListService.BuildSelectedStandardsList(shortCourses);
+        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList());
+        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList());
 
         var expectedProviderCourseIdCount = expectedCheckedStandards;
-        expectedProviderCourseIdCount.AddRange(expectedCheckedShortCourses);
+        expectedProviderCourseIdCount.AddRange(expectedCheckedApprenticeshipUnits);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 

@@ -39,18 +39,18 @@
                                 </li>
                             }
                         }
-                        @if (Model.ShortCourses.Any())
+                        @if (Model.ApprenticeshipUnits.Any())
                         {
                             <li class="list-item-margin-left-20 list-heading-item govuk-!-margin-top-6">
                                 <h3 class="govuk-heading-l">Apprenticeship units</h3>
                             </li>
-                            @foreach (var shortCourseDetails in Model.ShortCourses.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                            @foreach (var apprenticeshipUnitDetails in Model.ApprenticeshipUnits.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
                             {
                                 <li class="govuk-grid-column  list-item-margin-left-20">
                                     <div class="govuk-checkboxes__item">
-                                        <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@shortCourseDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@shortCourseDetails.ProviderCourseId" checked="@shortCourseDetails.IsSelected">
-                                        <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@shortCourseDetails.ProviderCourseId">
-                                            @shortCourseDetails.CourseName (level @shortCourseDetails.Level)
+                                        <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@apprenticeshipUnitDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@apprenticeshipUnitDetails.ProviderCourseId" checked="@apprenticeshipUnitDetails.IsSelected">
+                                        <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@apprenticeshipUnitDetails.ProviderCourseId">
+                                            @apprenticeshipUnitDetails.CourseName (level @apprenticeshipUnitDetails.Level)
                                         </label>
                                     </div>
                                 </li>

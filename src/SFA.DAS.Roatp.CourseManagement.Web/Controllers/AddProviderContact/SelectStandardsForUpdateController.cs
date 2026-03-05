@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
@@ -18,8 +20,8 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
 
         var model = new AddProviderContactStandardsViewModel
         {
-            Standards = sessionModel.Standards,
-            ShortCourses = sessionModel.ShortCourses
+            Standards = sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(),
+            ApprenticeshipUnits = sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(),
         };
 
         return View(ViewPath, model);
@@ -37,19 +39,14 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
             standard.IsSelected = submitModel.SelectedProviderCourseIds.Contains(standard.ProviderCourseId);
         }
 
-        foreach (var shortCourse in sessionModel.ShortCourses)
-        {
-            shortCourse.IsSelected = submitModel.SelectedProviderCourseIds.Contains(shortCourse.ProviderCourseId);
-        }
-
         _sessionService.Set(sessionModel);
 
         if (!ModelState.IsValid)
         {
             var viewModel = new AddProviderContactStandardsViewModel
             {
-                Standards = sessionModel.Standards,
-                ShortCourses = sessionModel.ShortCourses
+                Standards = sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(),
+                ApprenticeshipUnits = sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(),
             };
 
             return View(ViewPath, viewModel);

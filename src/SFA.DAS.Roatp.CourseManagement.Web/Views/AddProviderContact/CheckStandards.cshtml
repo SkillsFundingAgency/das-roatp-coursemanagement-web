@@ -51,7 +51,7 @@
                 </fieldset>
             </div>
         }       
-        @if (Model.CheckedShortCourses.Any())
+        @if (Model.CheckedApprenticeshipUnits.Any())
         {
             <h2 class="govuk-heading-m">Selected apprenticeship units</h2>
             <p class="govuk-body">
@@ -61,9 +61,9 @@
                 <fieldset class="govuk-fieldset">
 
                     <ul class="govuk-list govuk-list--bullet">
-                        @foreach (var shortCourseDetails in Model.CheckedShortCourses.OrderBy(x => x))
+                        @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits.OrderBy(x => x))
                         {
-                            <li>@shortCourseDetails</li>
+                            <li>@apprenticeshipUnitDetails</li>
                         }
                     </ul>
                 </fieldset>

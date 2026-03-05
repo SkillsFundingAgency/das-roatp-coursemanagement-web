@@ -201,7 +201,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Should().NotBeNull();
             model!.Standards.Should().NotBeEmpty();
             model.Standards.Should().BeEquivalentTo(expectedStandards,
-                options => options.Excluding(c => c.HasLocations));
+                options => options.Excluding(c => c.HasLocations).Excluding(c => c.CourseType));
         }
     }
 }

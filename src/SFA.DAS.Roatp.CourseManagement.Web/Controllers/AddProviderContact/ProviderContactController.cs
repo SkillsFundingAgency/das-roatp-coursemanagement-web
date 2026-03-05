@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -55,21 +54,14 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
 
         if (sessionModel.Standards == null)
         {
-            sessionModel.Standards = await GetStandards(ukprn, CourseType.Apprenticeship);
+            sessionModel.Standards = await GetStandards(ukprn);
 
             sessionModel.HasStandards = sessionModel.Standards.Count != 0;
         }
 
-        if (sessionModel.ShortCourses == null)
-        {
-            sessionModel.ShortCourses = await GetStandards(ukprn, CourseType.ShortCourse);
-
-            sessionModel.HasShortCourses = sessionModel.ShortCourses.Count != 0;
-        }
-
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.HasStandards || sessionModel.HasShortCourses)
+        if (sessionModel.HasStandards)
         {
             return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
         }
@@ -77,9 +69,9 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
         return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
     }
 
-    private async Task<List<ProviderContactStandardModel>> GetStandards(int ukprn, CourseType courseType)
+    private async Task<List<ProviderContactStandardModel>> GetStandards(int ukprn)
     {
-        var result = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, courseType));
+        var result = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, null));
 
         return result.Standards.Select(x => (ProviderContactStandardModel)x).ToList();
     }
