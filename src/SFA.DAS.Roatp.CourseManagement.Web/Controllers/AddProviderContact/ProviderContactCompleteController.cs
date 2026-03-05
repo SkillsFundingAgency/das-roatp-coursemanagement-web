@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -19,22 +20,26 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
         _sessionService.Delete(nameof(ProviderContactSessionModel));
 
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards);
+        var checkedShortCourses = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.ShortCourses);
 
         var showBoth = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
         var showPhoneOnly = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && string.IsNullOrEmpty(sessionModel.EmailAddress);
         var showEmailOnly = string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit.ToString();
 
         var model = new AddProviderContactCompleteViewModel
         {
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
             CheckedStandards = checkedStandards,
+            CheckedShortCourses = checkedShortCourses,
             ReviewYourDetailsUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails),
-            UseBulletedList = checkedStandards.Count > 1,
+            ManageShortCoursesUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType }),
             ShowBoth = showBoth,
             ShowEmailOnly = showEmailOnly,
             ShowPhoneOnly = showPhoneOnly,
-            ShowStandards = checkedStandards.Count > 0
+            ShowStandards = checkedStandards.Count > 0,
+            ShowShortCourses = checkedShortCourses.Count > 0
         };
 
         return View(ViewPath, model);

@@ -7,13 +7,14 @@ public class AddProviderContactCompleteViewModel
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
     public string ReviewYourDetailsUrl { get; set; }
+    public string ManageShortCoursesUrl { get; set; }
     public List<string> CheckedStandards { get; set; }
+    public List<string> CheckedShortCourses { get; set; }
 
     public bool ShowBoth { get; set; }
     public bool ShowPhoneOnly { get; set; }
     public bool ShowEmailOnly { get; set; }
 
     public bool ShowStandards { get; set; }
-
-    public bool UseBulletedList { get; set; }
+    public bool ShowShortCourses { get; set; }
 }
