@@ -6,6 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,23 +55,33 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
 
         if (sessionModel.Standards == null)
         {
-            GetAllProviderStandardsQueryResult standardsResult =
-                await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, CourseType.Apprenticeship));
-            sessionModel.Standards = standardsResult.Standards.Count > 0
-                ? standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList()
-                : new();
+            sessionModel.Standards = await GetStandards(ukprn, CourseType.Apprenticeship);
 
-            sessionModel.HasStandards = sessionModel.Standards.Count > 0;
+            sessionModel.HasStandards = sessionModel.Standards.Count != 0;
+        }
+
+        if (sessionModel.ShortCourses == null)
+        {
+            sessionModel.ShortCourses = await GetStandards(ukprn, CourseType.ShortCourse);
+
+            sessionModel.HasShortCourses = sessionModel.ShortCourses.Count != 0;
         }
 
         _sessionService.Set(sessionModel);
 
-        if (sessionModel.HasStandards)
+        if (sessionModel.HasStandards || sessionModel.HasShortCourses)
         {
             return RedirectToRoute(RouteNames.AddProviderContactConfirmUpdateStandards, new { ukprn = Ukprn });
         }
 
         return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
+    }
+
+    private async Task<List<ProviderContactStandardModel>> GetStandards(int ukprn, CourseType courseType)
+    {
+        var result = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, courseType));
+
+        return result.Standards.Select(x => (ProviderContactStandardModel)x).ToList();
     }
 }
 

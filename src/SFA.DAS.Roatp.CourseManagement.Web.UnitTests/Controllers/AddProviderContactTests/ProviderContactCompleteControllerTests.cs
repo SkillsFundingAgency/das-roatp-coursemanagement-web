@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -40,7 +40,9 @@ public class ProviderContactCompleteControllerTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ProviderContactCompleteController sut,
         List<ProviderContactStandardModel> standards,
+        List<ProviderContactStandardModel> shortCourses,
         string reviewYourDetailsLink,
+        string manageShortCoursesLink,
         int ukprn
     )
     {
@@ -51,10 +53,13 @@ public class ProviderContactCompleteControllerTests
         {
             EmailAddress = email,
             PhoneNumber = phoneNumber,
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses
         };
 
-        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
+        sut.AddDefaultContextWithUser().AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink)
+            .AddUrlForRoute(RouteNames.ManageShortCourses, manageShortCoursesLink);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -63,17 +68,20 @@ public class ProviderContactCompleteControllerTests
         var viewResult = result as ViewResult;
 
         var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+        var expectedCheckedShortCourses = StandardDescriptionListService.BuildSelectedStandardsList(shortCourses);
 
         var model = viewResult!.Model as AddProviderContactCompleteViewModel;
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
+        model.CheckedShortCourses.Should().BeEquivalentTo(expectedCheckedShortCourses);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
+        model.ManageShortCoursesUrl.Should().Be(manageShortCoursesLink);
         model.ShowBoth.Should().Be(true);
         model.ShowEmailOnly.Should().Be(false);
         model.ShowPhoneOnly.Should().Be(false);
-        model.UseBulletedList.Should().Be(expectedCheckedStandards.Count > 1);
         model.ShowStandards.Should().Be(expectedCheckedStandards.Count > 0);
+        model.ShowShortCourses.Should().Be(expectedCheckedShortCourses.Count > 0);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ProviderContactSessionModel)), Times.Once);
     }
@@ -83,6 +91,7 @@ public class ProviderContactCompleteControllerTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ProviderContactCompleteController sut,
         List<ProviderContactStandardModel> standards,
+        List<ProviderContactStandardModel> shortCourses,
         string reviewYourDetailsLink,
         int ukprn
     )
@@ -92,7 +101,8 @@ public class ProviderContactCompleteControllerTests
         var sessionModel = new ProviderContactSessionModel
         {
             EmailAddress = email,
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
@@ -114,6 +124,7 @@ public class ProviderContactCompleteControllerTests
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] ProviderContactCompleteController sut,
        List<ProviderContactStandardModel> standards,
+       List<ProviderContactStandardModel> shortCourses,
        string reviewYourDetailsLink,
        int ukprn
    )
@@ -123,7 +134,8 @@ public class ProviderContactCompleteControllerTests
         var sessionModel = new ProviderContactSessionModel
         {
             PhoneNumber = phoneNumber,
-            Standards = standards
+            Standards = standards,
+            ShortCourses = shortCourses
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
