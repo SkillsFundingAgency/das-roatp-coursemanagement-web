@@ -15,10 +15,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
         private const string ukprnRootValue = "ukprn";
         private static readonly string[] _controllersThatDoNotRequireAuthorize = new[]
         {
-            "PingController",
-            "ProviderAccountController",
-            "ErrorController",
-            "ProviderNotRegisteredController",
+            "Ping",
+            "ProviderAccount",
+            "Error",
+            "ProviderNotRegistered",
         };
         private readonly IMediator _mediator;
         private readonly IHttpContextAccessor _httpContextAccessor;
