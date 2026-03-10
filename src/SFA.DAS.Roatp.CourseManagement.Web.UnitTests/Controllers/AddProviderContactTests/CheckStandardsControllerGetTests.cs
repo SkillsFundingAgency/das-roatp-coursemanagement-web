@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,8 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -69,8 +69,10 @@ public class CheckStandardsControllerGetTests
 
         var viewResult = result as ViewResult;
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList());
-        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList());
+        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
+        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
+        var expectedShowStandards = expectedCheckedStandards.Count > 0;
+        var expectedApprenticeshipUnits = expectedCheckedApprenticeshipUnits.Count > 0;
 
         var hasBulletedList = expectedCheckedStandards.Count > 1;
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
@@ -82,6 +84,8 @@ public class CheckStandardsControllerGetTests
         model.ChangeEmailPhoneUrl.Should().Be(changeEmailPhoneUrl);
         model.ChangeSelectedStandardsUrl.Should().Be(changeSelectedStandardsUrl);
         model.UseBulletedList.Should().Be(hasBulletedList);
+        model.ShowStandards.Should().Be(expectedShowStandards);
+        model.ShowApprenticeshipUnits.Should().Be(expectedApprenticeshipUnits);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 

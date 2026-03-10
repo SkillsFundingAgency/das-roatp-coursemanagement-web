@@ -12,7 +12,7 @@
             </h1>
         </div>
         <p class="govuk-body" asp-show="@Model.ShowBoth">
-            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.EmailAddress</strong>.
+            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
         </p>
 
         <p class="govuk-body" asp-show="@Model.ShowEmailOnly">
@@ -32,7 +32,7 @@
             <fieldset class="govuk-fieldset">
                 <h2 class="govuk-heading-m">Apprenticeships</h2>
                 <ul class="govuk-list govuk-list--bullet">
-                    @foreach (var standardDetails in Model.CheckedStandards.OrderBy(x => x))
+                    @foreach (var standardDetails in Model.CheckedStandards)
                     {
                         <li>@standardDetails</li>
                     }
@@ -43,7 +43,7 @@
             <fieldset class="govuk-fieldset">
                 <h3 class="govuk-heading-m">Apprenticeship units</h3>
                 <ul class="govuk-list govuk-list--bullet">
-                    @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits.OrderBy(x => x))
+                    @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits)
                     {
                         <li>@apprenticeshipUnitDetails</li>
                     }

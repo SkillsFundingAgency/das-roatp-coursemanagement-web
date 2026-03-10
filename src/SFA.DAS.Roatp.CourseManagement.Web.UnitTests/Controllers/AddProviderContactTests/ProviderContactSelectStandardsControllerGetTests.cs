@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,8 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderContactTests;
 
@@ -54,6 +54,10 @@ public class SelectStandardsForUpdateControllerGetTests
             PhoneNumber = phoneNumber,
             Standards = standards
         };
+
+        var expectedShowStandards = sessionModel.Standards.Any(x => x.CourseType == CourseType.Apprenticeship);
+        var expectedApprenticeshipUnits = sessionModel.Standards.Any(x => x.CourseType == CourseType.ShortCourse);
+
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -63,8 +67,43 @@ public class SelectStandardsForUpdateControllerGetTests
 
         var model = viewResult!.Model as AddProviderContactStandardsViewModel;
 
-        model!.Standards.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList());
-        model!.ApprenticeshipUnits.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList());
+        model!.Standards.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(), options => options.Excluding(x => x.CourseName));
+        model!.ApprenticeshipUnits.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(), options => options.Excluding(x => x.CourseName));
+        model!.ShowStandards.Should().Be(expectedShowStandards);
+        model!.ShowApprenticeshipUnits.Should().Be(expectedApprenticeshipUnits);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_ModelInSession_ExpectedCourseName(
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Greedy] SelectStandardsForUpdateController sut,
+    List<ProviderContactStandardModel> standards,
+    int ukprn
+)
+    {
+
+        var sessionModel = new ProviderContactSessionModel
+        {
+            Standards = new List<ProviderContactStandardModel>
+            {
+                new ProviderContactStandardModel
+                {
+                    CourseName = "test",
+                    Level = 1
+                }
+            }
+        };
+
+        sut.AddDefaultContextWithUser();
+        sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
+
+        var result = sut.SelectStandards(ukprn);
+
+        var viewResult = result as ViewResult;
+
+        var model = viewResult!.Model as AddProviderContactStandardsViewModel;
+
+        model!.Standards.FirstOrDefault().CourseName.Should().Be($"{sessionModel.Standards.FirstOrDefault().CourseName} (level {sessionModel.Standards.FirstOrDefault().Level})");
     }
 }

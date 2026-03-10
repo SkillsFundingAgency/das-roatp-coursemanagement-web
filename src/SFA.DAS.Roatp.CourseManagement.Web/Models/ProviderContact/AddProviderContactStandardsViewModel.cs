@@ -1,5 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
@@ -7,6 +7,8 @@ public class AddProviderContactStandardsViewModel : AddProviderContactStandardsS
 {
     public List<ProviderContactStandardModel> Standards { get; set; }
     public List<ProviderContactStandardModel> ApprenticeshipUnits { get; set; }
+    public bool ShowStandards { get; set; }
+    public bool ShowApprenticeshipUnits { get; set; }
 }
 
 public class AddProviderContactStandardsSubmitViewModel

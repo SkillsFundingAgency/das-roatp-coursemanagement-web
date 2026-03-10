@@ -1,9 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
@@ -18,11 +19,7 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
         var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
         if (sessionModel == null) return RedirectToRoute(RouteNames.ReviewYourDetails, new { ukprn = Ukprn });
 
-        var model = new AddProviderContactStandardsViewModel
-        {
-            Standards = sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(),
-            ApprenticeshipUnits = sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(),
-        };
+        var model = GetModel(sessionModel);
 
         return View(ViewPath, model);
     }
@@ -43,15 +40,31 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
 
         if (!ModelState.IsValid)
         {
-            var viewModel = new AddProviderContactStandardsViewModel
-            {
-                Standards = sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(),
-                ApprenticeshipUnits = sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(),
-            };
+            var viewModel = GetModel(sessionModel);
 
             return View(ViewPath, viewModel);
         }
 
         return RedirectToRoute(RouteNames.AddProviderContactCheckStandards, new { ukprn = Ukprn });
+    }
+
+    private static AddProviderContactStandardsViewModel GetModel(ProviderContactSessionModel sessionModel)
+    {
+        var standards = sessionModel.Standards.OrderBy(x => x.CourseName).ThenBy(x => x.Level).Select(x => new ProviderContactStandardModel
+        {
+            ProviderCourseId = x.ProviderCourseId,
+            CourseName = $"{x.CourseName} (level {x.Level})",
+            Level = x.Level,
+            CourseType = x.CourseType,
+            IsSelected = x.IsSelected,
+        }).ToList();
+
+        return new AddProviderContactStandardsViewModel
+        {
+            Standards = standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(),
+            ApprenticeshipUnits = standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(),
+            ShowStandards = standards.Any(x => x.CourseType == CourseType.Apprenticeship),
+            ShowApprenticeshipUnits = standards.Any(x => x.CourseType == CourseType.ShortCourse)
+        };
     }
 }

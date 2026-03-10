@@ -23,34 +23,34 @@
                                 </label>
                             </div>
                         </li>
-                        @if(Model.Standards.Any())
+                        @if(Model.ShowStandards)
                         {
                             <li class="list-item-margin-left-20 list-heading-item">
                             <h2 class= "govuk-heading-l">Apprenticeships</h2></li>
-                            @foreach (var standardDetails in Model.Standards.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                            @foreach (var standardDetails in Model.Standards)
                             {   
                                 <li class="govuk-grid-column  list-item-margin-left-20">
                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@standardDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@standardDetails.ProviderCourseId" checked="@standardDetails.IsSelected">
                                         <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@standardDetails.ProviderCourseId">
-                                            @standardDetails.CourseName (level @standardDetails.Level)
+                                            @standardDetails.CourseName
                                         </label>
                                     </div>
                                 </li>
                             }
                         }
-                        @if (Model.ApprenticeshipUnits.Any())
+                        @if (Model.ShowApprenticeshipUnits)
                         {
                             <li class="list-item-margin-left-20 list-heading-item govuk-!-margin-top-6">
                                 <h3 class="govuk-heading-l">Apprenticeship units</h3>
                             </li>
-                            @foreach (var apprenticeshipUnitDetails in Model.ApprenticeshipUnits.OrderBy(x => x.CourseName).ThenBy(x => x.Level))
+                            @foreach (var apprenticeshipUnitDetails in Model.ApprenticeshipUnits)
                             {
                                 <li class="govuk-grid-column  list-item-margin-left-20">
                                     <div class="govuk-checkboxes__item">
                                         <input class="govuk-checkboxes__input providerContactStandards" id="providerCourseId-@apprenticeshipUnitDetails.ProviderCourseId" name="SelectedProviderCourseIds" type="checkbox" value="@apprenticeshipUnitDetails.ProviderCourseId" checked="@apprenticeshipUnitDetails.IsSelected">
                                         <label class="govuk-label govuk-checkboxes__label" for="providerCourseId-@apprenticeshipUnitDetails.ProviderCourseId">
-                                            @apprenticeshipUnitDetails.CourseName (level @apprenticeshipUnitDetails.Level)
+                                            @apprenticeshipUnitDetails.CourseName
                                         </label>
                                     </div>
                                 </li>

@@ -33,8 +33,7 @@
                 </dd>
             </div>
         </dl>
-        @if(Model.CheckedStandards.Any())
-        {
+        <div asp-show="Model.ShowStandards">
             <h2 class="govuk-heading-m">Selected apprenticeships</h2>
             <p class="govuk-body">
                 These are the apprenticeships you selected. <a class="govuk-link" href="@Model.ChangeSelectedStandardsUrl">Change your selected training</a>
@@ -43,16 +42,16 @@
                 <fieldset class="govuk-fieldset">
 
                     <ul class="govuk-list govuk-list--bullet">
-                        @foreach (var standardDetails in Model.CheckedStandards.OrderBy(x => x))
+                        @foreach (var standardDetails in Model.CheckedStandards)
                         {
                             <li>@standardDetails</li>
                         }
                     </ul>
                 </fieldset>
             </div>
-        }       
-        @if (Model.CheckedApprenticeshipUnits.Any())
-        {
+        </div>
+     
+        <div asp-show="Model.ShowApprenticeshipUnits">
             <h2 class="govuk-heading-m">Selected apprenticeship units</h2>
             <p class="govuk-body">
                 These are the apprenticeship units you selected. <a class="govuk-link" href="@Model.ChangeSelectedStandardsUrl">Change your selected training</a>
@@ -61,14 +60,15 @@
                 <fieldset class="govuk-fieldset">
 
                     <ul class="govuk-list govuk-list--bullet">
-                        @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits.OrderBy(x => x))
+                        @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits)
                         {
                             <li>@apprenticeshipUnitDetails</li>
                         }
                     </ul>
                 </fieldset>
             </div>
-        }
+        </div>
+
         <h2 class="govuk-heading-m">Save and update</h2>
         <p class="govuk-body">
             By saving, your details will be automatically updated on Find apprenticeship training. We'll also save them for next time you add a new training type.

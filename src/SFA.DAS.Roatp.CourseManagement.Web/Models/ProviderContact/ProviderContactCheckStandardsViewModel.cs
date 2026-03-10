@@ -15,4 +15,6 @@ public class ProviderContactCheckStandardsViewModel : IBackLink
     public bool ShowPhone { get; set; } = true;
 
     public bool UseBulletedList { get; set; }
+    public bool ShowStandards { get; set; }
+    public bool ShowApprenticeshipUnits { get; set; }
 }
