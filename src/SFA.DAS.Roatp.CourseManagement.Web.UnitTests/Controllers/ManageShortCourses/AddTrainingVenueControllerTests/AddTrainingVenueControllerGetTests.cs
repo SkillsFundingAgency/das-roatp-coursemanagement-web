@@ -12,7 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.AddTrainingVenueControllerTests;
 public class AddTrainingVenueControllerGetTests
@@ -40,8 +39,8 @@ public class AddTrainingVenueControllerGetTests
         var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
 
         // Assert
-        addressSearch.Result.As<ViewResult>().Should().NotBeNull();
-        addressSearch.Result.As<ViewResult>().ViewName.Should().Be(AddTrainingVenueController.ViewPath);
+        addressSearch.As<ViewResult>().Should().NotBeNull();
+        addressSearch.As<ViewResult>().ViewName.Should().Be(AddTrainingVenueController.ViewPath);
     }
 
     [Test]
@@ -71,12 +70,12 @@ public class AddTrainingVenueControllerGetTests
         var addressSearch = sut.LookupAddress(apprenticeshipType, larsCode);
 
         // Assert
-        var model = addressSearch.Result.As<ViewResult>().Model as AddTrainingVenueViewModel;
+        var model = addressSearch.As<ViewResult>().Model as AddTrainingVenueViewModel;
         model.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
     [Test, MoqAutoData]
-    public async Task LookupAddress_IsAddJourney_SessionIsNull_RedirectsToReviewYourDetails(
+    public void LookupAddress_IsAddJourney_SessionIsNull_RedirectsToReviewYourDetails(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut)
@@ -91,7 +90,7 @@ public class AddTrainingVenueControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.LookupAddress(apprenticeshipType, "") as RedirectToRouteResult;
+        var result = sut.LookupAddress(apprenticeshipType, "") as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -100,7 +99,7 @@ public class AddTrainingVenueControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public async Task LookupAddress_IsAddJourney_LocationsAvailableIsTrueInSession_RedirectsToSelectShortCourseTrainingVenue(
+    public void LookupAddress_IsAddJourney_LocationsAvailableIsTrueInSession_RedirectsToSelectShortCourseTrainingVenue(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut,
@@ -118,7 +117,7 @@ public class AddTrainingVenueControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.LookupAddress(apprenticeshipType, "") as RedirectToRouteResult;
+        var result = sut.LookupAddress(apprenticeshipType, "") as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();

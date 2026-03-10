@@ -44,7 +44,7 @@ public class ConfirmNationalDeliveryControllerGetTests
     [Test]
     [MoqInlineAutoData(false, ButtonText.Continue)]
     [MoqInlineAutoData(true, ButtonText.Confirm)]
-    public void ConfirmNationalProviderDelivery_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+    public void ConfirmNationalProviderDelivery_ReturnsExpectedButtonTextBasedOnHasSeenSummaryPage(
         bool seenSummaryPage,
         string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
