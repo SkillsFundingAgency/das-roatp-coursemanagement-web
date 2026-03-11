@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
@@ -12,6 +12,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 public class CheckProviderContactController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/CheckProviderContact.cshtml";
+    public const string PrimaryContactDetailsInfoViewPath = "~/Views/AddProviderContact/PrimaryContactDetailsInfo.cshtml";
+
     [HttpGet]
     public async Task<IActionResult> CheckProviderContact(int ukprn)
     {
@@ -19,7 +21,12 @@ public class CheckProviderContactController(IMediator _mediator, ISessionService
 
         if (response == null)
         {
-            return RedirectToRoute(RouteNames.AddProviderContactDetails, new { ukprn = Ukprn });
+            var viewModel = new CheckProviderContactViewModel
+            {
+                AddProviderContactDetailsLink = Url.RouteUrl(RouteNames.AddProviderContactDetails, new { ukprn = Ukprn })
+            };
+
+            return View(PrimaryContactDetailsInfoViewPath, viewModel);
         }
 
         var sessionModel = new ProviderContactSessionModel

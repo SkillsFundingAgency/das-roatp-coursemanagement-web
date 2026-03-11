@@ -20,21 +20,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderCo
 public class CheckProviderContactControllerTests
 {
     [Test, MoqAutoData]
-    public async Task Get_NoExistingRecord_RedirectsToAddProviderContactDetails(
+    public async Task Get_NoExistingRecord_ReturnsExpectedViewModel(
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Frozen] Mock<IMediator> mediatorMock,
        [Greedy] CheckProviderContactController sut,
-       int ukprn)
+       int ukprn,
+       string addProviderContactDetailsLink)
     {
-        sut.AddDefaultContextWithUser();
+        sut.AddDefaultContextWithUser().AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.AddProviderContactDetails, addProviderContactDetailsLink);
 
         mediatorMock.Setup(x => x.Send(It.Is<GetLatestProviderContactQuery>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync((GetLatestProviderContactQueryResult)null);
 
         var result = await sut.CheckProviderContact(ukprn);
-        var redirectResult = result as RedirectToRouteResult;
+        var viewResult = result as ViewResult;
 
-        mediatorMock.Verify(s => s.Send(It.Is<GetLatestProviderContactQuery>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>()), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactDetails);
+        mediatorMock.Verify(
+            s => s.Send(It.Is<GetLatestProviderContactQuery>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>()),
+            Times.Once);
+        viewResult.ViewName.Should().Be("~/Views/AddProviderContact/PrimaryContactDetailsInfo.cshtml");
+        var model = viewResult!.Model as CheckProviderContactViewModel;
+        model.AddProviderContactDetailsLink.Should().Be(addProviderContactDetailsLink);
     }
 
     [Test, MoqAutoData]
@@ -63,6 +69,7 @@ public class CheckProviderContactControllerTests
         sessionServiceMock.Verify(
             s => s.Set(It.Is<ProviderContactSessionModel>(s =>
                 s.EmailAddress == queryResult.EmailAddress && s.PhoneNumber == queryResult.PhoneNumber)), Times.Once);
+        viewResult.ViewName.Should().Be("~/Views/AddProviderContact/CheckProviderContact.cshtml");
         var model = viewResult!.Model as CheckProviderContactViewModel;
         model!.EmailAddress.Should().Be(queryResult.EmailAddress);
         model.PhoneNumber.Should().Be(queryResult.PhoneNumber);
