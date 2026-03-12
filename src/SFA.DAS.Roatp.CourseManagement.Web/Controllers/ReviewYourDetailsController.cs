@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +39,6 @@ public class ReviewYourDetailsController(ISessionService _sessionService, IMedia
     private async Task<bool> HasShortCourses(CancellationToken cancellationToken)
     {
         GetAllProviderStandardsQueryResult result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.ShortCourse), cancellationToken);
-        return result.Standards.Any();
+        return result.Standards.Count > 0;
     }
 }
