@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ProviderCourseId = source.ProviderCourseId,
                 CourseName = source.CourseName,
                 Level = source.Level,
-                CourseDisplayName = source.CourseName + " (level " + source.Level + ")",
+                CourseDisplayName = source.DisplayName,
                 LarsCode = source.LarsCode,
                 ApprovalBody = source.ApprovalBody,
                 IsApprovedByRegulator = source.IsApprovedByRegulator,
