@@ -16,7 +16,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new")]
-[ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
 public class ReviewShortCourseDetailsController(ISessionService _sessionService, IValidator<ReviewShortCourseDetailsViewModel> _validator, IMediator _mediator, ILogger<ReviewShortCourseDetailsController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAShortCourse/ReviewShortCourseDetailsView.cshtml";
