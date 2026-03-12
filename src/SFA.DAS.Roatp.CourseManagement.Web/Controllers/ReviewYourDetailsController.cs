@@ -29,7 +29,7 @@ public class ReviewYourDetailsController(ISessionService _sessionService, IMedia
             ProviderLocationsUrl = Url.RouteUrl(RouteNames.GetProviderLocations, urlParams),
             ProviderDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, urlParams),
             ProviderContactUrl = Url.RouteUrl(RouteNames.CheckProviderContactDetails, urlParams),
-            ForecastUrl = "#",
+            ForecastUrl = Url.RouteUrl(RouteNames.ForecastCourses, urlParams),
             ShowForecastOption = showForecastOption
         };
 

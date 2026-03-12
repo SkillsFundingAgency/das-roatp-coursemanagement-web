@@ -1,9 +1,7 @@
-﻿using System.Security.Claims;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -11,7 +9,6 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -26,6 +23,7 @@ public class ReviewYourDetailsControllerGetTests
     private const string ProviderLocationsUrl = "http://test/provider-locations";
     private const string ProviderDescriptionUrl = "http://test/provider-description";
     private const string ProviderContactUrl = "http://test/provider-contact";
+    private const string ForecastCoursesUrl = "http://test/forecasts/courses";
 
     Mock<ISessionService> _sessionServiceMock;
     Mock<IMediator> _mediatorMock;
@@ -34,26 +32,21 @@ public class ReviewYourDetailsControllerGetTests
     [SetUp]
     public void Before_Each_Test()
     {
-        var user = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ProviderClaims.ProviderUkprn, "111")], "mock"));
         _sessionServiceMock = new();
         _mediatorMock = new();
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllProviderStandardsQueryResult() { Standards = [new Standard()] });
-        _sut = new(_sessionServiceMock.Object, _mediatorMock.Object)
-        {
-            ControllerContext = new ControllerContext()
-            {
-                HttpContext = new DefaultHttpContext() { User = user },
-            }
-        };
+        _sut = new(_sessionServiceMock.Object, _mediatorMock.Object);
+
         _sut
             .AddDefaultContextWithUser()
             .AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.SelectCourseType, SelectCourseTypeUrl)
             .AddUrlForRoute(RouteNames.GetProviderLocations, ProviderLocationsUrl)
             .AddUrlForRoute(RouteNames.GetProviderDescription, ProviderDescriptionUrl)
-            .AddUrlForRoute(RouteNames.CheckProviderContactDetails, ProviderContactUrl);
+            .AddUrlForRoute(RouteNames.CheckProviderContactDetails, ProviderContactUrl)
+            .AddUrlForRoute(RouteNames.ForecastCourses, ForecastCoursesUrl);
     }
 
     [Test]
@@ -76,7 +69,7 @@ public class ReviewYourDetailsControllerGetTests
     }
 
     [Test]
-    public async Task Index_ReturnsViewWithModelWithExpectedUrls()
+    public async Task Index_ReturnsViewWithExpectedUrlsInModel()
     {
         var expectedModel = new ReviewYourDetailsViewModel()
         {
@@ -84,7 +77,7 @@ public class ReviewYourDetailsControllerGetTests
             SelectCourseTypeUrl = SelectCourseTypeUrl,
             ProviderDescriptionUrl = ProviderDescriptionUrl,
             ProviderContactUrl = ProviderContactUrl,
-            ForecastUrl = "#",
+            ForecastUrl = ForecastCoursesUrl,
             ShowForecastOption = true
         };
 
