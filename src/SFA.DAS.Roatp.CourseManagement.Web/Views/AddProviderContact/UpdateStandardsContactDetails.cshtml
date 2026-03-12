@@ -16,7 +16,7 @@
         <p asp-show="Model.EmailAddressOnlyUpdate" class="govuk-body">Saving a new email address to your standards and apprenticeship units will not remove any phone numbers associated with them.</p>
         <p asp-show="Model.PhoneNumberOnlyUpdate" class="govuk-body">Saving a new phone number to your standards and apprenticeship units will not remove any email addresses associated with them.</p>
         <dl class="govuk-summary-list">
-            @if (Model.EmailAddressOnlyUpdate || Model.EmailAddressAndPhoneNumberUpdate)
+            @if (Model.EmailAddressOnlyUpdate == true || Model.EmailAddressAndPhoneNumberUpdate == true)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
@@ -27,7 +27,7 @@
                     </dd>
                 </div>
             }
-            @if (Model.PhoneNumberOnlyUpdate || Model.EmailAddressAndPhoneNumberUpdate)
+            @if (Model.PhoneNumberOnlyUpdate == true || Model.EmailAddressAndPhoneNumberUpdate == true)
             {
                 <div class="govuk-summary-list__row">
                     <dt class="govuk-summary-list__key">
