@@ -5,4 +5,5 @@ public class CheckProviderContactViewModel : IBackLink
     public string ChangeProviderContactDetailsLink { get; set; }
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
+    public string AddProviderContactDetailsLink { get; set; } = "#";
 }
