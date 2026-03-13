@@ -1,0 +1,39 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts
+@model CourseForecastsViewModel
+@{
+    ViewData["Title"] = $"Add forecast for {Model.ApprenticeshipTypeLower}";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <span class="govuk-caption-l">Add your delivery forecast for @(Model.ApprenticeshipTypeLowerPlural)</span>
+        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">@Model.CourseDisplayName</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body">Add in how many learners will start an @Model.ApprenticeshipTypeLower during the following time periods.</p>
+
+        <p class="govuk-body govuk-!-margin-bottom-7">This can be an estimate and you are not committed to training this amount of learners. We will use this data for our own reporting.</p>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="post">
+              @for (int i = 0; i < Model.Forecasts.Count; i++)
+              {
+                <div class="govuk-form-group">
+                    <input type="hidden" asp-for="@Model.Forecasts[i].Quarter" />
+                    <input type="hidden" asp-for="@Model.Forecasts[i].TimePeriod" />
+                    <input type="hidden" asp-for="@Model.Forecasts[i].DisplayName" />
+                    <label class="govuk-label govuk-!-margin-bottom-2" for="@Model.Forecasts[i].Id">@Model.Forecasts[i].DisplayName</label>
+                    <input class="govuk-input govuk-input--width-10" asp-for="@Model.Forecasts[i].EstimatedLearners" id="@Model.Forecasts[i].Id" type="number" />
+                </div>
+              }
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Save and return
+            </button>
+        </form>
+    </div>
+</div>
