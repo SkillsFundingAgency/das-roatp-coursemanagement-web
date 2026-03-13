@@ -1,0 +1,20 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts
+@model ForecastCoursesViewModel
+@{
+    ViewData["Title"] = $"Select {Model.ApprenticeshipTypeLower} to add forecasts";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Add your delivery forecast for @Model.ApprenticeshipTypeLowerPlural</h1>
+        
+        <p class="govuk-body">Tell us how many learners you expect will start an @Model.ApprenticeshipTypeLower over the next 12 months. This can be an estimate and you can update it later.</p>
+        
+        <p class="govuk-body">Select an @Model.ApprenticeshipTypeLower from the list below to add your estimate for it.</p>
+        
+        <h2 class="govuk-heading-m">Your @Model.ApprenticeshipTypeLowerPlural</h2>
+        
+        <partial name="_CourseLinks" for="CourseLinks" />
+    </div>
+</div>

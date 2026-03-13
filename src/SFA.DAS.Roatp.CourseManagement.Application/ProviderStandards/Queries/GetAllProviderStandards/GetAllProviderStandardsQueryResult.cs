@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
+
+public class GetAllProviderStandardsQueryResult
 {
-    public class GetAllProviderStandardsQueryResult
-    {
-        public List<Domain.ApiModels.Standard> Standards { get; set; } = new();
-    }
+    public List<Standard> Standards { get; set; } = [];
 }

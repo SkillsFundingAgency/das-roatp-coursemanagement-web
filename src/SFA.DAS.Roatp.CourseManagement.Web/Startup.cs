@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -101,10 +100,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
             services.AddAuthorization<AuthorizationContextProvider>();
-            services.Configure<RouteOptions>(options =>
-            {
-                options.LowercaseUrls = true;
-            }).AddMvc(options =>
+            services.AddMvc(options =>
             {
                 options.AddAuthorization();
 
