@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -68,17 +69,23 @@ public class CheckStandardsControllerGetTests
 
         var viewResult = result as ViewResult;
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
+        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
+        var expectedShowStandards = expectedCheckedStandards.Count > 0;
+        var expectedApprenticeshipUnits = expectedCheckedApprenticeshipUnits.Count > 0;
 
         var hasBulletedList = expectedCheckedStandards.Count > 1;
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
         model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
+        model.CheckedApprenticeshipUnits.Should().BeEquivalentTo(expectedCheckedApprenticeshipUnits);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
         model.ChangeEmailPhoneUrl.Should().Be(changeEmailPhoneUrl);
         model.ChangeSelectedStandardsUrl.Should().Be(changeSelectedStandardsUrl);
         model.UseBulletedList.Should().Be(hasBulletedList);
+        model.ShowStandards.Should().Be(expectedShowStandards);
+        model.ShowApprenticeshipUnits.Should().Be(expectedApprenticeshipUnits);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 

@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -41,6 +43,7 @@ public class ProviderContactCompleteControllerTests
         [Greedy] ProviderContactCompleteController sut,
         List<ProviderContactStandardModel> standards,
         string reviewYourDetailsLink,
+        string manageShortCoursesLink,
         int ukprn
     )
     {
@@ -54,7 +57,9 @@ public class ProviderContactCompleteControllerTests
             Standards = standards
         };
 
-        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
+        sut.AddDefaultContextWithUser().AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink)
+            .AddUrlForRoute(RouteNames.ManageShortCourses, manageShortCoursesLink);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -62,18 +67,21 @@ public class ProviderContactCompleteControllerTests
 
         var viewResult = result as ViewResult;
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
+        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
 
         var model = viewResult!.Model as AddProviderContactCompleteViewModel;
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
+        model.CheckedApprenticeshipUnits.Should().BeEquivalentTo(expectedCheckedApprenticeshipUnits);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
+        model.ManageShortCoursesUrl.Should().Be(manageShortCoursesLink);
         model.ShowBoth.Should().Be(true);
         model.ShowEmailOnly.Should().Be(false);
         model.ShowPhoneOnly.Should().Be(false);
-        model.UseBulletedList.Should().Be(expectedCheckedStandards.Count > 1);
         model.ShowStandards.Should().Be(expectedCheckedStandards.Count > 0);
+        model.ShowApprenticeshipUnits.Should().Be(expectedCheckedApprenticeshipUnits.Count > 0);
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ProviderContactSessionModel)), Times.Once);
     }
