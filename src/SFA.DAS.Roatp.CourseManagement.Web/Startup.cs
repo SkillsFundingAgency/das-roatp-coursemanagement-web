@@ -1,3 +1,6 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
@@ -24,9 +27,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -114,6 +114,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
                         .RequireAuthenticatedUser()
                         .AddRequirements(new ProviderUkPrnRequirement())
                         .Build()));
+
+                options.Filters.Add(
+                    new ResponseCacheAttribute
+                    {
+                        NoStore = true,
+                        Location = ResponseCacheLocation.None
+                    });
 
                 if (!_configuration.IsDev())
                 {

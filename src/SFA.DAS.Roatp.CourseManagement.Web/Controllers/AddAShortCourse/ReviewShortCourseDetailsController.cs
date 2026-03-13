@@ -1,4 +1,6 @@
-﻿using FluentValidation;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,8 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
@@ -40,6 +40,7 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
         model.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
         model.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         model.NationalProviderChangeLink = Url.RouteUrl(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+        model.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
 
         var result = _validator.Validate(model);
 
