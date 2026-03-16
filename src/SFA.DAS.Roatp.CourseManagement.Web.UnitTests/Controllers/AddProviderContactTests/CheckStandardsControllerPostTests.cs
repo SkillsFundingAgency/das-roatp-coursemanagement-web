@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -9,6 +10,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -57,7 +59,11 @@ public class CheckStandardsControllerPostTests
             Standards = standards
         };
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
+        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList());
+        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList());
+
+        var expectedProviderCourseIdCount = expectedCheckedStandards;
+        expectedProviderCourseIdCount.AddRange(expectedCheckedApprenticeshipUnits);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -69,6 +75,6 @@ public class CheckStandardsControllerPostTests
 
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         redirectResult!.RouteName.Should().Be(RouteNames.AddProviderContactSaved);
-        mediatorMock.Verify(m => m.Send(It.Is<AddProviderContactCommand>(c => c.Ukprn == ukprn && c.UserId == TestConstants.DefaultUserId && c.EmailAddress == email && c.PhoneNumber == phoneNumber && c.ProviderCourseIds.Count == expectedCheckedStandards.Count), It.IsAny<CancellationToken>()));
+        mediatorMock.Verify(m => m.Send(It.Is<AddProviderContactCommand>(c => c.Ukprn == ukprn && c.UserId == TestConstants.DefaultUserId && c.EmailAddress == email && c.PhoneNumber == phoneNumber && c.ProviderCourseIds.Count == expectedProviderCourseIdCount.Count), It.IsAny<CancellationToken>()));
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -36,6 +37,10 @@ public class SelectStandardsForUpdateControllerPostTests
         {
             Standards = standards
         };
+
+        var expectedShowStandards = sessionModel.Standards.Any(x => x.CourseType == CourseType.Apprenticeship);
+        var expectedApprenticeshipUnits = sessionModel.Standards.Any(x => x.CourseType == CourseType.ShortCourse);
+
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -46,7 +51,10 @@ public class SelectStandardsForUpdateControllerPostTests
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as AddProviderContactStandardsViewModel;
-        model!.Standards.Should().BeEquivalentTo(standards);
+        model!.Standards.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.Apprenticeship).ToList(), options => options.Excluding(x => x.CourseName));
+        model!.ApprenticeshipUnits.Should().BeEquivalentTo(standards.Where(x => x.CourseType == CourseType.ShortCourse).ToList(), options => options.Excluding(x => x.CourseName));
+        model!.ShowStandards.Should().Be(expectedShowStandards);
+        model!.ShowApprenticeshipUnits.Should().Be(expectedApprenticeshipUnits);
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Once());
     }
@@ -59,9 +67,11 @@ public class SelectStandardsForUpdateControllerPostTests
         List<ProviderContactStandardModel> standards,
         int ukprn)
     {
+        var providerCourseIds = standards.Select(x => x.ProviderCourseId).ToList();
+
         var submitViewModel = new AddProviderContactStandardsSubmitViewModel
         {
-            SelectedProviderCourseIds = standards.Select(x => x.ProviderCourseId).ToList()
+            SelectedProviderCourseIds = providerCourseIds
         };
 
         var sessionModel = new ProviderContactSessionModel

@@ -10,8 +10,11 @@ public class ProviderContactCheckStandardsViewModel : IBackLink
     public string ChangeEmailPhoneUrl { get; set; } = "#";
     public string ChangeSelectedStandardsUrl { get; set; } = "#";
     public List<string> CheckedStandards { get; set; }
+    public List<string> CheckedApprenticeshipUnits { get; set; }
     public bool ShowEmail { get; set; } = true;
     public bool ShowPhone { get; set; } = true;
 
     public bool UseBulletedList { get; set; }
+    public bool ShowStandards { get; set; }
+    public bool ShowApprenticeshipUnits { get; set; }
 }

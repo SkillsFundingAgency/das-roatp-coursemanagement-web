@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -54,13 +54,9 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
 
         if (sessionModel.Standards == null)
         {
-            GetAllProviderStandardsQueryResult standardsResult =
-                await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, CourseType.Apprenticeship));
-            sessionModel.Standards = standardsResult.Standards.Count > 0
-                ? standardsResult.Standards.Select(x => (ProviderContactStandardModel)x).ToList()
-                : new();
+            sessionModel.Standards = await GetStandards(ukprn);
 
-            sessionModel.HasStandards = sessionModel.Standards.Count > 0;
+            sessionModel.HasStandards = sessionModel.Standards.Count != 0;
         }
 
         _sessionService.Set(sessionModel);
@@ -71,6 +67,13 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
         }
 
         return RedirectToRoute(RouteNames.AddProviderContact, new { ukprn = Ukprn });
+    }
+
+    private async Task<List<ProviderContactStandardModel>> GetStandards(int ukprn)
+    {
+        var result = await _mediator.Send(new GetAllProviderStandardsQuery(ukprn, null));
+
+        return result.Standards.Select(x => (ProviderContactStandardModel)x).ToList();
     }
 }
 
