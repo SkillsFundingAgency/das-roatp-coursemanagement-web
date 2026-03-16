@@ -99,5 +99,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string CheckProviderContactDetails = "CheckProviderContactDetails";
 
         public const string ForecastCourses = nameof(ForecastCourses);
+        public const string CourseForecasts = nameof(CourseForecasts);
     }
 }
