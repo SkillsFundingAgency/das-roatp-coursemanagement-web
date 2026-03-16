@@ -1,0 +1,59 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses
+@model ShortCourseLocationInformationViewModel
+
+<div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+        <h3 class="govuk-heading-m">Training delivery locations</h3>
+        <p class="govuk-body">This is where you have told us you can deliver training for this @Model.ApprenticeshipTypeLower.</p>
+        <table class="govuk-table" aria-label="List of training locations">
+            <tbody class="govuk-table__body">
+
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Delivery locations</th>
+                    <td class="govuk-table__cell">
+                        <ul class="govuk-list">
+                            @foreach (var location in Model.DeliveryLocations)
+                            {
+                                <li>@location</li>
+                            }
+                        </ul>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.LocationOptionsChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+
+                <tr class="govuk-table__row" asp-show="Model.ShowTrainingVenues">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Your training venues</th>
+                    <td class="govuk-table__cell">
+                        <ul class="govuk-list">
+                            @foreach (var venue in Model.TrainingVenues)
+                            {
+                                <li>@venue</li>
+                            }
+                        </ul>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.TrainingVenuesChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+
+                <tr class="govuk-table__row" asp-show="Model.DeliversAtEmployerLocation">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">National provider</th>
+                    <td class="govuk-table__cell">@Model.HasNationalDeliveryOption</td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.NationalProviderChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+
+                <tr class="govuk-table__row" asp-show="Model.ShowTrainingRegions">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Areas you can deliver at an employer’s location</th>
+                    <td class="govuk-table__cell">
+                        <ul class="govuk-list">
+                            @foreach (var region in Model.TrainingRegions)
+                            {
+                                <li>@region</li>
+                            }
+                        </ul>
+                    </td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.TrainingRegionsChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>

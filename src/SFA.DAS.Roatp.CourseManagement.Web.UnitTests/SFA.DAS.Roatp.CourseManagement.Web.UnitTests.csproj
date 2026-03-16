@@ -38,4 +38,8 @@
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Web\SFA.DAS.Roatp.CourseManagement.Web.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\ManageShortCourses\EditShortCourseDetailsControllerTests\" />
+  </ItemGroup>
+
 </Project>

@@ -11,32 +11,32 @@ public class ReviewShortCourseDetailsViewModelValidator : AbstractValidator<Revi
     {
         RuleFor(s => s)
             .Must(s =>
-            !string.IsNullOrWhiteSpace(s.ContactUsEmail) &&
-            !string.IsNullOrWhiteSpace(s.ContactUsPhoneNumber) &&
-            !string.IsNullOrWhiteSpace(s.StandardInfoUrl))
+            !string.IsNullOrWhiteSpace(s.ContactInformation.ContactUsEmail) &&
+            !string.IsNullOrWhiteSpace(s.ContactInformation.ContactUsPhoneNumber) &&
+            !string.IsNullOrWhiteSpace(s.ContactInformation.StandardInfoUrl))
             .WithMessage(s => $"Enter all contact details for this {s.ApprenticeshipTypeLower}");
 
-        RuleFor(s => s.DeliveryLocations)
+        RuleFor(s => s.LocationInformation.DeliveryLocations)
             .NotEmpty()
             .WithMessage(s => $"Select training options for this {s.ApprenticeshipTypeLower}");
 
-        RuleFor(s => s.TrainingVenues)
+        RuleFor(s => s.LocationInformation.TrainingVenues)
             .NotEmpty()
             .WithMessage(IncompleteErrorMessage)
             .When(s =>
-            s.LocationOptions.Contains(ShortCourseLocationOption.ProviderLocation));
+            s.LocationInformation.LocationOptions.Contains(ShortCourseLocationOption.ProviderLocation));
 
-        RuleFor(s => s.HasNationalDeliveryOption)
+        RuleFor(s => s.LocationInformation.HasNationalDeliveryOption)
             .NotNull()
             .WithMessage(IncompleteErrorMessage)
             .When(s =>
-            s.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation));
+            s.LocationInformation.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation));
 
-        RuleFor(s => s.TrainingRegions)
+        RuleFor(s => s.LocationInformation.TrainingRegions)
             .NotEmpty()
             .WithMessage(IncompleteErrorMessage)
             .When(s =>
-            s.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) &&
-            s.HasNationalDeliveryOption == "No");
+            s.LocationInformation.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) &&
+            s.LocationInformation.HasNationalDeliveryOption == "No");
     }
 }

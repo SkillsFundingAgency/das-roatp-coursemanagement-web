@@ -35,12 +35,14 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
         model.ApprenticeshipType = apprenticeshipType;
+        model.ContactInformation.ApprenticeshipType = apprenticeshipType;
+        model.LocationInformation.ApprenticeshipType = apprenticeshipType;
         model.CancelLink = Url.RouteUrl(RouteNames.ReviewYourDetails, new { Ukprn });
-        model.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
-        model.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
-        model.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
-        model.NationalProviderChangeLink = Url.RouteUrl(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
-        model.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
+        model.ContactInformation.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
+        model.LocationInformation.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
+        model.LocationInformation.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+        model.LocationInformation.NationalProviderChangeLink = Url.RouteUrl(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+        model.LocationInformation.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
 
         var result = _validator.Validate(model);
 

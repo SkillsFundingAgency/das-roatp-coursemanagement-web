@@ -21,4 +21,14 @@ public class ShortCourseInformationViewModelTests
             return option;
         });
     }
+
+    [Test, AutoData]
+    public void Operator_CourseDisplayName_ReturnsFormattedValue(GetStandardInformationQueryResult source)
+    {
+        ShortCourseInformationViewModel sut = source;
+
+        var result = sut.CourseDisplayName;
+
+        result.Should().Be($"{sut.CourseName} (level {sut.Level})");
+    }
 }

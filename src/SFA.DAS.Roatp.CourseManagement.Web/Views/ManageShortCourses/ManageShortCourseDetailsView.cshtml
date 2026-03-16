@@ -1,0 +1,20 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
+@model ManageShortCourseDetailsViewModel
+@{
+    ViewBag.Title = "Manage short course details";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</div>
+        <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
+
+    </div>
+</div>
+
+<partial name="_ShortCourseContactInformation" for="ContactInformation" />
+
+<partial name="_ShortCourseLocationInformation" for="LocationInformation" />
+
+<a id="submit" href="@Model.DeleteShortCourseLink" class="govuk-button govuk-button--secondary">Delete @Model.ApprenticeshipTypeLower</a> <br />
+<a href="@Model.BackToManageShortCoursesLink" class="govuk-link">Back to managing your @Model.ApprenticeshipTypeLowerPlural</a>

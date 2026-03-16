@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Security.Claims;
+using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -15,9 +18,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Security.Claims;
-using System.Text.Json;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ReviewShortCourseDetailsControllerTests;
 public class ReviewShortCourseDetailsControllerGetTests
@@ -67,11 +67,11 @@ public class ReviewShortCourseDetailsControllerGetTests
         model!.Should().NotBeNull();
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model.CancelLink.Should().Be(cancelLink);
-        model.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
-        model.TrainingRegionsChangeLink.Should().Be(regionsChangeLink);
-        model.TrainingVenuesChangeLink.Should().Be(trainingVenueChangeLink);
-        model.NationalProviderChangeLink.Should().Be(nationalProviderChangeLink);
-        model.LocationOptionsChangeLink.Should().Be(locationOptionsChangeLink);
+        model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
+        model.LocationInformation.TrainingRegionsChangeLink.Should().Be(regionsChangeLink);
+        model.LocationInformation.TrainingVenuesChangeLink.Should().Be(trainingVenueChangeLink);
+        model.LocationInformation.NationalProviderChangeLink.Should().Be(nationalProviderChangeLink);
+        model.LocationInformation.LocationOptionsChangeLink.Should().Be(locationOptionsChangeLink);
         sut.ModelState.ErrorCount.Should().Be(0);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasSeenSummaryPage)), Times.Once());

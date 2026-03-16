@@ -18,6 +18,7 @@ public class ShortCourseInformationViewModel
     public int Duration { get; set; }
     public DurationUnits DurationUnits { get; set; }
     public CourseType CourseType { get; set; }
+    public string CourseDisplayName => $"{CourseName} (level {Level})";
 
     public static implicit operator ShortCourseInformationViewModel(GetStandardInformationQueryResult source)
         => new()

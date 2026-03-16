@@ -34,101 +34,13 @@
     </div>
 </div>
 
-<div class="govuk-grid-row govuk-!-margin-top-6">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-m">Contact details</h1>
-        <p class="govuk-body">These are the contact details that show on Find apprenticeship training for this @Model.ApprenticeshipTypeLower.</p>
-        <table class="govuk-table" aria-label="Contact details">
-            <tbody class="govuk-table__body">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Email address</th>
-                    <td class="govuk-table__cell" style="word-break: break-all">@Model.ContactUsEmail</td>
-                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.ContactDetailsChangeLink" class="govuk-link">Change</a></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Telephone number</th>
-                    <td class="govuk-table__cell" style="word-break: break-all">@Model.ContactUsPhoneNumber</td>
-                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.ContactDetailsChangeLink" class="govuk-link">Change</a></td>
-                </tr>
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Website page</th>
-                    <td class="govuk-table__cell" style="word-break: break-all">@Model.StandardInfoUrl</td>
-                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.ContactDetailsChangeLink" class="govuk-link">Change</a></td>
-                </tr>
-            </tbody>
-        </table>
+<partial name="_ShortCourseContactInformation" for="ContactInformation" />
+
+<partial name="_ShortCourseLocationInformation" for="LocationInformation" />
+
+<form method="post" asp-route="@RouteNames.ReviewShortCourseDetails" enctype="multipart/form-data" novalidate>
+    <div class="govuk-button-group">
+        <button id="submit" type="submit" class="govuk-button">Save @Model.ApprenticeshipTypeLower</button>
+        <a href="@Model.CancelLink" class="govuk-link">Cancel and return to dashboard</a>
     </div>
-</div>
-
-<div class="govuk-grid-row govuk-!-margin-top-6">
-    <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-m">Training delivery locations</h1>
-        <p class="govuk-body">This is where you have told us you can deliver training for this @Model.ApprenticeshipTypeLower.</p>
-        <table class="govuk-table" aria-label="List of training locations">
-            <tbody class="govuk-table__body">
-
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Delivery locations</th>
-                    <td class="govuk-table__cell">
-                        <ul class="govuk-list">
-                            @foreach(var location in Model.DeliveryLocations)
-                            {
-                                <li>@location</li>
-                            }
-                        </ul>
-                    </td>
-                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.LocationOptionsChangeLink" class="govuk-link">Change</a></td>
-                </tr>
-
-                @if(Model.TrainingVenues.Any())
-                {
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header govuk-!-width-one-third" scope="row">Your training venues</th>
-                        <td class="govuk-table__cell">
-                            <ul class="govuk-list">
-                                @foreach(var venue in Model.TrainingVenues)
-                                {
-                                    <li>@venue</li>
-                                } 
-                            </ul>
-                        </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.TrainingVenuesChangeLink" class="govuk-link">Change</a></td>
-                    </tr>
-                }
-
-                @if (Model.DeliversAtEmployerLocation)
-                {
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header govuk-!-width-one-third" scope="row">National provider</th>
-                        <td class="govuk-table__cell">@Model.HasNationalDeliveryOption</td>
-                        <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.NationalProviderChangeLink" class="govuk-link">Change</a></td>
-                    </tr>
-                }
-
-                @if (Model.TrainingRegions.Any())
-                {
-                    <tr class="govuk-table__row">
-                        <th class="govuk-table__header govuk-!-width-one-third" scope="row">Areas you can deliver at an employer’s location</th>
-                        <td class="govuk-table__cell">
-                            <ul class="govuk-list">
-                                @foreach (var region in Model.TrainingRegions.OrderBy(x => x))
-                                {
-                                    <li>@region</li>
-                                }
-                            </ul>
-                        </td>
-                        <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.TrainingRegionsChangeLink" class="govuk-link">Change</a></td>
-                    </tr>
-                }
-                
-            </tbody>
-        </table>
-
-        <form method="post" asp-route="@RouteNames.ReviewShortCourseDetails" enctype="multipart/form-data" novalidate>
-            <div class="govuk-button-group">
-                <button id="submit" type="submit" class="govuk-button">Save @Model.ApprenticeshipTypeLower</button>
-                <a href="@Model.CancelLink" class="govuk-link">Cancel and return to dashboard</a>
-            </div>
-        </form>
-    </div>
-</div>
+</form>

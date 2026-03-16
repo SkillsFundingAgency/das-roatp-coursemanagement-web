@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses
+@model ShortCourseContactInformationViewModel
+
+<div class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-m">Contact details</h2>
+        <p class="govuk-body">These are the contact details that show on Find apprenticeship training for this @Model.ApprenticeshipTypeLower.</p>
+        <table class="govuk-table" aria-label="Contact details">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Email address</th>
+                    <td class="govuk-table__cell"><span class="das-breakable">@Model.ContactUsEmail</span></td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.ContactDetailsChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Telephone number</th>
+                    <td class="govuk-table__cell"><span class="das-breakable">@Model.ContactUsPhoneNumber</span></td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.ContactDetailsChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Website page</th>
+                    <td class="govuk-table__cell"><span class="das-breakable">@Model.StandardInfoUrl</span></td>
+                    <td class="govuk-table__cell govuk-!-text-align-right"><a href="@Model.ContactDetailsChangeLink" class="govuk-link">Change</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
