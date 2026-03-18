@@ -16,16 +16,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderCo
 [TestFixture]
 public class ProviderContactConfirmUpdateStandardsControllerPostTests
 {
-    [Test, MoqAutoData]
-    public void Post_ModelStateIsInvalid_EmailAndPhone_ReturnsViewResult(
+    [Test]
+    [MoqInlineAutoData("test@test.com", "123445", true, false, false)]
+    [MoqInlineAutoData("test@test.com", "", false, true, false)]
+    [MoqInlineAutoData("", "123445", false, false, true)]
+    [MoqInlineAutoData("test@test.com", null, false, true, false)]
+    [MoqInlineAutoData(null, "123445", false, false, true)]
+    public void Post_ModelStateIsInvalid_VariationOfEmailAndPhoneNumberInputs_SetsModelFlagCorrectlyAndReturnsViewResult(
+        string email,
+        string phoneNumber,
+        bool expectedEmailAddressAndPhoneNumberUpdate,
+        bool expectedEmailAddressOnlyUpdate,
+        bool expectedPhoneNumberOnlyUpdate,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ConfirmUpdateStandardsController sut,
         int ukprn)
     {
-        var email = "test@test.com";
-        var phoneNumber = "123445";
-
         var submitViewModel = new ConfirmUpdateStandardsSubmitViewModel
         {
             EmailAddress = email,
@@ -39,65 +46,12 @@ public class ProviderContactConfirmUpdateStandardsControllerPostTests
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ConfirmUpdateStandardsViewModel;
-        viewResult.ViewName.Should().Contain("UpdateStandardsPhoneAndEmail");
+        viewResult.ViewName.Should().Contain("UpdateStandardsContactDetails");
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
-
-        sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());
-    }
-
-    [Test, MoqAutoData]
-    public void Post_ModelStateIsInvalid_EmailOnly_ReturnsViewResult(
-       [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Frozen] Mock<IMediator> mediatorMock,
-       [Greedy] ConfirmUpdateStandardsController sut,
-       int ukprn)
-    {
-        var email = "test@test.com";
-
-        var submitViewModel = new ConfirmUpdateStandardsSubmitViewModel
-        {
-            EmailAddress = email
-        };
-
-        sut.AddDefaultContextWithUser();
-        sut.ModelState.AddModelError("key", "message");
-
-        var result = sut.PostConfirmUpdateStandards(ukprn, submitViewModel);
-
-        var viewResult = result as ViewResult;
-        var model = viewResult!.Model as ConfirmUpdateStandardsViewModel;
-        viewResult.ViewName.Should().Contain("UpdateStandardsEmailOnly");
-        model.EmailAddress.Should().Be(email);
-        model.PhoneNumber.Should().BeNull();
-
-        sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());
-    }
-
-    [Test, MoqAutoData]
-    public void Post_ModelStateIsInvalid_PhoneOnly_ReturnsViewResult(
-       [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Frozen] Mock<IMediator> mediatorMock,
-       [Greedy] ConfirmUpdateStandardsController sut,
-       int ukprn)
-    {
-        var phoneNumber = "123445";
-
-        var submitViewModel = new ConfirmUpdateStandardsSubmitViewModel
-        {
-            PhoneNumber = phoneNumber
-        };
-
-        sut.AddDefaultContextWithUser();
-        sut.ModelState.AddModelError("key", "message");
-
-        var result = sut.PostConfirmUpdateStandards(ukprn, submitViewModel);
-
-        var viewResult = result as ViewResult;
-        var model = viewResult!.Model as ConfirmUpdateStandardsViewModel;
-        viewResult.ViewName.Should().Contain("UpdateStandardsPhoneOnly");
-        model.EmailAddress.Should().BeNull();
-        model.PhoneNumber.Should().Be(phoneNumber);
+        model.EmailAddressAndPhoneNumberUpdate.Should().Be(expectedEmailAddressAndPhoneNumberUpdate);
+        model.EmailAddressOnlyUpdate.Should().Be(expectedEmailAddressOnlyUpdate);
+        model.PhoneNumberOnlyUpdate.Should().Be(expectedPhoneNumberOnlyUpdate);
 
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ProviderContactSessionModel>()), Times.Never());
     }

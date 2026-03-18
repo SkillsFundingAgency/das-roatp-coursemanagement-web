@@ -1,0 +1,32 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.CheckProviderContactViewModel
+@{
+    ViewBag.Title = "save primary cotact details";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-caption-l">Save contact details</div>
+        <h1 class="govuk-heading-xl">Save a primary set of  contact details</h1>
+        <p class="govuk-body">
+            These contact details will be displayed on Find apprenticeship training. Employers will use them to contact you about the training you offer.
+        </p>
+        <p class="govuk-body">
+            Your contact details must include either a phone number or email address, or both.
+        </p>
+        <p class="govuk-body">
+            Once you have added your details:
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>we will save them for next time you add or update your training</li>
+            <li>you will be asked if you want to apply them to one or multiple types of training.</li>
+        </ul>
+        <p class="govuk-body">
+            You must apply these contact details to at least one standard or apprenticeship unit for them to appear on Find apprenticeship training.
+        </p>
+
+        <div class="govuk-button-group govuk-!-margin-top-6">
+            <a id="Continue" class="govuk-button" data-module="govuk-button" data-disable-on-submit="true" href="@Model.AddProviderContactDetailsLink">
+                Continue
+            </a>
+        </div>
+    </div>
+</div>
