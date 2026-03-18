@@ -35,7 +35,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         Assert.IsNotNull(viewResult);
         var model = viewResult.Model as AddShortCourseContactDetailsViewModel;
         model.Should().NotBeNull();
-        model!.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 

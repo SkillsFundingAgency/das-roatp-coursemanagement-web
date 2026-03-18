@@ -33,13 +33,15 @@ public class ManageShortCourseDetailsControllerGetTests
         int ukprn = 12345;
         string larsCode = "ABC1234";
         string backToManageShortCoursesLink = Guid.NewGuid().ToString();
+        string contactDetailsChangeLink = Guid.NewGuid().ToString();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, ukprn.ToString()) }, "mock"));
 
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
         sut.AddDefaultContextWithUser();
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink);
+            .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink)
+            .AddUrlForRoute(RouteNames.EditShortCourseContactDetails, contactDetailsChangeLink); ;
 
         sut.ControllerContext = new ControllerContext()
         {
@@ -56,7 +58,7 @@ public class ManageShortCourseDetailsControllerGetTests
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model.BackToManageShortCoursesLink.Should().Be(backToManageShortCoursesLink);
         model.DeleteShortCourseLink.Should().Be("#");
-        model.ContactInformation.ContactDetailsChangeLink.Should().Be("#");
+        model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
         model.LocationInformation.TrainingRegionsChangeLink.Should().Be("#");
         model.LocationInformation.TrainingVenuesChangeLink.Should().Be("#");
         model.LocationInformation.NationalProviderChangeLink.Should().Be("#");
@@ -65,7 +67,7 @@ public class ManageShortCourseDetailsControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public async Task ManageShortCourseDetails_GetStandardsDetailsApiReturnsNull_RedirectsToReviewYourDetails(
+    public async Task ManageShortCourseDetails_GetStandardsDetailsApiReturnsNull_RedirectsPageNotFounds(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ManageShortCourseDetailsController sut)
     {

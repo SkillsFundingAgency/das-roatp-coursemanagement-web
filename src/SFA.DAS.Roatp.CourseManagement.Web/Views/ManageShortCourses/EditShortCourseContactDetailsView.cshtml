@@ -1,0 +1,20 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
+@model EditShortCourseContactDetailsViewModel
+@{
+    ViewBag.Title = "Edit short course contact details";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <div class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
+        <h1 class="govuk-heading-xl margin-bottom-30">Your contact details for this @Model.ApprenticeshipTypeLower</h1>
+        <p>These contact details show on Find apprenticeship training, and are how employers will contact you about this @Model.ApprenticeshipTypeLower. Changing your contact details here will not affect your primary set of contact details.</p>
+
+        <p>All fields must be filled in before you can continue.</p>
+
+        <partial name="_ShortCourseContactDetails" model="Model" />
+
+    </div>
+</div>

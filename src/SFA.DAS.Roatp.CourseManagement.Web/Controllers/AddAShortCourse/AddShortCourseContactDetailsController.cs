@@ -6,7 +6,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
@@ -32,9 +31,10 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             model.ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail;
             model.ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber;
             model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
-            model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
+            model.ApprenticeshipType = apprenticeshipType;
             model.ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true;
             model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
+            model.Route = RouteNames.AddShortCourseContactDetails;
         }
 
         return View(ViewPath, model);
@@ -54,9 +54,10 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
                 ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail,
                 ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber,
                 StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl,
-                ShortCourseBaseModel = new ShortCourseBaseViewModel { ApprenticeshipType = apprenticeshipType },
+                ApprenticeshipType = apprenticeshipType,
                 ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true,
-                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
+                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
+                Route = RouteNames.AddShortCourseContactDetails
             };
 
             return View(ViewPath, model);

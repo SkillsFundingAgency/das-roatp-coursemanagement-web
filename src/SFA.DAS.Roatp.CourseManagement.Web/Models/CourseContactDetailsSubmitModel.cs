@@ -1,8 +1,9 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models
 {
-    public class CourseContactDetailsSubmitModel
+    public class CourseContactDetailsSubmitModel : ShortCourseBaseViewModel
     {
         public string ContactUsEmail { get; set; }
         public string ContactUsPhoneNumber { get; set; }
