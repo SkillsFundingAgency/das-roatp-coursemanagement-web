@@ -1,13 +1,14 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
+
+[ExcludeFromCodeCoverage]
+public class ReviewYourDetailsViewModel : IBackLink
 {
-    [ExcludeFromCodeCoverage]
-    public class ReviewYourDetailsViewModel : IBackLink
-    {
-        public string SelectCourseTypeUrl { get; set; }
-        public string ProviderLocationsUrl { get; set; }
-        public string ProviderDescriptionUrl { get; set; }
-        public string ProviderContactUrl { get; set; }
-    }
+    public string SelectCourseTypeUrl { get; set; }
+    public string ProviderLocationsUrl { get; set; }
+    public string ProviderDescriptionUrl { get; set; }
+    public string ProviderContactUrl { get; set; }
+    public string ForecastUrl { get; set; }
+    public bool ShowForecastOption { get; set; }
 }

@@ -1,0 +1,47 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts
+@model CourseForecastsViewModel
+@{
+    ViewData["Title"] = $"Add forecast for {Model.ApprenticeshipTypeLower}";
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-three-quarters">
+        <partial name="_validationSummary" />
+        <span class="govuk-caption-l">Add your delivery forecast for @(Model.ApprenticeshipTypeLowerPlural)</span>
+        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">@Model.CourseDisplayName</h1>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body">Add in how many learners will start an @Model.ApprenticeshipTypeLower during the following time periods.</p>
+
+        <p class="govuk-body">This can be an estimate and you are not committed to training this amount of learners. We will use this data for our own reporting.</p>
+
+        <div class="govuk-!-margin-bottom-7">
+          <div asp-show="@Model.ShowLastUpdatedDate">
+              <p class="govuk-body"><span class="govuk-!-font-weight-bold">Last updated:</span> @Model.LastUpdatedDate</p>
+          </div>
+        </div>
+    </div>
+</div>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <form method="post">
+              @for (int i = 0; i < Model.Forecasts.Count; i++)
+              {
+                <div esfa-validation-marker-for="@Model.Forecasts[i].EstimatedLearners" class="govuk-form-group">
+                    <input type="hidden" asp-for="@Model.Forecasts[i].Quarter" />
+                    <input type="hidden" asp-for="@Model.Forecasts[i].TimePeriod" />
+                    <input type="hidden" asp-for="@Model.Forecasts[i].Description" />
+                    <label class="govuk-label govuk-!-margin-bottom-2" for="@Model.Forecasts[i].Id">@Model.Forecasts[i].Description</label>
+                    <span asp-validation-for="@Model.Forecasts[i].EstimatedLearners" class="govuk-error-message"></span>
+                    <input class="govuk-input govuk-input--width-10" asp-for="@Model.Forecasts[i].EstimatedLearners" id="@Model.Forecasts[i].Id" type="number" />
+                </div>
+              }
+            <button type="submit" class="govuk-button" data-module="govuk-button">
+                Save and return
+            </button>
+        </form>
+    </div>
+</div>

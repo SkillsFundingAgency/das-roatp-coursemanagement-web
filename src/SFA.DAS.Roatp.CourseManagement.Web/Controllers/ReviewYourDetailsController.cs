@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -6,37 +11,34 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-public class ReviewYourDetailsController : ControllerBase
+[Route("{ukprn}/review-your-details", Name = RouteNames.ReviewYourDetails)]
+public class ReviewYourDetailsController(ISessionService _sessionService, IMediator _mediator) : ControllerBase
 {
-    private readonly ISessionService _sessionService;
-    public ReviewYourDetailsController(ISessionService sessionService)
-    {
-        _sessionService = sessionService;
-    }
-
-    [Route("{ukprn}/review-your-details", Name = RouteNames.ReviewYourDetails)]
     [HttpGet]
-    public IActionResult ReviewYourDetails()
+    public async Task<IActionResult> ReviewYourDetails(CancellationToken cancellationToken)
     {
         _sessionService.Delete(nameof(ProviderContactSessionModel));
 
-        var selectCourseTypeUrl = Url.RouteUrl(RouteNames.SelectCourseType, new
+        var urlParams = new { Ukprn };
+
+        bool showForecastOption = await HasShortCourses(cancellationToken);
+
+        var model = new ReviewYourDetailsViewModel()
         {
-            ukprn = Ukprn,
-        });
+            SelectCourseTypeUrl = Url.RouteUrl(RouteNames.SelectCourseType, urlParams),
+            ProviderLocationsUrl = Url.RouteUrl(RouteNames.GetProviderLocations, urlParams),
+            ProviderDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, urlParams),
+            ProviderContactUrl = Url.RouteUrl(RouteNames.CheckProviderContactDetails, urlParams),
+            ForecastUrl = Url.RouteUrl(RouteNames.ForecastCourses, urlParams),
+            ShowForecastOption = showForecastOption
+        };
 
-        var providerLocationsUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new
-        { ukprn = Ukprn });
-        var providerDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, new { Ukprn });
+        return View("ReviewYourDetails", model);
+    }
 
-        var providerContactUrl = Url.RouteUrl(RouteNames.CheckProviderContactDetails, new { Ukprn });
-
-        return View("ReviewYourDetails", new ReviewYourDetailsViewModel()
-        {
-            SelectCourseTypeUrl = selectCourseTypeUrl,
-            ProviderLocationsUrl = providerLocationsUrl,
-            ProviderDescriptionUrl = providerDescriptionUrl,
-            ProviderContactUrl = providerContactUrl
-        });
+    private async Task<bool> HasShortCourses(CancellationToken cancellationToken)
+    {
+        GetAllProviderStandardsQueryResult result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.ShortCourse), cancellationToken);
+        return result.Standards.Count > 0;
     }
 }
