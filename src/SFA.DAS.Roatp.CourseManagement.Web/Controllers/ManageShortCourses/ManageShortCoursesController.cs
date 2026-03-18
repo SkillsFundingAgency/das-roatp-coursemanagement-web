@@ -7,10 +7,9 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
@@ -34,7 +33,7 @@ public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
 
         var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.ShortCourse));
 
-        viewModel.CourseLinks = new(result.Standards.Select(s => new CourseLink(s.DisplayName, "#")).OrderBy(c => c.Name));
+        viewModel.ShortCourses = result.Standards.Select(c => (ShortCourseViewModel)c).OrderBy(c => c.CourseDisplayName).ToList();
 
         foreach (var shortCourse in viewModel.ShortCourses)
         {
