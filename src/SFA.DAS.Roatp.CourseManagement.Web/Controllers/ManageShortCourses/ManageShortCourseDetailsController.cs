@@ -16,6 +16,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<ManageShortCourseDetailsController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/ManageShortCourses/ManageShortCourseDetailsView.cshtml";
+
+    [HttpGet]
     public async Task<IActionResult> ManageShortCourseDetails(ApprenticeshipType apprenticeshipType, string larsCode)
     {
         _logger.LogInformation("Getting Course details for ukprn {Ukprn} LarsCode {LarsCode}", Ukprn, larsCode);
@@ -34,6 +36,7 @@ public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<Man
         model.ApprenticeshipType = apprenticeshipType;
         model.ContactInformation.ApprenticeshipType = apprenticeshipType;
         model.LocationInformation.ApprenticeshipType = apprenticeshipType;
+        model.ContactInformation.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.EditShortCourseContactDetails, new { Ukprn, apprenticeshipType, larsCode });
         model.BackToManageShortCoursesLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType });
 
         return View(ViewPath, model);
