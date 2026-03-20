@@ -18,6 +18,28 @@
         {
             <h2 class="govuk-heading-m">Your @Model.ApprenticeshipTypeLowerPlural</h2>
         }        
-        <partial name="_CourseLinks" for="CourseLinks" />
+        
+        <table class="govuk-table" aria-labelledby="course-list">
+            <thead class="govuk-table__head govuk-visually-hidden">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-font-size-24" scope="col">Courses</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var course in Model.ShortCourses)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">
+                            <div class="govuk-!-margin-top-1 govuk-!-margin-bottom-2">
+                                <a class="govuk-link" href="@course.StandardUrl">
+                                    @course.CourseDisplayName
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
     </div>
 </div>

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 
 namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
 {
@@ -18,5 +20,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels
         public bool? IsApprovedByRegulator { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; }
+        public CourseType CourseType { get; set; }
+        public int Duration { get; set; }
+        public DurationUnits DurationUnits { get; set; }
     }
 }

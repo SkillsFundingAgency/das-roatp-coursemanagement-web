@@ -1,11 +1,11 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ShortCourses.AddAShortCourse;
 public class ReviewShortCourseDetailsViewModelValidatorTests
@@ -56,7 +56,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         var result = sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(s => s.DeliveryLocations)
+        result.ShouldHaveValidationErrorFor(s => s.LocationInformation.DeliveryLocations)
             .WithErrorMessage($"Select training options for this {model.ApprenticeshipTypeLower}");
     }
 
@@ -76,7 +76,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         var result = sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(s => s.TrainingVenues)
+        result.ShouldHaveValidationErrorFor(s => s.LocationInformation.TrainingVenues)
             .WithErrorMessage(ReviewShortCourseDetailsViewModelValidator.IncompleteErrorMessage);
     }
 
@@ -96,7 +96,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         var result = sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(s => s.HasNationalDeliveryOption)
+        result.ShouldHaveValidationErrorFor(s => s.LocationInformation.HasNationalDeliveryOption)
             .WithErrorMessage(ReviewShortCourseDetailsViewModelValidator.IncompleteErrorMessage);
     }
 
@@ -118,7 +118,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         var result = sut.TestValidate(model);
 
-        result.ShouldHaveValidationErrorFor(s => s.TrainingRegions)
+        result.ShouldHaveValidationErrorFor(s => s.LocationInformation.TrainingRegions)
             .WithErrorMessage(ReviewShortCourseDetailsViewModelValidator.IncompleteErrorMessage);
     }
 

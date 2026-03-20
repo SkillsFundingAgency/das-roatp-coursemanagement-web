@@ -2,6 +2,7 @@
 using System.Linq;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails
 {
@@ -20,6 +21,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public bool? IsApprovedByRegulator { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; }
+        public CourseType CourseType { get; set; }
+        public int Duration { get; set; }
+        public DurationUnits DurationUnits { get; set; }
         public List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
 
         public bool HasProviderLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Provider);
@@ -58,7 +63,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 ApprenticeshipType = v.ApprenticeshipType,
                 IsApprovedByRegulator = v.IsApprovedByRegulator,
                 IsRegulatedForProvider = v.IsRegulatedForProvider,
-                HasLocations = v.HasLocations
+                HasLocations = v.HasLocations,
+                HasOnlineDeliveryOption = v.HasOnlineDeliveryOption,
+                Duration = v.Duration,
+                DurationUnits = v.DurationUnits
             };
         }
     }

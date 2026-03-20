@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
@@ -33,9 +33,14 @@ public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
 
         var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.ShortCourse));
 
-        viewModel.CourseLinks = new(result.Standards.Select(s => new CourseLink(s.DisplayName, "#")).OrderBy(c => c.Name));
+        viewModel.ShortCourses = result.Standards.Select(c => (ShortCourseViewModel)c).OrderBy(c => c.CourseDisplayName).ToList();
 
-        viewModel.ShowShortCourseHeading = viewModel.CourseLinks.Courses.Any();
+        foreach (var shortCourse in viewModel.ShortCourses)
+        {
+            shortCourse.StandardUrl = Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, ApprenticeshipType = apprenticeshipType, larsCode = shortCourse.LarsCode });
+        }
+
+        viewModel.ShowShortCourseHeading = viewModel.ShortCourses.Count > 0;
 
         return View(ViewPath, viewModel);
     }
