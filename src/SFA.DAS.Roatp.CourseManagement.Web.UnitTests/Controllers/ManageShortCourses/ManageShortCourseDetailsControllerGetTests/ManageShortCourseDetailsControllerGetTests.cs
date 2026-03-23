@@ -34,6 +34,7 @@ public class ManageShortCourseDetailsControllerGetTests
         string larsCode = "ABC1234";
         string backToManageShortCoursesLink = Guid.NewGuid().ToString();
         string contactDetailsChangeLink = Guid.NewGuid().ToString();
+        string deleteShortCourseLink = Guid.NewGuid().ToString();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, ukprn.ToString()) }, "mock"));
 
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
@@ -41,7 +42,8 @@ public class ManageShortCourseDetailsControllerGetTests
         sut.AddDefaultContextWithUser();
         sut.AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink)
-            .AddUrlForRoute(RouteNames.EditShortCourseContactDetails, contactDetailsChangeLink); ;
+            .AddUrlForRoute(RouteNames.EditShortCourseContactDetails, contactDetailsChangeLink)
+            .AddUrlForRoute(RouteNames.DeleteShortCourse, deleteShortCourseLink);
 
         sut.ControllerContext = new ControllerContext()
         {
@@ -57,7 +59,7 @@ public class ManageShortCourseDetailsControllerGetTests
         model!.Should().NotBeNull();
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model.BackToManageShortCoursesLink.Should().Be(backToManageShortCoursesLink);
-        model.DeleteShortCourseLink.Should().Be("#");
+        model.DeleteShortCourseLink.Should().Be(deleteShortCourseLink);
         model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
         model.LocationInformation.TrainingRegionsChangeLink.Should().Be("#");
         model.LocationInformation.TrainingVenuesChangeLink.Should().Be("#");

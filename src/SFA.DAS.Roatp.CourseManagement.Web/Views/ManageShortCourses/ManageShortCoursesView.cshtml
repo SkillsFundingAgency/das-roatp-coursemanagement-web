@@ -5,6 +5,10 @@
     ViewData["Title"] = $"Manage your {Model.ApprenticeshipTypeLowerPlural}";
 }
 
+<div asp-show="Model.ShowDeleteShortCourseNotificationBanner">
+    <partial name="_ShortCourseDeleteNotificationBanner" model="Model.Banner" />
+</div>
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your @Model.ApprenticeshipTypeLowerPlural</h1>
@@ -14,10 +18,10 @@
                 Add an @Model.ApprenticeshipTypeLower
             </a>
         </p>
-        @if(Model.ShowShortCourseHeading)
-        {
-            <h2 class="govuk-heading-m">Your @Model.ApprenticeshipTypeLowerPlural</h2>
-        }        
+
+        <h2 asp-show="Model.ShowShortCourseHeading" class="govuk-heading-m">
+            Your @Model.ApprenticeshipTypeLowerPlural
+            </h2>   
         
         <table class="govuk-table" aria-labelledby="course-list">
             <thead class="govuk-table__head govuk-visually-hidden">

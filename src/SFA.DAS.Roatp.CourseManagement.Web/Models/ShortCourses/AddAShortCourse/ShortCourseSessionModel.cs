@@ -1,7 +1,7 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 

@@ -8,4 +8,5 @@ public class ShortCourseBaseViewModel
     public ApprenticeshipType? ApprenticeshipType { get; set; }
     public string ApprenticeshipTypeLower => ApprenticeshipType?.Humanize(LetterCasing.LowerCase);
     public string ApprenticeshipTypeLowerPlural => ApprenticeshipType?.Humanize(LetterCasing.LowerCase).Pluralize();
+    public string ApprenticeshipTypeHumanize => ApprenticeshipType?.Humanize();
 }

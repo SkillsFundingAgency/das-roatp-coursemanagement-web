@@ -1,0 +1,50 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
+@model DeleteShortCourseViewModel
+
+@{
+    ViewBag.Title = "Delete short course";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</span>
+        <h1 class="govuk-heading-xl">Are you sure you want to delete this @Model.ApprenticeshipTypeLower?</h1>
+        <form method="post" asp-route="@RouteNames.DeleteShortCourse" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="ShortCourseInformation.LarsCode" />
+
+            <table class="govuk-table" aria-label="Course details">
+                <tbody class="govuk-table__body">
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header das-table-cell-width-60" scope="row">Sector</th>
+                        <td class="govuk-table__cell das-table-cell-width-70">@Model.ShortCourseInformation.Sector</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Learning aim reference code</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.LarsCode</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Skills England code</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.IfateReferenceNumber</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Delivery hours</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.Duration</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Level</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.Level</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>This @Model.ApprenticeshipTypeLower will be removed from your record. It will no longer show as training you deliver.</p>
+
+            <div class="govuk-button-group">
+                <button id="submit" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
+                    Delete @Model.ApprenticeshipTypeLower
+                </button>
+            </div>
+
+            <a href="@Model.BackToManageShortCoursesLink" class="govuk-link govuk-body">Back to managing your @Model.ApprenticeshipTypeLowerPlural</a>
+        </form>
+    </div>
+</div>

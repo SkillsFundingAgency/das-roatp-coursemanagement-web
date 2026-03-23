@@ -17,7 +17,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models
             command.Should().BeEquivalentTo(sut, options => options
             .Excluding(x => x.ApprenticeshipType)
             .Excluding(x => x.ApprenticeshipTypeLower)
-            .Excluding(x => x.ApprenticeshipTypeLowerPlural));
+            .Excluding(x => x.ApprenticeshipTypeLowerPlural)
+            .Excluding(x => x.ApprenticeshipTypeHumanize));
         }
     }
 }
