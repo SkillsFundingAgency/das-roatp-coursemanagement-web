@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-regions", Name = RouteNames.SelectShortCourseRegions)]
 public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegionsController> _logger, ISessionService _sessionService, IRegionsService _regionsService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourseRegionsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegionsView.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> SelectShortCourseRegions(ApprenticeshipType apprenticeshipType)
@@ -77,6 +77,8 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
         var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
         model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
         model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
+        model.Route = RouteNames.SelectShortCourseRegions;
+        model.IsAddJourney = true;
         return model;
     }
 }
