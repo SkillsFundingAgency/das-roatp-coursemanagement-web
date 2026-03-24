@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
@@ -12,9 +15,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}")]
 public class ConfirmAddTrainingVenueController(ISessionService _sessionService, ILogger<ConfirmAddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ManageShortCourses/ConfirmAddTrainingVenueView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ConfirmAddTrainingVenueView.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]

@@ -11,7 +11,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -38,10 +38,12 @@ public class EditShortCourseContactDetailsControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
-        var model = viewResult.Model as EditShortCourseContactDetailsViewModel;
+        var model = viewResult.Model as ShortCourseContactDetailsViewModel;
         model.Should().NotBeNull();
         model.SubmitButtonText.Should().Be(ButtonText.Confirm);
         model.Route.Should().Be(RouteNames.EditShortCourseContactDetails);
+        model.IsAddJourney.Should().BeFalse();
+        model.ShowSavedContactDetailsText.Should().BeFalse();
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 

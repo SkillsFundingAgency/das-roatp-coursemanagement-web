@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -7,7 +8,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
 public class ConfirmShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddAShortCourse/ConfirmShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmShortCourseView.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> ConfirmShortCourse(ApprenticeshipType apprenticeshipType)

@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -38,13 +39,14 @@ public class AddShortCourseContactDetailsControllerGetTests
 
         // Assert
         var viewResult = result as ViewResult;
-        var model = viewResult!.Model as AddShortCourseContactDetailsViewModel;
+        var model = viewResult!.Model as ShortCourseContactDetailsViewModel;
         model!.ContactUsEmail.Should().Be(sessionModel.ContactInformation.ContactUsEmail);
         model!.ContactUsPhoneNumber.Should().Be(sessionModel.ContactInformation.ContactUsPhoneNumber);
         model!.StandardInfoUrl.Should().Be(sessionModel.ContactInformation.StandardInfoUrl);
         model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
+        model!.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
@@ -69,7 +71,7 @@ public class AddShortCourseContactDetailsControllerGetTests
 
         // Assert
         var viewResult = result as ViewResult;
-        var model = viewResult!.Model as AddShortCourseContactDetailsViewModel;
+        var model = viewResult!.Model as ShortCourseContactDetailsViewModel;
         model!.ContactUsEmail.Should().BeNull();
         model!.ContactUsPhoneNumber.Should().BeNull();
         model!.StandardInfoUrl.Should().BeNull();

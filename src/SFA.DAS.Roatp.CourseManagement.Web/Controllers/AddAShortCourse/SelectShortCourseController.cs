@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
@@ -9,8 +11,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-course", Name = RouteNames.SelectShortCourse)]
 public class SelectShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddAShortCourse/SelectShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourseView.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]

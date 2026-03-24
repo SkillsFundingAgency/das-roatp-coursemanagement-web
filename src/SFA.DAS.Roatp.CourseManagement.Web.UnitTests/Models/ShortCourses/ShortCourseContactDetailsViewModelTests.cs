@@ -1,17 +1,17 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ShortCourses.ManageShortCourses;
-public class EditShortCourseContactDetailsViewModelTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ShortCourses;
+public class ShortCourseContactDetailsViewModelTests
 {
     [Test, MoqAutoData]
     public void EditShortCourseContactDetailsViewModel_ImplicitOperator_MapsPropertiesCorrectly(
         GetStandardDetailsQueryResult source)
     {
         // Act
-        EditShortCourseContactDetailsViewModel sut = source;
+        ShortCourseContactDetailsViewModel sut = source;
 
         // Assert
         Assert.That(sut.ContactUsEmail, Is.EqualTo(source.ContactUsEmail));

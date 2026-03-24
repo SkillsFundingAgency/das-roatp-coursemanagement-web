@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-contact-details", Name = RouteNames.EditShortCourseContactDetails)]
 public class EditShortCourseContactDetailsController(IMediator _mediator, ILogger<EditShortCourseContactDetailsController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ManageShortCourses/EditShortCourseContactDetailsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetailsView.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> EditShortCourseContactDetails(ApprenticeshipType apprenticeshipType, string larsCode)
@@ -32,10 +32,12 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var model = (EditShortCourseContactDetailsViewModel)apiResponse;
+        var model = (ShortCourseContactDetailsViewModel)apiResponse;
         model.ApprenticeshipType = apprenticeshipType;
         model.SubmitButtonText = ButtonText.Confirm;
         model.Route = RouteNames.EditShortCourseContactDetails;
+        model.IsAddJourney = false;
+        model.ShowSavedContactDetailsText = false;
 
         return View(ViewPath, model);
     }
@@ -45,10 +47,12 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     {
         if (!ModelState.IsValid)
         {
-            var viewModel = new EditShortCourseContactDetailsViewModel();
+            var viewModel = new ShortCourseContactDetailsViewModel();
             viewModel.ApprenticeshipType = apprenticeshipType;
             viewModel.SubmitButtonText = ButtonText.Confirm;
             viewModel.Route = RouteNames.EditShortCourseContactDetails;
+            viewModel.IsAddJourney = false;
+            viewModel.ShowSavedContactDetailsText = false;
 
             return View(ViewPath, viewModel);
         }
