@@ -15,4 +15,14 @@ public class ShortCourseRegionViewModelTests
         Assert.That(sut.SubregionName, Is.EqualTo(source.SubregionName));
         Assert.That(sut.RegionName, Is.EqualTo(source.RegionName));
     }
+
+    [Test, AutoData]
+    public void RegionModelOperator_TransformsFromCourseRegionModel(CourseRegionModel source)
+    {
+        ShortCourseRegionViewModel sut = source;
+
+        Assert.That(sut.Id, Is.EqualTo(source.Id));
+        Assert.That(sut.SubregionName, Is.EqualTo(source.SubregionName));
+        Assert.That(sut.RegionName, Is.EqualTo(source.RegionName));
+    }
 }

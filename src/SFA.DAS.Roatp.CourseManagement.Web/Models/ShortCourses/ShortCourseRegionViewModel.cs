@@ -16,4 +16,15 @@ public class ShortCourseRegionViewModel
             SubregionName = source.SubregionName,
             RegionName = source.RegionName,
         };
+
+    public static implicit operator ShortCourseRegionViewModel(CourseRegionModel source)
+    {
+        return new ShortCourseRegionViewModel
+        {
+            Id = source.Id,
+            SubregionName = source.SubregionName,
+            RegionName = source.RegionName,
+            IsSelected = source.IsSelected
+        };
+    }
 }
