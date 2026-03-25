@@ -23,23 +23,16 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     [HttpGet]
     public async Task<IActionResult> EditShortCourseContactDetails(ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        var apiResponse = await GetStandardDetails(larsCode);
+        var viewModel = await GetViewModel(apprenticeshipType, larsCode, true);
 
-        if (apiResponse == null)
+        if (viewModel == null)
         {
             _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
 
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var model = (ShortCourseContactDetailsViewModel)apiResponse;
-        model.ApprenticeshipType = apprenticeshipType;
-        model.SubmitButtonText = ButtonText.Confirm;
-        model.Route = RouteNames.EditShortCourseContactDetails;
-        model.IsAddJourney = false;
-        model.ShowSavedContactDetailsText = false;
-
-        return View(ViewPath, model);
+        return View(ViewPath, viewModel);
     }
 
     [HttpPost]
@@ -47,12 +40,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     {
         if (!ModelState.IsValid)
         {
-            var viewModel = new ShortCourseContactDetailsViewModel();
-            viewModel.ApprenticeshipType = apprenticeshipType;
-            viewModel.SubmitButtonText = ButtonText.Confirm;
-            viewModel.Route = RouteNames.EditShortCourseContactDetails;
-            viewModel.IsAddJourney = false;
-            viewModel.ShowSavedContactDetailsText = false;
+            var viewModel = await GetViewModel(apprenticeshipType, larsCode, false);
 
             return View(ViewPath, viewModel);
         }
@@ -61,7 +49,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
         submitModel.ContactUsEmail = submitModel.ContactUsEmail.Trim();
         submitModel.StandardInfoUrl = submitModel.StandardInfoUrl.Trim();
 
-        var apiResponse = await GetStandardDetails(larsCode);
+        var apiResponse = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
         if (apiResponse == null)
         {
@@ -82,10 +70,28 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    private async Task<GetStandardDetailsQueryResult> GetStandardDetails(string larsCode)
+    private async Task<ShortCourseContactDetailsViewModel> GetViewModel(ApprenticeshipType apprenticeshipType, string larsCode, bool populateData)
     {
-        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var model = new ShortCourseContactDetailsViewModel();
 
-        return result;
+        if (populateData)
+        {
+            var apiResponse = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+
+            if (apiResponse == null)
+            {
+                return null;
+            }
+
+            model = (ShortCourseContactDetailsViewModel)apiResponse;
+        }
+
+        model.ApprenticeshipType = apprenticeshipType;
+        model.SubmitButtonText = ButtonText.Confirm;
+        model.Route = RouteNames.EditShortCourseContactDetails;
+        model.IsAddJourney = false;
+        model.ShowSavedContactDetailsText = false;
+
+        return model;
     }
 }

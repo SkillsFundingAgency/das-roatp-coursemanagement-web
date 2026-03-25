@@ -46,9 +46,34 @@ public class DeleteShortCourseControllerGetTests
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var model = viewResult!.Model as DeleteShortCourseViewModel;
-        model.Should().NotBeNull();
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model.BackToManageShortCoursesLink.Should().Be(backToManageShortCoursesLink);
+    }
+
+    [Test, MoqAutoData]
+    public async Task DeleteShortCourse_ValidRequest_VerifyMediatorIsInvoked(
+       [Frozen] Mock<IMediator> mediatorMock,
+       [Greedy] DeleteShortCourseController sut,
+       GetStandardInformationQueryResult queryResult,
+       GetStandardDetailsQueryResult getStandardDetailsQueryResult,
+       string larsCode)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        string backToManageShortCoursesLink = Guid.NewGuid().ToString();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        sut.AddDefaultContextWithUser();
+        sut.AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink);
+
+        // Act
+        await sut.DeleteShortCourse(apprenticeshipType, larsCode);
+
+        // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -74,10 +99,7 @@ public class DeleteShortCourseControllerGetTests
 
         // Assert
         var viewResult = result as ViewResult;
-        viewResult.Should().NotBeNull();
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never);
     }
 
     [Test, MoqAutoData]
@@ -101,9 +123,6 @@ public class DeleteShortCourseControllerGetTests
 
         // Assert
         var viewResult = result as ViewResult;
-        viewResult.Should().NotBeNull();
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

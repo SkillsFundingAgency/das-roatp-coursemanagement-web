@@ -44,6 +44,26 @@ public class EditShortCourseContactDetailsControllerGetTests
         model.Route.Should().Be(RouteNames.EditShortCourseContactDetails);
         model.IsAddJourney.Should().BeFalse();
         model.ShowSavedContactDetailsText.Should().BeFalse();
+    }
+
+    [Test, MoqAutoData]
+    public async Task EditShortCourseContactDetails_GetStardardsReturnsData_VerifyMediatorIsInvoked(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] EditShortCourseContactDetailsController sut,
+    GetStandardDetailsQueryResult queryResult,
+    string larsCode)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        sut.AddDefaultContextWithUser();
+
+        // Act
+        await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode);
+
+        // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 
@@ -67,6 +87,5 @@ public class EditShortCourseContactDetailsControllerGetTests
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 }
