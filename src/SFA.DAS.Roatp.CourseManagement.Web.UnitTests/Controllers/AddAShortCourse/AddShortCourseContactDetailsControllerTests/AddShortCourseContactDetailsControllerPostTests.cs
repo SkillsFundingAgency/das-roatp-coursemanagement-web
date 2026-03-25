@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -15,14 +16,19 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.AddShortCourseContactDetailsControllerTests;
 public class AddShortCourseContactDetailsControllerPostTests
 {
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(false, "Continue")]
+    [MoqInlineAutoData(true, "Confirm")]
     public void AddShortCourseContactDetails_InvalidState_ReturnsView(
+        bool seenSummaryPage,
+        string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddShortCourseContactDetailsController sut,
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = seenSummaryPage;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
@@ -33,9 +39,15 @@ public class AddShortCourseContactDetailsControllerPostTests
         // Assert
         var viewResult = response as ViewResult;
         Assert.IsNotNull(viewResult);
-        var model = viewResult.Model as AddShortCourseContactDetailsViewModel;
+        var model = viewResult.Model as ShortCourseContactDetailsViewModel;
         model.Should().NotBeNull();
-        model!.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.ContactUsEmail.Should().Be(sessionModel.ContactInformation.ContactUsEmail);
+        model!.ContactUsPhoneNumber.Should().Be(sessionModel.ContactInformation.ContactUsPhoneNumber);
+        model!.StandardInfoUrl.Should().Be(sessionModel.ContactInformation.StandardInfoUrl);
+        model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
+        model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
+        model!.IsAddJourney.Should().BeTrue();
+        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 

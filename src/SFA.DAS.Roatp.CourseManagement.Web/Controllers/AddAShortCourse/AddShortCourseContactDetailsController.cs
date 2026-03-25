@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
 public class AddShortCourseContactDetailsController(ISessionService _sessionService, ILogger<AddShortCourseContactDetailsController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddAShortCourse/AddShortCourseContactDetailsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetailsView.cshtml";
 
     [HttpGet]
     public IActionResult AddShortCourseContactDetails(ApprenticeshipType apprenticeshipType)
@@ -25,16 +25,18 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = new AddShortCourseContactDetailsViewModel();
+        var model = new ShortCourseContactDetailsViewModel();
 
         if (sessionModel.ContactInformation != null)
         {
             model.ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail;
             model.ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber;
             model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
-            model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
+            model.ApprenticeshipType = apprenticeshipType;
             model.ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true;
             model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
+            model.Route = RouteNames.AddShortCourseContactDetails;
+            model.IsAddJourney = true;
         }
 
         return View(ViewPath, model);
@@ -49,14 +51,16 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         if (!ModelState.IsValid)
         {
-            var model = new AddShortCourseContactDetailsViewModel()
+            var model = new ShortCourseContactDetailsViewModel()
             {
                 ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail,
                 ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber,
                 StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl,
-                ShortCourseBaseModel = new ShortCourseBaseViewModel { ApprenticeshipType = apprenticeshipType },
+                ApprenticeshipType = apprenticeshipType,
                 ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true,
-                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
+                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
+                Route = RouteNames.AddShortCourseContactDetails,
+                IsAddJourney = true
             };
 
             return View(ViewPath, model);

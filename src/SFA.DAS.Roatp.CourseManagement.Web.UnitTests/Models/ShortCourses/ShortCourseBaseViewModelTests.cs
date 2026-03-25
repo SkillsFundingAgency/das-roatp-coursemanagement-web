@@ -29,6 +29,17 @@ public class ShortCourseBaseViewModelTests
     }
 
     [Test]
+    public void ApprenticeshipTypeHumanize_IsHumanized()
+    {
+        var sut = new ShortCourseBaseViewModel()
+        {
+            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+        };
+
+        sut.ApprenticeshipTypeHumanize.Should().Be("Apprenticeship unit");
+    }
+
+    [Test]
     public void NullCheck_ApprenticeshipTypeIsNull_ReturnsNull()
     {
         var sut = new ShortCourseBaseViewModel()
@@ -38,5 +49,6 @@ public class ShortCourseBaseViewModelTests
 
         sut.ApprenticeshipTypeLower.Should().BeNull();
         sut.ApprenticeshipTypeLowerPlural.Should().BeNull();
+        sut.ApprenticeshipTypeHumanize.Should().BeNull();
     }
 }

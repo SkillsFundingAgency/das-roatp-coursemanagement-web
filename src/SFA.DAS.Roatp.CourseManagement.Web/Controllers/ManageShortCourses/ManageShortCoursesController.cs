@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}", Name = RouteNames.ManageShortCourses)]
 public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ManageShortCourses/ManageShortCoursesView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCoursesView.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
@@ -30,6 +30,15 @@ public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
             ApprenticeshipType = apprenticeshipType,
             AddAShortCourseLink = selectShortCourseUrl,
         };
+
+        TempData.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out var showShortCourseDeleteBanner);
+
+        if (showShortCourseDeleteBanner != null)
+        {
+            viewModel.ShowDeleteShortCourseNotificationBanner = true;
+            viewModel.Banner.ApprenticeshipType = viewModel.ApprenticeshipTypeHumanize;
+            TempData.Remove(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey);
+        }
 
         var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.ShortCourse));
 
