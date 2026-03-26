@@ -70,6 +70,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string ManageShortCourseDetails = "ManageShortCourseDetails";
         public const string EditShortCourseContactDetails = "EditShortCourseContactDetails";
         public const string DeleteShortCourse = "DeleteShortCourse";
+        public const string EditShortCourseRegions = "EditShortCourseRegions";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";

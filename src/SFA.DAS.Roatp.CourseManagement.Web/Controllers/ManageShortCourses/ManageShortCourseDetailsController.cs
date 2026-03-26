@@ -37,6 +37,7 @@ public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<Man
         model.ContactInformation.ApprenticeshipType = apprenticeshipType;
         model.LocationInformation.ApprenticeshipType = apprenticeshipType;
         model.ContactInformation.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.EditShortCourseContactDetails, new { Ukprn, apprenticeshipType, larsCode });
+        model.LocationInformation.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.EditShortCourseRegions, new { Ukprn, apprenticeshipType, larsCode });
         model.BackToManageShortCoursesLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType });
         model.DeleteShortCourseLink = Url.RouteUrl(RouteNames.DeleteShortCourse, new { Ukprn, apprenticeshipType, larsCode });
 
