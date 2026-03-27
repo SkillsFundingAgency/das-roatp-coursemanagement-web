@@ -50,7 +50,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
             {
                 LocationOptions = locationOptions,
                 DeliveryLocations = locationOptions.Select(ShortCourseLocationDisplayHelper.MapLocationOptionsDisplayText).ToList(),
-                TrainingVenues = source.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).ToList(),
+                TrainingVenues = source.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).OrderBy(x => x).ToList(),
                 HasNationalDeliveryOption = source.HasNationalLocation switch { true => "Yes", false => "No" },
                 TrainingRegions = source.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Regional).Select(x => x.SubregionName).OrderBy(x => x).ToList(),
                 DeliversAtEmployerLocation = locationOptions.Contains(ShortCourseLocationOption.EmployerLocation),
