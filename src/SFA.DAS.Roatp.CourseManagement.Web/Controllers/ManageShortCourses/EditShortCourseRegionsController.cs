@@ -5,7 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
@@ -49,7 +49,7 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
         {
             var regionsResponse = await _regionsService.GetRegions();
 
-            var viewModel = GetViewModel(regionsResponse, new GetStandardDetailsQueryResult(), apprenticeshipType);
+            var viewModel = GetViewModel(regionsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
 
             return View(ViewPath, viewModel);
         }
@@ -84,16 +84,16 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    private async Task<GetStandardDetailsQueryResult> GetProviderCourseDetails(string larsCode)
+    private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
     {
         _logger.LogInformation("Getting provider course details for ukprn {Ukprn} and lasrcode {LarsCode}", Ukprn, larsCode);
 
-        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         return result;
     }
 
-    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, GetStandardDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
     {
         var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
         model.ApprenticeshipType = apprenticeshipType;

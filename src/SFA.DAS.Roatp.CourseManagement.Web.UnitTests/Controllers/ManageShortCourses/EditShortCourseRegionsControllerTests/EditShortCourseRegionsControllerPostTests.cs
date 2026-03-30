@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -29,7 +29,7 @@ public class EditShortCourseRegionsControllerPostTests
             [Greedy] EditShortCourseRegionsController sut,
             RegionsSubmitModel model,
             List<RegionModel> regions,
-            GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
+            GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
             string larsCode)
     {
         // Arrange
@@ -39,7 +39,7 @@ public class EditShortCourseRegionsControllerPostTests
 
         sut.ModelState.AddModelError("key", "error");
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
@@ -79,7 +79,7 @@ public class EditShortCourseRegionsControllerPostTests
         await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
 
         // Assert
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never());
         regionsService.Verify(m => m.GetRegions(), Times.Once());
     }
 
@@ -96,7 +96,7 @@ public class EditShortCourseRegionsControllerPostTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         // Act
         var result = await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
@@ -104,7 +104,7 @@ public class EditShortCourseRegionsControllerPostTests
         // Assert
         var routeResult = result as RedirectToRouteResult;
         routeResult.RouteName.Should().Be(RouteNames.EditShortCourseRegions);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
         regionsService.Verify(m => m.GetRegions(), Times.Never());
     }
 
@@ -114,7 +114,7 @@ public class EditShortCourseRegionsControllerPostTests
         [Frozen] Mock<IRegionsService> regionsService,
         [Greedy] EditShortCourseRegionsController sut,
         RegionsSubmitModel model,
-        GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
+        GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         string larsCode)
     {
         // Arrange
@@ -157,7 +157,7 @@ public class EditShortCourseRegionsControllerPostTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
@@ -176,7 +176,7 @@ public class EditShortCourseRegionsControllerPostTests
         [Frozen] Mock<IRegionsService> regionsService,
         [Greedy] EditShortCourseRegionsController sut,
         RegionsSubmitModel model,
-        GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
+        GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         string larsCode)
     {
         // Arrange
@@ -219,7 +219,7 @@ public class EditShortCourseRegionsControllerPostTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 

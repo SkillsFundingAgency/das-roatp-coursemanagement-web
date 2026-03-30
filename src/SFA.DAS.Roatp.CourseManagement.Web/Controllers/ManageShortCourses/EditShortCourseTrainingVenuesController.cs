@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
@@ -60,7 +60,7 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
                 return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
             }
 
-            var model = GetViewModel(providerLocationsResponse, new GetStandardDetailsQueryResult(), apprenticeshipType);
+            var model = GetViewModel(providerLocationsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
 
             return View(ViewPath, model);
         }
@@ -114,16 +114,16 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
         return providerLocations;
     }
 
-    private async Task<GetStandardDetailsQueryResult> GetProviderCourseDetails(string larsCode)
+    private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
     {
         _logger.LogInformation("Getting provider course details for ukprn {Ukprn} and lasrcode {LarsCode}", Ukprn, larsCode);
 
-        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         return result;
     }
 
-    private static ShortCourseTrainingVenuesViewModel GetViewModel(List<ProviderLocation> providerLocations, GetStandardDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static ShortCourseTrainingVenuesViewModel GetViewModel(List<ProviderLocation> providerLocations, GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
     {
         List<TrainingVenueModel> trainingVenues = providerLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).OrderBy(l => l.LocationName).ToList();
 

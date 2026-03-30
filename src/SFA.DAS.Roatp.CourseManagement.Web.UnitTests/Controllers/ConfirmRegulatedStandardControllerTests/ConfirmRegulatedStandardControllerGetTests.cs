@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -44,11 +44,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
 
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
-            GetStandardDetailsQueryResult queryResult,
+            GetProviderCourseDetailsQueryResult queryResult,
             string larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
             var result = await _sut.ConfirmRegulatedStandard(larsCode);
@@ -61,13 +61,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
 
         [Test, AutoData]
         public async Task Get_ValidRequestWithReferer_ReturnsValidModel(
-           GetStandardDetailsQueryResult queryResult,
+           GetProviderCourseDetailsQueryResult queryResult,
            string larsCode)
         {
             string detailsUrl = $"{Ukprn}/standards/{larsCode}/confirm-regulated-standard";
 
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
             _sut.HttpContext.Request.Headers.Append("Referer", detailsUrl);
@@ -82,11 +82,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
 
         [Test, AutoData]
         public async Task Get_WhenRefererNull_ReturnsViewWithDefaultLinks(
-          GetStandardDetailsQueryResult queryResult,
+          GetProviderCourseDetailsQueryResult queryResult,
           string larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
 
 
@@ -102,8 +102,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetStandardDetailsQueryResult)null);
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetProviderCourseDetailsQueryResult)null);
 
             Func<Task> action = () => _sut.ConfirmRegulatedStandard(larsCode);
 

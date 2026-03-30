@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -8,7 +8,7 @@ public class ShortCourseContactDetailsViewModelTests
 {
     [Test, MoqAutoData]
     public void EditShortCourseContactDetailsViewModel_ImplicitOperator_MapsPropertiesCorrectly(
-        GetStandardDetailsQueryResult source)
+        GetProviderCourseDetailsQueryResult source)
     {
         // Act
         ShortCourseContactDetailsViewModel sut = source;

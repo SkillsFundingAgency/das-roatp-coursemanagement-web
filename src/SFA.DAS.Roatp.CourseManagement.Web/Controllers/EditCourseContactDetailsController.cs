@@ -1,14 +1,14 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -56,7 +56,7 @@ public class EditCourseContactDetailsController : ControllerBase
 
     private async Task<EditCourseContactDetailsViewModel> GetViewModel(string larsCode)
     {
-        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         if (result == null)
         {

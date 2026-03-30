@@ -1,15 +1,15 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Threading.Tasks;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -42,7 +42,7 @@ public class ProviderCourseDeleteController : ControllerBase
             throw new InvalidOperationException(message);
         }
 
-        var standardResult = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var standardResult = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         if (standardResult == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 

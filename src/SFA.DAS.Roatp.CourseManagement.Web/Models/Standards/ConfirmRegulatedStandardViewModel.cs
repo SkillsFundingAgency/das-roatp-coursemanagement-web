@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool IsRegulatedStandard => !string.IsNullOrEmpty(RegulatorName);
         public bool? IsApprovedByRegulator { get; set; }
         public string RefererLink { get; set; }
-        public static implicit operator ConfirmRegulatedStandardViewModel(GetStandardDetailsQueryResult source)
+        public static implicit operator ConfirmRegulatedStandardViewModel(GetProviderCourseDetailsQueryResult source)
         {
             return new ConfirmRegulatedStandardViewModel
             {

@@ -2,7 +2,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -22,7 +22,7 @@ public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShor
     [HttpGet]
     public async Task<IActionResult> DeleteShortCourse(ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        var courseDetailsResponse = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var courseDetailsResponse = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         if (courseDetailsResponse == null)
         {

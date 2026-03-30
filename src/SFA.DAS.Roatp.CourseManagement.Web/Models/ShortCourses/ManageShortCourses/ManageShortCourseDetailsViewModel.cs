@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
@@ -14,7 +14,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
     public string DeleteShortCourseLink { get; set; } = "#";
     public string BackToManageShortCoursesLink { get; set; } = "#";
 
-    public static implicit operator ManageShortCourseDetailsViewModel(GetStandardDetailsQueryResult source)
+    public static implicit operator ManageShortCourseDetailsViewModel(GetProviderCourseDetailsQueryResult source)
     {
         var locationOptions = new List<ShortCourseLocationOption>();
         if (source.HasProviderLocation)

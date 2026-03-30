@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
             GetStandardInformationQueryResult queryResult,
-            GetStandardDetailsQueryResult getStandardDetailsQueryResult,
+            GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
             string larsCode)
         {
             _mediatorMock
@@ -46,13 +46,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 .ReturnsAsync(queryResult);
 
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(getStandardDetailsQueryResult);
 
             var result = await _sut.GetProviderCourse(larsCode);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Once);
-            _mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
 
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         [Test, AutoData]
         public async Task Get_StandardNotPresentAgainstProvider_ReturnsToReviewYourDetails(
             GetStandardInformationQueryResult queryResult,
-            GetStandardDetailsQueryResult getStandardDetailsQueryResult,
+            GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
             string larsCode)
         {
             _mediatorMock
@@ -71,13 +71,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 .ReturnsAsync(queryResult);
 
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetStandardDetailsQueryResult)null);
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetProviderCourseDetailsQueryResult)null);
 
             var result = await _sut.GetProviderCourse(larsCode);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Once);
-            _mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+            _mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
 
             var viewResult = result as RedirectToRouteResult;
             viewResult.Should().NotBeNull();

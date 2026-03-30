@@ -2,7 +2,7 @@
 using System.Linq;
 using AutoFixture.NUnit3;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
@@ -13,7 +13,7 @@ public class ManageShortCourseDetailsViewModelTests
 {
     [Test, MoqAutoData]
     public void ManageShortCourseDetailsViewModel_ImplicitOperator_MapsPropertiesCorrectly(
-        GetStandardDetailsQueryResult source)
+        GetProviderCourseDetailsQueryResult source)
     {
         // Act
         ManageShortCourseDetailsViewModel sut = source;
@@ -49,7 +49,7 @@ public class ManageShortCourseDetailsViewModelTests
         ShortCourseLocationOption expectedLocationOption,
         string expectedLocationOptionText,
         string expectedHasNationalDeliveryOptionText,
-        GetStandardDetailsQueryResult source)
+        GetProviderCourseDetailsQueryResult source)
     {
         // Arrange
         source.ProviderCourseLocations = new List<ProviderCourseLocation>()

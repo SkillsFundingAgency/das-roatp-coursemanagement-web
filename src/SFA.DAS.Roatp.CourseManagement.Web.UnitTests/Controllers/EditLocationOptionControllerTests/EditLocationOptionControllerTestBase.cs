@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -36,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
 
         protected void SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations) => 
             _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetStandardDetailsQueryResult { ProviderCourseLocations = providerCourseLocations });
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetProviderCourseDetailsQueryResult { ProviderCourseLocations = providerCourseLocations });
     }
 }

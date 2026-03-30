@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models
 {
@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models
         public string LarsCode { get; set; }
         public int ProviderCourseId { get; set; }
 
-        public static implicit operator EditCourseContactDetailsViewModel(GetStandardDetailsQueryResult standardDetails) =>
+        public static implicit operator EditCourseContactDetailsViewModel(GetProviderCourseDetailsQueryResult standardDetails) =>
             new EditCourseContactDetailsViewModel
             {
                 ContactUsEmail = standardDetails.ContactUsEmail,

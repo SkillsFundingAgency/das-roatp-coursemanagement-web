@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
@@ -42,7 +42,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     {
         if (!ModelState.IsValid)
         {
-            var viewModel = GetViewModel(new GetStandardDetailsQueryResult(), apprenticeshipType);
+            var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
 
             return View(ViewPath, viewModel);
         }
@@ -72,16 +72,16 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    private async Task<GetStandardDetailsQueryResult> GetProviderCourseDetails(string larsCode)
+    private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
     {
         _logger.LogInformation("Getting provider course details for ukprn {Ukprn} and lasrcode {LarsCode}", Ukprn, larsCode);
 
-        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         return result;
     }
 
-    private static ShortCourseContactDetailsViewModel GetViewModel(GetStandardDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static ShortCourseContactDetailsViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
     {
         var model = (ShortCourseContactDetailsViewModel)providerCourseDetails;
 

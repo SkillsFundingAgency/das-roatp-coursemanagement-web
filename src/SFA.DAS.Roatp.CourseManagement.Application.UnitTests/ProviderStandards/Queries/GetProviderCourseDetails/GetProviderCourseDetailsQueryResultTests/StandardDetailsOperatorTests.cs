@@ -1,10 +1,10 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Queries.GetStandardDetails.GetStandardDetailsQueryResultTests
+namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Queries.GetProviderCourseDetails.GetProviderCourseDetailsQueryResultTests
 {
     [TestFixture]
     public class StandardDetailsOperatorTests
@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
         [Test, AutoData]
         public void StandardDetailsOperator_ReturnsResult(StandardDetails source)
         {
-            GetStandardDetailsQueryResult result = source;
+            GetProviderCourseDetailsQueryResult result = source;
             Assert.IsNotNull(result);
             result.Should().BeEquivalentTo(source, opt =>
             {
