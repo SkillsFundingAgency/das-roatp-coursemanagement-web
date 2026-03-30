@@ -38,6 +38,8 @@ public class ConfirmNationalDeliveryControllerGetTests
         var model = viewResult!.Model as ConfirmNationalDeliveryViewModel;
         model!.HasNationalDeliveryOption.Should().Be(sessionModel.HasNationalDeliveryOption);
         model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.IsAddJourney.Should().BeTrue();
+        model!.Route.Should().Be(RouteNames.ConfirmNationalDelivery);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
