@@ -11,8 +11,6 @@ public class SelectShortCourseRegionsViewModel : RegionsSubmitModel, IBackLink
         AllRegions = allRegions;
     }
 
-    public ShortCourseBaseViewModel ShortCourseBaseModel { get; set; } = new ShortCourseBaseViewModel();
-
     public IEnumerable<IGrouping<string, ShortCourseRegionViewModel>> SubregionsGroupedByRegions => AllRegions.GroupBy(x => x.RegionName).OrderBy(x => x.Key);
 
     public string SubmitButtonText { get; set; }

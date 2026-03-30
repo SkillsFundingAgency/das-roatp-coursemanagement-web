@@ -27,9 +27,9 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
     [HttpGet]
     public async Task<IActionResult> EditShortCourseTrainingVenues(ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        var provideCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
-        if (provideCourseDetailsResponse == null)
+        if (providerCourseDetailsResponse == null)
         {
             _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
 
@@ -43,7 +43,7 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
             return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType, larsCode });
         }
 
-        var model = GetViewModel(providerLocationsResponse, provideCourseDetailsResponse, apprenticeshipType);
+        var model = GetViewModel(providerLocationsResponse, providerCourseDetailsResponse, apprenticeshipType);
 
         return View(ViewPath, model);
     }
@@ -65,17 +65,17 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
             return View(ViewPath, model);
         }
 
-        var provideCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
         var providerLocations = await GetProviderLocations();
 
         var selectedProviderLocations = providerLocations.Where(x => submitModel.SelectedProviderLocationIds.Contains(x.NavigationId)).ToList();
 
-        var currentCourseLocations = provideCourseDetailsResponse.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).ToList();
+        var currentCourseLocations = providerCourseDetailsResponse.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).ToList();
 
         var addCourseLocationIds = selectedProviderLocations.Where(x => !currentCourseLocations.Contains(x.LocationName)).Select(x => x.NavigationId).ToList();
 
-        var removeCourseLocationIds = provideCourseDetailsResponse.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider && !selectedProviderLocations.Any(y => y.LocationName == x.LocationName)).Select(x => x.Id).ToList();
+        var removeCourseLocationIds = providerCourseDetailsResponse.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider && !selectedProviderLocations.Any(y => y.LocationName == x.LocationName)).Select(x => x.Id).ToList();
 
         foreach (var addCourseLocationId in addCourseLocationIds)
         {
@@ -123,11 +123,11 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
         return result;
     }
 
-    private static ShortCourseTrainingVenuesViewModel GetViewModel(List<ProviderLocation> providerLocations, GetStandardDetailsQueryResult provideCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static ShortCourseTrainingVenuesViewModel GetViewModel(List<ProviderLocation> providerLocations, GetStandardDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
     {
         List<TrainingVenueModel> trainingVenues = providerLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).OrderBy(l => l.LocationName).ToList();
 
-        var currentTrainingVenues = provideCourseDetails.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).ToList();
+        var currentTrainingVenues = providerCourseDetails.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).ToList();
 
         if (currentTrainingVenues.Count != 0)
         {

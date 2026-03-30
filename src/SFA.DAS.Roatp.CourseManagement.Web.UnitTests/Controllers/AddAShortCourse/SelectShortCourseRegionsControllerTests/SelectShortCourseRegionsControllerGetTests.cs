@@ -47,7 +47,7 @@ public class SelectShortCourseRegionsControllerGetTests
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseRegionsViewModel;
         model!.SubregionsGroupedByRegions.Should().NotBeEmpty();
-        model.ShortCourseBaseModel.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.ApprenticeshipType.Should().Be(apprenticeshipType);
         model.IsAddJourney.Should().BeTrue();
         model.Route.Should().Be(RouteNames.SelectShortCourseRegions);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);

@@ -1,10 +1,11 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
@@ -12,26 +13,31 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-regions", Name = RouteNames.EditShortCourseRegions)]
-public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger) : ControllerBase
+public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger, IRegionsService _regionsService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegionsView.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> EditShortCourseRegions(ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        var viewModel = await GetViewModel(apprenticeshipType, larsCode);
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
-        if (viewModel == null)
+        if (providerCourseDetailsResponse == null)
         {
-            _logger.LogWarning("No regions returned for LarsCode {LarsCode}. Redirecting to PageNotFound.", larsCode);
+            _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
 
             return View(ViewsPath.PageNotFoundPath);
         }
+
+        var regionsResponse = await _regionsService.GetRegions();
+
+        var viewModel = GetViewModel(regionsResponse, providerCourseDetailsResponse, apprenticeshipType);
 
         return View(ViewPath, viewModel);
     }
@@ -41,29 +47,25 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
     {
         if (!ModelState.IsValid)
         {
-            var viewModel = await GetViewModel(apprenticeshipType, larsCode);
+            var regionsResponse = await _regionsService.GetRegions();
 
-            if (viewModel == null)
-            {
-                _logger.LogWarning("No regions returned for LarsCode {LarsCode}. Redirecting to PageNotFound.", larsCode);
+            var viewModel = GetViewModel(regionsResponse, new GetStandardDetailsQueryResult(), apprenticeshipType);
 
-                return View(ViewsPath.PageNotFoundPath);
-            }
-
-            viewModel.AllRegions.ForEach(s => s.IsSelected = false);
             return View(ViewPath, viewModel);
         }
 
-        var apiResponse = await _mediator.Send(new GetAllStandardRegionsQuery(Ukprn, larsCode));
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
-        if (apiResponse == null)
+        if (providerCourseDetailsResponse == null)
         {
             return RedirectToRoute(RouteNames.EditShortCourseRegions, new { Ukprn, apprenticeshipType, larsCode });
         }
 
-        var currentSubRegions = apiResponse.Regions.Where(x => x.IsSelected).Select(x => x.Id).OrderBy(x => x);
+        var regions = await _regionsService.GetRegions();
 
-        var selectedSubRegions = submitModel.SelectedSubRegions.Select(x => int.Parse(x)).OrderBy(x => x).ToList();
+        var currentSubRegions = providerCourseDetailsResponse.ProviderCourseLocations.Where(r => r.LocationType == LocationType.Regional).Select(r => r.SubregionName).OrderBy(x => x);
+
+        var selectedSubRegions = regions.Where(x => submitModel.SelectedSubRegions.Contains(x.Id.ToString())).Select(x => x.SubregionName).OrderBy(x => x);
 
         if (!currentSubRegions.SequenceEqual(selectedSubRegions))
         {
@@ -82,20 +84,30 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    private async Task<SelectShortCourseRegionsViewModel> GetViewModel(ApprenticeshipType apprenticeshipType, string larsCode)
+    private async Task<GetStandardDetailsQueryResult> GetProviderCourseDetails(string larsCode)
     {
-        var result = await _mediator.Send(new GetAllStandardRegionsQuery(Ukprn, larsCode));
+        _logger.LogInformation("Getting provider course details for ukprn {Ukprn} and lasrcode {LarsCode}", Ukprn, larsCode);
 
-        if (result == null)
-        {
-            return null;
-        }
+        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
-        var model = new SelectShortCourseRegionsViewModel(result.Regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
-        model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
+        return result;
+    }
+
+    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, GetStandardDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    {
+        var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
+        model.ApprenticeshipType = apprenticeshipType;
         model.SubmitButtonText = ButtonText.Confirm;
         model.Route = RouteNames.EditShortCourseRegions;
         model.IsAddJourney = false;
+
+        foreach (var subregionsGroupedByRegion in model.SubregionsGroupedByRegions)
+        {
+            foreach (var region in subregionsGroupedByRegion)
+            {
+                region.IsSelected = providerCourseDetails.ProviderCourseLocations.Any(r => r.SubregionName == region.SubregionName && r.LocationType == LocationType.Regional);
+            }
+        }
 
         return model;
     }

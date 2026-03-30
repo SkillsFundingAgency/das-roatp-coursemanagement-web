@@ -23,14 +23,16 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     [HttpGet]
     public async Task<IActionResult> EditShortCourseContactDetails(ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        var viewModel = await GetViewModel(apprenticeshipType, larsCode, true);
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
-        if (viewModel == null)
+        if (providerCourseDetailsResponse == null)
         {
             _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
 
             return View(ViewsPath.PageNotFoundPath);
         }
+
+        var viewModel = GetViewModel(providerCourseDetailsResponse, apprenticeshipType);
 
         return View(ViewPath, viewModel);
     }
@@ -40,7 +42,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     {
         if (!ModelState.IsValid)
         {
-            var viewModel = await GetViewModel(apprenticeshipType, larsCode, false);
+            var viewModel = GetViewModel(new GetStandardDetailsQueryResult(), apprenticeshipType);
 
             return View(ViewPath, viewModel);
         }
@@ -49,14 +51,14 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
         submitModel.ContactUsEmail = submitModel.ContactUsEmail.Trim();
         submitModel.StandardInfoUrl = submitModel.StandardInfoUrl.Trim();
 
-        var apiResponse = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
-        if (apiResponse == null)
+        if (providerCourseDetailsResponse == null)
         {
             return RedirectToRoute(RouteNames.EditShortCourseContactDetails, new { Ukprn, apprenticeshipType, larsCode });
         }
 
-        if (!(apiResponse.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber && apiResponse.ContactUsEmail == submitModel.ContactUsEmail && apiResponse.StandardInfoUrl == submitModel.StandardInfoUrl))
+        if (!(providerCourseDetailsResponse.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber && providerCourseDetailsResponse.ContactUsEmail == submitModel.ContactUsEmail && providerCourseDetailsResponse.StandardInfoUrl == submitModel.StandardInfoUrl))
         {
             var command = (UpdateProviderCourseContactDetailsCommand)submitModel;
             command.LarsCode = larsCode;
@@ -70,21 +72,18 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    private async Task<ShortCourseContactDetailsViewModel> GetViewModel(ApprenticeshipType apprenticeshipType, string larsCode, bool populateData)
+    private async Task<GetStandardDetailsQueryResult> GetProviderCourseDetails(string larsCode)
     {
-        var model = new ShortCourseContactDetailsViewModel();
+        _logger.LogInformation("Getting provider course details for ukprn {Ukprn} and lasrcode {LarsCode}", Ukprn, larsCode);
 
-        if (populateData)
-        {
-            var apiResponse = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+        var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
 
-            if (apiResponse == null)
-            {
-                return null;
-            }
+        return result;
+    }
 
-            model = (ShortCourseContactDetailsViewModel)apiResponse;
-        }
+    private static ShortCourseContactDetailsViewModel GetViewModel(GetStandardDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    {
+        var model = (ShortCourseContactDetailsViewModel)providerCourseDetails;
 
         model.ApprenticeshipType = apprenticeshipType;
         model.SubmitButtonText = ButtonText.Confirm;

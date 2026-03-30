@@ -75,7 +75,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
     private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, ApprenticeshipType apprenticeshipType, ShortCourseSessionModel sessionModel)
     {
         var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
-        model.ShortCourseBaseModel.ApprenticeshipType = apprenticeshipType;
+        model.ApprenticeshipType = apprenticeshipType;
         model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
         model.Route = RouteNames.SelectShortCourseRegions;
         model.IsAddJourney = true;

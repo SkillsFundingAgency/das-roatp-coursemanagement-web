@@ -26,7 +26,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
     public async Task EditShortCourseTrainingVenues_ProviderCourseExists_ReturnsView(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] EditShortCourseTrainingVenuesController sut,
-    GetStandardDetailsQueryResult provideCourseDetailsApiResponse,
+    GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
     GetAllProviderLocationsQueryResult providerLocationsApiResponse,
     string larscode
 )
@@ -37,7 +37,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(provideCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
@@ -58,7 +58,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
     public async Task EditShortCourseTrainingVenues_ProviderCourseExists_IsSelectedIsSetCorrectly(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] EditShortCourseTrainingVenuesController sut,
-    GetStandardDetailsQueryResult provideCourseDetailsApiResponse,
+    GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
     GetAllProviderLocationsQueryResult providerLocationsApiResponse,
     string larscode
 )
@@ -81,7 +81,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
             }
         };
 
-        provideCourseDetailsApiResponse.ProviderCourseLocations = providerCourseLocations;
+        providerCourseDetailsApiResponse.ProviderCourseLocations = providerCourseLocations;
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
@@ -90,7 +90,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(provideCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
@@ -107,7 +107,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
     public async Task EditShortCourseTrainingVenues_ProviderCourseExists_VerifyMediatorInvokedCorrectly(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] EditShortCourseTrainingVenuesController sut,
-    GetStandardDetailsQueryResult provideCourseDetailsApiResponse,
+    GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
     GetAllProviderLocationsQueryResult providerLocationsApiResponse,
     string larscode
 )
@@ -117,7 +117,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(provideCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
@@ -156,7 +156,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
     public async Task EditShortCourseTrainingVenues_ProviderLocationsReturnsEmpty_RedirectsToGetAddTrainingVenue(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] EditShortCourseTrainingVenuesController sut,
-    GetStandardDetailsQueryResult provideCourseDetailsApiResponse,
+    GetStandardDetailsQueryResult providerCourseDetailsApiResponse,
     string larscode
 )
     {
@@ -165,7 +165,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
 
         sut.AddDefaultContextWithUser();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(provideCourseDetailsApiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
 
