@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/confirm-national", Name = RouteNames.ConfirmNationalDelivery)]
 public class ConfirmNationalDeliveryController(ISessionService _sessionService, ILogger<ConfirmNationalDeliveryController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmNationalDeliveryView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ConfirmNationalDelivery.cshtml";
 
     [HttpGet]
     public IActionResult ConfirmNationalProviderDelivery(ApprenticeshipType apprenticeshipType)
@@ -36,7 +36,9 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
         {
             ApprenticeshipType = apprenticeshipType,
             HasNationalDeliveryOption = sessionModel.HasNationalDeliveryOption,
-            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
+            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
+            IsAddJourney = true,
+            Route = RouteNames.ConfirmNationalDelivery
         };
 
         return View(ViewPath, model);
@@ -54,7 +56,9 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
             return View(ViewPath, new ConfirmNationalDeliveryViewModel()
             {
                 ApprenticeshipType = apprenticeshipType,
-                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
+                SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
+                IsAddJourney = true,
+                Route = RouteNames.ConfirmNationalDelivery
             });
         }
 
