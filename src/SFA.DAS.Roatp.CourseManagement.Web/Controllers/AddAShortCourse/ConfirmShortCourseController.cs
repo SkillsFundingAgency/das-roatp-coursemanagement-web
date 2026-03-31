@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/confirm-course", Name = RouteNames.ConfirmShortCourse)]
 public class ConfirmShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmShortCourse.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> ConfirmShortCourse(ApprenticeshipType apprenticeshipType)

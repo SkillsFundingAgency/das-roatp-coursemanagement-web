@@ -18,8 +18,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new")]
 public class ReviewShortCourseDetailsController(ISessionService _sessionService, IValidator<ReviewShortCourseDetailsViewModel> _validator, IMediator _mediator, ILogger<ReviewShortCourseDetailsController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ReviewShortCourseDetailsView.cshtml";
-    public const string ConfirmationPageViewPath = "~/Views/ShortCourses/AddAShortCourse/SaveShortCourseConfirmationView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ReviewShortCourseDetails.cshtml";
+    public const string ConfirmationPageViewPath = "~/Views/ShortCourses/AddAShortCourse/SaveShortCourseConfirmation.cshtml";
 
     [HttpGet("review-details", Name = RouteNames.ReviewShortCourseDetails)]
     public IActionResult ReviewShortCourseDetails(ApprenticeshipType apprenticeshipType)
