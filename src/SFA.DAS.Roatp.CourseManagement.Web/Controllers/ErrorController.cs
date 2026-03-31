@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Provider.Shared.UI.Attributes;
@@ -10,29 +11,30 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AllowAnonymous]
 [HideNavigationBar]
+[Route("Error")]
 public class ErrorController : Controller
 {
+    public const string ProviderNotRegisteredViewName = "ProviderNotRegistered";
+    public const string PageNotFoundViewName = "PageNotFound";
+    public const string ErrorInServiceViewName = "ErrorInService";
+
     private readonly ILogger<ErrorController> _logger;
     public ErrorController(ILogger<ErrorController> logger)
     {
         _logger = logger;
     }
 
-    [Route("Error/{statuscode}")]
-    public IActionResult HttpStatusCodeHandler(int statusCode)
+    [Route("{statuscode}")]
+    public IActionResult HttpStatusCodeHandler([FromRoute] int statusCode)
     {
-        switch (statusCode)
+        return statusCode switch
         {
-            case 403:
-                return View("ProviderNotRegistered");
-            case 404:
-                return View("PageNotFound");
-            default:
-                return View("ErrorInService");
-        }
+            StatusCodes.Status403Forbidden => View(ProviderNotRegisteredViewName),
+            StatusCodes.Status404NotFound => View(PageNotFoundViewName),
+            _ => View(ErrorInServiceViewName)
+        };
     }
 
-    [Route("Error")]
     public IActionResult ErrorInService()
     {
         var feature = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
