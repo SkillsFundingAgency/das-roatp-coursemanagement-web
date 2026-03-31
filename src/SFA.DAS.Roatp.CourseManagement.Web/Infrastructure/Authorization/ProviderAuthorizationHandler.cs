@@ -1,72 +1,77 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization
+namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+
+[ExcludeFromCodeCoverage]
+public class ProviderAuthorizationHandler : AuthorizationHandler<ProviderUkPrnRequirement>
 {
-    [ExcludeFromCodeCoverage]
-    public class ProviderAuthorizationHandler : AuthorizationHandler<ProviderUkPrnRequirement>
+    private const string ukprnRootValue = "ukprn";
+    private static readonly string[] _controllersThatDoNotRequireAuthorize = new[]
     {
-        private const string ukprnRootValue = "ukprn";
-        private static readonly string[] _controllersThatDoNotRequireAuthorize = new[]
-        {
-            "Ping",
-            "ProviderAccount",
-            "Error",
-            "ProviderNotRegistered",
-        };
-        private readonly IMediator _mediator;
-        private readonly IHttpContextAccessor _httpContextAccessor;
+        "Ping",
+        "ProviderAccount",
+        "Error",
+        "ProviderNotRegistered",
+    };
+    private readonly IMediator _mediator;
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public ProviderAuthorizationHandler(IHttpContextAccessor httpContextAccessor, IMediator mediator)
+    public ProviderAuthorizationHandler(IHttpContextAccessor httpContextAccessor, IMediator mediator)
+    {
+        _httpContextAccessor = httpContextAccessor;
+        _mediator = mediator;
+    }
+
+    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ProviderUkPrnRequirement requirement)
+    {
+        if (!IsProviderAuthorised(context))
         {
-            _httpContextAccessor = httpContextAccessor;
-            _mediator = mediator;
+            context.Fail();
+            return;
         }
 
-        protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, ProviderUkPrnRequirement requirement)
+        var isRegistered = await CheckIfProviderIsRegistered(_httpContextAccessor.HttpContext);
+        if (!isRegistered)
         {
-            if (!IsProviderAuthorised(context))
-            {
-                context.Fail();
-                return;
-            }
-
-            await CheckIfProviderIsRegistered(_httpContextAccessor.HttpContext);
-
-            context.Succeed(requirement);
+            context.Fail();
+            return;
         }
 
-        private async Task CheckIfProviderIsRegistered(HttpContext context)
+        context.Succeed(requirement);
+    }
+
+    private async Task<bool> CheckIfProviderIsRegistered(HttpContext context)
+    {
+        var controllerName = context.Request.RouteValues["controller"].ToString();
+        if (_controllersThatDoNotRequireAuthorize.Any(n => n == controllerName)) return true;
+
+        var ukprn = int.Parse(context.User.FindFirstValue(ProviderClaims.ProviderUkprn));
+        GetProviderQueryResult result = await _mediator.Send(new GetProviderQuery(ukprn));
+        return result.Provider != null;
+    }
+
+    private bool IsProviderAuthorised(AuthorizationHandlerContext context)
+    {
+        if (!context.User.HasClaim(c => c.Type.Equals(ProviderClaims.ProviderUkprn)))
         {
-            var controllerName = context.Request.RouteValues["controller"].ToString();
-            if (_controllersThatDoNotRequireAuthorize.Any(n => n == controllerName)) return;
-            var ukprn = int.Parse(context.User.FindFirstValue(ProviderClaims.ProviderUkprn));
-            var provider = await _mediator.Send(new GetProviderQuery(ukprn));
-            if (provider.Provider == null) context.Response.Redirect(RouteNames.ProviderNotRegistered);
+            return false;
         }
 
-        private bool IsProviderAuthorised(AuthorizationHandlerContext context)
+        if (_httpContextAccessor.HttpContext.Request.RouteValues.ContainsKey(ukprnRootValue))
         {
-            if (!context.User.HasClaim(c => c.Type.Equals(ProviderClaims.ProviderUkprn)))
-            {
-                return false;
-            }
+            var ukPrnFromUrl = _httpContextAccessor.HttpContext.Request.RouteValues[ukprnRootValue].ToString();
+            var ukPrn = context.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
 
-            if (_httpContextAccessor.HttpContext.Request.RouteValues.ContainsKey(ukprnRootValue))
-            {
-                var ukPrnFromUrl = _httpContextAccessor.HttpContext.Request.RouteValues[ukprnRootValue].ToString();
-                var ukPrn = context.User.FindFirst(c => c.Type.Equals(ProviderClaims.ProviderUkprn)).Value;
-
-                return ukPrn.Equals(ukPrnFromUrl);
-            }
-
-            return true;
+            return ukPrn.Equals(ukPrnFromUrl);
         }
+
+        return true;
     }
 }
