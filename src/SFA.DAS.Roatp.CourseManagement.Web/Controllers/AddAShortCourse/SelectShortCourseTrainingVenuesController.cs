@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-training-venues", Name = RouteNames.SelectShortCourseTrainingVenue)]
 public class SelectShortCourseTrainingVenuesController(ISessionService _sessionService, IMediator _mediator, ILogger<SelectShortCourseTrainingVenuesController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenuesView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenues.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> SelectShortCourseTrainingVenue(ApprenticeshipType apprenticeshipType)

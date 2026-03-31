@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-training-venues", Name = RouteNames.EditShortCourseTrainingVenues)]
 public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenuesView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenues.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> EditShortCourseTrainingVenues(ApprenticeshipType apprenticeshipType, string larsCode)

@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-course-locations", Name = RouteNames.SelectShortCourseLocationOption)]
 public class SelectShortCourseLocationOptionsController(ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourseLocationOptionsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourseLocationOptions.cshtml";
 
     [HttpGet]
     public IActionResult SelectShortCourseLocation(ApprenticeshipType apprenticeshipType)
