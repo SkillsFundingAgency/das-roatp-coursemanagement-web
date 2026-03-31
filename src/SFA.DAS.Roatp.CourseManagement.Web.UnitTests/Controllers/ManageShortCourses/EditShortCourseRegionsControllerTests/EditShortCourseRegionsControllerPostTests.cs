@@ -29,7 +29,6 @@ public class EditShortCourseRegionsControllerPostTests
             [Greedy] EditShortCourseRegionsController sut,
             RegionsSubmitModel model,
             List<RegionModel> regions,
-            GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
             string larsCode)
     {
         // Arrange
@@ -38,8 +37,6 @@ public class EditShortCourseRegionsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "error");
-
-        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
@@ -84,82 +81,17 @@ public class EditShortCourseRegionsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public async Task EditShortCourseRegions_ProviderCourseDoesNotExist_VerifyMediatorsAreInvokedCorrectlyAndRedirectedToEditShortCourseRegions(
+    public async Task EditShortCourseRegions_ValidModelState_SendsUpdateCommandAndVerifyMediatorIsInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
-        [Frozen] Mock<IRegionsService> regionsService,
         [Greedy] EditShortCourseRegionsController sut,
         RegionsSubmitModel model,
         string larsCode)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.SelectedSubRegions = ["1", "2"];
 
         sut.AddDefaultContextWithUser();
-
-        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
-
-        // Act
-        var result = await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
-
-        // Assert
-        var routeResult = result as RedirectToRouteResult;
-        routeResult.RouteName.Should().Be(RouteNames.EditShortCourseRegions);
-        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
-        regionsService.Verify(m => m.GetRegions(), Times.Never());
-    }
-
-    [Test, MoqAutoData]
-    public async Task EditShortCourseRegions_ChangeToRegions_SendsUpdateCommandAndVerifyMediatorIsInvoked(
-        [Frozen] Mock<IMediator> mediatorMock,
-        [Frozen] Mock<IRegionsService> regionsService,
-        [Greedy] EditShortCourseRegionsController sut,
-        RegionsSubmitModel model,
-        GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
-        string larsCode)
-    {
-        // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        string[] selectedSubRegions = new string[] { "1", "2", "3" };
-        model.SelectedSubRegions = selectedSubRegions;
-
-        List<RegionModel> regions = new List<RegionModel>()
-        {
-            new RegionModel()
-            {
-                Id = 1,
-                SubregionName = "Test"
-            },
-            new RegionModel()
-            {
-                Id = 2,
-                SubregionName = "Test2"
-            },
-            new RegionModel()
-            {
-                Id = 3,
-                SubregionName = "Test3"
-            }
-        };
-
-        providerCourseDetailsApiResponse.ProviderCourseLocations = new List<ProviderCourseLocation>()
-        {
-            new ProviderCourseLocation()
-            {
-                SubregionName = "Test",
-                LocationType = LocationType.Regional
-            },
-            new ProviderCourseLocation()
-            {
-                SubregionName = "Test2",
-                LocationType = LocationType.Regional
-            }
-        };
-
-        sut.AddDefaultContextWithUser();
-
-        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
-
-        regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act
         var result = await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
@@ -168,67 +100,5 @@ public class EditShortCourseRegionsControllerPostTests
         var routeResult = result as RedirectToRouteResult;
         routeResult.RouteName.Should().Be(RouteNames.ManageShortCourseDetails);
         mediatorMock.Verify(m => m.Send(It.Is<UpdateStandardSubRegionsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
-    }
-
-    [Test, MoqAutoData]
-    public async Task EditShortCourseRegions_NoChangeToRegions_VerifyMediatorIsNotInvokedAndRedirectsToManageShortCourseDetails(
-        [Frozen] Mock<IMediator> mediatorMock,
-        [Frozen] Mock<IRegionsService> regionsService,
-        [Greedy] EditShortCourseRegionsController sut,
-        RegionsSubmitModel model,
-        GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
-        string larsCode)
-    {
-        // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        string[] selectedSubRegions = new string[] { "1", "2" };
-        model.SelectedSubRegions = selectedSubRegions;
-
-        List<RegionModel> regions = new List<RegionModel>()
-        {
-            new RegionModel()
-            {
-                Id = 1,
-                SubregionName = "Test"
-            },
-            new RegionModel()
-            {
-                Id = 2,
-                SubregionName = "Test2"
-            },
-            new RegionModel()
-            {
-                Id = 3,
-                SubregionName = "Test3"
-            }
-        };
-
-        providerCourseDetailsApiResponse.ProviderCourseLocations = new List<ProviderCourseLocation>()
-        {
-            new ProviderCourseLocation()
-            {
-                SubregionName = "Test",
-                LocationType = LocationType.Regional
-            },
-            new ProviderCourseLocation()
-            {
-                SubregionName = "Test2",
-                LocationType = LocationType.Regional
-            }
-        };
-
-        sut.AddDefaultContextWithUser();
-
-        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
-
-        regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
-
-        // Act
-        var result = await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
-
-        // Assert
-        var routeResult = result as RedirectToRouteResult;
-        routeResult.RouteName.Should().Be(RouteNames.ManageShortCourseDetails);
-        mediatorMock.Verify(m => m.Send(It.Is<UpdateStandardSubRegionsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never);
     }
 }
