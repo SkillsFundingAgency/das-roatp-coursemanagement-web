@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}")]
 public class ConfirmAddTrainingVenueController(ISessionService _sessionService, ILogger<ConfirmAddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ConfirmAddTrainingVenueView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ConfirmAddTrainingVenue.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]

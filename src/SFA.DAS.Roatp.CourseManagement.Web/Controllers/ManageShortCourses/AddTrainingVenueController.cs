@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}")]
 public class AddTrainingVenueController(ISessionService _sessionService, ILogger<AddTrainingVenueController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/AddTrainingVenueView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/AddTrainingVenue.cshtml";
 
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
     public IActionResult LookupAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)

@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-course", Name = RouteNames.SelectShortCourse)]
 public class SelectShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourse.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]

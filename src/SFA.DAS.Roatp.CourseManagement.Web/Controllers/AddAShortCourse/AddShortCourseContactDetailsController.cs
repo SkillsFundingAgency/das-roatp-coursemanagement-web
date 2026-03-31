@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
 public class AddShortCourseContactDetailsController(ISessionService _sessionService, ILogger<AddShortCourseContactDetailsController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetailsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetails.cshtml";
 
     [HttpGet]
     public IActionResult AddShortCourseContactDetails(ApprenticeshipType apprenticeshipType)
