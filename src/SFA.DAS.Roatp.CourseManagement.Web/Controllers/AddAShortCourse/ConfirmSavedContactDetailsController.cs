@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 [Route("{ukprn}/courses/{apprenticeshipType}/new/use-provider-contact", Name = RouteNames.ConfirmSavedContactDetailsForShortCourse)]
 public class ConfirmSavedContactDetailsController(ISessionService _sessionService, ILogger<ConfirmSavedContactDetailsController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmSavedContactDetailsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmSavedContactDetails.cshtml";
 
     [HttpGet]
     public IActionResult ConfirmSavedContactDetails(ApprenticeshipType apprenticeshipType)

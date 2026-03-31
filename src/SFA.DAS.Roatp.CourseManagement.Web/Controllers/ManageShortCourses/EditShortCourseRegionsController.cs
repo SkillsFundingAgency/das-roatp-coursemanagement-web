@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-regions", Name = RouteNames.EditShortCourseRegions)]
 public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger, IRegionsService _regionsService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegionsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegions.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> EditShortCourseRegions(ApprenticeshipType apprenticeshipType, string larsCode)
