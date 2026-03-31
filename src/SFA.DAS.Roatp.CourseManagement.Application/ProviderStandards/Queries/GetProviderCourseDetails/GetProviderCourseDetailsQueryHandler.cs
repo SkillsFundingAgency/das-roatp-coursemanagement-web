@@ -17,11 +17,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         }
         public async Task<GetProviderCourseDetailsQueryResult> Handle(GetProviderCourseDetailsQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Get Standards details request received for ukprn {ukprn} and larsCode {larsCode}", request.Ukprn, request.LarsCode);
+            _logger.LogInformation("Get provide course details request received for ukprn {Ukprn} and larsCode {LarsCode}", request.Ukprn, request.LarsCode);
             var standardDetails = await _apiClient.Get<Domain.ApiModels.StandardDetails>($"providers/{request.Ukprn}/courses/{request.LarsCode}");
             if (standardDetails == null)
             {
-                _logger.LogError($"Standard details not found for ukprn {request.Ukprn} and LarsCode {request.LarsCode}");
+                _logger.LogError("Provide course details not found for ukprn {Ukprn} and LarsCode {LarsCode}", request.Ukprn, request.LarsCode);
                 return null;
             }
 

@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         {
             get
             {
-                if (!ProviderCourseLocations.Any())
+                if (ProviderCourseLocations.Count == 0)
                     return LocationOption.None;
                 if (HasProviderLocation && !HasNationalLocation && !HasRegionalLocation)
                     return LocationOption.ProviderLocation;
