@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool StandardRequiresMoreInfo => SetMissingInfo();
         public MissingInfoBannerViewModel MissingInfoBannerViewModel { get; set; }
 
-        public static implicit operator StandardDetailsViewModel(GetStandardDetailsQueryResult standardDetails)
+        public static implicit operator StandardDetailsViewModel(GetProviderCourseDetailsQueryResult standardDetails)
         {
             return new StandardDetailsViewModel
             {

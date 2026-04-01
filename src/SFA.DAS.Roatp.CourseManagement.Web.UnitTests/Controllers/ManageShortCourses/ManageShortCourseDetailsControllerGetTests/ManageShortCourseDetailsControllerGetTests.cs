@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -25,7 +25,7 @@ public class ManageShortCourseDetailsControllerGetTests
     public async Task ManageShortCourseDetails_GetStandardsDetailsApiReturnedValidResponse_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ManageShortCourseDetailsController sut,
-        GetStandardDetailsQueryResult apiResponse)
+        GetProviderCourseDetailsQueryResult apiResponse)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -36,16 +36,18 @@ public class ManageShortCourseDetailsControllerGetTests
         string contactDetailsChangeLink = Guid.NewGuid().ToString();
         string deleteShortCourseLink = Guid.NewGuid().ToString();
         string trainingRegionsChangeLink = Guid.NewGuid().ToString();
+        string trainingVenuesChangeLink = Guid.NewGuid().ToString();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, ukprn.ToString()) }, "mock"));
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
         sut.AddDefaultContextWithUser();
         sut.AddUrlHelperMock()
             .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink)
             .AddUrlForRoute(RouteNames.EditShortCourseContactDetails, contactDetailsChangeLink)
             .AddUrlForRoute(RouteNames.DeleteShortCourse, deleteShortCourseLink)
-            .AddUrlForRoute(RouteNames.EditShortCourseRegions, trainingRegionsChangeLink);
+            .AddUrlForRoute(RouteNames.EditShortCourseRegions, trainingRegionsChangeLink)
+            .AddUrlForRoute(RouteNames.EditShortCourseTrainingVenues, trainingVenuesChangeLink);
 
         sut.ControllerContext = new ControllerContext()
         {
@@ -64,10 +66,10 @@ public class ManageShortCourseDetailsControllerGetTests
         model.DeleteShortCourseLink.Should().Be(deleteShortCourseLink);
         model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
         model.LocationInformation.TrainingRegionsChangeLink.Should().Be(trainingRegionsChangeLink);
-        model.LocationInformation.TrainingVenuesChangeLink.Should().Be("#");
+        model.LocationInformation.TrainingVenuesChangeLink.Should().Be(trainingVenuesChangeLink);
         model.LocationInformation.NationalProviderChangeLink.Should().Be("#");
         model.LocationInformation.LocationOptionsChangeLink.Should().Be("#");
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test, MoqAutoData]
@@ -80,7 +82,7 @@ public class ManageShortCourseDetailsControllerGetTests
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
-        mediatorMock.Setup(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         // Act
         var result = await sut.ManageShortCourseDetails(apprenticeshipType, larsCode);
@@ -90,6 +92,6 @@ public class ManageShortCourseDetailsControllerGetTests
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
-        mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 }

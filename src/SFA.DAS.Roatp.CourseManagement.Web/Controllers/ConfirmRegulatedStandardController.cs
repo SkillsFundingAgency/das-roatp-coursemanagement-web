@@ -1,14 +1,14 @@
-﻿using MediatR;
+﻿using System;
+using System.Net;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Net;
-using System.Threading.Tasks;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -31,7 +31,7 @@ public class ConfirmRegulatedStandardController : ControllerBase
         var ukprn = Ukprn;
         _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
 
-        var result = await _mediator.Send(new GetStandardDetailsQuery(ukprn, larsCode));
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(ukprn, larsCode));
 
         if (result == null)
         {

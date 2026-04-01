@@ -37,7 +37,7 @@ public class ReviewShortCourseDetailsViewModelTests
         Assert.That(sut.ContactInformation.StandardInfoUrl, Is.EqualTo(sessionModel.ContactInformation.StandardInfoUrl));
         Assert.That(sut.LocationInformation.LocationOptions, Is.EqualTo(sessionModel.LocationOptions));
         Assert.That(sut.LocationInformation.DeliveryLocations.First, Is.EqualTo(expectedLocationOptionText));
-        Assert.That(sut.LocationInformation.TrainingVenues, Is.EqualTo(sessionModel.TrainingVenues.Select(x => x.LocationName).ToList()));
+        Assert.That(sut.LocationInformation.TrainingVenues, Is.EqualTo(sessionModel.TrainingVenues.Select(x => x.LocationName).OrderBy(x => x).ToList()));
         Assert.That(sut.LocationInformation.HasNationalDeliveryOption, Is.EqualTo(expectedHasNationalDeliveryOptionText));
         Assert.That(sut.LocationInformation.TrainingRegions, Is.EqualTo(sessionModel.TrainingRegions.Select(x => x.SubregionName).OrderBy(x => x).ToList()));
         Assert.That(sut.LocationInformation.DeliversAtEmployerLocation, Is.EqualTo(sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation)));

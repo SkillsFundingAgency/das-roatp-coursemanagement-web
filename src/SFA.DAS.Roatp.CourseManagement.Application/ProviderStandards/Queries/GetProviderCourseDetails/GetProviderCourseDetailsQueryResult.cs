@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails
+namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails
 {
-    public class GetStandardDetailsQueryResult
+    public class GetProviderCourseDetailsQueryResult
     {
         public string CourseName { get; set; }
         public int Level { get; set; }
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         {
             get
             {
-                if (!ProviderCourseLocations.Any())
+                if (ProviderCourseLocations.Count == 0)
                     return LocationOption.None;
                 if (HasProviderLocation && !HasNationalLocation && !HasRegionalLocation)
                     return LocationOption.ProviderLocation;
@@ -46,9 +46,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             }
         }
 
-        public static implicit operator GetStandardDetailsQueryResult(StandardDetails v)
+        public static implicit operator GetProviderCourseDetailsQueryResult(StandardDetails v)
         {
-            return new GetStandardDetailsQueryResult
+            return new GetProviderCourseDetailsQueryResult
             {
                 ContactUsEmail = v.ContactUsEmail,
                 ContactUsPhoneNumber = v.ContactUsPhoneNumber,

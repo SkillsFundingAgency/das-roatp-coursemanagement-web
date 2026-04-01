@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -11,8 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseTrainingVenuesControllerTests;
 public class SelectShortCourseTrainingVenuesControllerPostTests
@@ -22,7 +22,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel,
-        SelectShortCourseTrainingVenuesSubmitModel submitModel)
+        ShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -37,10 +37,12 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         // Assert
         var viewResult = response as ViewResult;
         Assert.IsNotNull(viewResult);
-        var model = viewResult.Model as SelectShortCourseTrainingVenuesViewModel;
+        var model = viewResult.Model as ShortCourseTrainingVenuesViewModel;
         model.Should().NotBeNull();
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
         model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.Route.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
+        model!.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
     }
@@ -58,7 +60,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
             ShortCourseLocationOption.ProviderLocation
         ];
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
+        var submitModel = new ShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
         };
@@ -90,7 +92,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
             ShortCourseLocationOption.EmployerLocation
         ];
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
+        var submitModel = new ShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
         };
@@ -124,7 +126,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         sessionModel.HasNationalDeliveryOption = false;
         sessionModel.TrainingRegions = new List<TrainingRegionModel>();
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var submitModel = new SelectShortCourseTrainingVenuesSubmitModel()
+        var submitModel = new ShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
         };
@@ -145,7 +147,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     public void SelectShortCourseTrainingVenue_SessionIsNull_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
-        SelectShortCourseTrainingVenuesSubmitModel submitModel)
+        ShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;

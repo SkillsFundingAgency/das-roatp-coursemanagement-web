@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
@@ -14,7 +14,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
     public string DeleteShortCourseLink { get; set; } = "#";
     public string BackToManageShortCoursesLink { get; set; } = "#";
 
-    public static implicit operator ManageShortCourseDetailsViewModel(GetStandardDetailsQueryResult source)
+    public static implicit operator ManageShortCourseDetailsViewModel(GetProviderCourseDetailsQueryResult source)
     {
         var locationOptions = new List<ShortCourseLocationOption>();
         if (source.HasProviderLocation)
@@ -50,7 +50,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
             {
                 LocationOptions = locationOptions,
                 DeliveryLocations = locationOptions.Select(ShortCourseLocationDisplayHelper.MapLocationOptionsDisplayText).ToList(),
-                TrainingVenues = source.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).ToList(),
+                TrainingVenues = source.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Provider).Select(x => x.LocationName).OrderBy(x => x).ToList(),
                 HasNationalDeliveryOption = source.HasNationalLocation switch { true => "Yes", false => "No" },
                 TrainingRegions = source.ProviderCourseLocations.Where(x => x.LocationType == LocationType.Regional).Select(x => x.SubregionName).OrderBy(x => x).ToList(),
                 DeliversAtEmployerLocation = locationOptions.Contains(ShortCourseLocationOption.EmployerLocation),

@@ -23,7 +23,7 @@ public class ReviewShortCourseDetailsViewModel : ShortCourseBaseViewModel
         {
             LocationOptions = sessionModel.LocationOptions,
             DeliveryLocations = sessionModel.LocationOptions.Select(ShortCourseLocationDisplayHelper.MapLocationOptionsDisplayText).ToList(),
-            TrainingVenues = sessionModel.TrainingVenues.Select(x => x.LocationName).ToList(),
+            TrainingVenues = sessionModel.TrainingVenues.Select(x => x.LocationName).OrderBy(x => x).ToList(),
             HasNationalDeliveryOption = sessionModel.HasNationalDeliveryOption switch { true => "Yes", false => "No", _ => null },
             TrainingRegions = sessionModel.TrainingRegions.Select(x => x.SubregionName).OrderBy(x => x).ToList(),
             DeliversAtEmployerLocation = sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation),

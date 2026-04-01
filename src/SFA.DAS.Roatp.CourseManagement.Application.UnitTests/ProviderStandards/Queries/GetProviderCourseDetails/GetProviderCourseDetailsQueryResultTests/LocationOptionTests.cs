@@ -3,10 +3,10 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Queries.GetStandardDetails.GetStandardDetailsQueryResultTests
+namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards.Queries.GetProviderCourseDetails.GetProviderCourseDetailsQueryResultTests
 {
     [TestFixture]
-    public class LocationOptionTests : GetStandardDetailsQueryResultTestsBase
+    public class LocationOptionTests : GetProviderCourseDetailsQueryResultTestsBase
     {
         [Test]
         public void NoLocations_ReturnsNone()

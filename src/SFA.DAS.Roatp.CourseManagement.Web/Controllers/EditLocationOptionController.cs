@@ -1,7 +1,9 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -10,8 +12,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -37,7 +37,7 @@ public class EditLocationOptionController : ControllerBase
         var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption);
         if (string.IsNullOrEmpty(locationOption))
         {
-            var result = await _mediator.Send(new GetStandardDetailsQuery(Ukprn, larsCode));
+            var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
             model.LocationOption = result.LocationOption;
         }
         else

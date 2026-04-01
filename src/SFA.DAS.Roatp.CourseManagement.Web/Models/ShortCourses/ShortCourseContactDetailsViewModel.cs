@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+﻿using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
@@ -9,7 +9,7 @@ public class ShortCourseContactDetailsViewModel : CourseContactDetailsSubmitMode
     public string SubmitButtonText { get; set; }
     public string Route { get; set; }
 
-    public static implicit operator ShortCourseContactDetailsViewModel(GetStandardDetailsQueryResult standardDetails) =>
+    public static implicit operator ShortCourseContactDetailsViewModel(GetProviderCourseDetailsQueryResult standardDetails) =>
     new ShortCourseContactDetailsViewModel
     {
         ContactUsEmail = standardDetails.ContactUsEmail,

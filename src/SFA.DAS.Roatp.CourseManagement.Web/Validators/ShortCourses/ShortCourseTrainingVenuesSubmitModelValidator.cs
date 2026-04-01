@@ -3,11 +3,11 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses;
 
-public class SelectShortCourseTrainingVenuesSubmitModelValidator : AbstractValidator<SelectShortCourseTrainingVenuesSubmitModel>
+public class ShortCourseTrainingVenuesSubmitModelValidator : AbstractValidator<ShortCourseTrainingVenuesSubmitModel>
 {
     public const string NoneSelectedErrorMessage = "Select at least one training venue";
 
-    public SelectShortCourseTrainingVenuesSubmitModelValidator()
+    public ShortCourseTrainingVenuesSubmitModelValidator()
     {
         RuleFor(m => m.SelectedProviderLocationIds)
             .NotEmpty()

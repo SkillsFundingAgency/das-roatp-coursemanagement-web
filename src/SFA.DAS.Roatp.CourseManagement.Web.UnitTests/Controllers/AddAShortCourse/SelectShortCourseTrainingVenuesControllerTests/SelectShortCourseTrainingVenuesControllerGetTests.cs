@@ -1,4 +1,8 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +17,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseTrainingVenuesControllerTests;
 public class SelectShortCourseTrainingVenuesControllerGetTests
@@ -50,9 +50,11 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
 
         // Assert
         var viewResult = result as ViewResult;
-        var model = viewResult!.Model as SelectShortCourseTrainingVenuesViewModel;
+        var model = viewResult!.Model as ShortCourseTrainingVenuesViewModel;
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.Route.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
+        model.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.FirstOrDefault().NavigationId == queryResult.ProviderLocations.FirstOrDefault().NavigationId && m.LocationsAvailable)), Times.Once);
         mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
@@ -92,7 +94,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
 
         // Assert
         var viewResult = result as ViewResult;
-        var model = viewResult!.Model as SelectShortCourseTrainingVenuesViewModel;
+        var model = viewResult!.Model as ShortCourseTrainingVenuesViewModel;
         model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 

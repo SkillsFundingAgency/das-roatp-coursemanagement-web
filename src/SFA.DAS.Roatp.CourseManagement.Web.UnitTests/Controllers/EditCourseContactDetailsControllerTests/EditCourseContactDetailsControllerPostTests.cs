@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -49,10 +49,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
-        public async Task Post_InvalidModel_ReturnsView(CourseContactDetailsSubmitModel model, GetStandardDetailsQueryResult queryResult, string larsCode)
+        public async Task Post_InvalidModel_ReturnsView(CourseContactDetailsSubmitModel model, GetProviderCourseDetailsQueryResult queryResult, string larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
             _sut.ModelState.AddModelError("key", "error");
 
@@ -68,8 +68,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         public async Task Post_InvalidModelAndCourseDetailsNotFound_ThrowsException(CourseContactDetailsSubmitModel submitModel, string larsCode)
         {
             _mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((GetStandardDetailsQueryResult)null);
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetProviderCourseDetailsQueryResult)null);
             _sut.ModelState.AddModelError("key", "error");
 
             Func<Task> action = () => _sut.Index(larsCode, submitModel);

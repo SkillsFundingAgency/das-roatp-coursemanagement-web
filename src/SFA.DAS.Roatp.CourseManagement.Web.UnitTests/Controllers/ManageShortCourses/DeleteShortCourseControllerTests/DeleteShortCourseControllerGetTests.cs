@@ -7,7 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -24,14 +24,14 @@ public class DeleteShortCourseControllerGetTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] DeleteShortCourseController sut,
         GetStandardInformationQueryResult queryResult,
-        GetStandardDetailsQueryResult getStandardDetailsQueryResult,
+        GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
         string larsCode)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         string backToManageShortCoursesLink = Guid.NewGuid().ToString();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
@@ -55,14 +55,14 @@ public class DeleteShortCourseControllerGetTests
        [Frozen] Mock<IMediator> mediatorMock,
        [Greedy] DeleteShortCourseController sut,
        GetStandardInformationQueryResult queryResult,
-       GetStandardDetailsQueryResult getStandardDetailsQueryResult,
+       GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
        string larsCode)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         string backToManageShortCoursesLink = Guid.NewGuid().ToString();
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
@@ -74,7 +74,7 @@ public class DeleteShortCourseControllerGetTests
         await sut.DeleteShortCourse(apprenticeshipType, larsCode);
 
         // Assert
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
         mediatorMock.Verify(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -88,7 +88,7 @@ public class DeleteShortCourseControllerGetTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync((GetStandardDetailsQueryResult)null);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync((GetProviderCourseDetailsQueryResult)null);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
@@ -106,13 +106,13 @@ public class DeleteShortCourseControllerGetTests
     public async Task DeleteShortCourse_GetStandardInformationReturnsNull_RedirectsToPageNotFound(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] DeleteShortCourseController sut,
-    GetStandardDetailsQueryResult getStandardDetailsQueryResult,
+    GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
     string larsCode)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync((GetStandardInformationQueryResult)null);
 

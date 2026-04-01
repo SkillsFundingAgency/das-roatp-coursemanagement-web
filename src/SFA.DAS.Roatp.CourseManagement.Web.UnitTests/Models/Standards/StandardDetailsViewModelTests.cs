@@ -2,7 +2,7 @@
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string contactUsPhoneNumber = "12345";
             const string contactUsEmail = "me@test.com";
 
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 CourseName = courseName,
                 LarsCode = larsCode,
@@ -107,7 +107,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             providerCourseLocations.AddRange(subregionLocations);
             providerCourseLocations.Add(nationalLocation);
 
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -123,7 +123,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         public void ImplicitOperator_NoCourseLocations_ConvertsLocationSummaryToNoneSet()
         {
             var providerCourseLocations = new List<ProviderCourseLocation>();
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -146,7 +146,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                     LocationType = locationType
                 }
             };
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 ProviderCourseLocations = courseLocations
             };
@@ -172,7 +172,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 }
             };
 
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -198,7 +198,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 }
             };
 
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -251,7 +251,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 }
             };
 
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations
             };
@@ -278,7 +278,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         public void ImplicitOperator_ConvertsFromStandardDetails(bool? isApprovedByRegulator, string approvedByRegulatorStatus)
         {
             const string regulatorName = "Test regulator";
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 RegulatorName = regulatorName,
                 IsApprovedByRegulator = isApprovedByRegulator
@@ -297,7 +297,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         [TestCase(true, false, null, false)]
         public void StandardRequiresMoreInfoIsSet(bool hasLocations, bool isRegulatedForProvider, bool? isApprovedByRegulator, bool expected)
         {
-            var standardDetails = new GetStandardDetailsQueryResult
+            var standardDetails = new GetProviderCourseDetailsQueryResult
             {
                 HasLocations = hasLocations,
                 IsRegulatedForProvider = isRegulatedForProvider,

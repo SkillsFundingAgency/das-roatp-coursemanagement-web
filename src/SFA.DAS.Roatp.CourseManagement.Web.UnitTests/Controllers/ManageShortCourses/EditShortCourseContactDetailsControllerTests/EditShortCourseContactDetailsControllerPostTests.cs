@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateContactDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -66,7 +66,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
 
         // Assert
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never());
         mediatorMock.Verify(m => m.Send(It.IsAny<UpdateProviderCourseContactDetailsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     }
 
@@ -75,13 +75,13 @@ public class EditShortCourseContactDetailsControllerPostTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] EditShortCourseContactDetailsController sut,
         CourseContactDetailsSubmitModel model,
-        GetStandardDetailsQueryResult queryResult,
+        GetProviderCourseDetailsQueryResult queryResult,
         string larsCode)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         sut.AddDefaultContextWithUser();
 
@@ -95,7 +95,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(TestConstants.DefaultUkprn));
         routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(larsCode);
         routeResult.RouteValues.Should().ContainKey("apprenticeshipType").WhoseValue.Should().Be(apprenticeshipType);
-        mediatorMock.Verify(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
         mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -104,7 +104,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] EditShortCourseContactDetailsController sut,
         CourseContactDetailsSubmitModel model,
-        GetStandardDetailsQueryResult queryResult,
+        GetProviderCourseDetailsQueryResult queryResult,
         string larsCode)
     {
         // Arrange
@@ -113,7 +113,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         queryResult.ContactUsEmail = model.ContactUsEmail;
         queryResult.StandardInfoUrl = model.StandardInfoUrl;
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         sut.AddDefaultContextWithUser();
 
@@ -131,7 +131,7 @@ public class EditShortCourseContactDetailsControllerPostTests
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] EditShortCourseContactDetailsController sut,
     CourseContactDetailsSubmitModel model,
-    GetStandardDetailsQueryResult queryResult,
+    GetProviderCourseDetailsQueryResult queryResult,
     string larsCode)
     {
         // Arrange
@@ -145,7 +145,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         var contactUsPhoneNumberTrimmed = "012345";
         var standardInfoUrlTrimmed = "test@gmail.com";
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         sut.AddDefaultContextWithUser();
 
@@ -172,7 +172,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        mediatorMock.Setup(m => m.Send(It.Is<GetStandardDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         sut.AddDefaultContextWithUser();
 
