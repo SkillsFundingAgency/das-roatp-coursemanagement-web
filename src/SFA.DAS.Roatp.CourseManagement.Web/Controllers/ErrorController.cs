@@ -4,13 +4,11 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Provider.Shared.UI.Attributes;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AllowAnonymous]
-[HideNavigationBar]
 [Route("Error")]
 public class ErrorController : Controller
 {
