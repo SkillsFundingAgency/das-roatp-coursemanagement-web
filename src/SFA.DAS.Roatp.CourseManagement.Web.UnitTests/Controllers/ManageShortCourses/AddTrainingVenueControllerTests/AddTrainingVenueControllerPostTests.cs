@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -12,16 +13,17 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Text.Json;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.AddTrainingVenueControllerTests;
 public class AddTrainingVenueControllerPostTests
 {
     [Test]
-    [MoqInlineAutoData("")]
-    [MoqInlineAutoData("test")]
+    [MoqInlineAutoData("", RouteNames.PostAddTrainingVenue, true)]
+    [MoqInlineAutoData("test", RouteNames.PostAddTrainingVenueEditShortCourse, false)]
     public void LookupAddress_InvalidStatus_ReturnsViewResult(
        string larsCode,
+       string expectedPostRoute,
+       bool expectedIsAddJourney,
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] AddTrainingVenueController sut,
        AddTrainingVenueSubmitModel model,
@@ -43,6 +45,9 @@ public class AddTrainingVenueControllerPostTests
         var viewResult = result as ViewResult;
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
+        var viewModel = viewResult.Model as AddTrainingVenueViewModel;
+        viewModel.Route.Should().Be(expectedPostRoute);
+        viewModel.IsAddJourney.Should().Be(expectedIsAddJourney);
     }
 
     [Test]
@@ -78,10 +83,11 @@ public class AddTrainingVenueControllerPostTests
     }
 
     [Test]
-    [MoqInlineAutoData("")]
-    [MoqInlineAutoData("test")]
-    public void LookupAddress_Valid_SetsSelectedAddressInTempDataAndRedirectsToGetAddTrainingVenue(
+    [MoqInlineAutoData("", RouteNames.GetConfirmAddTrainingVenue)]
+    [MoqInlineAutoData("test", RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
+    public void LookupAddress_Valid_SetsSelectedAddressInTempDataAndRedirectsToCorrectRoute(
         string larsCode,
+        string expectedRedirectRoute,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut,
         AddTrainingVenueSubmitModel submitModel,
@@ -112,7 +118,7 @@ public class AddTrainingVenueControllerPostTests
         // Assert
         var result = response as RedirectToRouteResult;
         Assert.IsNotNull(result);
-        result.RouteName.Should().Be(RouteNames.GetConfirmAddTrainingVenue);
+        result.RouteName.Should().Be(expectedRedirectRoute);
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
         tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, expectedValueInTempData));
     }

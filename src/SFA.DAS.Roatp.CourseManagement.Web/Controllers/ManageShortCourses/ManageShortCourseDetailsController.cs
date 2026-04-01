@@ -18,20 +18,21 @@ public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<Man
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCourseDetails.cshtml";
 
     [HttpGet]
+    [ClearSession(SessionKeys.SelectedShortCourseLocationOption)]
     public async Task<IActionResult> ManageShortCourseDetails(ApprenticeshipType apprenticeshipType, string larsCode)
     {
         _logger.LogInformation("Getting Course details for ukprn {Ukprn} LarsCode {LarsCode}", Ukprn, larsCode);
 
-        var standardDetailsResponse = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+        var providerCourseDetailsResponse = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
-        if (standardDetailsResponse == null)
+        if (providerCourseDetailsResponse == null)
         {
             _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
 
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var model = (ManageShortCourseDetailsViewModel)standardDetailsResponse;
+        var model = (ManageShortCourseDetailsViewModel)providerCourseDetailsResponse;
 
         model.ApprenticeshipType = apprenticeshipType;
         model.ContactInformation.ApprenticeshipType = apprenticeshipType;
@@ -40,8 +41,10 @@ public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<Man
         model.LocationInformation.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.EditShortCourseRegions, new { Ukprn, apprenticeshipType, larsCode });
         model.LocationInformation.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.EditShortCourseTrainingVenues, new { Ukprn, apprenticeshipType, larsCode });
         model.LocationInformation.NationalProviderChangeLink = Url.RouteUrl(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, apprenticeshipType, larsCode });
+        model.LocationInformation.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.EditShortCourseLocationOptions, new { Ukprn, apprenticeshipType, larsCode });
         model.BackToManageShortCoursesLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType });
         model.DeleteShortCourseLink = Url.RouteUrl(RouteNames.DeleteShortCourse, new { Ukprn, apprenticeshipType, larsCode });
+        model.Banner.ApprenticeshipType = model.ApprenticeshipTypeLower;
 
         return View(ViewPath, model);
     }

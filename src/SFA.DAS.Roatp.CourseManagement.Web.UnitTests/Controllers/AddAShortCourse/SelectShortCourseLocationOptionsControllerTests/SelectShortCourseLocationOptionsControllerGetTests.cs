@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -12,7 +13,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseLocationOptionsControllerTests;
 public class SelectShortCourseLocationOptionsControllerGetTests
@@ -52,6 +52,8 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         var model = viewResult!.Model as SelectShortCourseLocationOptionsViewModel;
         model!.LocationOptions.Should().BeEquivalentTo(locationOptions);
         model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.Route.Should().Be(RouteNames.SelectShortCourseLocationOption);
+        model.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 

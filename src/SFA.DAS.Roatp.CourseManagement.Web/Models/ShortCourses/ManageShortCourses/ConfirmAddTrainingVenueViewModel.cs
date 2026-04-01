@@ -1,5 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
@@ -7,6 +7,8 @@ public class ConfirmAddTrainingVenueViewModel : ConfirmAddTrainingVenueSubmitMod
 {
     public string SubmitButtonText { get; set; }
     public bool ShowCancelOption { get; set; }
+    public string Route { get; set; }
+    public bool IsAddJourney { get; set; }
     public ConfirmAddTrainingVenueViewModel(AddressItem addressItem)
     {
         AddressLine1 = addressItem.AddressLine1;

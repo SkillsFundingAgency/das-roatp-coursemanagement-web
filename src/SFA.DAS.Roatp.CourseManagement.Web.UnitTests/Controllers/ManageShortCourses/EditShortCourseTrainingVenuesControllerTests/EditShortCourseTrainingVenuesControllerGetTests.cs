@@ -153,7 +153,7 @@ public class EditShortCourseTrainingVenuesControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public async Task EditShortCourseTrainingVenues_ProviderLocationsReturnsEmpty_RedirectsToGetAddTrainingVenue(
+    public async Task EditShortCourseTrainingVenues_ProviderLocationsReturnsEmpty_RedirectsToGetAddTrainingVenueEditShortCourse(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] EditShortCourseTrainingVenuesController sut,
     GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
@@ -174,6 +174,6 @@ public class EditShortCourseTrainingVenuesControllerGetTests
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.GetAddTrainingVenue);
+        redirectResult!.RouteName.Should().Be(RouteNames.GetAddTrainingVenueEditShortCourse);
     }
 }

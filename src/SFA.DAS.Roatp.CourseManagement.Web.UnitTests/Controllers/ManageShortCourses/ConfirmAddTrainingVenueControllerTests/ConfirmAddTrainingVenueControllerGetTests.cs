@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Text.Json;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -13,16 +14,17 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Text.Json;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.ConfirmAddTrainingVenueControllerTests;
 public class ConfirmAddTrainingVenueControllerGetTests
 {
     [Test]
-    [MoqInlineAutoData("")]
-    [MoqInlineAutoData("test")]
+    [MoqInlineAutoData("", RouteNames.PostConfirmAddTrainingVenue, true)]
+    [MoqInlineAutoData("test", RouteNames.PostConfirmAddTrainingVenueEditShortCourse, false)]
     public void ConfirmVenue_AddressInTempData_ReturnsViewResult(
         string larsCode,
+        string expectedPostRoute,
+        bool expectedIsAddJourney,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         Mock<ITempDataDictionary> tempDataMock,
         Mock<IUrlHelper> urlHelperMock,
@@ -51,11 +53,13 @@ public class ConfirmAddTrainingVenueControllerGetTests
         var model = result.Model as ConfirmAddTrainingVenueViewModel;
         model!.AddressLine1.Should().Be(addressItem.AddressLine1);
         model!.CancelLink.Should().Be(cancelLinkUrl);
+        model!.Route.Should().Be(expectedPostRoute);
+        model!.IsAddJourney.Should().Be(expectedIsAddJourney);
     }
 
     [Test]
     [MoqInlineAutoData("", true, ButtonText.Confirm)]
-    [MoqInlineAutoData("test", false, ButtonText.Continue)]
+    [MoqInlineAutoData("test", false, ButtonText.Confirm)]
     public void ConfirmVenue_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
         string larsCode,
         bool hasSeenSummaryPage,
@@ -90,9 +94,9 @@ public class ConfirmAddTrainingVenueControllerGetTests
 
     [Test]
     [MoqInlineAutoData("", true, false)]
-    [MoqInlineAutoData("test", false, true)]
+    [MoqInlineAutoData("test", false, false)]
     [MoqInlineAutoData("", false, true)]
-    [MoqInlineAutoData("test", true, true)]
+    [MoqInlineAutoData("test", true, false)]
     public void ConfirmVenue_HasSeenSummaryPageIsTrueOrFalse_ShowCancelButtonSetsCorrectly(
         string larsCode,
         bool hasSeenSummaryPage,
@@ -126,7 +130,7 @@ public class ConfirmAddTrainingVenueControllerGetTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_AddressNotInTempData_RedirectsToSelectShortCourseTrainingVenue(
+    public void ConfirmVenue_AddressNotInTempData_RedirectsToEditShortCourseTrainingVenues(
         string larsCode,
         Mock<ITempDataDictionary> tempDataMock,
         [Greedy] ConfirmAddTrainingVenueController sut)
@@ -143,7 +147,7 @@ public class ConfirmAddTrainingVenueControllerGetTests
 
         // Assert
         result.Should().NotBeNull();
-        result!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
+        result!.RouteName.Should().Be(RouteNames.EditShortCourseTrainingVenues);
     }
 
     [Test, MoqAutoData]

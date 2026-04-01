@@ -38,6 +38,7 @@ public class ManageShortCourseDetailsControllerGetTests
         string trainingRegionsChangeLink = Guid.NewGuid().ToString();
         string trainingVenuesChangeLink = Guid.NewGuid().ToString();
         string nationalDeliveryChangeLink = Guid.NewGuid().ToString();
+        string locationOptionsChangeLink = Guid.NewGuid().ToString();
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, ukprn.ToString()) }, "mock"));
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
@@ -49,7 +50,8 @@ public class ManageShortCourseDetailsControllerGetTests
             .AddUrlForRoute(RouteNames.DeleteShortCourse, deleteShortCourseLink)
             .AddUrlForRoute(RouteNames.EditShortCourseRegions, trainingRegionsChangeLink)
             .AddUrlForRoute(RouteNames.EditShortCourseTrainingVenues, trainingVenuesChangeLink)
-            .AddUrlForRoute(RouteNames.EditShortCourseNationalDelivery, nationalDeliveryChangeLink);
+            .AddUrlForRoute(RouteNames.EditShortCourseNationalDelivery, nationalDeliveryChangeLink)
+            .AddUrlForRoute(RouteNames.EditShortCourseLocationOptions, locationOptionsChangeLink);
 
         sut.ControllerContext = new ControllerContext()
         {
@@ -70,7 +72,8 @@ public class ManageShortCourseDetailsControllerGetTests
         model.LocationInformation.TrainingRegionsChangeLink.Should().Be(trainingRegionsChangeLink);
         model.LocationInformation.TrainingVenuesChangeLink.Should().Be(trainingVenuesChangeLink);
         model.LocationInformation.NationalProviderChangeLink.Should().Be(nationalDeliveryChangeLink);
-        model.LocationInformation.LocationOptionsChangeLink.Should().Be("#");
+        model.LocationInformation.LocationOptionsChangeLink.Should().Be(locationOptionsChangeLink);
+        model.Banner.ApprenticeshipType.Should().Be(model.ApprenticeshipTypeLower);
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 

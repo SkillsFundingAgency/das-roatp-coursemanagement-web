@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -15,12 +16,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-training-venues", Name = RouteNames.EditShortCourseTrainingVenues)]
-public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger) : ControllerBase
+public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenues.cshtml";
 
@@ -40,7 +42,7 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
 
         if (providerLocationsResponse.Count == 0)
         {
-            return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.GetAddTrainingVenueEditShortCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
         }
 
         var model = GetViewModel(providerLocationsResponse, providerCourseDetailsResponse, apprenticeshipType);
@@ -100,6 +102,11 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
             await _mediator.Send(command);
         }
 
+        if (IsEmployerLocationOptionSetInSession())
+        {
+            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, apprenticeshipType, larsCode });
+        }
+
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
@@ -147,5 +154,14 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
         };
 
         return model;
+    }
+
+    private bool IsEmployerLocationOptionSetInSession()
+    {
+        var sessionValue = _sessionService.Get(SessionKeys.SelectedShortCourseLocationOption);
+        return
+            (!string.IsNullOrEmpty(sessionValue) &&
+            (Enum.TryParse<ShortCourseLocationOption>(sessionValue, out var locationOption)
+                && (locationOption == ShortCourseLocationOption.EmployerLocation)));
     }
 }

@@ -27,5 +27,28 @@ public class ShortCourseViewModelTests
         viewModel.LarsCode.Should().Be(standard.LarsCode);
         viewModel.CourseDisplayName.Should().Be(expectedCourseDisplayName);
         viewModel.HasLocation.Should().Be(standard.HasLocations);
+        viewModel.HasOnlineDeliveryOption.Should().Be(standard.HasOnlineDeliveryOption);
+    }
+
+    [TestCase(true, false, false)]
+    [TestCase(true, false, false)]
+    [TestCase(false, false, true)]
+    public void ShortCourseViewModel_SetMissingInfo_ReturnsExpectedResult(
+        bool hasLocation,
+        bool hasOnlineDelivery,
+        bool expectedResult)
+    {
+        // Arrange
+        var viewModel = new ShortCourseViewModel()
+        {
+            HasLocation = hasLocation,
+            HasOnlineDeliveryOption = hasOnlineDelivery
+        };
+
+        // Act
+        var result = viewModel.StandardRequiresMoreInfo;
+
+        // Assert
+        result.Should().Be(expectedResult);
     }
 }

@@ -101,7 +101,9 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
         {
             LocationOptions = locationOptions,
             ApprenticeshipType = apprenticeshipType,
-            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue
+            SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
+            Route = RouteNames.SelectShortCourseLocationOption,
+            IsAddJourney = true
         };
     }
 
