@@ -6,4 +6,6 @@ public class SelectShortCourseLocationOptionsViewModel : SelectShortCourseLocati
 {
     public List<ShortCourseLocationOptionModel> LocationOptions { get; set; } = new List<ShortCourseLocationOptionModel>();
     public string SubmitButtonText { get; set; }
+    public string Route { get; set; }
+    public bool IsAddJourney { get; set; }
 }
