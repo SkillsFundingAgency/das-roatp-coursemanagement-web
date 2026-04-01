@@ -19,6 +19,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -309,6 +310,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseTrainingVenues_NoChange_VerifyMediatorIsNotInvokedAndRedirectsToManageShortCourseDetails(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] EditShortCourseTrainingVenuesController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
@@ -349,6 +351,8 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedShortCourseLocationOption)).Returns(() => null);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -424,5 +428,35 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Id == nonProviderCourseLocationsId), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test, MoqAutoData]
+    public async Task EditShortCourseTrainingVenues_EmployerLocationExistsInSession_RedirectsToEditShortCourseNationalDelivery(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Greedy] EditShortCourseTrainingVenuesController sut,
+    GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
+    GetAllProviderLocationsQueryResult providerLocationsApiResponse,
+    ShortCourseTrainingVenuesSubmitModel submitModel,
+    string larsCode)
+    {
+
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedShortCourseLocationOption)).Returns(ShortCourseLocationOption.EmployerLocation.ToString());
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
+
+        // Act
+        var result = await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+
+        // Assert
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.EditShortCourseNationalDelivery);
     }
 }

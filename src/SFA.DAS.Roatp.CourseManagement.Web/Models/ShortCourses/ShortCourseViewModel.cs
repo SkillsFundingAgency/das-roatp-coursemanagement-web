@@ -11,6 +11,7 @@ public class ShortCourseViewModel
     public string LarsCode { get; set; }
     public string StandardUrl { get; set; }
     public bool HasLocation { get; set; }
+    public bool HasOnlineDeliveryOption { get; set; }
     public bool StandardRequiresMoreInfo => SetMissingInfo();
 
     public static implicit operator ShortCourseViewModel(Standard source)
@@ -22,12 +23,13 @@ public class ShortCourseViewModel
             Level = source.Level,
             CourseDisplayName = source.DisplayName,
             LarsCode = source.LarsCode,
-            HasLocation = source.HasLocations
+            HasLocation = source.HasLocations,
+            HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
         };
     }
 
     private bool SetMissingInfo()
     {
-        return (!HasLocation);
+        return (!HasLocation && !HasOnlineDeliveryOption);
     }
 }

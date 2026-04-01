@@ -12,6 +12,7 @@ public class Standard
     public bool IsRegulatedForProvider { get; set; }
     public bool HasLocations { get; set; }
     public CourseType CourseType { get; set; }
+    public bool HasOnlineDeliveryOption { get; set; }
 
     public string DisplayName => $"{CourseName} (level {Level})";
 }

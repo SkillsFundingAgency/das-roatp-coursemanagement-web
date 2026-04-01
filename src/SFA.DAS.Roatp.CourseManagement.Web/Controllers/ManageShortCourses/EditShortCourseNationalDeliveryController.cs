@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +13,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-national-delivery", Name = RouteNames.EditShortCourseNationalDelivery)]
-public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILogger<EditShortCourseNationalDeliveryController> _logger) : ControllerBase
+public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILogger<EditShortCourseNationalDeliveryController> _logger, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ConfirmNationalDelivery.cshtml";
 
@@ -80,16 +82,36 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
         return result;
     }
 
-    private static ConfirmNationalDeliveryViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private ConfirmNationalDeliveryViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
     {
+        bool? hasNationalDeliveryOption = HasNationalDeliveryOption(providerCourseDetails);
+
         var model = new ConfirmNationalDeliveryViewModel();
 
         model.ApprenticeshipType = apprenticeshipType;
-        model.HasNationalDeliveryOption = providerCourseDetails.ProviderCourseLocations.Any(x => x.LocationType == LocationType.National);
+        model.HasNationalDeliveryOption = hasNationalDeliveryOption;
         model.SubmitButtonText = ButtonText.Confirm;
         model.Route = RouteNames.EditShortCourseNationalDelivery;
         model.IsAddJourney = false;
 
         return model;
+    }
+
+    private bool? HasNationalDeliveryOption(GetProviderCourseDetailsQueryResult providerCourseDetails)
+    {
+        var sessionValue = _sessionService.Get(SessionKeys.SelectedShortCourseLocationOption);
+        if (!string.IsNullOrEmpty(sessionValue) &&
+            (Enum.TryParse<ShortCourseLocationOption>(sessionValue, out var locationOption)
+                && (locationOption == ShortCourseLocationOption.EmployerLocation)))
+        {
+            return null;
+        }
+
+        if (providerCourseDetails.ProviderCourseLocations.Any(x => x.LocationType == LocationType.National))
+        {
+            return true;
+        }
+
+        return false;
     }
 }

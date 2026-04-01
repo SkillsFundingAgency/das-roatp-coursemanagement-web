@@ -1,0 +1,22 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses
+@model BannerViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
+            <div class="govuk-notification-banner__header">
+                <h4 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+                    Important
+                </h4>
+            </div>
+            <div class="govuk-notification-banner__content">
+                <p class="govuk-body">
+                    <strong>
+                        You must add a training option to this @Model.ApprenticeshipType. It will not show on Find apprenticeship training until you do.
+                    </strong>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+

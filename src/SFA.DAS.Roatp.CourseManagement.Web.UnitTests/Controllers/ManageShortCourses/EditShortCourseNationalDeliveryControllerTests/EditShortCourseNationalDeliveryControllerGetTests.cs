@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -46,9 +47,16 @@ public class EditShortCourseNationalDeliveryControllerGetTests
         model.IsAddJourney.Should().BeFalse();
     }
 
-    [Test, MoqAutoData]
+    [Test]
+    [MoqInlineAutoData(LocationType.National, null, true)]
+    [MoqInlineAutoData(LocationType.Regional, null, false)]
+    [MoqInlineAutoData(LocationType.Provider, "EmployerLocation", null)]
     public async Task EditShortCourseNationalDelivery_ProviderCourseExists_HasNationalDeliveryOptionIsSetCorrectly(
+        LocationType locationType,
+        string sessionLocation,
+        bool? expectedHasNationalDeliveryOption,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] EditShortCourseNationalDeliveryController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         string larsCode)
@@ -61,9 +69,11 @@ public class EditShortCourseNationalDeliveryControllerGetTests
             new ProviderCourseLocation()
             {
                 SubregionName = "Test",
-                LocationType = LocationType.National
+                LocationType = locationType
             }
         };
+
+        sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedShortCourseLocationOption)).Returns(sessionLocation);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -75,7 +85,7 @@ public class EditShortCourseNationalDeliveryControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult.Model as ConfirmNationalDeliveryViewModel;
-        model.HasNationalDeliveryOption.Should().BeTrue();
+        model.HasNationalDeliveryOption.Should().Be(expectedHasNationalDeliveryOption);
     }
 
     [Test, MoqAutoData]
