@@ -4,14 +4,17 @@
 }
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-6">
         <partial name="_validationSummary" />
         <div class="govuk-caption-l">Save contact details</div>
         <h1 class="govuk-heading-xl margin-bottom-30">Save your contact details</h1>
-        <p class="govuk-body">Your contact details show on the Find an apprenticeship training service and are how employers contact you about your standards. </p>
-        <p class="govuk-body">You can save a primary set of contact details. You can use them when adding a standard or updating multiple standards.</p> 
-        <p class="govuk-body">Once you've saved these details, you can decide if you want to apply them to one or multiple standards.</p>
-        <p class="govuk-body">You must add either an email address or phone number, or you can add both.</p>
+        <div asp-show="Model.ExistingContactDetailsAvailable">
+            <p class="govuk-body">Add an email address, phone number or both to use as your primary set of contact details. They will be shown on Find apprenticeship training and used by employers to contact you about training you offer.</p>
+            <p class="govuk-body">We will save your contact details for next time you add a standard or apprenticeship unit. Once you have added them, you’ll be asked if you want to apply them to any or all of your existing training.</p>
+        </div>
+        <div asp-show="!Model.ExistingContactDetailsAvailable">
+            <p class="govuk-body">Add an email address, phone number or both to use as your primary set of contact details.</p>
+        </div>
     </div>
 </div>
 <div class="govuk-grid-row">

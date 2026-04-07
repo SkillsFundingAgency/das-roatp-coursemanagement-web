@@ -31,6 +31,7 @@ public class ProviderContactControllerGetTests
         var model = viewResult!.Model as AddProviderContactViewModel;
         model.EmailAddress.Should().BeNull();
         model.PhoneNumber.Should().BeNull();
+        model.ExistingContactDetailsAvailable.Should().BeFalse();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 
@@ -46,7 +47,8 @@ public class ProviderContactControllerGetTests
         var sessionModel = new ProviderContactSessionModel
         {
             EmailAddress = email,
-            PhoneNumber = phoneNumber
+            PhoneNumber = phoneNumber,
+            HasExistingContactDetails = true
         };
 
         sut.AddDefaultContextWithUser();
@@ -60,6 +62,7 @@ public class ProviderContactControllerGetTests
         var model = viewResult!.Model as AddProviderContactViewModel;
         model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
+        model.ExistingContactDetailsAvailable.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 }

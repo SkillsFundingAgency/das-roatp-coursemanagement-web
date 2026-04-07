@@ -1,13 +1,13 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
@@ -27,6 +27,7 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
         {
             model.EmailAddress = sessionModel.EmailAddress;
             model.PhoneNumber = sessionModel.PhoneNumber;
+            model.ExistingContactDetailsAvailable = sessionModel.HasExistingContactDetails;
         }
 
         return View(ViewPath, model);
@@ -35,18 +36,20 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
     [HttpPost]
     public async Task<IActionResult> PostProviderContact(int ukprn, AddProviderContactSubmitViewModel submitViewModel)
     {
+        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
+
         if (!ModelState.IsValid)
         {
             var model = new AddProviderContactViewModel
             {
                 EmailAddress = submitViewModel.EmailAddress,
-                PhoneNumber = submitViewModel.PhoneNumber
+                PhoneNumber = submitViewModel.PhoneNumber,
+                ExistingContactDetailsAvailable = sessionModel.HasExistingContactDetails
             };
 
             return View(ViewPath, model);
         }
 
-        var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
         if (sessionModel == null) sessionModel = new ProviderContactSessionModel();
 
         sessionModel.EmailAddress = submitViewModel.EmailAddress;
