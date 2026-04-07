@@ -1,4 +1,8 @@
-﻿using AutoFixture;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -6,10 +10,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
 {
@@ -50,15 +50,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Handlers
         }
 
         [Test]
-        public async Task Handle_NoStandardsReturned_ReturnsNullResponse()
+        public async Task Handle_NoStandardsReturned_ReturnsEmptyResponse()
         {
             _apiClient.Setup(x => x.Get<List<Domain.ApiModels.Standard>>(ApiEndPoint)).ReturnsAsync(() => null);
             _handler = new GetAllProviderStandardsQueryHandler(_apiClient.Object, _logger.Object);
 
-            var result = await _handler.Handle(_query, CancellationToken.None);
+            GetAllProviderStandardsQueryResult result = await _handler.Handle(_query, CancellationToken.None);
 
-            Assert.IsNull(result);
-            _logger.Verify(x => x.Log(LogLevel.Information, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.AtLeastOnce);
+            Assert.That(result.Standards, Is.Empty);
         }
 
         [Test]
