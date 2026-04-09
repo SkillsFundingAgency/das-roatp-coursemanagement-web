@@ -258,11 +258,6 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         }
     }
 
-    private static bool IsAddJourney(string larsCode)
-    {
-        return string.IsNullOrWhiteSpace(larsCode);
-    }
-
     private async Task<GetAllProviderLocationsQueryResult> GetProviderLocations()
     {
         return await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
