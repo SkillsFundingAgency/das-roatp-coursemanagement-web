@@ -1,4 +1,9 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text.Json;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +13,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -16,17 +22,12 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.ConfirmAddTrainingVenueControllerTests;
-public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
+public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueAddTests
 {
     [Test, MoqAutoData]
-    public void ConfirmVenue_AddressMissingInTempData_RedirectsToGetProviderLocations(
+    public void ConfirmVenueAdd_AddressMissingInTempData_RedirectsToGetProviderLocations(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ConfirmAddTrainingVenueController sut,
@@ -34,14 +35,13 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var larsCode = "";
         object address = null;
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         //Act
-        var result = sut.ConfirmVenue(model, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmVenueAdd(model, apprenticeshipType).Result as RedirectToRouteResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -50,7 +50,105 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_InvokesMediatorWithCreateCommandSetsSessionAndRedirectsToReviewShortCourseDetails(
+    public void ConfirmVenueAdd_ModelStateIsInvalid_ReturnsViewResult(
+    Mock<ITempDataDictionary> tempDataMock,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ConfirmAddTrainingVenueController sut,
+    ConfirmAddTrainingVenueSubmitModel model,
+    ShortCourseSessionModel sessionModel,
+    AddressItem addressItem)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        object address = JsonSerializer.Serialize(addressItem);
+        sut.AddDefaultContextWithUser();
+        sut.TempData = tempDataMock.Object;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        sut.ModelState.AddModelError("key", "message");
+
+        // Act
+        var result = sut.ConfirmVenueAdd(model, apprenticeshipType).Result as ViewResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        result.ViewName.Should().Be(ConfirmAddTrainingVenueController.ViewPath);
+        var actualModel = (ConfirmAddTrainingVenueViewModel)result.Model;
+        actualModel!.LocationName.Should().Be(model.LocationName);
+        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenue);
+        actualModel!.IsAddJourney.Should().Be(true);
+        mediatorMock.Verify(m => m.Send(It.IsAny<CreateProviderLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test]
+    [MoqInlineAutoData(true, ButtonText.Confirm)]
+    [MoqInlineAutoData(false, ButtonText.Continue)]
+    public void ConfirmVenueAdd_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+    bool hasSeenSummaryPage,
+    string expectedSubmitButtonText,
+    Mock<ITempDataDictionary> tempDataMock,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ConfirmAddTrainingVenueController sut,
+    ConfirmAddTrainingVenueSubmitModel model,
+    ShortCourseSessionModel sessionModel,
+    AddressItem addressItem)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
+        object address = JsonSerializer.Serialize(addressItem);
+        sut.AddDefaultContextWithUser();
+        sut.TempData = tempDataMock.Object;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        sut.ModelState.AddModelError("key", "message");
+
+        // Act
+        var result = sut.ConfirmVenueAdd(model, apprenticeshipType).Result as ViewResult;
+
+        // Assert
+        result.ViewName.Should().Be(ConfirmAddTrainingVenueController.ViewPath);
+        var actualModel = (ConfirmAddTrainingVenueViewModel)result.Model;
+        actualModel.SubmitButtonText.Should().Be(expectedSubmitButtonText);
+    }
+
+    [Test]
+    [MoqInlineAutoData(true, false)]
+    [MoqInlineAutoData(false, true)]
+    public void ConfirmVenueAdd_HasSeenSummaryPageIsTrueOrFalse_ShowCancelButtonSetsCorrectly(
+    bool hasSeenSummaryPage,
+    bool showCancelButton,
+    Mock<ITempDataDictionary> tempDataMock,
+    [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ConfirmAddTrainingVenueController sut,
+    ConfirmAddTrainingVenueSubmitModel model,
+    ShortCourseSessionModel sessionModel,
+    AddressItem addressItem)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
+        object address = JsonSerializer.Serialize(addressItem);
+        sut.AddDefaultContextWithUser();
+        sut.TempData = tempDataMock.Object;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
+        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        sut.ModelState.AddModelError("key", "message");
+
+        // Act
+        var result = sut.ConfirmVenueAdd(model, apprenticeshipType).Result as ViewResult;
+
+        // Assert
+        result.ViewName.Should().Be(ConfirmAddTrainingVenueController.ViewPath);
+        var actualModel = (ConfirmAddTrainingVenueViewModel)result.Model;
+        actualModel.ShowCancelOption.Should().Be(showCancelButton);
+    }
+
+    [Test, MoqAutoData]
+    public void ConfirmVenueAdd_InvokesMediatorWithCreateCommandSetsSessionAndRedirectsToReviewShortCourseDetails(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -66,7 +164,6 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
             ShortCourseLocationOption.ProviderLocation
         ];
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var larsCode = "";
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         object address = JsonSerializer.Serialize(addressItem);
@@ -75,7 +172,7 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenue(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmVenueAdd(submitModel, apprenticeshipType).Result as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -94,12 +191,12 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
             c.Longitude == addressItem.Longitude
         ), It.IsAny<CancellationToken>()));
         mediatorMock.Verify(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Exactly(2));
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(3));
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(2));
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().LocationName == queryResult.ProviderLocations.FirstOrDefault().LocationName && m.LocationsAvailable)), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_SessionContainsEmployerLocationOption_SetsSessionAndRedirectsToConfirmNationalProviderDelivery(
+    public void ConfirmVenueAdd_SessionContainsEmployerLocationOption_SetsSessionAndRedirectsToConfirmNationalProviderDelivery(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -125,16 +222,16 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenue(submitModel, apprenticeshipType, "").Result as RedirectToRouteResult;
+        var result = sut.ConfirmVenueAdd(submitModel, apprenticeshipType).Result as RedirectToRouteResult;
 
         // Assert
         result.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(3));
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(2));
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().LocationName == queryResult.ProviderLocations.FirstOrDefault().LocationName && m.LocationsAvailable)), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_HasNationalDeliveryOptionIsFalseAndRegionsMissing_SetsSessionAndRedirectsToSelectShortCourseRegions(
+    public void ConfirmVenueAdd_HasNationalDeliveryOptionIsFalseAndRegionsMissing_SetsSessionAndRedirectsToSelectShortCourseRegions(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -161,16 +258,16 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenue(submitModel, apprenticeshipType, "").Result as RedirectToRouteResult;
+        var result = sut.ConfirmVenueAdd(submitModel, apprenticeshipType).Result as RedirectToRouteResult;
 
         // Assert
         result.RouteName.Should().Be(RouteNames.SelectShortCourseRegions);
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(3));
+        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Exactly(2));
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.TrainingVenues.FirstOrDefault().LocationName == queryResult.ProviderLocations.FirstOrDefault().LocationName && m.LocationsAvailable)), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_AddressHasEmptyFields_ModelStateIsValid_InvokesMediatorWithCreateCommand(
+    public void ConfirmVenueAdd_AddressHasEmptyFields_ModelStateIsValid_InvokesMediatorWithCreateCommand(
     Mock<ITempDataDictionary> tempDataMock,
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -180,7 +277,6 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var larsCode = "";
         addressItem.AddressLine2 = null;
         addressItem.Town = null;
         addressItem.County = null;
@@ -190,7 +286,7 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenue(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmVenueAdd(submitModel, apprenticeshipType).Result as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -212,7 +308,7 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
     }
 
     [Test, MoqAutoData]
-    public void ConfirmVenue_LocationNameIsNotDistinct_ReturnsViewResult(
+    public void ConfirmVenueAdd_LocationNameIsNotDistinct_ReturnsViewResult(
     Mock<ITempDataDictionary> tempDataMock,
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] ConfirmAddTrainingVenueController sut,
@@ -222,7 +318,6 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var larsCode = "";
         allLocations.ProviderLocations.FirstOrDefault().LocationName = model.LocationName;
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
         object address = JsonSerializer.Serialize(addressItem);
@@ -231,7 +326,7 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenue(model, apprenticeshipType, larsCode).Result as ViewResult;
+        var result = sut.ConfirmVenueAdd(model, apprenticeshipType).Result as ViewResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -243,7 +338,7 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
 
 
     [Test, MoqAutoData]
-    public async Task ConfirmVenue_SessionIsNull_RedirectsToReviewYourDetails(
+    public async Task ConfirmVenueAdd_SessionIsNull_RedirectsToReviewYourDetails(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ConfirmAddTrainingVenueController sut,
@@ -260,7 +355,7 @@ public class ConfirmAddTrainingVenueControllerPost_AddJourneyTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.ConfirmVenue(model, apprenticeshipType, "") as RedirectToRouteResult;
+        var result = await sut.ConfirmVenueAdd(model, apprenticeshipType) as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
