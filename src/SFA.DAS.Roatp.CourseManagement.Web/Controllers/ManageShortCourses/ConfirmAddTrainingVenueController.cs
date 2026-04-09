@@ -28,48 +28,38 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
-    [HttpGet("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
-    public IActionResult ConfirmVenue(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public IActionResult ConfirmVenueAdd(ApprenticeshipType apprenticeshipType)
     {
         var submitButtonText = ButtonText.Confirm;
         bool showCancelOption = false;
+        var postRoute = RouteNames.PostConfirmAddTrainingVenue;
 
-        var isAddJourney = IsAddJourney(larsCode);
 
-        var postRoute = isAddJourney
-            ? RouteNames.PostConfirmAddTrainingVenue
-            : RouteNames.PostConfirmAddTrainingVenueEditShortCourse;
+        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
-        if (isAddJourney)
+        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+        if (sessionModel.LocationsAvailable)
         {
-            var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+            _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
 
-            if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+        }
 
-            if (sessionModel.LocationsAvailable)
-            {
-                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
-
-                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
-            }
-
-            if (!sessionModel.HasSeenSummaryPage)
-            {
-                submitButtonText = ButtonText.Continue;
-                showCancelOption = true;
-            }
+        if (!sessionModel.HasSeenSummaryPage)
+        {
+            submitButtonText = ButtonText.Continue;
+            showCancelOption = true;
         }
 
         var addressItem = GetAddressFromTempData(true);
 
         if (addressItem == null)
         {
-            return isAddJourney
-                ? RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails)
-                : RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, isAddJourney);
+        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, true);
         return View(ViewPath, model);
     }
 
@@ -126,6 +116,24 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         }
 
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+    }
+
+    [HttpGet("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
+    public IActionResult ConfirmVenueEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    {
+        var submitButtonText = ButtonText.Confirm;
+        bool showCancelOption = false;
+        var postRoute = RouteNames.PostConfirmAddTrainingVenueEditShortCourse;
+
+        var addressItem = GetAddressFromTempData(true);
+
+        if (addressItem == null)
+        {
+            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+        }
+
+        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, false);
+        return View(ViewPath, model);
     }
 
     [HttpPost("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.PostConfirmAddTrainingVenueEditShortCourse)]
