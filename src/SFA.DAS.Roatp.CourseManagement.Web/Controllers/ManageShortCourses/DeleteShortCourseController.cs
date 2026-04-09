@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/delete-course", Name = RouteNames.DeleteShortCourse)]
 public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShortCourseController> _logger) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/DeleteShortCourseView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/DeleteShortCourse.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> DeleteShortCourse(ApprenticeshipType apprenticeshipType, string larsCode)

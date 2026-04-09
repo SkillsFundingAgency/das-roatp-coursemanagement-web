@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-regions", Name = RouteNames.EditShortCourseRegions)]
 public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger, IRegionsService _regionsService) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegionsView.cshtml";
+    public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegions.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> EditShortCourseRegions(ApprenticeshipType apprenticeshipType, string larsCode)
@@ -54,32 +54,16 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
             return View(ViewPath, viewModel);
         }
 
-        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
-
-        if (providerCourseDetailsResponse == null)
+        var command = new UpdateStandardSubRegionsCommand
         {
-            return RedirectToRoute(RouteNames.EditShortCourseRegions, new { Ukprn, apprenticeshipType, larsCode });
-        }
+            LarsCode = larsCode,
+            Ukprn = Ukprn,
+            UserId = UserId,
+            UserDisplayName = UserDisplayName,
+            SelectedSubRegions = submitModel.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList()
+        };
 
-        var regions = await _regionsService.GetRegions();
-
-        var currentSubRegions = providerCourseDetailsResponse.ProviderCourseLocations.Where(r => r.LocationType == LocationType.Regional).Select(r => r.SubregionName).OrderBy(x => x);
-
-        var selectedSubRegions = regions.Where(x => submitModel.SelectedSubRegions.Contains(x.Id.ToString())).Select(x => x.SubregionName).OrderBy(x => x);
-
-        if (!currentSubRegions.SequenceEqual(selectedSubRegions))
-        {
-            var command = new UpdateStandardSubRegionsCommand
-            {
-                LarsCode = larsCode,
-                Ukprn = Ukprn,
-                UserId = UserId,
-                UserDisplayName = UserDisplayName,
-                SelectedSubRegions = submitModel.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList()
-            };
-
-            await _mediator.Send(command);
-        }
+        await _mediator.Send(command);
 
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
