@@ -2,6 +2,7 @@
 
 public class AddProviderContactViewModel : AddProviderContactSubmitViewModel, IBackLink
 {
+    public bool ExistingContactDetailsAvailable { get; set; }
 }
 
 public class AddProviderContactSubmitViewModel

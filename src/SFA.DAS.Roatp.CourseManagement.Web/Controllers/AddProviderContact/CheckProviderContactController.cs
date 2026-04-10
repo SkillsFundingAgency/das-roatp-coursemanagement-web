@@ -32,7 +32,8 @@ public class CheckProviderContactController(IMediator _mediator, ISessionService
         var sessionModel = new ProviderContactSessionModel
         {
             EmailAddress = response.EmailAddress,
-            PhoneNumber = response.PhoneNumber
+            PhoneNumber = response.PhoneNumber,
+            HasExistingContactDetails = true
         };
 
         _sessionService.Set(sessionModel);

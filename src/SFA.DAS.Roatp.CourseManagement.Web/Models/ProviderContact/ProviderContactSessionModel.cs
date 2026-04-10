@@ -12,5 +12,6 @@ public class ProviderContactSessionModel
     public bool? UpdateExistingStandards { get; set; }
 
     public bool HasStandards { get; set; }
+    public bool HasExistingContactDetails { get; set; }
 
 }
