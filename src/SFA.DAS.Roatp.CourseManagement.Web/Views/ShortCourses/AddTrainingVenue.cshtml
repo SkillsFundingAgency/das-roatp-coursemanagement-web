@@ -7,7 +7,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
-        <form method="post" asp-route="@RouteNames.PostAddTrainingVenue" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@Model.Route" enctype="multipart/form-data" novalidate>
 
             <input asp-for="AddressLine1" id="AddressLine1" type="hidden" />
             <input asp-for="AddressLine2" id="AddressLine2" type="hidden" />
@@ -17,7 +17,8 @@
             <input asp-for="Longitude" id="Longitude" type="hidden" />
             <input asp-for="Latitude" id="Latitude" type="hidden" />
 
-            <span class="govuk-caption-l">Add an @(Model.ApprenticeshipTypeLower)</span>
+            <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
+            <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</div>
 
             <h1 class="govuk-label-wrapper">
                 <label class="govuk-label govuk-label--xl" asp-for="SearchTerm">

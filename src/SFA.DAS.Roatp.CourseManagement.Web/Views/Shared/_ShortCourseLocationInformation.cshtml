@@ -9,7 +9,8 @@
             <tbody class="govuk-table__body">
 
                 <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-width-one-third" scope="row">Delivery locations</th>
+                    <th asp-show="!Model.DeliveryLocations.Any()" class="govuk-table__header govuk-!-width-two-third govuk-!-font-weight-regular" scope="row">No training options. Select <strong>change</strong> to add one</th>
+                    <th asp-show="Model.DeliveryLocations.Any()" class="govuk-table__header govuk-!-width-one-third" scope="row">Delivery locations</th>
                     <td class="govuk-table__cell">
                         <ul class="govuk-list">
                             @foreach (var location in Model.DeliveryLocations)

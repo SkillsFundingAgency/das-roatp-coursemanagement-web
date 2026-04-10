@@ -5,5 +5,6 @@
         public const string SelectedLocationOption = "SelectedLocationOption";
         public const string SelectedPostcode = "SelectedPostcode";
         public const string AllRegions = "AllRegions";
+        public const string SelectedShortCourseLocationOption = "SelectedShortCourseLocationOption";
     }
 }
