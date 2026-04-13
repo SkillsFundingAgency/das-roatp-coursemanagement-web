@@ -25,85 +25,48 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     public const string ViewPath = "~/Views/ShortCourses/AddTrainingVenue.cshtml";
 
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
-    [HttpGet("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenueEditShortCourse)]
-    public async Task<IActionResult> LookupAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public IActionResult LookupAddressAdd(ApprenticeshipType apprenticeshipType)
     {
         var submitButtonText = ButtonText.Continue;
+        var postRoute = RouteNames.PostAddTrainingVenue;
 
-        var isAddJourney = IsAddJourney(larsCode);
+        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
-        var postRoute = isAddJourney
-            ? RouteNames.PostAddTrainingVenue
-            : RouteNames.PostAddTrainingVenueEditShortCourse;
+        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        if (isAddJourney)
+        if (sessionModel.LocationsAvailable)
         {
-            var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+            _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
 
-            if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-            if (sessionModel.LocationsAvailable)
-            {
-                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
-
-                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
-            }
-
-            if (sessionModel.HasSeenSummaryPage)
-            {
-                submitButtonText = ButtonText.Confirm;
-            }
+            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        if (!isAddJourney)
+        if (sessionModel.HasSeenSummaryPage)
         {
-            var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
-
-            if (providerCourseDetailsResponse == null)
-            {
-                _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
-
-                return View(ViewsPath.PageNotFoundPath);
-            }
-
-            var providerLocationsResponse = await GetProviderLocations();
-
-            if (providerLocationsResponse.Count > 0)
-            {
-                return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
-            }
+            submitButtonText = ButtonText.Confirm;
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = isAddJourney };
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = true };
         return View(ViewPath, model);
     }
 
     [HttpPost("new/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
-    [HttpPost("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenueEditShortCourse)]
-    public IActionResult LookupAddress([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public IActionResult LookupAddressAdd([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var submitButtonText = ButtonText.Continue;
+        var postRoute = RouteNames.PostAddTrainingVenue;
 
-        var isAddJourney = IsAddJourney(larsCode);
+        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
-        var postRoute = isAddJourney
-            ? RouteNames.PostAddTrainingVenue
-            : RouteNames.PostAddTrainingVenueEditShortCourse;
+        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        if (isAddJourney)
+        if (sessionModel.HasSeenSummaryPage)
         {
-            var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
-
-            if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-            if (sessionModel.HasSeenSummaryPage)
-            {
-                submitButtonText = ButtonText.Confirm;
-            }
+            submitButtonText = ButtonText.Confirm;
         }
 
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = isAddJourney };
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = true };
 
         if (!ModelState.IsValid)
         {
@@ -124,17 +87,64 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-        if (isAddJourney)
-        {
-            return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
-        }
-
-        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenueEditShortCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private static bool IsAddJourney(string larsCode)
+    [HttpGet("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenueEditShortCourse)]
+    public async Task<IActionResult> LookupAddressEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        return string.IsNullOrWhiteSpace(larsCode);
+        var submitButtonText = ButtonText.Continue;
+        var postRoute = RouteNames.PostAddTrainingVenueEditShortCourse;
+
+        var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
+
+        if (providerCourseDetailsResponse == null)
+        {
+            _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
+
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
+        var providerLocationsResponse = await GetProviderLocations();
+
+        if (providerLocationsResponse.Count > 0)
+        {
+            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+        }
+
+        TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = false };
+        return View(ViewPath, model);
+    }
+
+    [HttpPost("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenueEditShortCourse)]
+    public IActionResult LookupAddressEdit([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    {
+        var submitButtonText = ButtonText.Continue;
+        var postRoute = RouteNames.PostAddTrainingVenueEditShortCourse;
+
+        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = false };
+
+        if (!ModelState.IsValid)
+        {
+            return View(ViewPath, model);
+        }
+
+        AddressItem selectedAddress = new AddressItem
+        {
+            AddressLine1 = submitModel.AddressLine1,
+            AddressLine2 = submitModel.AddressLine2,
+            Town = submitModel.Town,
+            County = submitModel.County,
+            Latitude = submitModel.Latitude,
+            Longitude = submitModel.Longitude,
+            Postcode = submitModel.Postcode
+        };
+
+        TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
+        TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
+
+        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenueEditShortCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
     }
 
     private async Task<List<ProviderLocation>> GetProviderLocations()

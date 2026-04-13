@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -15,15 +16,10 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.AddTrainingVenueControllerTests;
-public class AddTrainingVenueControllerPostTests
+public class AddTrainingVenueControllerPost_LookupAddressAddTests
 {
-    [Test]
-    [MoqInlineAutoData("", RouteNames.PostAddTrainingVenue, true)]
-    [MoqInlineAutoData("test", RouteNames.PostAddTrainingVenueEditShortCourse, false)]
-    public void LookupAddress_InvalidStatus_ReturnsViewResult(
-       string larsCode,
-       string expectedPostRoute,
-       bool expectedIsAddJourney,
+    [Test, MoqAutoData]
+    public void LookupAddressAdd_InvalidStatus_ReturnsViewResult(
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] AddTrainingVenueController sut,
        AddTrainingVenueSubmitModel model,
@@ -39,22 +35,21 @@ public class AddTrainingVenueControllerPostTests
         sut.ModelState.AddModelError("key", "errorMessage");
 
         // Act
-        var result = sut.LookupAddress(model, apprenticeshipType, larsCode);
+        var result = sut.LookupAddressAdd(model, apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
         var viewModel = viewResult.Model as AddTrainingVenueViewModel;
-        viewModel.Route.Should().Be(expectedPostRoute);
-        viewModel.IsAddJourney.Should().Be(expectedIsAddJourney);
+        viewModel.Route.Should().Be(RouteNames.PostAddTrainingVenue);
+        viewModel.IsAddJourney.Should().Be(true);
     }
 
     [Test]
-    [MoqInlineAutoData("", true, "Confirm")]
-    [MoqInlineAutoData("test", false, "Continue")]
-    public void LookupAddress_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
-       string larsCode,
+    [MoqInlineAutoData(true, ButtonText.Confirm)]
+    [MoqInlineAutoData(false, ButtonText.Continue)]
+    public void LookupAddressAdd_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
        bool hasSeenSummaryPage,
        string expectedSubmitButtonText,
        [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -74,7 +69,7 @@ public class AddTrainingVenueControllerPostTests
         sut.ModelState.AddModelError("key", "errorMessage");
 
         // Act
-        var result = sut.LookupAddress(model, apprenticeshipType, larsCode);
+        var result = sut.LookupAddressAdd(model, apprenticeshipType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -82,12 +77,8 @@ public class AddTrainingVenueControllerPostTests
         viewModel.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
-    [Test]
-    [MoqInlineAutoData("", RouteNames.GetConfirmAddTrainingVenue)]
-    [MoqInlineAutoData("test", RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
-    public void LookupAddress_Valid_SetsSelectedAddressInTempDataAndRedirectsToCorrectRoute(
-        string larsCode,
-        string expectedRedirectRoute,
+    [Test, MoqAutoData]
+    public void LookupAddressAdd_Valid_SetsSelectedAddressInTempDataAndRedirectsToCorrectRoute(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut,
         AddTrainingVenueSubmitModel submitModel,
@@ -113,18 +104,18 @@ public class AddTrainingVenueControllerPostTests
         sut.TempData = tempDataMock.Object;
 
         // Act
-        var response = sut.LookupAddress(submitModel, apprenticeshipType, larsCode);
+        var response = sut.LookupAddressAdd(submitModel, apprenticeshipType);
 
         // Assert
         var result = response as RedirectToRouteResult;
         Assert.IsNotNull(result);
-        result.RouteName.Should().Be(expectedRedirectRoute);
+        result.RouteName.Should().Be(RouteNames.GetConfirmAddTrainingVenue);
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
         tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, expectedValueInTempData));
     }
 
     [Test, MoqAutoData]
-    public void LookupAddress_IsAddJourney_SessionIsNull_RedirectsToReviewYourDetails(
+    public void LookupAddressAdd_SessionIsNull_RedirectsToReviewYourDetails(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut,
@@ -140,7 +131,7 @@ public class AddTrainingVenueControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.LookupAddress(submitMode, apprenticeshipType, "") as RedirectToRouteResult;
+        var result = sut.LookupAddressAdd(submitMode, apprenticeshipType) as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
