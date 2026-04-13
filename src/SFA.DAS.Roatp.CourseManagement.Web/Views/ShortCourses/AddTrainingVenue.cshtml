@@ -17,7 +17,7 @@
             <input asp-for="Longitude" id="Longitude" type="hidden" />
             <input asp-for="Latitude" id="Latitude" type="hidden" />
 
-            <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
+            <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">@Model.DisplayHeader</div>
             <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</div>
 
             <h1 class="govuk-label-wrapper">

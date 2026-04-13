@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -25,29 +26,50 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     public const string ViewPath = "~/Views/ShortCourses/AddTrainingVenue.cshtml";
 
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
-    public IActionResult LookupAddressAdd(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> LookupAddressAdd(ApprenticeshipType apprenticeshipType)
     {
         var submitButtonText = ButtonText.Continue;
         var postRoute = RouteNames.PostAddTrainingVenue;
 
-        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
-
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-        if (sessionModel.LocationsAvailable)
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
         {
-            _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+            var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
 
-            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            if (standardsSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            var providerLocationsResponse = await GetProviderLocations();
+
+            if (providerLocationsResponse.Count > 0)
+            {
+                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+
+                return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
+            }
         }
 
-        if (sessionModel.HasSeenSummaryPage)
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
         {
-            submitButtonText = ButtonText.Confirm;
+            var shortCourseSessionModel = _sessionService.Get<ShortCourseSessionModel>();
+
+            if (shortCourseSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            if (shortCourseSessionModel.LocationsAvailable)
+            {
+                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+
+                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            }
+
+            if (shortCourseSessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ButtonText.Confirm;
+            }
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = true };
+
+        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, true);
+
         return View(ViewPath, model);
     }
 
@@ -57,16 +79,26 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         var submitButtonText = ButtonText.Continue;
         var postRoute = RouteNames.PostAddTrainingVenue;
 
-        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
-
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-        if (sessionModel.HasSeenSummaryPage)
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
         {
-            submitButtonText = ButtonText.Confirm;
+            var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
+
+            if (standardsSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = true };
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        {
+            var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+
+            if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            if (sessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ButtonText.Confirm;
+            }
+        }
+
+        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, true);
 
         if (!ModelState.IsValid)
         {
@@ -113,7 +145,9 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = false };
+
+        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, false);
+
         return View(ViewPath, model);
     }
 
@@ -123,7 +157,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         var submitButtonText = ButtonText.Continue;
         var postRoute = RouteNames.PostAddTrainingVenueEditShortCourse;
 
-        var model = new AddTrainingVenueViewModel() { ApprenticeshipType = apprenticeshipType, SubmitButtonText = submitButtonText, Route = postRoute, IsAddJourney = false };
+        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, false);
 
         if (!ModelState.IsValid)
         {
@@ -165,5 +199,20 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         return result;
+    }
+
+    private AddTrainingVenueViewModel GetViewModel(ApprenticeshipType apprenticeshipType, string submitButtonText, string postRoute, bool isAddJourney)
+    {
+        var viewModel = new AddTrainingVenueViewModel()
+        {
+            ApprenticeshipType = apprenticeshipType,
+            SubmitButtonText = submitButtonText,
+            Route = postRoute,
+            IsAddJourney = isAddJourney
+        };
+
+        viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {viewModel.ApprenticeshipTypeLower}" : $"Add an {viewModel.ApprenticeshipTypeLower}";
+
+        return viewModel;
     }
 }

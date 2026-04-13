@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -16,19 +17,30 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.AddTrainingVenueControllerTests;
-public class AddTrainingVenueControllerPost_LookupAddressAddTests
+public class LookupAddressAddPostTests
 {
-    [Test, MoqAutoData]
-    public void LookupAddressAdd_InvalidStatus_ReturnsViewResult(
+    [Test]
+    [MoqInlineAutoData(ApprenticeshipType.Apprenticeship)]
+    [MoqInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
+    public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnitAndModelStateIsInvalid_Then_ReturnsViewResult(
+       ApprenticeshipType apprenticeshipType,
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] AddTrainingVenueController sut,
        AddTrainingVenueSubmitModel model,
-       ShortCourseSessionModel sessionModel)
+       ShortCourseSessionModel shortCourseSessionModel,
+       StandardSessionModel standardSessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+        }
+
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        {
+            sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(shortCourseSessionModel);
+        }
 
         sut.AddDefaultContextWithUser();
 
@@ -47,9 +59,48 @@ public class AddTrainingVenueControllerPost_LookupAddressAddTests
     }
 
     [Test]
+    [MoqInlineAutoData(ApprenticeshipType.Apprenticeship, "Add a standard")]
+    [MoqInlineAutoData(ApprenticeshipType.ApprenticeshipUnit, "Add an apprenticeship unit")]
+    public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnitAndModelStateIsInvalid_Then_ReturnsExpectedDisplayHeader(
+        ApprenticeshipType apprenticeshipType,
+        string expectedDisplayHeader,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<ITempDataDictionary> tempDataMock,
+        [Greedy] AddTrainingVenueController sut,
+        AddTrainingVenueSubmitModel model,
+        ShortCourseSessionModel shortCourseSessionModel,
+        StandardSessionModel standardSessionModel)
+    {
+        // Arrange
+
+        sut.AddDefaultContextWithUser();
+
+        sut.ModelState.AddModelError("key", "errorMessage");
+
+        sut.TempData = tempDataMock.Object;
+
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+        }
+
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        {
+            sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(shortCourseSessionModel);
+        }
+
+        // Act
+        var addressSearch = sut.LookupAddressAdd(model, apprenticeshipType) as ViewResult;
+
+        // Assert
+        var viewModel = addressSearch.Model as AddTrainingVenueViewModel;
+        viewModel.DisplayHeader.Should().Be(expectedDisplayHeader);
+    }
+
+    [Test]
     [MoqInlineAutoData(true, ButtonText.Confirm)]
     [MoqInlineAutoData(false, ButtonText.Continue)]
-    public void LookupAddressAdd_HasSeenSummaryPageIsTrueOrFalse_ReturnsExpectedButtonText(
+    public void When_ApprenticeshipTypeIsApprenticeshipUnitAndHasSeenSummaryPageIsTrueOrFalse_Then_ReturnsExpectedButtonText(
        bool hasSeenSummaryPage,
        string expectedSubmitButtonText,
        [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -77,15 +128,17 @@ public class AddTrainingVenueControllerPost_LookupAddressAddTests
         viewModel.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
-    [Test, MoqAutoData]
-    public void LookupAddressAdd_Valid_SetsSelectedAddressInTempDataAndRedirectsToCorrectRoute(
+    [Test]
+    [MoqInlineAutoData(ApprenticeshipType.Apprenticeship)]
+    [MoqInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
+    public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnitAndModelStateIsValid_Then_SetsSelectedAddressInTempDataAndRedirectsToGetConfirmAddTrainingVenue(
+        ApprenticeshipType apprenticeshipType,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut,
         AddTrainingVenueSubmitModel submitModel,
         Mock<ITempDataDictionary> tempDataMock)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         AddressItem selectedAddress = new AddressItem
         {
@@ -114,21 +167,31 @@ public class AddTrainingVenueControllerPost_LookupAddressAddTests
         tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, expectedValueInTempData));
     }
 
-    [Test, MoqAutoData]
-    public void LookupAddressAdd_SessionIsNull_RedirectsToReviewYourDetails(
+    [Test]
+    [MoqInlineAutoData(ApprenticeshipType.Apprenticeship)]
+    [MoqInlineAutoData(ApprenticeshipType.ApprenticeshipUnit)]
+    public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnitAndSessionIsNull_Then_RedirectsToReviewYourDetails(
+        ApprenticeshipType apprenticeshipType,
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddTrainingVenueController sut,
         AddTrainingVenueSubmitModel submitMode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sut.TempData = tempDataMock.Object;
 
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
+        }
+
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        {
+            sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
+        }
 
         // Act
         var result = sut.LookupAddressAdd(submitMode, apprenticeshipType) as RedirectToRouteResult;
@@ -136,6 +199,5 @@ public class AddTrainingVenueControllerPost_LookupAddressAddTests
         // Assert
         result.Should().NotBeNull();
         result!.RouteName.Should().Be(RouteNames.ReviewYourDetails);
-        sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 }

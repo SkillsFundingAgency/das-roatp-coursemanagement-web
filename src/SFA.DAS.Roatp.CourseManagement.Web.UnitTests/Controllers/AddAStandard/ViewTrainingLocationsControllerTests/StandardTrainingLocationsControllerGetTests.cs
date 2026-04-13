@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
@@ -21,21 +25,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class StandardTrainingLocationsControllerGetTests
     {
         [Test, MoqAutoData]
-        public void ViewTrainingLocations_SessionNotAvailable_RedirectsToReviewYourDetails(
+        public async Task ViewTrainingLocations_SessionNotAvailable_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] StandardTrainingLocationsController sut)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
-            var result = sut.ViewTrainingLocations();
+            var result = await sut.ViewTrainingLocations();
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
         }
 
         [Test, MoqAutoData]
-        public void ViewTrainingLocations_IncorrectLocationOptionInSession_RedirectsToStandardsListPage(
+        public async Task ViewTrainingLocations_IncorrectLocationOptionInSession_RedirectsToStandardsListPage(
            [Frozen] Mock<ISessionService> sessionServiceMock,
            [Greedy] StandardTrainingLocationsController sut,
            StandardSessionModel standardSessionModel)
@@ -44,20 +48,24 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
 
-            var result = sut.ViewTrainingLocations();
+            var result = await sut.ViewTrainingLocations();
 
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ViewStandards);
         }
 
         [Test, MoqAutoData]
-        public void ViewTrainingLocations_ReturnsView(
+        public async Task ViewTrainingLocations_ReturnsView(
             [Frozen] Mock<ISessionService> sessionServiceMock,
-            [Greedy] StandardTrainingLocationsController sut)
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] StandardTrainingLocationsController sut,
+            GetAllProviderLocationsQueryResult providerLocations)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = "1" });
 
-            var result = sut.ViewTrainingLocations();
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocations);
+
+            var result = await sut.ViewTrainingLocations();
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(StandardTrainingLocationsController.ViewPath);
@@ -65,10 +73,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void ViewTrainingLocations_MapProviderLocations(
+        public async Task ViewTrainingLocations_MapProviderLocations(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] StandardTrainingLocationsController sut,
-            DeliveryMethodModel deliveryModel)
+            DeliveryMethodModel deliveryModel,
+            GetAllProviderLocationsQueryResult providerLocations)
         {
             var locationName = "location name";
             var courseLocationModel = new CourseLocationModel();
@@ -79,12 +89,30 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = "1", CourseLocations = new List<CourseLocationModel> { courseLocationModel } });
 
-            var result = sut.ViewTrainingLocations();
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocations);
+
+            var result = await sut.ViewTrainingLocations();
             var model = result.As<ViewResult>().Model.As<TrainingLocationListViewModel>();
             model.ProviderCourseLocations.Count.Should().Be(1);
             model.ProviderCourseLocations.First().LocationName.Should().Be(locationName);
             model.ProviderCourseLocations.First().LocationType.Should().Be(LocationType.Provider);
             model.ProviderCourseLocations.First().DeliveryMethod.Should().Be(deliveryModel);
+        }
+
+        [Test, MoqAutoData]
+        public async Task ViewTrainingLocations_LocationsNotAvailable_RedirectsToGetAddTrainingVenue(
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] StandardTrainingLocationsController sut)
+        {
+            sut.AddDefaultContextWithUser();
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LocationOption = LocationOption.ProviderLocation, LarsCode = "1" });
+
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
+
+            var result = await sut.ViewTrainingLocations() as RedirectToRouteResult;
+
+            result.RouteName.Should().Be(RouteNames.GetAddTrainingVenue);
         }
     }
 }
