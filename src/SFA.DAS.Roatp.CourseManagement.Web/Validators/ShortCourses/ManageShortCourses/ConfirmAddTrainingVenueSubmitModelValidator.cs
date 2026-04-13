@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.CourseManagement.Domain;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.ManageShortCourses;
@@ -11,6 +12,8 @@ public class ConfirmAddTrainingVenueSubmitModelValidator : AbstractValidator<Con
     {
         RuleFor(m => m.LocationName)
             .NotEmpty()
-            .WithMessage(VenueNameMissingMessage);
+            .WithMessage(VenueNameMissingMessage)
+            .Matches(Constants.RegularExpressions.ExcludedCharactersRegex)
+            .WithMessage(CommonValidationErrorMessage.HasExcludedCharactersInVenueNameMessage);
     }
 }
