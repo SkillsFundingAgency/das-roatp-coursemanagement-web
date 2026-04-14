@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
@@ -28,28 +29,48 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
     [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
-    public IActionResult ConfirmVenueAdd(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> ConfirmVenueAdd(ApprenticeshipType apprenticeshipType)
     {
         var submitButtonText = ButtonText.Confirm;
         bool showCancelOption = false;
         var postRoute = RouteNames.PostConfirmAddTrainingVenue;
 
-
-        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
-
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-        if (sessionModel.LocationsAvailable)
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
         {
-            _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+            var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
 
-            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            if (standardsSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            var providerLocationsResponse = await GetProviderLocations();
+
+            if (providerLocationsResponse.ProviderLocations.Count > 0)
+            {
+                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+
+                return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
+            }
+
+            showCancelOption = true;
         }
 
-        if (!sessionModel.HasSeenSummaryPage)
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
         {
-            submitButtonText = ButtonText.Continue;
-            showCancelOption = true;
+            var shortCourseSessionModel = _sessionService.Get<ShortCourseSessionModel>();
+
+            if (shortCourseSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            if (shortCourseSessionModel.LocationsAvailable)
+            {
+                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+
+                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            }
+
+            if (!shortCourseSessionModel.HasSeenSummaryPage)
+            {
+                submitButtonText = ButtonText.Continue;
+                showCancelOption = true;
+            }
         }
 
         var addressItem = GetAddressFromTempData(true);
@@ -70,13 +91,22 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         bool showCancelOption = false;
         var postRoute = RouteNames.PostConfirmAddTrainingVenue;
 
-        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+        var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
+        var shortCourseSessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+        if ((standardsSessionModel == null) && (shortCourseSessionModel == null))
+        {
+            return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+        }
 
-        if (!sessionModel.HasSeenSummaryPage)
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && !shortCourseSessionModel.HasSeenSummaryPage)
         {
             submitButtonText = ButtonText.Continue;
+            showCancelOption = true;
+        }
+
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
             showCancelOption = true;
         }
 
@@ -103,14 +133,19 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         await _mediator.Send(command);
 
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
+        }
+
         await SetTrainingVenueInSession();
 
-        if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && sessionModel.IsEmployerInfoMissing())
+        if (shortCourseSessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && shortCourseSessionModel.IsEmployerInfoMissing())
         {
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        if (sessionModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
+        if (shortCourseSessionModel.HasNationalDeliveryOption == false && shortCourseSessionModel.IsEmployerRegionsMissing())
         {
             return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
         }
@@ -201,6 +236,11 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     {
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectLocationOption);
+        }
+
         return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
     }
 
@@ -234,6 +274,9 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
             CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType }),
             IsAddJourney = isAddJourney
         };
+
+        model.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {model.ApprenticeshipTypeLower}" : $"Add an {model.ApprenticeshipTypeLower}";
+
         return model;
     }
 

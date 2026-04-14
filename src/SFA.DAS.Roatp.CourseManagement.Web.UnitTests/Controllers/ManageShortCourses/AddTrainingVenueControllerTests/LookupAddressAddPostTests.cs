@@ -98,22 +98,31 @@ public class LookupAddressAddPostTests
     }
 
     [Test]
-    [MoqInlineAutoData(true, ButtonText.Confirm)]
-    [MoqInlineAutoData(false, ButtonText.Continue)]
+    [MoqInlineAutoData(ApprenticeshipType.ApprenticeshipUnit, true, ButtonText.Confirm)]
+    [MoqInlineAutoData(ApprenticeshipType.ApprenticeshipUnit, false, ButtonText.Continue)]
+    [MoqInlineAutoData(ApprenticeshipType.Apprenticeship, false, ButtonText.Continue)]
     public void When_ApprenticeshipTypeIsApprenticeshipUnitAndHasSeenSummaryPageIsTrueOrFalse_Then_ReturnsExpectedButtonText(
+       ApprenticeshipType apprenticeshipType,
        bool hasSeenSummaryPage,
        string expectedSubmitButtonText,
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] AddTrainingVenueController sut,
        AddTrainingVenueSubmitModel model,
-       ShortCourseSessionModel sessionModel)
+       ShortCourseSessionModel shortCourseSessionModel,
+       StandardSessionModel standardSessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        shortCourseSessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
 
-        sessionModel.HasSeenSummaryPage = hasSeenSummaryPage;
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+        }
 
-        sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        {
+            sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(shortCourseSessionModel);
+        }
 
         sut.AddDefaultContextWithUser();
 

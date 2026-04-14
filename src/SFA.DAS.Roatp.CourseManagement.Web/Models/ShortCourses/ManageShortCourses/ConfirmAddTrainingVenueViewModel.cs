@@ -9,6 +9,7 @@ public class ConfirmAddTrainingVenueViewModel : ConfirmAddTrainingVenueSubmitMod
     public bool ShowCancelOption { get; set; }
     public string Route { get; set; }
     public bool IsAddJourney { get; set; }
+    public string DisplayHeader { get; set; }
     public ConfirmAddTrainingVenueViewModel(AddressItem addressItem)
     {
         AddressLine1 = addressItem.AddressLine1;
