@@ -1,11 +1,11 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
-using System.Collections.Generic;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ShortCourses.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models;
 public class ConfirmAddTrainingVenueViewModelTests
 {
     [Test, AutoData]

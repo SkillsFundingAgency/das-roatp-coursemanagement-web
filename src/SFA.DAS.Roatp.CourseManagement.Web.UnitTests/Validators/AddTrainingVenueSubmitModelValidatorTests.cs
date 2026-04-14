@@ -1,9 +1,9 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
-using SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ShortCourses.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators;
 public class AddTrainingVenueSubmitModelValidatorTests
 {
     [TestCase("")]

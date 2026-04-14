@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 public class ConfirmAddTrainingVenueViewModel : ConfirmAddTrainingVenueSubmitModel, IBackLink
 {

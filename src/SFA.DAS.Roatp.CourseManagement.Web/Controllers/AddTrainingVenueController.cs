@@ -12,24 +12,23 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
 public class AddTrainingVenueController(ISessionService _sessionService, ILogger<AddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/AddTrainingVenue.cshtml";
+    public const string ViewPath = "~/Views/AddTrainingVenue.cshtml";
 
     [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
     public async Task<IActionResult> LookupAddressAdd(ApprenticeshipType apprenticeshipType)
     {
-        var submitButtonText = ButtonText.Continue;
-        var postRoute = RouteNames.PostAddTrainingVenue;
+        bool hasSeenSummaryPage = false;
 
         if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
         {
@@ -62,13 +61,13 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
             if (shortCourseSessionModel.HasSeenSummaryPage)
             {
-                submitButtonText = ButtonText.Confirm;
+                hasSeenSummaryPage = true;
             }
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
-        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, true);
+        var model = GetViewModel(apprenticeshipType, true, hasSeenSummaryPage);
 
         return View(ViewPath, model);
     }
@@ -76,8 +75,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     [HttpPost("new/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
     public IActionResult LookupAddressAdd([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
-        var submitButtonText = ButtonText.Continue;
-        var postRoute = RouteNames.PostAddTrainingVenue;
+        bool hasSeenSummaryPage = false;
 
         if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
         {
@@ -94,11 +92,11 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
             if (sessionModel.HasSeenSummaryPage)
             {
-                submitButtonText = ButtonText.Confirm;
+                hasSeenSummaryPage = true;
             }
         }
 
-        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, true);
+        var model = GetViewModel(apprenticeshipType, true, hasSeenSummaryPage);
 
         if (!ModelState.IsValid)
         {
@@ -125,9 +123,6 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     [HttpGet("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenueEditShortCourse)]
     public async Task<IActionResult> LookupAddressEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ButtonText.Continue;
-        var postRoute = RouteNames.PostAddTrainingVenueEditShortCourse;
-
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
         if (providerCourseDetailsResponse == null)
@@ -146,7 +141,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
-        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, false);
+        var model = GetViewModel(apprenticeshipType, false, false);
 
         return View(ViewPath, model);
     }
@@ -154,10 +149,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
     [HttpPost("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenueEditShortCourse)]
     public IActionResult LookupAddressEdit([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ButtonText.Continue;
-        var postRoute = RouteNames.PostAddTrainingVenueEditShortCourse;
-
-        var model = GetViewModel(apprenticeshipType, submitButtonText, postRoute, false);
+        var model = GetViewModel(apprenticeshipType, false, false);
 
         if (!ModelState.IsValid)
         {
@@ -201,18 +193,30 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         return result;
     }
 
-    private AddTrainingVenueViewModel GetViewModel(ApprenticeshipType apprenticeshipType, string submitButtonText, string postRoute, bool isAddJourney)
+    private static AddTrainingVenueViewModel GetViewModel(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
     {
+        string submitButtonText = GetButtonText(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
+
         var viewModel = new AddTrainingVenueViewModel()
         {
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = submitButtonText,
-            Route = postRoute,
+            Route = isAddJourney ? RouteNames.PostAddTrainingVenue : RouteNames.PostAddTrainingVenueEditShortCourse,
             IsAddJourney = isAddJourney
         };
 
         viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {viewModel.ApprenticeshipTypeLower}" : $"Add an {viewModel.ApprenticeshipTypeLower}";
 
         return viewModel;
+    }
+
+    private static string GetButtonText(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    {
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && isAddJourney && hasSeenSummaryPage)
+        {
+            return ButtonText.Confirm;
+        }
+
+        return ButtonText.Continue;
     }
 }

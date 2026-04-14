@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
 public class AddTrainingVenueSubmitModelValidator : AbstractValidator<AddTrainingVenueSubmitModel>
 {

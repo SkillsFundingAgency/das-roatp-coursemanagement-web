@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+﻿using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
+
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 public class AddTrainingVenueViewModel : AddTrainingVenueSubmitModel, IBackLink
 {
