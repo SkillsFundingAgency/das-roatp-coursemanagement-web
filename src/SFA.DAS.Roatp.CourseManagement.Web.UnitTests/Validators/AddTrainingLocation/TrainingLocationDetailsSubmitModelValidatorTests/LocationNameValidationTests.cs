@@ -15,9 +15,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLoc
         {
             var model = new ProviderLocationDetailsSubmitModel { LocationName = locationName };
 
-            var sut = new TrainingLocationDetailsSubmitModelValidator();
+            var sut = new ProviderLocationDetailsSubmitModelValidator();
             var result = sut.TestValidateAsync(model).Result;
-            result.ShouldHaveValidationErrorFor(m => m.LocationName).WithErrorMessage(TrainingLocationDetailsSubmitModelValidator.VenueNameMissingMessage);
+            result.ShouldHaveValidationErrorFor(m => m.LocationName).WithErrorMessage(ProviderLocationDetailsSubmitModelValidator.LocationNameMissingMessage);
         }
 
         [Test]
@@ -25,9 +25,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddTrainingLoc
         {
             var model = new ProviderLocationDetailsSubmitModel { LocationName = new string('a', 51) };
 
-            var sut = new TrainingLocationDetailsSubmitModelValidator();
+            var sut = new ProviderLocationDetailsSubmitModelValidator();
             var result = sut.TestValidateAsync(model).Result;
-            result.ShouldHaveValidationErrorFor(m => m.LocationName).WithErrorMessage(TrainingLocationDetailsSubmitModelValidator.VenueNameCharacterLimitMessage);
+            result.ShouldHaveValidationErrorFor(m => m.LocationName).WithErrorMessage(ProviderLocationDetailsSubmitModelValidator.LocationNameCharacterLimitMessage);
         }
     }
 }

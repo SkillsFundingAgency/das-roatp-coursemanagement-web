@@ -10,16 +10,17 @@ using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingVenueControllerTests;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests;
 public class AddTrainingVenueControllerPost_LookupAddressEditTests
 {
     [Test, MoqAutoData]
     public void LookupAddressEdit_InvalidStatus_ReturnsViewResult(
-       [Greedy] AddTrainingVenueController sut,
-       AddTrainingVenueSubmitModel model)
+       [Greedy] AddProviderLocationController sut,
+       AddressSearchSubmitModel model)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -35,8 +36,8 @@ public class AddTrainingVenueControllerPost_LookupAddressEditTests
         // Assert
         var viewResult = result as ViewResult;
         Assert.IsNotNull(viewResult);
-        viewResult.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
-        var viewModel = viewResult.Model as AddTrainingVenueViewModel;
+        viewResult.ViewName.Should().Be(AddProviderLocationController.ViewPath);
+        var viewModel = viewResult.Model as AddProviderLocationViewModel;
         viewModel.Route.Should().Be(RouteNames.PostAddTrainingVenueEditShortCourse);
         viewModel.IsAddJourney.Should().Be(false);
         viewModel.SubmitButtonText.Should().Be(ButtonText.Continue);
@@ -44,8 +45,8 @@ public class AddTrainingVenueControllerPost_LookupAddressEditTests
 
     [Test, MoqAutoData]
     public void LookupAddressEdit_Valid_SetsSelectedAddressInTempDataAndRedirectsToCorrectRoute(
-        [Greedy] AddTrainingVenueController sut,
-        AddTrainingVenueSubmitModel submitModel,
+        [Greedy] AddProviderLocationController sut,
+        AddressSearchSubmitModel submitModel,
         Mock<ITempDataDictionary> tempDataMock)
     {
         // Arrange

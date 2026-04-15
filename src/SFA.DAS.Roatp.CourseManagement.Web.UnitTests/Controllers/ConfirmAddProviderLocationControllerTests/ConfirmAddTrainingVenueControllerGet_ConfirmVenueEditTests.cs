@@ -14,7 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddTrainingVenueControllerTests;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddProviderLocationControllerTests;
 public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
 {
     [Test, MoqAutoData]
@@ -22,7 +22,7 @@ public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         Mock<ITempDataDictionary> tempDataMock,
         Mock<IUrlHelper> urlHelperMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
+        [Greedy] ConfirmAddProviderLocationController sut,
         ShortCourseSessionModel sessionModel,
         AddressItem addressItem,
         string cancelLinkUrl)
@@ -40,12 +40,12 @@ public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
             .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
 
         // Act
-        var result = sut.ConfirmVenueEdit(apprenticeshipType, larsCode) as ViewResult;
+        var result = sut.ConfirmLocationEdit(apprenticeshipType, larsCode) as ViewResult;
 
         // Assert
         Assert.IsNotNull(result);
-        result.ViewName.Should().Be(ConfirmAddTrainingVenueController.ViewPath);
-        var model = result.Model as ConfirmAddTrainingVenueViewModel;
+        result.ViewName.Should().Be(ConfirmAddProviderLocationController.ViewPath);
+        var model = result.Model as ConfirmAddProviderLocationViewModel;
         model!.AddressLine1.Should().Be(addressItem.AddressLine1);
         model!.CancelLink.Should().Be(cancelLinkUrl);
         model!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenueEditShortCourse);
@@ -57,7 +57,7 @@ public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
     public void ConfirmVenueEdit_AddressNotInTempData_RedirectsToEditShortCourseTrainingVenues(
         string larsCode,
         Mock<ITempDataDictionary> tempDataMock,
-        [Greedy] ConfirmAddTrainingVenueController sut)
+        [Greedy] ConfirmAddProviderLocationController sut)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -67,7 +67,7 @@ public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenueEdit(apprenticeshipType, "test") as RedirectToRouteResult;
+        var result = sut.ConfirmLocationEdit(apprenticeshipType, "test") as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();

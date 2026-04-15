@@ -1,16 +1,8 @@
 ﻿using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 
-public class AddTrainingVenueViewModel : AddTrainingVenueSubmitModel, IBackLink
-{
-    public string SubmitButtonText { get; set; }
-    public string Route { get; set; }
-    public bool IsAddJourney { get; set; }
-    public string DisplayHeader { get; set; }
-}
-
-public class AddTrainingVenueSubmitModel : ShortCourseBaseViewModel
+public class AddressSearchSubmitModel : ShortCourseBaseViewModel
 {
     public string SearchTerm { get; set; }
     public string Town { get; set; }

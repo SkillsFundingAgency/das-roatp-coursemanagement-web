@@ -11,8 +11,8 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddTrainingVenueControllerTests;
-public class CancelAddTrainingVenueGetTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddProviderLocationControllerTests;
+public class CancelAddProviderLocationGetTests
 {
     [Test]
     [MoqInlineAutoData(ApprenticeshipType.Apprenticeship)]
@@ -20,7 +20,7 @@ public class CancelAddTrainingVenueGetTests
     public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnit_Then_RemovesTempData(
         ApprenticeshipType apprenticeshipType,
         Mock<ITempDataDictionary> tempDataMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
+        [Greedy] ConfirmAddProviderLocationController sut,
         AddressItem addressItem)
     {
         // Arrange
@@ -31,7 +31,7 @@ public class CancelAddTrainingVenueGetTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out serialisedAddressItem));
 
         // Act
-        sut.CancelAddTrainingVenue(ukprn, apprenticeshipType);
+        sut.CancelAddProviderLocation(ukprn, apprenticeshipType);
 
         // Assert
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
@@ -40,7 +40,7 @@ public class CancelAddTrainingVenueGetTests
     [Test, MoqAutoData]
     public void When_ApprenticeshipTypeIsApprenticeshipUnit_Then_RedirectsToReviewYourDetails(
         Mock<ITempDataDictionary> tempDataMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
+        [Greedy] ConfirmAddProviderLocationController sut,
         AddressItem addressItem)
     {
         // Arrange
@@ -52,7 +52,7 @@ public class CancelAddTrainingVenueGetTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out serialisedAddressItem));
 
         // Act
-        var result = sut.CancelAddTrainingVenue(ukprn, apprenticeshipType) as RedirectToRouteResult;
+        var result = sut.CancelAddProviderLocation(ukprn, apprenticeshipType) as RedirectToRouteResult;
 
         // Assert
         result!.RouteName.Should().Be(RouteNames.SelectShortCourseLocationOption);
@@ -61,7 +61,7 @@ public class CancelAddTrainingVenueGetTests
     [Test, MoqAutoData]
     public void When_ApprenticeshipTypeIsApprenticeship_Then_RedirectsToGetAddStandardSelectLocationOption(
         Mock<ITempDataDictionary> tempDataMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
+        [Greedy] ConfirmAddProviderLocationController sut,
         AddressItem addressItem)
     {
         // Arrange
@@ -73,7 +73,7 @@ public class CancelAddTrainingVenueGetTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out serialisedAddressItem));
 
         // Act
-        var result = sut.CancelAddTrainingVenue(ukprn, apprenticeshipType) as RedirectToRouteResult;
+        var result = sut.CancelAddProviderLocation(ukprn, apprenticeshipType) as RedirectToRouteResult;
 
         // Assert
         result!.RouteName.Should().Be(RouteNames.GetAddStandardSelectLocationOption);

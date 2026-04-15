@@ -17,14 +17,14 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingVenueControllerTests;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests;
 public class AddTrainingVenueControllerGet_LookupAddressEditTests
 {
     [Test, MoqAutoData]
     public async Task LookupAddressEdit_ReturnsExpectedView(
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] AddTrainingVenueController sut,
+        [Greedy] AddProviderLocationController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse)
     {
         // Arrange
@@ -44,8 +44,8 @@ public class AddTrainingVenueControllerGet_LookupAddressEditTests
 
         // Assert
         addressSearch.Should().NotBeNull();
-        addressSearch.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
-        var model = addressSearch.Model as AddTrainingVenueViewModel;
+        addressSearch.ViewName.Should().Be(AddProviderLocationController.ViewPath);
+        var model = addressSearch.Model as AddProviderLocationViewModel;
         model.Route.Should().Be(RouteNames.PostAddTrainingVenueEditShortCourse);
         model.IsAddJourney.Should().Be(false);
         model.SubmitButtonText.Should().Be(ButtonText.Continue);
@@ -55,7 +55,7 @@ public class AddTrainingVenueControllerGet_LookupAddressEditTests
     public async Task LookupAddressEdit_ProviderCourseDoesNotExist_RedirectToPageNotFound(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] AddTrainingVenueController sut,
+        [Greedy] AddProviderLocationController sut,
         string larsCode)
     {
         // Arrange
@@ -80,7 +80,7 @@ public class AddTrainingVenueControllerGet_LookupAddressEditTests
     public async Task LookupAddressEdit_ProviderLocationsExist_RedirectToEditShortCourseTrainingVenues(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] AddTrainingVenueController sut,
+        [Greedy] AddProviderLocationController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
         string larsCode)

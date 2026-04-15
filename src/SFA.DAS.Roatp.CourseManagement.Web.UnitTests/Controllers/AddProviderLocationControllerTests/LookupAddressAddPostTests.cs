@@ -11,12 +11,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingVenueControllerTests;
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests;
 public class LookupAddressAddPostTests
 {
     [Test]
@@ -25,8 +26,8 @@ public class LookupAddressAddPostTests
     public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnitAndModelStateIsInvalid_Then_ReturnsViewResult(
        ApprenticeshipType apprenticeshipType,
        [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Greedy] AddTrainingVenueController sut,
-       AddTrainingVenueSubmitModel model,
+       [Greedy] AddProviderLocationController sut,
+       AddressSearchSubmitModel model,
        ShortCourseSessionModel shortCourseSessionModel,
        StandardSessionModel standardSessionModel)
     {
@@ -52,8 +53,8 @@ public class LookupAddressAddPostTests
         // Assert
         var viewResult = result as ViewResult;
         Assert.IsNotNull(viewResult);
-        viewResult.ViewName.Should().Be(AddTrainingVenueController.ViewPath);
-        var viewModel = viewResult.Model as AddTrainingVenueViewModel;
+        viewResult.ViewName.Should().Be(AddProviderLocationController.ViewPath);
+        var viewModel = viewResult.Model as AddProviderLocationViewModel;
         viewModel.Route.Should().Be(RouteNames.PostAddTrainingVenue);
         viewModel.IsAddJourney.Should().Be(true);
     }
@@ -66,8 +67,8 @@ public class LookupAddressAddPostTests
         string expectedDisplayHeader,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
-        [Greedy] AddTrainingVenueController sut,
-        AddTrainingVenueSubmitModel model,
+        [Greedy] AddProviderLocationController sut,
+        AddressSearchSubmitModel model,
         ShortCourseSessionModel shortCourseSessionModel,
         StandardSessionModel standardSessionModel)
     {
@@ -93,7 +94,7 @@ public class LookupAddressAddPostTests
         var addressSearch = sut.LookupAddressAdd(model, apprenticeshipType) as ViewResult;
 
         // Assert
-        var viewModel = addressSearch.Model as AddTrainingVenueViewModel;
+        var viewModel = addressSearch.Model as AddProviderLocationViewModel;
         viewModel.DisplayHeader.Should().Be(expectedDisplayHeader);
     }
 
@@ -106,8 +107,8 @@ public class LookupAddressAddPostTests
        bool hasSeenSummaryPage,
        string expectedSubmitButtonText,
        [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Greedy] AddTrainingVenueController sut,
-       AddTrainingVenueSubmitModel model,
+       [Greedy] AddProviderLocationController sut,
+       AddressSearchSubmitModel model,
        ShortCourseSessionModel shortCourseSessionModel,
        StandardSessionModel standardSessionModel)
     {
@@ -133,7 +134,7 @@ public class LookupAddressAddPostTests
 
         // Assert
         var viewResult = result as ViewResult;
-        var viewModel = viewResult.Model as AddTrainingVenueViewModel;
+        var viewModel = viewResult.Model as AddProviderLocationViewModel;
         viewModel.SubmitButtonText.Should().Be(expectedSubmitButtonText);
     }
 
@@ -143,8 +144,8 @@ public class LookupAddressAddPostTests
     public void When_ApprenticeshipTypeIsApprenticeshipOrApprenticeshipUnitAndModelStateIsValid_Then_SetsSelectedAddressInTempDataAndRedirectsToGetConfirmAddTrainingVenue(
         ApprenticeshipType apprenticeshipType,
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] AddTrainingVenueController sut,
-        AddTrainingVenueSubmitModel submitModel,
+        [Greedy] AddProviderLocationController sut,
+        AddressSearchSubmitModel submitModel,
         Mock<ITempDataDictionary> tempDataMock)
     {
         // Arrange
@@ -183,8 +184,8 @@ public class LookupAddressAddPostTests
         ApprenticeshipType apprenticeshipType,
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] AddTrainingVenueController sut,
-        AddTrainingVenueSubmitModel submitMode)
+        [Greedy] AddProviderLocationController sut,
+        AddressSearchSubmitModel submitMode)
     {
         // Arrange
 

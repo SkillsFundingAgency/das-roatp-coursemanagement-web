@@ -15,6 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -23,13 +24,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
-public class ConfirmAddTrainingVenueController(ISessionService _sessionService, ILogger<ConfirmAddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
+public class ConfirmAddProviderLocationController(ISessionService _sessionService, ILogger<ConfirmAddProviderLocationController> _logger, IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ConfirmAddTrainingVenue.cshtml";
+    public const string ViewPath = "~/Views/ConfirmAddProviderLocation.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
-    [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
-    public async Task<IActionResult> ConfirmVenueAdd(ApprenticeshipType apprenticeshipType)
+    [HttpGet("new/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddTrainingVenue)]
+    public async Task<IActionResult> ConfirmLocationAdd(ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
@@ -79,8 +80,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return View(ViewPath, model);
     }
 
-    [HttpPost("new/add-training-venue/confirm-venue", Name = RouteNames.PostConfirmAddTrainingVenue)]
-    public async Task<IActionResult> ConfirmVenueAdd(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    [HttpPost("new/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddTrainingVenue)]
+    public async Task<IActionResult> ConfirmLocationAdd(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
@@ -140,8 +141,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    [HttpGet("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
-    public IActionResult ConfirmVenueEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    [HttpGet("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
+    public IActionResult ConfirmLocationEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var addressItem = GetAddressFromTempData(true);
 
@@ -154,8 +155,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return View(ViewPath, model);
     }
 
-    [HttpPost("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.PostConfirmAddTrainingVenueEditShortCourse)]
-    public async Task<IActionResult> ConfirmVenueEdit(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    [HttpPost("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddTrainingVenueEditShortCourse)]
+    public async Task<IActionResult> ConfirmLocationEdit(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var addressItem = GetAddressFromTempData(true);
 
@@ -210,8 +211,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    [HttpGet("new/add-training-venue/confirm-venue/cancel", Name = RouteNames.CancelAddTrainingVenue)]
-    public IActionResult CancelAddTrainingVenue(int ukprn, ApprenticeshipType apprenticeshipType)
+    [HttpGet("new/add-provider-location/confirm-location/cancel", Name = RouteNames.CancelAddTrainingVenue)]
+    public IActionResult CancelAddProviderLocation(int ukprn, ApprenticeshipType apprenticeshipType)
     {
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
@@ -223,7 +224,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private CreateProviderLocationCommand GetCommand(ConfirmAddTrainingVenueSubmitModel submitModel, AddressItem addressItem)
+    private CreateProviderLocationCommand GetCommand(ProviderLocationDetailsSubmitModel submitModel, AddressItem addressItem)
     {
         var command = new CreateProviderLocationCommand()
         {
@@ -242,12 +243,12 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return command;
     }
 
-    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    private ConfirmAddProviderLocationViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
     {
         string buttonText = GetButtonText(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
         bool showCancelOption = ShowCancelOption(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
 
-        var model = new ConfirmAddTrainingVenueViewModel(addressItem)
+        var model = new ConfirmAddProviderLocationViewModel(addressItem)
         {
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = buttonText,

@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
@@ -21,11 +22,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
-public class AddTrainingVenueController(ISessionService _sessionService, ILogger<AddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
+public class AddProviderLocationController(ISessionService _sessionService, ILogger<AddProviderLocationController> _logger, IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/AddTrainingVenue.cshtml";
+    public const string ViewPath = "~/Views/AddProviderLocation.cshtml";
 
-    [HttpGet("new/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
+    [HttpGet("new/add-provider-location/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
     public async Task<IActionResult> LookupAddressAdd(ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
@@ -72,8 +73,8 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         return View(ViewPath, model);
     }
 
-    [HttpPost("new/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
-    public IActionResult LookupAddressAdd([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    [HttpPost("new/add-provider-location/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
+    public IActionResult LookupAddressAdd([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
@@ -120,7 +121,7 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    [HttpGet("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.GetAddTrainingVenueEditShortCourse)]
+    [HttpGet("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.GetAddTrainingVenueEditShortCourse)]
     public async Task<IActionResult> LookupAddressEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
@@ -146,8 +147,8 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         return View(ViewPath, model);
     }
 
-    [HttpPost("{larsCode}/add-training-venue/lookup-address", Name = RouteNames.PostAddTrainingVenueEditShortCourse)]
-    public IActionResult LookupAddressEdit([FromForm] AddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    [HttpPost("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.PostAddTrainingVenueEditShortCourse)]
+    public IActionResult LookupAddressEdit([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var model = GetViewModel(apprenticeshipType, false, false);
 
@@ -193,11 +194,11 @@ public class AddTrainingVenueController(ISessionService _sessionService, ILogger
         return result;
     }
 
-    private static AddTrainingVenueViewModel GetViewModel(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    private static AddProviderLocationViewModel GetViewModel(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
     {
         string submitButtonText = GetButtonText(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
 
-        var viewModel = new AddTrainingVenueViewModel()
+        var viewModel = new AddProviderLocationViewModel()
         {
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = submitButtonText,

@@ -6,12 +6,12 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models;
-public class ConfirmAddTrainingVenueViewModelTests
+public class ConfirmAddProviderLocationViewModelTests
 {
     [Test, AutoData]
     public void Constructor_BuildsModel(AddressItem addressItem)
     {
-        var sut = new ConfirmAddTrainingVenueViewModel(addressItem);
+        var sut = new ConfirmAddProviderLocationViewModel(addressItem);
         sut.AddressLine1.Should().Be(addressItem.AddressLine1);
         sut.AddressLine2.Should().Be(addressItem.AddressLine2);
         sut.Town.Should().Be(addressItem.Town);
