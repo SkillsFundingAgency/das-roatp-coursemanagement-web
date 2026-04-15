@@ -91,7 +91,7 @@ public class ConfirmLocationAddPostTests
         result.ViewName.Should().Be(ConfirmAddProviderLocationController.ViewPath);
         var actualModel = (ConfirmAddProviderLocationViewModel)result.Model;
         actualModel!.LocationName.Should().Be(model.LocationName);
-        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenue);
+        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddProviderLocation);
         actualModel!.IsAddJourney.Should().Be(true);
         mediatorMock.Verify(m => m.Send(It.IsAny<CreateProviderLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
     }

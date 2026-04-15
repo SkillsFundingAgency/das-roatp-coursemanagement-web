@@ -15,7 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddProviderLocationControllerTests;
-public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
+public class ConfirmVenueEditGetTests
 {
     [Test, MoqAutoData]
     public void ConfirmVenueEdit_AddressInTempData_ReturnsViewResult(
@@ -37,7 +37,7 @@ public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
+            .AddUrlForRoute(RouteNames.CancelAddProviderLocation, cancelLinkUrl);
 
         // Act
         var result = sut.ConfirmLocationEdit(apprenticeshipType, larsCode) as ViewResult;
@@ -48,7 +48,7 @@ public class ConfirmAddTrainingVenueControllerGet_ConfirmVenueEditTests
         var model = result.Model as ConfirmAddProviderLocationViewModel;
         model!.AddressLine1.Should().Be(addressItem.AddressLine1);
         model!.CancelLink.Should().Be(cancelLinkUrl);
-        model!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenueEditShortCourse);
+        model!.Route.Should().Be(RouteNames.PostConfirmAddProviderLocationEditCourse);
         model!.ShowCancelOption.Should().BeFalse();
         model!.IsAddJourney.Should().Be(false);
     }

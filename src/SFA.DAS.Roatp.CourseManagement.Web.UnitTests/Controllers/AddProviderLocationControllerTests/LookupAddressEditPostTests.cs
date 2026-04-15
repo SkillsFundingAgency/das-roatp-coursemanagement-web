@@ -15,7 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests;
-public class AddTrainingVenueControllerPost_LookupAddressEditTests
+public class LookupAddressEditPostTests
 {
     [Test, MoqAutoData]
     public void LookupAddressEdit_InvalidStatus_ReturnsViewResult(
@@ -38,7 +38,7 @@ public class AddTrainingVenueControllerPost_LookupAddressEditTests
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddProviderLocationController.ViewPath);
         var viewModel = viewResult.Model as AddProviderLocationViewModel;
-        viewModel.Route.Should().Be(RouteNames.PostAddTrainingVenueEditShortCourse);
+        viewModel.Route.Should().Be(RouteNames.PostAddProviderLocationEditCourse);
         viewModel.IsAddJourney.Should().Be(false);
         viewModel.SubmitButtonText.Should().Be(ButtonText.Continue);
     }
@@ -75,7 +75,7 @@ public class AddTrainingVenueControllerPost_LookupAddressEditTests
         // Assert
         var result = response as RedirectToRouteResult;
         Assert.IsNotNull(result);
-        result.RouteName.Should().Be(RouteNames.GetConfirmAddTrainingVenueEditShortCourse);
+        result.RouteName.Should().Be(RouteNames.GetConfirmAddProviderLocationEditCourse);
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
         tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, expectedValueInTempData));
     }

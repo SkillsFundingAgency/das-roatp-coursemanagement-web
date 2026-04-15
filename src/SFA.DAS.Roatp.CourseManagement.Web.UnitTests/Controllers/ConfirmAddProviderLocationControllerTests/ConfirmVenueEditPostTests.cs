@@ -23,7 +23,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddProviderLocationControllerTests;
-public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
+public class ConfirmVenueEditPostTests
 {
     [Test, MoqAutoData]
     public void ConfirmVenueEdit_AddressMissingInTempData_RedirectsToEditShortCourseTrainingVenues(
@@ -77,7 +77,7 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         result.ViewName.Should().Be(ConfirmAddProviderLocationController.ViewPath);
         var actualModel = (ConfirmAddProviderLocationViewModel)result.Model;
         actualModel!.LocationName.Should().Be(model.LocationName);
-        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenueEditShortCourse);
+        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddProviderLocationEditCourse);
         actualModel!.IsAddJourney.Should().Be(false);
         actualModel!.SubmitButtonText.Should().Be(ButtonText.Confirm);
         actualModel!.ShowCancelOption.Should().BeFalse();

@@ -112,7 +112,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
             var result = await sut.ViewTrainingLocations() as RedirectToRouteResult;
 
-            result.RouteName.Should().Be(RouteNames.GetAddTrainingVenue);
+            result.RouteName.Should().Be(RouteNames.GetAddProviderLocation);
         }
     }
 }

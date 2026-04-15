@@ -54,7 +54,7 @@ public class ConfirmLocationAddGetTests
         }
 
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
+            .AddUrlForRoute(RouteNames.CancelAddProviderLocation, cancelLinkUrl);
 
         // Act
         var result = await sut.ConfirmLocationAdd(apprenticeshipType) as ViewResult;
@@ -65,7 +65,7 @@ public class ConfirmLocationAddGetTests
         var model = result.Model as ConfirmAddProviderLocationViewModel;
         model!.AddressLine1.Should().Be(addressItem.AddressLine1);
         model!.CancelLink.Should().Be(cancelLinkUrl);
-        model!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenue);
+        model!.Route.Should().Be(RouteNames.PostConfirmAddProviderLocation);
         model!.IsAddJourney.Should().Be(true);
     }
 
@@ -100,7 +100,7 @@ public class ConfirmLocationAddGetTests
         }
 
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
+            .AddUrlForRoute(RouteNames.CancelAddProviderLocation, cancelLinkUrl);
 
         // Act
         var result = await sut.ConfirmLocationAdd(apprenticeshipType) as ViewResult;
@@ -145,7 +145,7 @@ public class ConfirmLocationAddGetTests
         }
 
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
+            .AddUrlForRoute(RouteNames.CancelAddProviderLocation, cancelLinkUrl);
 
         // Act
         var result = await sut.ConfirmLocationAdd(apprenticeshipType) as ViewResult;
@@ -190,7 +190,7 @@ public class ConfirmLocationAddGetTests
         }
 
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.CancelAddTrainingVenue, cancelLinkUrl);
+            .AddUrlForRoute(RouteNames.CancelAddProviderLocation, cancelLinkUrl);
 
         // Act
         var result = await sut.ConfirmLocationAdd(apprenticeshipType) as ViewResult;

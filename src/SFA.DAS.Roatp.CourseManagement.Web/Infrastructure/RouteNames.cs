@@ -58,11 +58,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string AddShortCourseContactDetails = "AddShortCourseContactDetails";
         public const string SelectShortCourseLocationOption = "SelectShortCourseLocationOption";
         public const string SelectShortCourseTrainingVenue = "SelectShortCourseTrainingVenue";
-        public const string GetAddTrainingVenue = "GetAddTrainingVenue";
-        public const string PostAddTrainingVenue = "PostAddTrainingVenue";
-        public const string GetConfirmAddTrainingVenue = "GetConfirmAddTrainingVenue";
-        public const string PostConfirmAddTrainingVenue = "PostConfirmAddTrainingVenue";
-        public const string CancelAddTrainingVenue = "CancelAddTrainingVenue";
+        public const string GetAddProviderLocation = "GetAddProviderLocation";
+        public const string PostAddProviderLocation = "PostAddProviderLocation";
+        public const string GetConfirmAddProviderLocation = "GetConfirmAddProviderLocation";
+        public const string PostConfirmAddProviderLocation = "PostConfirmAddProviderLocation";
+        public const string CancelAddProviderLocation = "CancelAddProviderLocation";
         public const string ConfirmNationalDelivery = "ConfirmNationalDelivery";
         public const string SelectShortCourseRegions = "SelectShortCourseRegions";
         public const string ReviewShortCourseDetails = "ReviewShortCourseDetails";
@@ -74,10 +74,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string EditShortCourseTrainingVenues = "EditShortCourseTrainingVenues";
         public const string EditShortCourseNationalDelivery = "EditShortCourseNationalDelivery";
         public const string EditShortCourseLocationOptions = "EditShortCourseLocationOptions";
-        public const string GetAddTrainingVenueEditShortCourse = "GetAddTrainingVenueEditShortCourse";
-        public const string PostAddTrainingVenueEditShortCourse = "PostAddTrainingVenueEditShortCourse";
-        public const string GetConfirmAddTrainingVenueEditShortCourse = "GetConfirmAddTrainingVenueEditShortCourse";
-        public const string PostConfirmAddTrainingVenueEditShortCourse = "PostConfirmAddTrainingVenueEditShortCourse";
+        public const string GetAddProviderLocationEditCourse = "GetAddProviderLocationEditCourse";
+        public const string PostAddProviderLocationEditCourse = "PostAddProviderLocationEditCourse";
+        public const string GetConfirmAddProviderLocationEditCourse = "GetConfirmAddProviderLocationEditCourse";
+        public const string PostConfirmAddProviderLocationEditCourse = "PostConfirmAddProviderLocationEditCourse";
 
         public const string SearchAddress = "SearchAddress";
         public const string PostSearchAddress = "PostSearchAddress";

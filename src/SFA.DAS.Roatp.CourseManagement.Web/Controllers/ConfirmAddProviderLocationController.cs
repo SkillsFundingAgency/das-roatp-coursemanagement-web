@@ -22,14 +22,14 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-[AuthorizeCourseType(CourseType.ShortCourse)]
+[AuthorizeCourseType(CourseType.ShortCourse, CourseType.Apprenticeship)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
 public class ConfirmAddProviderLocationController(ISessionService _sessionService, ILogger<ConfirmAddProviderLocationController> _logger, IMediator _mediator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ConfirmAddProviderLocation.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
-    [HttpGet("new/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddTrainingVenue)]
+    [HttpGet("new/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddProviderLocation)]
     public async Task<IActionResult> ConfirmLocationAdd(ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
@@ -80,7 +80,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
         return View(ViewPath, model);
     }
 
-    [HttpPost("new/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddTrainingVenue)]
+    [HttpPost("new/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddProviderLocation)]
     public async Task<IActionResult> ConfirmLocationAdd(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
@@ -141,7 +141,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    [HttpGet("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
+    [HttpGet("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddProviderLocationEditCourse)]
     public IActionResult ConfirmLocationEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var addressItem = GetAddressFromTempData(true);
@@ -155,7 +155,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
         return View(ViewPath, model);
     }
 
-    [HttpPost("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddTrainingVenueEditShortCourse)]
+    [HttpPost("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddProviderLocationEditCourse)]
     public async Task<IActionResult> ConfirmLocationEdit(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var addressItem = GetAddressFromTempData(true);
@@ -211,7 +211,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    [HttpGet("new/add-provider-location/confirm-location/cancel", Name = RouteNames.CancelAddTrainingVenue)]
+    [HttpGet("new/add-provider-location/confirm-location/cancel", Name = RouteNames.CancelAddProviderLocation)]
     public IActionResult CancelAddProviderLocation(int ukprn, ApprenticeshipType apprenticeshipType)
     {
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
@@ -253,8 +253,8 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = buttonText,
             ShowCancelOption = showCancelOption,
-            Route = isAddJourney ? RouteNames.PostConfirmAddTrainingVenue : RouteNames.PostConfirmAddTrainingVenueEditShortCourse,
-            CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType }),
+            Route = isAddJourney ? RouteNames.PostConfirmAddProviderLocation : RouteNames.PostConfirmAddProviderLocationEditCourse,
+            CancelLink = Url.RouteUrl(RouteNames.CancelAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType }),
             IsAddJourney = isAddJourney
         };
 

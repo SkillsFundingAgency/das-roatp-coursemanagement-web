@@ -182,6 +182,6 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         var redirectResult = result as RedirectToRouteResult;
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.ProviderLocations.SequenceEqual(new List<ProviderLocation>()) && !m.LocationsAvailable)), Times.Once);
-        redirectResult!.RouteName.Should().Be(RouteNames.GetAddTrainingVenue);
+        redirectResult!.RouteName.Should().Be(RouteNames.GetAddProviderLocation);
     }
 }

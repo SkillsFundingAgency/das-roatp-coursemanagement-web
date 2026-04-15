@@ -52,7 +52,7 @@ public class StandardTrainingLocationsController : AddAStandardControllerBase
 
         if (!providerLocations.ProviderLocations.Any(l => l.LocationType == LocationType.Provider))
         {
-            return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.Apprenticeship });
+            return RedirectToRoute(RouteNames.GetAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.Apprenticeship });
         }
 
         var model = GetModel();

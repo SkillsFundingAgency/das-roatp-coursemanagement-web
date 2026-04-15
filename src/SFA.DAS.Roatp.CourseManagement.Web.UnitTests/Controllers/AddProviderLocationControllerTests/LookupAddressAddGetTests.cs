@@ -56,7 +56,7 @@ public class LookupAddressAddGetTests
         addressSearch.Should().NotBeNull();
         addressSearch.ViewName.Should().Be(AddProviderLocationController.ViewPath);
         var model = addressSearch.Model as AddProviderLocationViewModel;
-        model.Route.Should().Be(RouteNames.PostAddTrainingVenue);
+        model.Route.Should().Be(RouteNames.PostAddProviderLocation);
         model.IsAddJourney.Should().Be(true);
     }
 

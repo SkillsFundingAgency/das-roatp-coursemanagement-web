@@ -42,7 +42,7 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
 
         if (providerLocationsResponse.Count == 0)
         {
-            return RedirectToRoute(RouteNames.GetAddTrainingVenueEditShortCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.GetAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
         }
 
         var model = GetViewModel(providerLocationsResponse, providerCourseDetailsResponse, apprenticeshipType);

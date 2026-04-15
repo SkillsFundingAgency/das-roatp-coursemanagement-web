@@ -46,7 +46,7 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         if (!sessionModel.LocationsAvailable)
         {
-            return RedirectToRoute(RouteNames.GetAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.GetAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType });
         }
 
         ShortCourseTrainingVenuesViewModel model = GetViewModel(sessionModel, apprenticeshipType);

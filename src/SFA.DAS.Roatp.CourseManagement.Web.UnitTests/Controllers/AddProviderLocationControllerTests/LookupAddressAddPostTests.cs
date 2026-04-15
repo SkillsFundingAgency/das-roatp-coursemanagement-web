@@ -55,7 +55,7 @@ public class LookupAddressAddPostTests
         Assert.IsNotNull(viewResult);
         viewResult.ViewName.Should().Be(AddProviderLocationController.ViewPath);
         var viewModel = viewResult.Model as AddProviderLocationViewModel;
-        viewModel.Route.Should().Be(RouteNames.PostAddTrainingVenue);
+        viewModel.Route.Should().Be(RouteNames.PostAddProviderLocation);
         viewModel.IsAddJourney.Should().Be(true);
     }
 
@@ -172,7 +172,7 @@ public class LookupAddressAddPostTests
         // Assert
         var result = response as RedirectToRouteResult;
         Assert.IsNotNull(result);
-        result.RouteName.Should().Be(RouteNames.GetConfirmAddTrainingVenue);
+        result.RouteName.Should().Be(RouteNames.GetConfirmAddProviderLocation);
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
         tempDataMock.Verify(t => t.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, expectedValueInTempData));
     }

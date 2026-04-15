@@ -20,13 +20,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-[AuthorizeCourseType(CourseType.ShortCourse)]
+[AuthorizeCourseType(CourseType.ShortCourse, CourseType.Apprenticeship)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
 public class AddProviderLocationController(ISessionService _sessionService, ILogger<AddProviderLocationController> _logger, IMediator _mediator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderLocation.cshtml";
 
-    [HttpGet("new/add-provider-location/lookup-address", Name = RouteNames.GetAddTrainingVenue)]
+    [HttpGet("new/add-provider-location/lookup-address", Name = RouteNames.GetAddProviderLocation)]
     public async Task<IActionResult> LookupAddressAdd(ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
@@ -73,7 +73,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
         return View(ViewPath, model);
     }
 
-    [HttpPost("new/add-provider-location/lookup-address", Name = RouteNames.PostAddTrainingVenue)]
+    [HttpPost("new/add-provider-location/lookup-address", Name = RouteNames.PostAddProviderLocation)]
     public IActionResult LookupAddressAdd([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
@@ -118,10 +118,10 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.GetConfirmAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    [HttpGet("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.GetAddTrainingVenueEditShortCourse)]
+    [HttpGet("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.GetAddProviderLocationEditCourse)]
     public async Task<IActionResult> LookupAddressEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
@@ -147,7 +147,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
         return View(ViewPath, model);
     }
 
-    [HttpPost("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.PostAddTrainingVenueEditShortCourse)]
+    [HttpPost("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.PostAddProviderLocationEditCourse)]
     public IActionResult LookupAddressEdit([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var model = GetViewModel(apprenticeshipType, false, false);
@@ -171,7 +171,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-        return RedirectToRoute(RouteNames.GetConfirmAddTrainingVenueEditShortCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.GetConfirmAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
     }
 
     private async Task<List<ProviderLocation>> GetProviderLocations()
@@ -202,7 +202,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
         {
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = submitButtonText,
-            Route = isAddJourney ? RouteNames.PostAddTrainingVenue : RouteNames.PostAddTrainingVenueEditShortCourse,
+            Route = isAddJourney ? RouteNames.PostAddProviderLocation : RouteNames.PostAddProviderLocationEditCourse,
             IsAddJourney = isAddJourney
         };
 

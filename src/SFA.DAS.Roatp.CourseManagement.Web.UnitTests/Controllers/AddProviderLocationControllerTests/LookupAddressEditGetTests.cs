@@ -18,7 +18,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests;
-public class AddTrainingVenueControllerGet_LookupAddressEditTests
+public class LookupAddressEditGetTests
 {
     [Test, MoqAutoData]
     public async Task LookupAddressEdit_ReturnsExpectedView(
@@ -46,7 +46,7 @@ public class AddTrainingVenueControllerGet_LookupAddressEditTests
         addressSearch.Should().NotBeNull();
         addressSearch.ViewName.Should().Be(AddProviderLocationController.ViewPath);
         var model = addressSearch.Model as AddProviderLocationViewModel;
-        model.Route.Should().Be(RouteNames.PostAddTrainingVenueEditShortCourse);
+        model.Route.Should().Be(RouteNames.PostAddProviderLocationEditCourse);
         model.IsAddJourney.Should().Be(false);
         model.SubmitButtonText.Should().Be(ButtonText.Continue);
     }
