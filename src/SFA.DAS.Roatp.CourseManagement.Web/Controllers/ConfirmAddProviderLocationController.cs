@@ -63,10 +63,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
                 return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
             }
 
-            if (shortCourseSessionModel.HasSeenSummaryPage)
-            {
-                hasSeenSummaryPage = true;
-            }
+            hasSeenSummaryPage = shortCourseSessionModel.HasSeenSummaryPage;
         }
 
         var addressItem = GetAddressFromTempData(true);
@@ -93,9 +90,9 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && shortCourseSessionModel.HasSeenSummaryPage)
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
         {
-            hasSeenSummaryPage = true;
+            hasSeenSummaryPage = shortCourseSessionModel.HasSeenSummaryPage;
         }
 
         var addressItem = GetAddressFromTempData(true);
@@ -275,7 +272,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
 
     private static bool ShowCancelOption(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
     {
-        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && isAddJourney && !hasSeenSummaryPage || apprenticeshipType == ApprenticeshipType.Apprenticeship && isAddJourney)
+        if (isAddJourney && (apprenticeshipType == ApprenticeshipType.Apprenticeship || (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && !hasSeenSummaryPage)))
         {
             return true;
         }

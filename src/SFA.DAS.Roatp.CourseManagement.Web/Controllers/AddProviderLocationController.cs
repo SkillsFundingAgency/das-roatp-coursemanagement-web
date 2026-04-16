@@ -60,10 +60,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
                 return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
             }
 
-            if (shortCourseSessionModel.HasSeenSummaryPage)
-            {
-                hasSeenSummaryPage = true;
-            }
+            hasSeenSummaryPage = shortCourseSessionModel.HasSeenSummaryPage;
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
@@ -91,10 +88,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
             if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-            if (sessionModel.HasSeenSummaryPage)
-            {
-                hasSeenSummaryPage = true;
-            }
+            hasSeenSummaryPage = sessionModel.HasSeenSummaryPage;
         }
 
         var model = GetViewModel(apprenticeshipType, true, hasSeenSummaryPage);
@@ -128,7 +122,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         if (providerCourseDetailsResponse == null)
         {
-            _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
+            _logger.LogWarning("No course details found for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
 
             return View(ViewsPath.PageNotFoundPath);
         }

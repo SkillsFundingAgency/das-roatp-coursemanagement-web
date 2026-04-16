@@ -24,7 +24,7 @@ public class CancelAddProviderLocationGetTests
         AddressItem addressItem)
     {
         // Arrange
-        var ukprn = 12345;
+        var ukprn = 12345678;
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
         object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
@@ -45,7 +45,7 @@ public class CancelAddProviderLocationGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var ukprn = 12345;
+        var ukprn = 12345678;
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
         object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
@@ -66,7 +66,7 @@ public class CancelAddProviderLocationGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.Apprenticeship;
-        var ukprn = 12345;
+        var ukprn = 12345678;
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
         object serialisedAddressItem = JsonSerializer.Serialize(addressItem);
