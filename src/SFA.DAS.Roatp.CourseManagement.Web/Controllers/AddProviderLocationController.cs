@@ -116,7 +116,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
     }
 
     [HttpGet("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.GetAddProviderLocationEditCourse)]
-    public async Task<IActionResult> LookupAddressEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public async Task<IActionResult> GetAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
@@ -131,7 +131,14 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         if (providerLocationsResponse.Count > 0)
         {
-            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            switch (apprenticeshipType)
+            {
+                case ApprenticeshipType.Apprenticeship:
+                    return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+
+                case ApprenticeshipType.ApprenticeshipUnit:
+                    return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            }
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
@@ -142,7 +149,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
     }
 
     [HttpPost("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.PostAddProviderLocationEditCourse)]
-    public IActionResult LookupAddressEdit([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public IActionResult GetAddress([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var model = GetViewModel(apprenticeshipType, false, false);
 
@@ -162,7 +169,6 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
             Postcode = submitModel.Postcode
         };
 
-        TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
         return RedirectToRoute(RouteNames.GetConfirmAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
@@ -200,7 +206,14 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
             IsAddJourney = isAddJourney
         };
 
-        viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {viewModel.ApprenticeshipTypeLower}" : $"Add an {viewModel.ApprenticeshipTypeLower}";
+        if (isAddJourney)
+        {
+            viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {viewModel.ApprenticeshipTypeLower}" : $"Add an {viewModel.ApprenticeshipTypeLower}";
+        }
+        else
+        {
+            viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Manage a {viewModel.ApprenticeshipTypeLower}" : $"Manage an {viewModel.ApprenticeshipTypeLower}";
+        }
 
         return viewModel;
     }

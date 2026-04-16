@@ -139,13 +139,20 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
     }
 
     [HttpGet("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddProviderLocationEditCourse)]
-    public IActionResult ConfirmLocationEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public IActionResult ConfirmLocation(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var addressItem = GetAddressFromTempData(true);
 
         if (addressItem == null)
         {
-            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            switch (apprenticeshipType)
+            {
+                case ApprenticeshipType.Apprenticeship:
+                    return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+
+                case ApprenticeshipType.ApprenticeshipUnit:
+                    return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            }
         }
 
         var model = GetViewModel(addressItem, apprenticeshipType, false, false);
@@ -153,13 +160,20 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
     }
 
     [HttpPost("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddProviderLocationEditCourse)]
-    public async Task<IActionResult> ConfirmLocationEdit(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public async Task<IActionResult> ConfirmLocation(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
         var addressItem = GetAddressFromTempData(true);
 
         if (addressItem == null)
         {
-            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            switch (apprenticeshipType)
+            {
+                case ApprenticeshipType.Apprenticeship:
+                    return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+
+                case ApprenticeshipType.ApprenticeshipUnit:
+                    return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            }
         }
 
         await CheckIfNameIsAvailable(submitModel.LocationName);
@@ -177,6 +191,11 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
         await _mediator.Send(command);
+
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
+        }
 
         var providerLocations = await GetProviderLocations();
 
@@ -255,7 +274,14 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
             IsAddJourney = isAddJourney
         };
 
-        model.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {model.ApprenticeshipTypeLower}" : $"Add an {model.ApprenticeshipTypeLower}";
+        if (isAddJourney)
+        {
+            model.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {model.ApprenticeshipTypeLower}" : $"Add an {model.ApprenticeshipTypeLower}";
+        }
+        else
+        {
+            model.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Manage a {model.ApprenticeshipTypeLower}" : $"Manage an {model.ApprenticeshipTypeLower}";
+        }
 
         return model;
     }

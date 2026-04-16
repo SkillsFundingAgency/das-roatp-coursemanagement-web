@@ -18,7 +18,7 @@
             <input asp-for="Latitude" id="Latitude" type="hidden" />
 
             <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">@Model.DisplayHeader</div>
-            <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</div>
+            <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">@Model.DisplayHeader</div>
 
             <h1 class="govuk-label-wrapper">
                 <label class="govuk-label govuk-label--xl" asp-for="SearchTerm">
