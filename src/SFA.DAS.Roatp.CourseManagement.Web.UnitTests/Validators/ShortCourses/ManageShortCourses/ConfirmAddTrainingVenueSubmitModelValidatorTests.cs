@@ -1,9 +1,11 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.ManageShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ShortCourses.ManageShortCourses;
+
 public class ConfirmAddTrainingVenueSubmitModelValidatorTests
 {
     [TestCase("")]
@@ -15,7 +17,7 @@ public class ConfirmAddTrainingVenueSubmitModelValidatorTests
 
         var sut = new ConfirmAddTrainingVenueSubmitModelValidator();
 
-        var result = sut.TestValidateAsync(model).Result;
+        var result = sut.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(m => m.LocationName).WithErrorMessage(ConfirmAddTrainingVenueSubmitModelValidator.VenueNameMissingMessage);
     }
@@ -30,5 +32,30 @@ public class ConfirmAddTrainingVenueSubmitModelValidatorTests
         var result = sut.TestValidate(model);
 
         result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [TestCase("<")]
+    [TestCase(">")]
+    [TestCase("^")]
+    [TestCase("!")]
+    [TestCase("\"")]
+    [TestCase("£")]
+    [TestCase("$")]
+    [TestCase("%")]
+    [TestCase("&")]
+    [TestCase("*")]
+    [TestCase("=")]
+    [TestCase("?")]
+    [TestCase(";")]
+    public void ShouldNotAcceptExcludedCharacters(string venueName)
+    {
+        var model = new ConfirmAddTrainingVenueSubmitModel { LocationName = venueName };
+        var sut = new ConfirmAddTrainingVenueSubmitModelValidator();
+
+        var result = sut.TestValidate(model);
+
+        result
+            .ShouldHaveValidationErrorFor(m => m.LocationName)
+            .WithErrorMessage(CommonValidationErrorMessage.HasExcludedCharactersInVenueNameMessage);
     }
 }
