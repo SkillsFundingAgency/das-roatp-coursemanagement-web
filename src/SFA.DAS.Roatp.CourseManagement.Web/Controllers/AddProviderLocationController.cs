@@ -27,7 +27,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
     public const string ViewPath = "~/Views/AddProviderLocation.cshtml";
 
     [HttpGet("new/add-provider-location/lookup-address", Name = RouteNames.GetAddProviderLocation)]
-    public async Task<IActionResult> LookupAddressAdd(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> GetAddress(ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
@@ -71,7 +71,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
     }
 
     [HttpPost("new/add-provider-location/lookup-address", Name = RouteNames.PostAddProviderLocation)]
-    public IActionResult LookupAddressAdd([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public IActionResult GetAddress([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
@@ -109,7 +109,6 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
             Postcode = submitModel.Postcode
         };
 
-        TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
         return RedirectToRoute(RouteNames.GetConfirmAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType });
