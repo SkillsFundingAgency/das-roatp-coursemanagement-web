@@ -30,7 +30,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
     [HttpGet("new/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddProviderLocation)]
-    public async Task<IActionResult> ConfirmLocationAdd(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> ConfirmLocation(ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
@@ -78,7 +78,7 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
     }
 
     [HttpPost("new/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddProviderLocation)]
-    public async Task<IActionResult> ConfirmLocationAdd(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> ConfirmLocation(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         bool hasSeenSummaryPage = false;
 
