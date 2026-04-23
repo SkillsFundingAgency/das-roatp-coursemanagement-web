@@ -13,43 +13,57 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
-[AuthorizeCourseType(CourseType.ShortCourse)]
+[AuthorizeCourseType(CourseType.ShortCourse, CourseType.Apprenticeship)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
-public class ConfirmAddTrainingVenueController(ISessionService _sessionService, ILogger<ConfirmAddTrainingVenueController> _logger, IMediator _mediator) : ControllerBase
+public class ConfirmAddProviderLocationController(ISessionService _sessionService, ILogger<ConfirmAddProviderLocationController> _logger, IMediator _mediator) : ControllerBase
 {
-    public const string ViewPath = "~/Views/ShortCourses/ConfirmAddTrainingVenue.cshtml";
+    public const string ViewPath = "~/Views/ConfirmAddProviderLocation.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
 
-    [HttpGet("new/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenue)]
-    public IActionResult ConfirmVenueAdd(ApprenticeshipType apprenticeshipType)
+    [HttpGet("new/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddProviderLocation)]
+    public async Task<IActionResult> ConfirmLocationAdd(ApprenticeshipType apprenticeshipType)
     {
-        var submitButtonText = ButtonText.Confirm;
-        bool showCancelOption = false;
-        var postRoute = RouteNames.PostConfirmAddTrainingVenue;
+        bool hasSeenSummaryPage = false;
 
-
-        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
-
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-        if (sessionModel.LocationsAvailable)
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
         {
-            _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+            var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
 
-            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            if (standardsSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            var providerLocationsResponse = await GetProviderLocations();
+
+            if (providerLocationsResponse.ProviderLocations.Count > 0)
+            {
+                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+
+                return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
+            }
         }
 
-        if (!sessionModel.HasSeenSummaryPage)
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
         {
-            submitButtonText = ButtonText.Continue;
-            showCancelOption = true;
+            var shortCourseSessionModel = _sessionService.Get<ShortCourseSessionModel>();
+
+            if (shortCourseSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+            if (shortCourseSessionModel.LocationsAvailable)
+            {
+                _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
+
+                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            }
+
+            hasSeenSummaryPage = shortCourseSessionModel.HasSeenSummaryPage;
         }
 
         var addressItem = GetAddressFromTempData(true);
@@ -59,25 +73,26 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, true);
+        var model = GetViewModel(addressItem, apprenticeshipType, true, hasSeenSummaryPage);
         return View(ViewPath, model);
     }
 
-    [HttpPost("new/add-training-venue/confirm-venue", Name = RouteNames.PostConfirmAddTrainingVenue)]
-    public async Task<IActionResult> ConfirmVenueAdd(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    [HttpPost("new/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddProviderLocation)]
+    public async Task<IActionResult> ConfirmLocationAdd(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
-        var submitButtonText = ButtonText.Confirm;
-        bool showCancelOption = false;
-        var postRoute = RouteNames.PostConfirmAddTrainingVenue;
+        bool hasSeenSummaryPage = false;
 
-        var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
+        var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
+        var shortCourseSessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
-        if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
-
-        if (!sessionModel.HasSeenSummaryPage)
+        if (standardsSessionModel == null && shortCourseSessionModel == null)
         {
-            submitButtonText = ButtonText.Continue;
-            showCancelOption = true;
+            return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+        }
+
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        {
+            hasSeenSummaryPage = shortCourseSessionModel.HasSeenSummaryPage;
         }
 
         var addressItem = GetAddressFromTempData(true);
@@ -91,7 +106,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (!ModelState.IsValid)
         {
-            var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, true);
+            var model = GetViewModel(addressItem, apprenticeshipType, true, hasSeenSummaryPage);
 
             model.LocationName = submitModel.LocationName;
             return View(ViewPath, model);
@@ -103,14 +118,19 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         await _mediator.Send(command);
 
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            return RedirectToRouteWithUkprn(RouteNames.GetNewStandardViewTrainingLocationOptions);
+        }
+
         await SetTrainingVenueInSession();
 
-        if (sessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && sessionModel.IsEmployerInfoMissing())
+        if (shortCourseSessionModel.LocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && shortCourseSessionModel.IsEmployerInfoMissing())
         {
             return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
         }
 
-        if (sessionModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
+        if (shortCourseSessionModel.HasNationalDeliveryOption == false && shortCourseSessionModel.IsEmployerRegionsMissing())
         {
             return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
         }
@@ -118,13 +138,9 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    [HttpGet("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.GetConfirmAddTrainingVenueEditShortCourse)]
-    public IActionResult ConfirmVenueEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    [HttpGet("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.GetConfirmAddProviderLocationEditCourse)]
+    public IActionResult ConfirmLocationEdit(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ButtonText.Confirm;
-        bool showCancelOption = false;
-        var postRoute = RouteNames.PostConfirmAddTrainingVenueEditShortCourse;
-
         var addressItem = GetAddressFromTempData(true);
 
         if (addressItem == null)
@@ -132,17 +148,13 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
             return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
         }
 
-        var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, false);
+        var model = GetViewModel(addressItem, apprenticeshipType, false, false);
         return View(ViewPath, model);
     }
 
-    [HttpPost("{larsCode}/add-training-venue/confirm-venue", Name = RouteNames.PostConfirmAddTrainingVenueEditShortCourse)]
-    public async Task<IActionResult> ConfirmVenueEdit(ConfirmAddTrainingVenueSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    [HttpPost("{larsCode}/add-provider-location/confirm-location", Name = RouteNames.PostConfirmAddProviderLocationEditCourse)]
+    public async Task<IActionResult> ConfirmLocationEdit(ProviderLocationDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
     {
-        var submitButtonText = ButtonText.Confirm;
-        bool showCancelOption = false;
-        var postRoute = RouteNames.PostConfirmAddTrainingVenueEditShortCourse;
-
         var addressItem = GetAddressFromTempData(true);
 
         if (addressItem == null)
@@ -154,7 +166,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
 
         if (!ModelState.IsValid)
         {
-            var model = GetViewModel(addressItem, apprenticeshipType, submitButtonText, showCancelOption, postRoute, false);
+            var model = GetViewModel(addressItem, apprenticeshipType, false, false);
 
             model.LocationName = submitModel.LocationName;
             return View(ViewPath, model);
@@ -196,21 +208,26 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
     }
 
-    [HttpGet("new/add-training-venue/confirm-venue/cancel", Name = RouteNames.CancelAddTrainingVenue)]
-    public IActionResult CancelAddTrainingVenue(int ukprn, ApprenticeshipType apprenticeshipType)
+    [HttpGet("new/add-provider-location/confirm-location/cancel", Name = RouteNames.CancelAddProviderLocation)]
+    public IActionResult CancelAddProviderLocation(int ukprn, ApprenticeshipType apprenticeshipType)
     {
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
+
+        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        {
+            return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectLocationOption);
+        }
 
         return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
     }
 
-    private CreateProviderLocationCommand GetCommand(ConfirmAddTrainingVenueSubmitModel submitModel, AddressItem addressItem)
+    private CreateProviderLocationCommand GetCommand(ProviderLocationDetailsSubmitModel submitModel, AddressItem addressItem)
     {
         var command = new CreateProviderLocationCommand()
         {
-            Ukprn = base.Ukprn,
-            UserId = base.UserId,
-            UserDisplayName = base.UserDisplayName,
+            Ukprn = Ukprn,
+            UserId = UserId,
+            UserDisplayName = UserDisplayName,
             LocationName = submitModel.LocationName,
             AddressLine1 = addressItem.AddressLine1,
             AddressLine2 = addressItem.AddressLine2 ?? string.Empty,
@@ -223,18 +240,44 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
         return command;
     }
 
-    private ConfirmAddTrainingVenueViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, string buttonText, bool showCancelOption, string route, bool isAddJourney)
+    private ConfirmAddProviderLocationViewModel GetViewModel(AddressItem addressItem, ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
     {
-        var model = new ConfirmAddTrainingVenueViewModel(addressItem)
+        string buttonText = GetButtonText(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
+        bool showCancelOption = ShowCancelOption(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
+
+        var model = new ConfirmAddProviderLocationViewModel(addressItem)
         {
             ApprenticeshipType = apprenticeshipType,
             SubmitButtonText = buttonText,
             ShowCancelOption = showCancelOption,
-            Route = route,
-            CancelLink = Url.RouteUrl(RouteNames.CancelAddTrainingVenue, new { ukprn = Ukprn, apprenticeshipType }),
+            Route = isAddJourney ? RouteNames.PostConfirmAddProviderLocation : RouteNames.PostConfirmAddProviderLocationEditCourse,
+            CancelLink = Url.RouteUrl(RouteNames.CancelAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType }),
             IsAddJourney = isAddJourney
         };
+
+        model.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {model.ApprenticeshipTypeLower}" : $"Add an {model.ApprenticeshipTypeLower}";
+
         return model;
+    }
+
+    private static string GetButtonText(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    {
+        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && isAddJourney && !hasSeenSummaryPage)
+        {
+            return ButtonText.Continue;
+        }
+
+        return ButtonText.Confirm;
+    }
+
+    private static bool ShowCancelOption(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    {
+        if (isAddJourney && (apprenticeshipType == ApprenticeshipType.Apprenticeship || (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && !hasSeenSummaryPage)))
+        {
+            return true;
+        }
+
+        return false;
     }
 
     private AddressItem GetAddressFromTempData(bool keepTempData)
@@ -252,7 +295,7 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     private async Task CheckIfNameIsAvailable(string locationName)
     {
         var locations = await GetProviderLocations();
-        if (locations.ProviderLocations.Any(l => l.LocationName.Equals(locationName.Trim(), System.StringComparison.CurrentCultureIgnoreCase)))
+        if (locations.ProviderLocations.Any(l => l.LocationName.Equals(locationName.Trim(), StringComparison.CurrentCultureIgnoreCase)))
         {
             ModelState.AddModelError("LocationName", LocationNameNotAvailable);
         }
@@ -287,8 +330,8 @@ public class ConfirmAddTrainingVenueController(ISessionService _sessionService, 
     {
         var sessionValue = _sessionService.Get(SessionKeys.SelectedShortCourseLocationOption);
         return
-            (!string.IsNullOrEmpty(sessionValue) &&
-            (Enum.TryParse<ShortCourseLocationOption>(sessionValue, out var locationOption)
-                && (locationOption == ShortCourseLocationOption.EmployerLocation)));
+            !string.IsNullOrEmpty(sessionValue) &&
+            Enum.TryParse<ShortCourseLocationOption>(sessionValue, out var locationOption)
+                && locationOption == ShortCourseLocationOption.EmployerLocation;
     }
 }

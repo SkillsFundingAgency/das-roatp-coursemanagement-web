@@ -1,5 +1,5 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
-@model AddTrainingVenueViewModel
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models
+@model AddProviderLocationViewModel
 @{
     ViewBag.Title = "Select an address";
     ViewBag.Description = "";
@@ -17,7 +17,7 @@
             <input asp-for="Longitude" id="Longitude" type="hidden" />
             <input asp-for="Latitude" id="Latitude" type="hidden" />
 
-            <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
+            <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">@Model.DisplayHeader</div>
             <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</div>
 
             <h1 class="govuk-label-wrapper">
@@ -26,7 +26,7 @@
                 </label>
             </h1>
 
-            <p>This venue will be added to your account. It will show up as an option when adding new standards or @(Model.ApprenticeshipTypeLowerPlural).</p>
+            <p>This venue will be added to your account. It will show up as an option when adding new standards or apprenticeship units.</p>
 
             <div class="govuk-label govuk-label--m govuk-!-margin-top-6">
                 Add venue address

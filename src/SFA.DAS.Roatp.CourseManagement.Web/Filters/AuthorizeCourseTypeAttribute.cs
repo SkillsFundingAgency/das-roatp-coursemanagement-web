@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Filters;
 
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-public class AuthorizeCourseTypeAttribute(CourseType _courseType) : Attribute, IAsyncAuthorizationFilter
+public class AuthorizeCourseTypeAttribute(params CourseType[] _courseType) : Attribute, IAsyncAuthorizationFilter
 {
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
@@ -23,7 +23,7 @@ public class AuthorizeCourseTypeAttribute(CourseType _courseType) : Attribute, I
 
         var courseTypeResponse = await providerService.GetProviderCourseType(ukprn);
 
-        if (!courseTypeResponse.Any(c => c.CourseType == _courseType))
+        if (!courseTypeResponse.Any(c => _courseType.Contains(c.CourseType)))
         {
             context.Result = new ViewResult { ViewName = "~/Views/Error/PageNotFound.cshtml" };
         }

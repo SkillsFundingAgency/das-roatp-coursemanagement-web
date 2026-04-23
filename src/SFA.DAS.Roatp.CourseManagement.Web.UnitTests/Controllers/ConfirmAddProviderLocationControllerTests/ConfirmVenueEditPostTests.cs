@@ -13,23 +13,24 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
-using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.ConfirmAddTrainingVenueControllerTests;
-public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddProviderLocationControllerTests;
+public class ConfirmVenueEditPostTests
 {
     [Test, MoqAutoData]
     public void ConfirmVenueEdit_AddressMissingInTempData_RedirectsToEditShortCourseTrainingVenues(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
-        ConfirmAddTrainingVenueSubmitModel model)
+        [Greedy] ConfirmAddProviderLocationController sut,
+        ProviderLocationDetailsSubmitModel model)
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
@@ -40,7 +41,7 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         //Act
-        var result = sut.ConfirmVenueEdit(model, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmLocationEdit(model, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
 
         //Assert
         result.Should().NotBeNull();
@@ -53,8 +54,8 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
-        ConfirmAddTrainingVenueSubmitModel model,
+        [Greedy] ConfirmAddProviderLocationController sut,
+        ProviderLocationDetailsSubmitModel model,
         ShortCourseSessionModel sessionModel,
         AddressItem addressItem)
     {
@@ -69,14 +70,14 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var result = sut.ConfirmVenueEdit(model, apprenticeshipType, larsCode).Result as ViewResult;
+        var result = sut.ConfirmLocationEdit(model, apprenticeshipType, larsCode).Result as ViewResult;
 
         // Assert
         result.Should().NotBeNull();
-        result.ViewName.Should().Be(ConfirmAddTrainingVenueController.ViewPath);
-        var actualModel = (ConfirmAddTrainingVenueViewModel)result.Model;
+        result.ViewName.Should().Be(ConfirmAddProviderLocationController.ViewPath);
+        var actualModel = (ConfirmAddProviderLocationViewModel)result.Model;
         actualModel!.LocationName.Should().Be(model.LocationName);
-        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddTrainingVenueEditShortCourse);
+        actualModel!.Route.Should().Be(RouteNames.PostConfirmAddProviderLocationEditCourse);
         actualModel!.IsAddJourney.Should().Be(false);
         actualModel!.SubmitButtonText.Should().Be(ButtonText.Confirm);
         actualModel!.ShowCancelOption.Should().BeFalse();
@@ -92,8 +93,8 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
-        ConfirmAddTrainingVenueSubmitModel submitModel,
+        [Greedy] ConfirmAddProviderLocationController sut,
+        ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
         GetAllProviderLocationsQueryResult queryResult,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
@@ -110,7 +111,7 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenueEdit(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmLocationEdit(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
 
         // Assert
         result.Should().NotBeNull();
@@ -145,8 +146,8 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
-        ConfirmAddTrainingVenueSubmitModel submitModel,
+        [Greedy] ConfirmAddProviderLocationController sut,
+        ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse)
     {
@@ -163,7 +164,7 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        var result = sut.ConfirmVenueEdit(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmLocationEdit(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
 
         // Assert
         tempDataMock.Verify(t => t.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey));
@@ -193,8 +194,8 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
     public void ConfirmVenueEdit_LocationNameIsNotDistinct_ReturnsViewResult(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
-        ConfirmAddTrainingVenueSubmitModel model,
+        [Greedy] ConfirmAddProviderLocationController sut,
+        ProviderLocationDetailsSubmitModel model,
         AddressItem addressItem,
         GetAllProviderLocationsQueryResult allLocations)
     {
@@ -209,11 +210,11 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmVenueEdit(model, apprenticeshipType, larsCode).Result as ViewResult;
+        var result = sut.ConfirmLocationEdit(model, apprenticeshipType, larsCode).Result as ViewResult;
 
         // Assert
         result.Should().NotBeNull();
-        result.ViewName.Should().Be(ConfirmAddTrainingVenueController.ViewPath);
+        result.ViewName.Should().Be(ConfirmAddProviderLocationController.ViewPath);
         mediatorMock.Verify(m => m.Send(It.IsAny<CreateProviderLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
         sut.ModelState.ErrorCount.Should().Be(1);
         sut.ModelState.Should().ContainKey("LocationName");
@@ -224,8 +225,8 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
-        [Greedy] ConfirmAddTrainingVenueController sut,
-        ConfirmAddTrainingVenueSubmitModel submitModel,
+        [Greedy] ConfirmAddProviderLocationController sut,
+        ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem)
     {
         // Arrange
@@ -241,7 +242,7 @@ public class ConfirmAddTrainingVenueControllerPost_ConfirmVenueEditTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(() => new GetAllProviderLocationsQueryResult());
 
         // Act
-        var result = sut.ConfirmVenueEdit(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
+        var result = sut.ConfirmLocationEdit(submitModel, apprenticeshipType, larsCode).Result as RedirectToRouteResult;
 
         // Assert
         result.RouteName.Should().Be(RouteNames.EditShortCourseTrainingVenues);

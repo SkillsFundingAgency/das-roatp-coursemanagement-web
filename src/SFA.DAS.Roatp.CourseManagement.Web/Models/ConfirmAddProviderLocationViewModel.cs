@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
 
-public class ConfirmAddTrainingVenueViewModel : ConfirmAddTrainingVenueSubmitModel, IBackLink
+public class ConfirmAddProviderLocationViewModel : ProviderLocationDetailsSubmitModel, IBackLink
 {
     public string SubmitButtonText { get; set; }
     public bool ShowCancelOption { get; set; }
     public string Route { get; set; }
     public bool IsAddJourney { get; set; }
-    public ConfirmAddTrainingVenueViewModel(AddressItem addressItem)
+    public string DisplayHeader { get; set; }
+    public ConfirmAddProviderLocationViewModel(AddressItem addressItem)
     {
         AddressLine1 = addressItem.AddressLine1;
         AddressLine2 = addressItem.AddressLine2;
@@ -37,9 +39,4 @@ public class ConfirmAddTrainingVenueViewModel : ConfirmAddTrainingVenueSubmitMod
         }
 
     }
-}
-
-public class ConfirmAddTrainingVenueSubmitModel : ShortCourseBaseViewModel
-{
-    public string LocationName { get; set; }
 }

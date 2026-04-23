@@ -1,5 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
@@ -8,7 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
@@ -17,18 +22,21 @@ public class StandardTrainingLocationsController : AddAStandardControllerBase
 {
     public const string ViewPath = "~/Views/AddAStandard/StandardTrainingLocations.cshtml";
     private readonly ILogger<StandardTrainingLocationsController> _logger;
+    private readonly IMediator _mediator;
 
 
     public StandardTrainingLocationsController(
         ISessionService sessionService,
-        ILogger<StandardTrainingLocationsController> logger) : base(sessionService)
+        ILogger<StandardTrainingLocationsController> logger,
+        IMediator mediator) : base(sessionService)
     {
         _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpGet]
     [Route("{ukprn}/standards/add/locations", Name = RouteNames.GetNewStandardViewTrainingLocationOptions)]
-    public IActionResult ViewTrainingLocations()
+    public async Task<IActionResult> ViewTrainingLocations()
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
         if (sessionModel == null) return redirectResult;
@@ -38,6 +46,13 @@ public class StandardTrainingLocationsController : AddAStandardControllerBase
         {
             _logger.LogWarning($"User: {UserId} unexpectedly landed on provider location page when location option is set to employers.");
             return RedirectToRouteWithUkprn(RouteNames.ViewStandards);
+        }
+
+        var providerLocations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+
+        if (!providerLocations.ProviderLocations.Any(l => l.LocationType == LocationType.Provider))
+        {
+            return RedirectToRoute(RouteNames.GetAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.Apprenticeship });
         }
 
         var model = GetModel();

@@ -174,6 +174,6 @@ public class EditShortCourseTrainingVenuesControllerGetTests
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.GetAddTrainingVenueEditShortCourse);
+        redirectResult!.RouteName.Should().Be(RouteNames.GetAddProviderLocationEditCourse);
     }
 }
