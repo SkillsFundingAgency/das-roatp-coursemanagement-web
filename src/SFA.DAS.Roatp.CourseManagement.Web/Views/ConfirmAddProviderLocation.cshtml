@@ -9,7 +9,7 @@
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" />
         <div asp-show="@Model.IsAddJourney" class="govuk-caption-l">@Model.DisplayHeader</div>
-        <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</div>
+        <div asp-show="!@Model.IsAddJourney" class="govuk-caption-l">@Model.DisplayHeader</div>
         <h1 class="govuk-heading-xl govuk-!-margin-bottom-3">You don't have any training venues registered yet. Add a training venue.</h1>
         <p>This venue will be added to your account. It will show up as an option when adding new standards or apprenticeship units.</p>
 

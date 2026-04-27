@@ -1,7 +1,12 @@
-﻿using MediatR;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
@@ -9,9 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -35,6 +37,13 @@ public class ProviderCourseLocationsController : ControllerBase
     public async Task<IActionResult> GetProviderCourseLocations([FromRoute] string larsCode)
     {
         _logger.LogInformation("Getting Provider Course Locations for ukprn {Ukprn} ", Ukprn);
+
+        var providerLocations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
+
+        if (!providerLocations.ProviderLocations.Any(l => l.LocationType == LocationType.Provider))
+        {
+            return RedirectToRoute(RouteNames.GetAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.Apprenticeship, larsCode });
+        }
 
         ProviderCourseLocationListViewModel model = await BuildViewModel(larsCode);
 
