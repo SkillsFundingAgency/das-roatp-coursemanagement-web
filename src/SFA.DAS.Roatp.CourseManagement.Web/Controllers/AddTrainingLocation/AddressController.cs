@@ -1,18 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Text.Json;
+using System.Threading.Tasks;
+using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation;
 
-public class AddressController : ControllerBase
+[Route("{ukprn}/add-training-location/address")]
+public class AddressController(IValidator<AddressSearchSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddTrainingLocation/SelectAddress.cshtml";
 
-    [Route("{ukprn}/add-training-location/address", Name = RouteNames.SearchAddress)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.SearchAddress)]
     public Task<IActionResult> AddressSearch()
     {
         TempData.Remove(TempDataKeys.SelectedAddressTempDataKey);
@@ -20,14 +22,17 @@ public class AddressController : ControllerBase
         return Task.FromResult<IActionResult>(View(ViewPath, model));
     }
 
-    [Route("{ukprn}/add-training-location/address", Name = RouteNames.PostSearchAddress)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostSearchAddress)]
     public Task<IActionResult> PostAddressSearch([FromForm] AddressSearchSubmitModel submitModel)
     {
         var model = new AddressSearchViewModel();
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return Task.FromResult<IActionResult>(View(ViewPath, model));
         }
 

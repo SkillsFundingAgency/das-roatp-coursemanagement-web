@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
@@ -7,32 +10,33 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAv
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/add/select-standard")]
 public class SelectAStandardController : ControllerBase
 {
     public const string ViewPath = "~/Views/AddAStandard/SelectAStandard.cshtml";
     private readonly ILogger<SelectAStandardController> _logger;
     private readonly IMediator _mediator;
     private readonly ISessionService _sessionService;
+    private readonly IValidator<SelectAStandardSubmitModel> _validator;
 
-    public SelectAStandardController(ILogger<SelectAStandardController> logger, IMediator mediator, ISessionService sessionService)
+    public SelectAStandardController(ILogger<SelectAStandardController> logger, IMediator mediator, ISessionService sessionService, IValidator<SelectAStandardSubmitModel> validator)
     {
         _logger = logger;
         _mediator = mediator;
         _sessionService = sessionService;
+        _validator = validator;
     }
 
-    [Route("{ukprn}/standards/add/select-standard", Name = RouteNames.GetAddStandardSelectStandard)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetAddStandardSelectStandard)]
     [ClearSession(nameof(StandardSessionModel))]
     public async Task<IActionResult> SelectAStandard()
     {
@@ -40,16 +44,20 @@ public class SelectAStandardController : ControllerBase
         return View(ViewPath, model);
     }
 
-    [Route("{ukprn}/standards/add/select-standard", Name = RouteNames.PostAddStandardSelectStandard)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostAddStandardSelectStandard)]
     public async Task<IActionResult> SubmitAStandard(SelectAStandardSubmitModel submitModel)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var model = await GetModel();
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, model);
         }
-        _logger.LogInformation("Begin of journey for ukprn: {ukprn} to add standard {larscode}", Ukprn, submitModel.SelectedLarsCode);
+        _logger.LogInformation("Begin of journey for ukprn: {Ukprn} to add standard {LarsCode}", Ukprn, submitModel.SelectedLarsCode);
 
         var sessionModel = new StandardSessionModel { LarsCode = submitModel.SelectedLarsCode };
 
@@ -74,7 +82,7 @@ public class SelectAStandardController : ControllerBase
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmRegulatedStandard);
         }
 
-        _logger.LogInformation("Add standard: A non-regulated standard larscode:{larscode} is being added for ukprn:{ukprn} by {userid}", Ukprn, sessionModel.LarsCode, UserId);
+        _logger.LogInformation("Add standard: A non-regulated standard larscode:{LarsCode} is being added for ukprn:{Ukprn} by {UserId}", sessionModel.LarsCode, Ukprn, UserId);
 
         return RedirectToRouteWithUkprn(RouteNames.GetAddStandardConfirmNonRegulatedStandard);
     }

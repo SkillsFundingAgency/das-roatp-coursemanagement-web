@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -12,7 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 [Route("{ukprn}/add-provider-contact", Name = RouteNames.AddProviderContactDetails)]
-public class ProviderContactController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
+public class ProviderContactController(IMediator _mediator, ISessionService _sessionService, IValidator<AddProviderContactSubmitViewModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/AddProviderContact.cshtml";
 
@@ -38,7 +40,9 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
     {
         var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitViewModel);
+
+        if (!validatedResult.IsValid)
         {
             var model = new AddProviderContactViewModel
             {
@@ -46,6 +50,8 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
                 PhoneNumber = submitViewModel.PhoneNumber,
                 ExistingContactDetailsAvailable = sessionModel.HasExistingContactDetails
             };
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourse;
@@ -7,11 +8,11 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/add/save-standard")]
 public class ReviewAndSaveStandardController : AddAStandardControllerBase
 {
     public const string ViewPath = "~/Views/AddAStandard/ReviewAndSaveStandard.cshtml";
@@ -24,8 +25,7 @@ public class ReviewAndSaveStandardController : AddAStandardControllerBase
         _mediator = mediator;
     }
 
-    [HttpGet]
-    [Route("{ukprn}/standards/add/save-standard", Name = RouteNames.GetAddStandardReviewStandard)]
+    [HttpGet(Name = RouteNames.GetAddStandardReviewStandard)]
     public IActionResult ReviewStandard()
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
@@ -34,8 +34,7 @@ public class ReviewAndSaveStandardController : AddAStandardControllerBase
         return View(ViewPath, sessionModel);
     }
 
-    [HttpPost]
-    [Route("{ukprn}/standards/add/save-standard", Name = RouteNames.PostAddStandardReviewStandard)]
+    [HttpPost(Name = RouteNames.PostAddStandardReviewStandard)]
     public async Task<IActionResult> SaveStandard()
     {
         var sessionModel = _sessionService.Get<StandardSessionModel>();

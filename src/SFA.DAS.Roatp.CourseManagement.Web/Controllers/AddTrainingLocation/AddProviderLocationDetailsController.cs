@@ -1,32 +1,36 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Text.Json;
+using System.Threading.Tasks;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Commands.CreateProviderLocation;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
-using System.Linq;
-using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation;
 
+[Route("{ukprn}/add-training-location/details")]
 public class AddProviderLocationDetailsController : ControllerBase
 {
     public const string ViewPath = "~/Views/AddTrainingLocation/AddTrainingLocationDetails.cshtml";
     public const string LocationNameNotAvailable = "A location with this name already exists";
     private readonly ILogger<AddProviderLocationDetailsController> _logger;
     private readonly IMediator _mediator;
+    private readonly IValidator<ProviderLocationDetailsSubmitModel> _validator;
 
-    public AddProviderLocationDetailsController(ILogger<AddProviderLocationDetailsController> logger, IMediator mediator)
+    public AddProviderLocationDetailsController(ILogger<AddProviderLocationDetailsController> logger, IMediator mediator, IValidator<ProviderLocationDetailsSubmitModel> validator)
     {
         _logger = logger;
         _mediator = mediator;
+        _validator = validator;
     }
 
-    [Route("{ukprn}/add-training-location/details", Name = RouteNames.GetAddProviderLocationDetails)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetAddProviderLocationDetails)]
     public IActionResult GetLocationDetails()
     {
         var addressItem = GetAddressFromTempData(true);
@@ -37,20 +41,24 @@ public class AddProviderLocationDetailsController : ControllerBase
         return View(ViewPath, model);
     }
 
-    [Route("{ukprn}/add-training-location/details", Name = RouteNames.PostAddProviderLocationDetails)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostAddProviderLocationDetails)]
     public async Task<IActionResult> SubmitLocationDetails(ProviderLocationDetailsSubmitModel submitModel)
     {
         var addressItem = GetAddressFromTempData(true);
         if (addressItem == null) return RedirectToRouteWithUkprn(RouteNames.GetProviderLocations);
 
-        if (ModelState.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+        var validatedResult = _validator.Validate(submitModel);
 
-        if (!ModelState.IsValid)
+        if (validatedResult.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+
+        if (!validatedResult.IsValid)
         {
             var model = GetViewModel(addressItem);
 
             model.LocationName = submitModel.LocationName;
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, model);
         }
 

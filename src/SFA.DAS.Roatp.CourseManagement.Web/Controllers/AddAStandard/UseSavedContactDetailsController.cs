@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddAStandard;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
@@ -15,12 +16,15 @@ public class UseSavedContactDetailsController : AddAStandardControllerBase
 {
     public const string ViewPath = "~/Views/AddAStandard/UseSavedContactDetails.cshtml";
     private readonly ILogger<UseSavedContactDetailsController> _logger;
+    private readonly IValidator<UseSavedContactDetailsSubmitViewModel> _validator;
 
     public UseSavedContactDetailsController(
         ISessionService sessionService,
-        ILogger<UseSavedContactDetailsController> logger) : base(sessionService)
+        ILogger<UseSavedContactDetailsController> logger,
+        IValidator<UseSavedContactDetailsSubmitViewModel> validator) : base(sessionService)
     {
         _logger = logger;
+        _validator = validator;
     }
 
     [HttpGet]
@@ -40,12 +44,14 @@ public class UseSavedContactDetailsController : AddAStandardControllerBase
         var sessionModel = _sessionService.Get<StandardSessionModel>();
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var validator = new UseSavedContactDetailsSubmitViewModelValidator();
-        var validatorResult = validator.Validate(model);
+        var validatedResult = _validator.Validate(model);
 
-        if (!validatorResult.IsValid)
+        if (!validatedResult.IsValid)
         {
             var viewModel = GetViewModel(sessionModel, Ukprn);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, viewModel);
         }
 

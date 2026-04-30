@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -7,7 +9,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 [Route("{ukprn}/update-existing-standards", Name = RouteNames.AddProviderContactConfirmUpdateStandards)]
 
-public class ConfirmUpdateStandardsController(ISessionService _sessionService) : ControllerBase
+public class ConfirmUpdateStandardsController(ISessionService _sessionService, IValidator<ConfirmUpdateStandardsSubmitViewModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/UpdateStandardsContactDetails.cshtml";
 
@@ -35,7 +37,9 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService) :
     [HttpPost]
     public IActionResult PostConfirmUpdateStandards(int ukprn, ConfirmUpdateStandardsSubmitViewModel submitViewModel)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitViewModel);
+
+        if (!validatedResult.IsValid)
         {
             var model = new ConfirmUpdateStandardsViewModel
             {
@@ -46,6 +50,8 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService) :
             model.EmailAddressOnlyUpdate = IsEmailAddressOnlyUpdate(model);
             model.PhoneNumberOnlyUpdate = IsPhoneNumberOnlyUpdate(model);
             model.EmailAddressAndPhoneNumberUpdate = IsEmailAndPhoneNumberUpdate(model);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

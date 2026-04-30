@@ -1,14 +1,15 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
+[Route("/providers/{ukprn}/locations/{Id}")]
 public class ViewProviderLocationDetailsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -20,8 +21,7 @@ public class ViewProviderLocationDetailsController : ControllerBase
         _mediator = mediator;
     }
 
-    [Route("/providers/{ukprn}/locations/{Id}", Name = RouteNames.GetProviderLocationDetails)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetProviderLocationDetails)]
     public async Task<IActionResult> GetProviderLocationDetails([FromRoute] Guid Id)
     {
         _logger.LogInformation("Getting Provider Location for {Ukprn}, {Id}", Ukprn, Id);

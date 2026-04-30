@@ -1,15 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/remove/locations/{providerLocationId}")]
 public class RemoveProviderCourseLocationController : AddAStandardControllerBase
 {
     private readonly ILogger<RemoveProviderCourseLocationController> _logger;
@@ -18,8 +19,7 @@ public class RemoveProviderCourseLocationController : AddAStandardControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    [Route("{ukprn}/standards/remove/locations/{providerLocationId}", Name = RouteNames.GetAddStandardRemoveProviderCourseLocation)]
+    [HttpGet(Name = RouteNames.GetAddStandardRemoveProviderCourseLocation)]
     public IActionResult RemoveProviderCourseLocation(Guid providerLocationId)
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);

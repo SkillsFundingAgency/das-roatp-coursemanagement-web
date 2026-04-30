@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseForecasts.Commands.UpsertProviderCourseForecasts;
@@ -9,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseForecasts.Queries
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts;
@@ -16,7 +18,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [Route("{ukprn}")]
-public class ProviderCourseForecastsController(IMediator _mediator) : ControllerBase
+public class ProviderCourseForecastsController(IMediator _mediator, IValidator<CourseForecastsSubmitModel> _validator) : ControllerBase
 {
     public const string AllCoursesViewPath = "~/Views/Forecasts/AllCourses.cshtml";
     public const string CourseForecastsViewPath = "~/Views/Forecasts/CourseForecasts.cshtml";
@@ -63,8 +65,12 @@ public class ProviderCourseForecastsController(IMediator _mediator) : Controller
     [Route("forecasts/courses/{larsCode}", Name = RouteNames.CourseForecasts)]
     public async Task<IActionResult> PostCourseForecasts(string larsCode, CourseForecastsSubmitModel submitModel, CancellationToken cancellationToken)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return await GetCourseForecasts(larsCode, cancellationToken);
         }
         var forecasts = submitModel.Forecasts.Select(f => (UpsertForecastModel)f);

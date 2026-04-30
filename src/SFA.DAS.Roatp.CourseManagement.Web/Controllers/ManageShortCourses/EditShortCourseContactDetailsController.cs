@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetPr
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -16,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-contact-details", Name = RouteNames.EditShortCourseContactDetails)]
-public class EditShortCourseContactDetailsController(IMediator _mediator, ILogger<EditShortCourseContactDetailsController> _logger) : ControllerBase
+public class EditShortCourseContactDetailsController(IMediator _mediator, ILogger<EditShortCourseContactDetailsController> _logger, IValidator<CourseContactDetailsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetails.cshtml";
 
@@ -40,9 +42,13 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     [HttpPost]
     public async Task<IActionResult> EditShortCourseContactDetails(ApprenticeshipType apprenticeshipType, string larsCode, CourseContactDetailsSubmitModel submitModel)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
         }

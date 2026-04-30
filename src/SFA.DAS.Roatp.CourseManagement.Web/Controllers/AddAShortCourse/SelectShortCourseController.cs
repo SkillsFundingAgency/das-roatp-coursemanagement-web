@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -7,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -16,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-course", Name = RouteNames.SelectShortCourse)]
-public class SelectShortCourseController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
+public class SelectShortCourseController(IMediator _mediator, ISessionService _sessionService, IValidator<SelectShortCourseSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourse.cshtml";
 
@@ -31,9 +33,14 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
     [HttpPost]
     public async Task<IActionResult> SelectShortCourse(SelectShortCourseSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var viewModel = await GetModel(apprenticeshipType);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, viewModel);
 
         }

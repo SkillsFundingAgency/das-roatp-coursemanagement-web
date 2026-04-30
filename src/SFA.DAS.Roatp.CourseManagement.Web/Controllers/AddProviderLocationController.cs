@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetPr
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -22,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.ShortCourse, CourseType.Apprenticeship)]
 [Route("{ukprn}/courses/{apprenticeshipType}")]
-public class AddProviderLocationController(ISessionService _sessionService, ILogger<AddProviderLocationController> _logger, IMediator _mediator) : ControllerBase
+public class AddProviderLocationController(ISessionService _sessionService, ILogger<AddProviderLocationController> _logger, IMediator _mediator, IValidator<AddressSearchSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderLocation.cshtml";
 
@@ -93,8 +95,12 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         var model = GetViewModel(apprenticeshipType, true, hasSeenSummaryPage);
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, model);
         }
 
@@ -152,8 +158,12 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
     {
         var model = GetViewModel(apprenticeshipType, false, false);
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, model);
         }
 
