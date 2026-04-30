@@ -1,7 +1,9 @@
 ﻿using System.Linq;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
@@ -9,7 +11,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
 [Route("{ukprn}/contact-select-standards", Name = RouteNames.AddProviderContactSelectStandardsForUpdate)]
-public class SelectStandardsForUpdateController(ISessionService _sessionService) : ControllerBase
+public class SelectStandardsForUpdateController(ISessionService _sessionService, IValidator<AddProviderContactStandardsSubmitViewModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/SelectStandards.cshtml";
 
@@ -38,9 +40,13 @@ public class SelectStandardsForUpdateController(ISessionService _sessionService)
 
         _sessionService.Set(sessionModel);
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var viewModel = GetModel(sessionModel);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
         }

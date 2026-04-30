@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourse
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -22,7 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-training-venues", Name = RouteNames.EditShortCourseTrainingVenues)]
-public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger, ISessionService _sessionService) : ControllerBase
+public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger, ISessionService _sessionService, IValidator<ShortCourseTrainingVenuesSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenues.cshtml";
 
@@ -53,7 +55,9 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
     [HttpPost]
     public async Task<IActionResult> EditShortCourseTrainingVenues(ShortCourseTrainingVenuesSubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var providerLocationsResponse = await GetProviderLocations();
 
@@ -63,6 +67,8 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
             }
 
             var model = GetViewModel(providerLocationsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

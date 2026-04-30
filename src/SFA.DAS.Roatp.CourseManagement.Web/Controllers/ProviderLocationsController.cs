@@ -1,15 +1,16 @@
-﻿using MediatR;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
+[Route("{ukprn}/manage-training-locations")]
 public class ProviderLocationsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -20,12 +21,11 @@ public class ProviderLocationsController : ControllerBase
         _mediator = mediator;
     }
 
-    [Route("{ukprn}/manage-training-locations", Name = RouteNames.GetProviderLocations)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetProviderLocations)]
     [ClearSession(SessionKeys.SelectedPostcode)]
     public async Task<IActionResult> GetProvidersTrainingLocations()
     {
-        _logger.LogInformation("Getting Provider Locations for {ukprn}", Ukprn);
+        _logger.LogInformation("Getting Provider Locations for {Ukprn}", Ukprn);
 
         var result = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));
 
@@ -36,7 +36,7 @@ public class ProviderLocationsController : ControllerBase
 
         if (result == null)
         {
-            _logger.LogInformation("Provider Locations data not found for {ukprn}", Ukprn);
+            _logger.LogInformation("Provider Locations data not found for {Ukprn}", Ukprn);
             return View("~/Views/ProviderLocations/ViewProviderLocations.cshtml", model);
         }
 

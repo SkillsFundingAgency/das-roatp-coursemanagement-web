@@ -1,13 +1,14 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Providers.Queries;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderDescription;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
+[Route("{ukprn}/provider-description")]
 public class ProviderController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -19,11 +20,10 @@ public class ProviderController : ControllerBase
         _logger = logger;
     }
 
-    [Route("{ukprn}/provider-description", Name = RouteNames.GetProviderDescription)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetProviderDescription)]
     public async Task<IActionResult> ViewProviderDescription(int ukprn)
     {
-        _logger.LogInformation("Provider data gathering for {ukprn}", Ukprn);
+        _logger.LogInformation("Provider data gathering for {Ukprn}", Ukprn);
         var result = await _mediator.Send(new GetProviderQuery(ukprn));
 
         var model = new ProviderDescriptionViewModel

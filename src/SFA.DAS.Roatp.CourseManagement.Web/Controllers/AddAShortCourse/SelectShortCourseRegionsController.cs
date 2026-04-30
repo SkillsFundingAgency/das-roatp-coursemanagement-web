@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -17,7 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new/select-regions", Name = RouteNames.SelectShortCourseRegions)]
-public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegionsController> _logger, ISessionService _sessionService, IRegionsService _regionsService) : ControllerBase
+public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegionsController> _logger, ISessionService _sessionService, IRegionsService _regionsService, IValidator<RegionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegions.cshtml";
 
@@ -59,9 +61,14 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         var regionsResponse = await _regionsService.GetRegions();
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType, sessionModel);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View(ViewPath, model);
         }
 

@@ -1,35 +1,39 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
+[Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard")]
 public class ConfirmRegulatedStandardController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ILogger<ConfirmRegulatedStandardController> _logger;
+    private readonly IValidator<ConfirmRegulatedStandardViewModel> _validator;
 
-    public ConfirmRegulatedStandardController(IMediator mediator, ILogger<ConfirmRegulatedStandardController> logger)
+    public ConfirmRegulatedStandardController(IMediator mediator, ILogger<ConfirmRegulatedStandardController> logger, IValidator<ConfirmRegulatedStandardViewModel> validator)
     {
         _mediator = mediator;
         _logger = logger;
+        _validator = validator;
     }
 
-    [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.GetConfirmRegulatedStandard)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetConfirmRegulatedStandard)]
     public async Task<IActionResult> ConfirmRegulatedStandard([FromRoute] string larsCode)
     {
         var ukprn = Ukprn;
-        _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", ukprn, larsCode);
+        _logger.LogInformation("Getting Course details for ukprn {Ukprn} LarsCode {LarsCode}", ukprn, larsCode);
 
         var result = await _mediator.Send(new GetProviderCourseDetailsQuery(ukprn, larsCode));
 
@@ -46,12 +50,15 @@ public class ConfirmRegulatedStandardController : ControllerBase
         return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
     }
 
-    [Route("{ukprn}/standards/{larsCode}/confirm-regulated-standard", Name = RouteNames.PostConfirmRegulatedStandard)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostConfirmRegulatedStandard)]
     public async Task<IActionResult> UpdateApprovedByRegulator(ConfirmRegulatedStandardViewModel model)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(model);
+
+        if (!validatedResult.IsValid)
         {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+
             return View("~/Views/Standards/ConfirmRegulatedStandard.cshtml", model);
         }
 

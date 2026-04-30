@@ -1,32 +1,36 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards")]
 public class ConfirmRegulatedStandardController : AddAStandardControllerBase
 {
     public const string ViewPath = "~/Views/AddAStandard/ConfirmRegulatedStandard.cshtml";
 
     private readonly IMediator _mediator;
     private readonly ILogger<ConfirmRegulatedStandardController> _logger;
+    private readonly IValidator<ConfirmNewRegulatedStandardSubmitModel> _validator;
 
-    public ConfirmRegulatedStandardController(ISessionService sessionService, IMediator mediator, ILogger<ConfirmRegulatedStandardController> logger) : base(sessionService)
+    public ConfirmRegulatedStandardController(ISessionService sessionService, IMediator mediator, ILogger<ConfirmRegulatedStandardController> logger, IValidator<ConfirmNewRegulatedStandardSubmitModel> validator) : base(sessionService)
     {
         _mediator = mediator;
         _logger = logger;
+        _validator = validator;
     }
 
-    [HttpGet]
-    [Route("{ukprn}/standards/add/confirm-regulated-standard", Name = RouteNames.GetAddStandardConfirmRegulatedStandard)]
+    [HttpGet("add/confirm-regulated-standard", Name = RouteNames.GetAddStandardConfirmRegulatedStandard)]
     public async Task<IActionResult> GetConfirmationOfRegulatedStandard()
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
@@ -36,16 +40,19 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
         return View(ViewPath, model);
     }
 
-    [HttpPost]
-    [Route("{ukprn}/standards/add/confirm-regulated-standard", Name = RouteNames.PostAddStandardConfirmRegulatedStandard)]
+    [HttpPost("add/confirm-regulated-standard", Name = RouteNames.PostAddStandardConfirmRegulatedStandard)]
     public async Task<IActionResult> SubmitConfirmationOfRegulatedStandard(ConfirmNewRegulatedStandardSubmitModel submitModel)
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
         if (sessionModel == null) return redirectResult;
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var model = await GetViewModel(sessionModel.LarsCode);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }
@@ -64,13 +71,12 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
             return RedirectToRouteWithUkprn(RouteNames.GetAddStandardUseSavedContactDetails);
         }
 
-        _logger.LogInformation("Add standard: Regulated standard confirmed for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
+        _logger.LogInformation("Add standard: Regulated standard confirmed for ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, sessionModel.LarsCode);
 
         return RedirectToRouteWithUkprn(RouteNames.GetAddStandardAddContactDetails);
     }
 
-    [HttpGet]
-    [Route("{ukprn}/standards/needs-approval", Name = RouteNames.GetNeedApprovalToDeliverRegulatedStandard)]
+    [HttpGet("needs-approval", Name = RouteNames.GetNeedApprovalToDeliverRegulatedStandard)]
     public ActionResult NeedConfirmationOfRegulatedStandard()
     {
         var model = new NeedApprovalForRegulatedStandardViewModel

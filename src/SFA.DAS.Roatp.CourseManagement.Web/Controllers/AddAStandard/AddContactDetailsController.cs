@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -10,18 +12,20 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/add/contact-details")]
 public class AddContactDetailsController : AddAStandardControllerBase
 {
     public const string ViewPath = "~/Views/AddAStandard/AddStandardContactDetails.cshtml";
     private readonly ILogger<AddContactDetailsController> _logger;
+    private readonly IValidator<CourseContactDetailsSubmitModel> _validator;
 
-    public AddContactDetailsController(ILogger<AddContactDetailsController> logger, ISessionService sessionService) : base(sessionService)
+    public AddContactDetailsController(ILogger<AddContactDetailsController> logger, ISessionService sessionService, IValidator<CourseContactDetailsSubmitModel> validator) : base(sessionService)
     {
         _logger = logger;
+        _validator = validator;
     }
 
-    [HttpGet]
-    [Route("{ukprn}/standards/add/contact-details", Name = RouteNames.GetAddStandardAddContactDetails)]
+    [HttpGet(Name = RouteNames.GetAddStandardAddContactDetails)]
     public IActionResult GetContactDetails()
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
@@ -46,14 +50,15 @@ public class AddContactDetailsController : AddAStandardControllerBase
         return View(ViewPath, model);
     }
 
-    [HttpPost]
-    [Route("{ukprn}/standards/add/contact-details", Name = RouteNames.PostAddStandardAddContactDetails)]
+    [HttpPost(Name = RouteNames.PostAddStandardAddContactDetails)]
     public IActionResult SubmitContactDetails(CourseContactDetailsSubmitModel submitModel)
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
         if (sessionModel == null) return redirectResult;
 
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var model = new AddStandardContactDetailsViewModel()
             {
@@ -62,6 +67,8 @@ public class AddContactDetailsController : AddAStandardControllerBase
                 StandardInfoUrl = submitModel.StandardInfoUrl,
                 ShowSavedContactDetailsText = IsUsingSavedContactDetails(sessionModel)
             };
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }
@@ -72,7 +79,7 @@ public class AddContactDetailsController : AddAStandardControllerBase
 
         _sessionService.Set(sessionModel);
 
-        _logger.LogInformation("Add standard: Contact details added for ukprn:{ukprn} larscode:{larscode}", Ukprn, sessionModel.LarsCode);
+        _logger.LogInformation("Add standard: Contact details added for ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, sessionModel.LarsCode);
 
         return RedirectToRouteWithUkprn(RouteNames.GetAddStandardSelectLocationOption);
     }

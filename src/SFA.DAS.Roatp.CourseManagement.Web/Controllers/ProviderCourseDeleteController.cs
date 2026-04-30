@@ -15,6 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/{larsCode}/delete-standard")]
 public class ProviderCourseDeleteController : ControllerBase
 {
     public const string ViewPath = "~/Views/Standards/ConfirmDeleteStandard.cshtml";
@@ -27,11 +28,10 @@ public class ProviderCourseDeleteController : ControllerBase
         _logger = logger;
     }
 
-    [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.GetConfirmDeleteStandard)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetConfirmDeleteStandard)]
     public async Task<IActionResult> GetProviderCourse(string larsCode)
     {
-        _logger.LogInformation("Getting Standard information for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
+        _logger.LogInformation("Getting Standard information for ukprn {Ukprn} LarsCode {LarsCode}", Ukprn, larsCode);
 
         var result = await _mediator.Send(new GetStandardInformationQuery(larsCode));
 
@@ -51,8 +51,7 @@ public class ProviderCourseDeleteController : ControllerBase
         return View(ViewPath, model);
     }
 
-    [Route("{ukprn}/standards/{larsCode}/delete-standard", Name = RouteNames.PostConfirmDeleteStandard)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostConfirmDeleteStandard)]
     public async Task<IActionResult> DeleteProviderCourse(ConfirmDeleteStandardViewModel model)
     {
         var command = new DeleteProviderCourseCommand(Ukprn, model.StandardInformation.LarsCode, UserId, UserDisplayName);

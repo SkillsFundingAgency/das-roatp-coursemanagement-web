@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetPr
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -19,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-regions", Name = RouteNames.EditShortCourseRegions)]
-public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger, IRegionsService _regionsService) : ControllerBase
+public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger, IRegionsService _regionsService, IValidator<RegionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegions.cshtml";
 
@@ -45,11 +47,15 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
     [HttpPost]
     public async Task<IActionResult> EditShortCourseRegions(RegionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var regionsResponse = await _regionsService.GetRegions();
 
             var viewModel = GetViewModel(regionsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+
+            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
         }

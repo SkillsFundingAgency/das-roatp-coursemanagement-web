@@ -1,34 +1,38 @@
-﻿using MediatR;
+﻿using System;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using FluentValidation;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/{larsCode}/regional-locations")]
 public class EditProviderCourseRegionsController : ControllerBase
 {
     public const string ViewPath = "~/Views/Standards/EditProviderCourseRegions.cshtml";
     private readonly IMediator _mediator;
     private readonly ILogger<EditProviderCourseRegionsController> _logger;
-    public EditProviderCourseRegionsController(IMediator mediator, ILogger<EditProviderCourseRegionsController> logger)
+    private readonly IValidator<RegionsSubmitModel> _validator;
+    public EditProviderCourseRegionsController(IMediator mediator, ILogger<EditProviderCourseRegionsController> logger, IValidator<RegionsSubmitModel> validator)
     {
         _logger = logger;
         _mediator = mediator;
+        _validator = validator;
     }
 
-    [Route("{ukprn}/standards/{larsCode}/regional-locations", Name = RouteNames.GetStandardSubRegions)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetStandardSubRegions)]
     public async Task<IActionResult> GetAllRegions(string larsCode)
     {
         _logger.LogInformation("Getting All Sub Regions");
@@ -58,14 +62,16 @@ public class EditProviderCourseRegionsController : ControllerBase
         return model;
     }
 
-    [Route("{ukprn}/standards/{larscode}/regional-locations", Name = RouteNames.PostStandardSubRegions)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostStandardSubRegions)]
     public async Task<IActionResult> UpdateStandardSubRegions([FromRoute] string larsCode, RegionsSubmitModel submitModel)
     {
-        if (!ModelState.IsValid)
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid)
         {
             var model = await BuildRegionsViewModel(larsCode);
             model.AllRegions.ForEach(s => s.IsSelected = false);
+            ModelState.AddValidationErrors(validatedResult.Errors);
             return View(ViewPath, model);
         }
 
