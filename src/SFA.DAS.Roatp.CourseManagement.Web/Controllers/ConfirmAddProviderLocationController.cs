@@ -119,8 +119,6 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
 
             model.LocationName = submitModel.LocationName;
 
-            ModelState.AddValidationErrors(validatedResult.Errors);
-
             return View(ViewPath, model);
         }
 
@@ -202,8 +200,6 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
             var model = GetViewModel(addressItem, apprenticeshipType, false, false);
 
             model.LocationName = submitModel.LocationName;
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

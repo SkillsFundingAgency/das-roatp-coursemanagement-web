@@ -67,12 +67,8 @@ public class ProviderCourseForecastsController(IMediator _mediator, IValidator<C
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
-        {
-            ModelState.AddValidationErrors(validatedResult.Errors);
-
-            return await GetCourseForecasts(larsCode, cancellationToken);
-        }
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+        if (!ModelState.IsValid) return await GetCourseForecasts(larsCode, cancellationToken);
         var forecasts = submitModel.Forecasts.Select(f => (UpsertForecastModel)f);
         await _mediator.Send(new UpsertProviderCourseForecastsCommand(Ukprn, larsCode, forecasts), cancellationToken);
         return RedirectToRoute(RouteNames.ForecastCourses, new { Ukprn });
