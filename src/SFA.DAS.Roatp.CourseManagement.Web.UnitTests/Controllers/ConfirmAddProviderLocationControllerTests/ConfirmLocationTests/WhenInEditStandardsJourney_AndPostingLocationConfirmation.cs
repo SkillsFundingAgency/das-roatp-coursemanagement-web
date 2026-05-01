@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -21,6 +23,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddProviderLocationControllerTests.ConfirmLocationTests;
+
 public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
 {
     private ApprenticeshipType _learningType;
@@ -250,6 +253,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
     public async Task When_ModelStateIsValid_Then_VerifyCreateProviderLocationCommandMediatorIsInvoked(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
         [Greedy] ConfirmAddProviderLocationController sut,
         ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
@@ -260,6 +264,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
         // Arrange
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
+        validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
         object address = JsonSerializer.Serialize(addressItem);
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
@@ -287,6 +292,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
     public async Task When_ModelStateIsValid_Then_VerifyGetAllProviderLocationsQueryMediatorIsInvoked(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
         [Greedy] ConfirmAddProviderLocationController sut,
         ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
@@ -297,6 +303,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
         // Arrange
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
+        validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
         object address = JsonSerializer.Serialize(addressItem);
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
@@ -313,6 +320,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
     public async Task When_ModelStateIsValid_Then_VerifyTempDataIsRemoved(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
         [Greedy] ConfirmAddProviderLocationController sut,
         ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
@@ -323,6 +331,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
         // Arrange
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
+        validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
         object address = JsonSerializer.Serialize(addressItem);
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
@@ -339,6 +348,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
     public void When_ModelStateIsValid_Then_RedirectsToGetProviderCourseLocations(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
         [Greedy] ConfirmAddProviderLocationController sut,
         ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
@@ -349,6 +359,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
         // Arrange
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
+        validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
         object address = JsonSerializer.Serialize(addressItem);
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
@@ -365,6 +376,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
     public async Task When_AddressHasEmptyFields_Then_VerifyCreateProviderLocationCommandMediatorIsInvokedWithEmptyFields(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
         [Greedy] ConfirmAddProviderLocationController sut,
         ProviderLocationDetailsSubmitModel submitModel,
         AddressItem addressItem,
@@ -372,6 +384,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
         string larsCode)
     {
         // Arrange
+        validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
         addressItem.AddressLine2 = null;
         addressItem.Town = null;
         addressItem.County = null;
@@ -403,6 +416,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
     public async Task When_LocationNameIsNotDistinct_Then_ModelStateErrorIsAdded(
         Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
         [Greedy] ConfirmAddProviderLocationController sut,
         ProviderLocationDetailsSubmitModel model,
         AddressItem addressItem,
@@ -412,6 +426,7 @@ public class WhenInEditStandardsJourney_AndPostingLocationConfirmation
         // Arrange
         allLocations.ProviderLocations.FirstOrDefault().LocationName = model.LocationName;
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
+        validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
         object address = JsonSerializer.Serialize(addressItem);
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;

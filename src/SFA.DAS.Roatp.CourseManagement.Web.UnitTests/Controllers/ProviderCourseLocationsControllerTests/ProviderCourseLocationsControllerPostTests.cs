@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     {
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ProviderCourseLocationListViewModel>> _validatorMock;
         private ProviderCourseLocationsController _sut;
         readonly string verifyUrl = "http://test";
         protected Mock<ISessionService> _sessionServiceMock;
@@ -31,8 +34,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         {
             _mediatorMock = new Mock<IMediator>();
             _sessionServiceMock = new Mock<ISessionService>();
+            _validatorMock = new Mock<IValidator<ProviderCourseLocationListViewModel>>();
 
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object);
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object, _validatorMock.Object);
 
             _sut.AddDefaultContextWithUser()
                .AddUrlHelperMock()
@@ -46,6 +50,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             _mediatorMock
                .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
                .ReturnsAsync(queryResult);
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
 
             var result = await _sut.ConfirmedProviderCourseLocations(model);
             var redirectResult = result as RedirectToRouteResult;
@@ -65,6 +71,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             _mediatorMock
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
+
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(validationResult);
 
 
             var result = await _sut.ConfirmedProviderCourseLocations(model);
@@ -86,6 +98,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             _mediatorMock
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
 
             _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(LocationOption.Both.ToString());
             var result = await _sut.ConfirmedProviderCourseLocations(model);

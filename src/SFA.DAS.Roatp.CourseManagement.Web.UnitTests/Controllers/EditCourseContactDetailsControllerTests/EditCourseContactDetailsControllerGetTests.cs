@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -20,6 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
     {
         private Mock<ILogger<EditCourseContactDetailsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<CourseContactDetailsSubmitModel>> _validatorMock;
         private EditCourseContactDetailsController _sut;
 
         [SetUp]
@@ -27,8 +29,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         {
             _loggerMock = new Mock<ILogger<EditCourseContactDetailsController>>();
             _mediatorMock = new Mock<IMediator>();
+            _validatorMock = new Mock<IValidator<CourseContactDetailsSubmitModel>>();
 
-            _sut = new EditCourseContactDetailsController(_mediatorMock.Object, _loggerMock.Object);
+            _sut = new EditCourseContactDetailsController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object);
             _sut
                 .AddDefaultContextWithUser();
         }

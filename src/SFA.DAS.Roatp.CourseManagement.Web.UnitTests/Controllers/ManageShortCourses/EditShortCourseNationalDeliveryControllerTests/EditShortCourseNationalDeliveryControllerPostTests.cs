@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -19,6 +21,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.EditShortCourseNationalDeliveryControllerTests;
+
 public class EditShortCourseNationalDeliveryControllerPostTests
 {
     [Test, MoqAutoData]
@@ -51,6 +54,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseNationalDelivery_ProviderCourseDoesNotExist_VerifyMediatorIsInvokedAndRedirectedToEditShortCourseNationalDelivery(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ConfirmNationalDeliverySubmitModel>> validator,
         [Greedy] EditShortCourseNationalDeliveryController sut,
         ConfirmNationalDeliverySubmitModel submitModel,
         string larsCode)
@@ -59,6 +63,8 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -74,6 +80,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseNationalDelivery_HasNationalDeliveryOptionChangedToTrue_VerifyMediatorsAreInvokedCorrectly(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ConfirmNationalDeliverySubmitModel>> validator,
         [Greedy] EditShortCourseNationalDeliveryController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         ConfirmNationalDeliverySubmitModel submitModel,
@@ -95,6 +102,8 @@ public class EditShortCourseNationalDeliveryControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
+
         sut.AddDefaultContextWithUser();
 
 
@@ -109,6 +118,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseNationalDelivery_HasNationalDeliveryOptionChangedTofFalse_VerifyMediatorsNotInvokedAndRedirectsToEditShortCourseRegions(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ConfirmNationalDeliverySubmitModel>> validator,
         [Greedy] EditShortCourseNationalDeliveryController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         ConfirmNationalDeliverySubmitModel submitModel,
@@ -130,6 +140,8 @@ public class EditShortCourseNationalDeliveryControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
+
         sut.AddDefaultContextWithUser();
 
 
@@ -150,6 +162,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         LocationType locationType,
         bool hasNationalDeliveryOption,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ConfirmNationalDeliverySubmitModel>> validator,
         [Greedy] EditShortCourseNationalDeliveryController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         ConfirmNationalDeliverySubmitModel submitModel,
@@ -170,6 +183,8 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         submitModel.HasNationalDeliveryOption = hasNationalDeliveryOption;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
+
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

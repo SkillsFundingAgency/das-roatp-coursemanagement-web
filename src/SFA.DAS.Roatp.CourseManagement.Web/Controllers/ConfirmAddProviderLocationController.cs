@@ -104,11 +104,16 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
             return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        await CheckIfNameIsAvailable(submitModel.LocationName);
-
         var validatedResult = _validator.Validate(submitModel);
 
         if (!validatedResult.IsValid)
+        {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+        }
+
+        if (validatedResult.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+
+        if (!ModelState.IsValid)
         {
             var model = GetViewModel(addressItem, apprenticeshipType, true, hasSeenSummaryPage);
 
@@ -183,11 +188,16 @@ public class ConfirmAddProviderLocationController(ISessionService _sessionServic
             }
         }
 
-        await CheckIfNameIsAvailable(submitModel.LocationName);
-
         var validatedResult = _validator.Validate(submitModel);
 
         if (!validatedResult.IsValid)
+        {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+        }
+
+        if (validatedResult.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
+
+        if (!ModelState.IsValid)
         {
             var model = GetViewModel(addressItem, apprenticeshipType, false, false);
 

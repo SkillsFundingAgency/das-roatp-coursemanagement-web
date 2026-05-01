@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -51,11 +53,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void SubmitLocationOption_LocationOptionIsEmployer_NavigateToConfirmNationalProvider(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<LocationOptionSubmitModel>> validator,
             [Greedy] SelectLocationOptionController sut,
             StandardSessionModel sessionModel)
         {
             var locationOption = LocationOption.EmployerLocation;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });
@@ -67,11 +71,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void SubmitLocationOption_LocationOptionIsProvider_NavigateToViewTrainingLocations(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<LocationOptionSubmitModel>> validator,
             [Greedy] SelectLocationOptionController sut,
             StandardSessionModel sessionModel)
         {
             var locationOption = LocationOption.ProviderLocation;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitLocationOption(new LocationOptionSubmitModel { LocationOption = locationOption });

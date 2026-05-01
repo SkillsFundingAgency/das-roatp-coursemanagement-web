@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -21,6 +23,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.EditShortCourseLocationOptionsControllerTests;
+
 public class EditShortCourseLocationOptionsControllerPostTests
 {
     [Test, MoqAutoData]
@@ -66,6 +69,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_ProviderCourseDoesNotExist_VerifyMediatorIsInvokedAndRedirectedToEditShortCourseLocationOptions(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -74,8 +78,9 @@ public class EditShortCourseLocationOptionsControllerPostTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
-        sut.AddDefaultContextWithUser();
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
+        sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
@@ -92,6 +97,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_OnlineLocationIsAdded_VerifyUpdateOnlineDeliveryMediatorIsInvokedWithTrueValue(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -114,6 +120,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
             }
         };
 
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
+
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
@@ -132,6 +140,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_OnlineLocationIsRemoved_VerifyUpdateOnlineDeliveryMediatorIsInvokedWithFalseValue(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -154,6 +163,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
             }
         };
 
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
+
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
@@ -172,6 +183,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_ProviderLocationIsAdded_DeleteCommandIsNotInvokedAndRedirectsToEditShortCourseTrainingVenues(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
         [Greedy] EditShortCourseLocationOptionsController sut,
         SelectShortCourseLocationOptionsSubmitModel submitModel,
         string larsCode
@@ -193,6 +205,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
             }
         };
 
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
+
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
@@ -213,6 +227,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_ProviderLocationIsRemoved_DeleteCommandIsInvokedAndRedirectsToManageShortCourseDetails(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -231,6 +246,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
                 new ProviderCourseLocation { LocationType = LocationType.Provider }
             }
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -253,6 +270,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     public async Task EditShortCourseLocationOptions_EmployerLocationIsAdded_SessionIsSet(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -272,6 +290,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
                 new ProviderCourseLocation { LocationType = LocationType.Provider }
             }
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -287,6 +307,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_EmployerLocationIsAdded_DeleteCommandIsNotInvokedAndRedirectsToEditShortCourseNationalDelivery(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -306,6 +327,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
                 new ProviderCourseLocation { LocationType = LocationType.Provider }
             }
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -327,6 +350,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_EmployerLocationIsRemoved_DeleteCommandIsInvokedAndRedirectsToManageShortCourseDetails(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -345,6 +369,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
                 new ProviderCourseLocation { LocationType = LocationType.National }
             }
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -366,6 +392,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseLocationOptions_NoChange_MediatorsAreNotInvokedAndRedirectsToManageShortCourseDetails(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
     [Greedy] EditShortCourseLocationOptionsController sut,
     SelectShortCourseLocationOptionsSubmitModel submitModel,
     string larsCode
@@ -389,6 +416,8 @@ public class EditShortCourseLocationOptionsControllerPostTests
                 new ProviderCourseLocation { LocationType = LocationType.Regional }
             }
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

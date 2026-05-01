@@ -3,6 +3,8 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         private static string UserId = Guid.NewGuid().ToString();
         private Mock<ILogger<ConfirmRegulatedStandardController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ConfirmRegulatedStandardViewModel>> _validatorMock;
         private ConfirmRegulatedStandardController _sut;
 
         [SetUp]
@@ -29,13 +32,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         {
             _loggerMock = new Mock<ILogger<ConfirmRegulatedStandardController>>();
             _mediatorMock = new Mock<IMediator>();
+            _validatorMock = new Mock<IValidator<ConfirmRegulatedStandardViewModel>>();
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(
                 new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), new Claim(ProviderClaims.UserId, UserId) },
                 "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
 
-            _sut = new ConfirmRegulatedStandardController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new ConfirmRegulatedStandardController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object)
             {
                 ControllerContext = new ControllerContext
                 {
@@ -47,6 +51,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         [Test, AutoData]
         public async Task Post_ValidModel_SendsUpdateCommand(ConfirmRegulatedStandardViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmRegulatedStandardViewModel>())).Returns(new ValidationResult());
+
             model.IsApprovedByRegulator = true;
             var result = await _sut.UpdateApprovedByRegulator(model);
             var redirectResult = result as RedirectResult;
@@ -57,6 +63,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         [Test, AutoData]
         public async Task Post_ValidModelWithIsApprovedByRegulatorFalse_RedirectToShutterPage(ConfirmRegulatedStandardViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmRegulatedStandardViewModel>())).Returns(new ValidationResult());
+
             model.IsApprovedByRegulator = false;
             var result = await _sut.UpdateApprovedByRegulator(model);
             var viewResult = result as ViewResult;
@@ -68,7 +76,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         [Test, AutoData]
         public async Task Post_InValidModel_ReturnsView(ConfirmRegulatedStandardViewModel model)
         {
-            _sut.ModelState.AddModelError("key", "error");
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmRegulatedStandardViewModel>())).Returns(validationResult);
 
             var result = await _sut.UpdateApprovedByRegulator(model);
 
@@ -79,6 +91,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         [Test, AutoData]
         public async Task Post_ValidModelWithIsRegulatedStandardFalse_RedirectToErrorPage(ConfirmRegulatedStandardViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmRegulatedStandardViewModel>())).Returns(new ValidationResult());
+
             model.RegulatorName = string.Empty;
             var expectedUrl = "Error/NotFound";
             var result = await _sut.UpdateApprovedByRegulator(model);

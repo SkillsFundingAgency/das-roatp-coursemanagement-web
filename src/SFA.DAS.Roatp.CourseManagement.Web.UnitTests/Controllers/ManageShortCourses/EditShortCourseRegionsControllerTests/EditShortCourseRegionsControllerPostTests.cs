@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -20,6 +22,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.EditShortCourseRegionsControllerTests;
+
 public class EditShortCourseRegionsControllerPostTests
 {
     [Test, MoqAutoData]
@@ -83,6 +86,7 @@ public class EditShortCourseRegionsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseRegions_ValidModelState_SendsUpdateCommandAndVerifyMediatorIsInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<RegionsSubmitModel>> validator,
         [Greedy] EditShortCourseRegionsController sut,
         RegionsSubmitModel model,
         string larsCode)
@@ -90,6 +94,8 @@ public class EditShortCourseRegionsControllerPostTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
         model.SelectedSubRegions = ["1", "2"];
+
+        validator.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -19,7 +20,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         public async Task Post_InvalidState_ReturnsView(ConfirmNationalProviderSubmitModel model, string larsCode)
         {
             SetupController();
-            Sut.ModelState.AddModelError("key", "error");
+
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(validationResult);
 
             var result = await Sut.Index(larsCode, model);
 
@@ -32,6 +38,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         public async Task Post_HasNationalDeliveryOption_AddsNationalLocation_RedirectsToStandardDetails(ConfirmNationalProviderSubmitModel model, string larsCode)
         {
             SetupController();
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(new ValidationResult());
+
             model.HasNationalDeliveryOption = true;
 
             var result = await Sut.Index(larsCode, model);
@@ -47,6 +56,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         public async Task Post_DoesNotDeliverNationally_RedirectsToSelectRegions(ConfirmNationalProviderSubmitModel model, string larsCode)
         {
             SetupController();
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(new ValidationResult());
+
             model.HasNationalDeliveryOption = false;
 
             var result = await Sut.Index(larsCode, model);
