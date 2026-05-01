@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
@@ -15,6 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests.GetAddressTests;
+
 public class WhenInEditStandardsJourney_AndPostingAddressDetails
 {
     private ApprenticeshipType _learningType;
@@ -123,6 +126,7 @@ public class WhenInEditStandardsJourney_AndPostingAddressDetails
 
     [Test, MoqAutoData]
     public void When_ModelIsValid_Then_VerifySelectedAddressIsAddedInTempData(
+        [Frozen] Mock<IValidator<AddressSearchSubmitModel>> validator,
         [Greedy] AddProviderLocationController sut,
         AddressSearchSubmitModel submitModel,
         Mock<ITempDataDictionary> tempDataMock,
@@ -143,6 +147,7 @@ public class WhenInEditStandardsJourney_AndPostingAddressDetails
         };
 
         var expectedValueInTempData = JsonSerializer.Serialize(selectedAddress);
+        validator.Setup(x => x.Validate(It.IsAny<AddressSearchSubmitModel>())).Returns(new ValidationResult());
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
 
@@ -155,12 +160,14 @@ public class WhenInEditStandardsJourney_AndPostingAddressDetails
 
     [Test, MoqAutoData]
     public void When_ModelIsValid_Then_RedirectsToGetConfirmAddProviderLocationEditCourse(
+    [Frozen] Mock<IValidator<AddressSearchSubmitModel>> validator,
     [Greedy] AddProviderLocationController sut,
     AddressSearchSubmitModel submitModel,
     Mock<ITempDataDictionary> tempDataMock,
     string larsCode)
     {
         // Arrange
+        validator.Setup(x => x.Validate(It.IsAny<AddressSearchSubmitModel>())).Returns(new ValidationResult());
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
 

@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -49,11 +51,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Post_ModelStateIsValid_UpdatesSessionModel(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNationalProviderSubmitModel>> validator,
             [Greedy] ConfirmNationalProviderController sut,
             StandardSessionModel sessionModel,
             bool hasNationalDeliveryOption)
         {
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = hasNationalDeliveryOption });
@@ -64,10 +68,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Post_HasNationalOption_RedirectsToReviewStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNationalProviderSubmitModel>> validator,
             [Greedy] ConfirmNationalProviderController sut,
             StandardSessionModel sessionModel)
         {
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = true });
@@ -78,10 +84,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Post_DoesNotHaveNationalOption_RedirectsToReviewStandard(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNationalProviderSubmitModel>> validator,
             [Greedy] ConfirmNationalProviderController sut,
             StandardSessionModel sessionModel)
         {
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitConfirmationOnNationalProvider(new ConfirmNationalProviderSubmitModel { HasNationalDeliveryOption = false });

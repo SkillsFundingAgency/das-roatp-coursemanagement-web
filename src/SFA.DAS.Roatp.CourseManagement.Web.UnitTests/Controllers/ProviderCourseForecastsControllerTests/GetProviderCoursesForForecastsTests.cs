@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -19,6 +20,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 public class GetProviderCoursesForForecastsTests
 {
     private readonly Standard _expectedStandard = new() { CourseName = "course name", Level = 1 };
+    private Mock<IValidator<CourseForecastsSubmitModel>> _validatorMock;
     ProviderCourseForecastsController _sut;
     ForecastCoursesViewModel _actualModel;
 
@@ -28,7 +30,8 @@ public class GetProviderCoursesForForecastsTests
         Mock<IMediator> mediatorMock = new();
         GetAllProviderStandardsQueryResult coursesResult = new() { Standards = [_expectedStandard] };
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(coursesResult);
-        _sut = new(mediatorMock.Object);
+        _validatorMock = new Mock<IValidator<CourseForecastsSubmitModel>>();
+        _sut = new(mediatorMock.Object, _validatorMock.Object);
 
         _sut
             .AddDefaultContextWithUser()

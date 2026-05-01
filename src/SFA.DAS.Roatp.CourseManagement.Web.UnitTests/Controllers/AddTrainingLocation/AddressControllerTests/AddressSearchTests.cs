@@ -1,9 +1,11 @@
 ﻿using FluentAssertions;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddTrainingLocation;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLocation.AddressControllerTests;
@@ -14,7 +16,8 @@ public class AddressSearchTests
     [Test]
     public void AddressSearch_ReturnsExpectedView()
     {
-        var sut = new AddressController();
+        var validatorMock = new Mock<IValidator<AddressSearchSubmitModel>>();
+        var sut = new AddressController(validatorMock.Object);
         sut.AddDefaultContextWithUser();
         Mock<ITempDataDictionary> tempDataMock = new Mock<ITempDataDictionary>();
         sut.TempData = tempDataMock.Object;

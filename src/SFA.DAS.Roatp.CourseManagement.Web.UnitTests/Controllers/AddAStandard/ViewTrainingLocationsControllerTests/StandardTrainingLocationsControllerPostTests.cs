@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -52,11 +54,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Submit_LocationOptionSetToProviders_RedirectsToReviewPage(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<TrainingLocationListViewModel>> validator,
             [Greedy] StandardTrainingLocationsController sut,
             StandardSessionModel sessionModel)
         {
             sessionModel.LocationOption = LocationOption.ProviderLocation;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<TrainingLocationListViewModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());
@@ -67,11 +71,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Submit_LocationOptionSetToBoth_RedirectsToNationalQuestionPage(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<TrainingLocationListViewModel>> validator,
             [Greedy] StandardTrainingLocationsController sut,
             StandardSessionModel sessionModel)
         {
             sessionModel.LocationOption = LocationOption.Both;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<TrainingLocationListViewModel>())).Returns(new ValidationResult());
             sut.AddDefaultContextWithUser();
 
             var result = sut.SubmitTrainingLocations(new TrainingLocationListViewModel());

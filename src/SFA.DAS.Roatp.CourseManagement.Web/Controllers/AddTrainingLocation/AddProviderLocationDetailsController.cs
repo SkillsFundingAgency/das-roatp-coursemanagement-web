@@ -49,15 +49,18 @@ public class AddProviderLocationDetailsController : ControllerBase
 
         var validatedResult = _validator.Validate(submitModel);
 
+        if (!validatedResult.IsValid)
+        {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+        }
+
         if (validatedResult.IsValid) await CheckIfNameIsAvailable(submitModel.LocationName);
 
-        if (!validatedResult.IsValid)
+        if (!ModelState.IsValid)
         {
             var model = GetViewModel(addressItem);
 
             model.LocationName = submitModel.LocationName;
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

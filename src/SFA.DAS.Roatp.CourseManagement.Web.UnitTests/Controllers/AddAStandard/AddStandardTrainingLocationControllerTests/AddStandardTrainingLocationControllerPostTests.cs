@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -61,6 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Get_ModelStateIsValid_UpdatesStandardSessionModel(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<CourseLocationAddSubmitModel>> validator,
             [Greedy] AddStandardTrainingLocationController sut,
             CourseLocationAddViewModel submitModel,
             string locationName)
@@ -76,6 +79,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sut.AddDefaultContextWithUser();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(new StandardSessionModel { LarsCode = larsCode });
+            validator.Setup(x => x.Validate(It.IsAny<CourseLocationAddSubmitModel>())).Returns(new ValidationResult());
 
             var result = await sut.SubmitAProviderlocation(submitModel);
 

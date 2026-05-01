@@ -59,13 +59,17 @@ public class EditProviderLocationDetailsController : ControllerBase
     {
         var validatedResult = _validator.Validate(model);
 
+        if (!validatedResult.IsValid)
+        {
+            ModelState.AddValidationErrors(validatedResult.Errors);
+        }
+
         if (validatedResult.IsValid) await CheckIfNameIsAvailable(model.LocationName, Id);
 
-        if (!validatedResult.IsValid)
+        if (!ModelState.IsValid)
         {
             _logger.LogInformation("Provider Location Details are Invalid to update for {Ukprn} Id:{Id}", Ukprn, Id);
             var viewmodel = await BuildViewModel(Id);
-            ModelState.AddValidationErrors(validatedResult.Errors);
             return View("~/Views/EditProviderLocation/EditProviderLocationsDetails.cshtml", viewmodel);
         }
 

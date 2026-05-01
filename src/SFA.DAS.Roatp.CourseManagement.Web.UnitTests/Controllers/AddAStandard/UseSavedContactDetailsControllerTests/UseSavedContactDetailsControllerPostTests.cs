@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -48,12 +50,14 @@ public class UseSavedContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void Get_ModelStateIsValid_UpdatesStandardSessionModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<UseSavedContactDetailsSubmitViewModel>> validator,
         [Greedy] UseSavedContactDetailsController sut,
         StandardSessionModel standardSessionModel,
         UseSavedContactDetailsViewModel submitModel)
     {
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<UseSavedContactDetailsSubmitViewModel>())).Returns(new ValidationResult());
 
         sut.PostUseSavedContactDetails(submitModel);
 
@@ -63,12 +67,14 @@ public class UseSavedContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void Get_ModelStateIsValid_RedirectToSelectLocationOption(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<UseSavedContactDetailsSubmitViewModel>> validator,
         [Greedy] UseSavedContactDetailsController sut,
         StandardSessionModel standardSessionModel,
         UseSavedContactDetailsViewModel submitModel)
     {
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<UseSavedContactDetailsSubmitViewModel>())).Returns(new ValidationResult());
 
         var result = sut.PostUseSavedContactDetails(submitModel);
 

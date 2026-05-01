@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAl
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderCourseRegionsControllerTests
@@ -28,6 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         private Mock<ILogger<EditProviderCourseRegionsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
         private Mock<IUrlHelper> _urlHelperMock;
+        private Mock<IValidator<RegionsSubmitModel>> _validatorMock;
         private EditProviderCourseRegionsController _sut;
 
         [SetUp]
@@ -35,6 +38,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         {
             _loggerMock = new Mock<ILogger<EditProviderCourseRegionsController>>();
             _mediatorMock = new Mock<IMediator>();
+            _validatorMock = new Mock<IValidator<RegionsSubmitModel>>();
             _urlHelperMock = new Mock<IUrlHelper>();
             _urlHelperMock
                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.GetStandardDetails))))
@@ -42,7 +46,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object)
             {
                 Url = _urlHelperMock.Object,
                 ControllerContext = new ControllerContext

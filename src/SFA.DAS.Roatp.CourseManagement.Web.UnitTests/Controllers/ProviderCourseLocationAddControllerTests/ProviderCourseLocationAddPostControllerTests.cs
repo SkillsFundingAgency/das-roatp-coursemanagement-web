@@ -4,6 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,6 +27,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     {
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ProviderCourseLocationAddSubmitModel>> _validatorMock;
         private ProviderCourseLocationAddController _sut;
         string verifyUrl = "http://test";
 
@@ -32,7 +35,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public void Before_Each_Test()
         {
             _mediatorMock = new Mock<IMediator>();
-            _sut = new ProviderCourseLocationAddController(Mock.Of<ILogger<ProviderCourseLocationAddController>>(), _mediatorMock.Object);
+            _validatorMock = new Mock<IValidator<ProviderCourseLocationAddSubmitModel>>();
+            _sut = new ProviderCourseLocationAddController(Mock.Of<ILogger<ProviderCourseLocationAddController>>(), _mediatorMock.Object, _validatorMock.Object);
             _sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderCourseLocations, verifyUrl);
@@ -51,6 +55,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
                 .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(resultProviderCourseLocations);
 
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationAddSubmitModel>())).Returns(new ValidationResult());
+
             model.TrainingVenueNavigationId = resultAllProviderLocations.ProviderLocations.First().NavigationId.ToString();
             var result = await _sut.SubmitAProviderlocation(larsCode, model);
 
@@ -68,7 +74,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
             .ReturnsAsync(availableProviderLocationsQueryResult);
 
-            _sut.ModelState.AddModelError("key", "error");
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationAddSubmitModel>())).Returns(validationResult);
+
             var result = await _sut.SubmitAProviderlocation(larsCode, model);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<AddProviderCourseLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);

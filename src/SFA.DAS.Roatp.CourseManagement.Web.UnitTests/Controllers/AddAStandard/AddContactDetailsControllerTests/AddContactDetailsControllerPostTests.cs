@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -72,12 +74,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Get_ModelStateIsValid_UpdatesStandardSessionModel(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
             [Greedy] AddContactDetailsController sut,
             StandardSessionModel standardSessionModel,
             CourseContactDetailsSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
             sut.SubmitContactDetails(submitModel);
 
@@ -91,12 +95,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public void Get_ModelStateIsValid_RedirectToSelectLocationOption(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
             [Greedy] AddContactDetailsController sut,
             StandardSessionModel standardSessionModel,
             CourseContactDetailsSubmitModel submitModel)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
             var result = sut.SubmitContactDetails(submitModel);
 

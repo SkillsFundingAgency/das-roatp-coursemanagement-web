@@ -1,5 +1,10 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,9 +18,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.SelectAStandardControllerTests;
 
@@ -50,12 +52,14 @@ public class SelectAStandardControllerPostTests
     public async Task SubmitAStandard_IfNotRegulatedForProvider_RedirectsToRespectiveConfirmationPage(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectAStandardSubmitModel>> validator,
         [Greedy] SelectAStandardController sut,
         SelectAStandardSubmitModel submitModel,
         GetStandardInformationQueryResult standardInformation)
     {
         standardInformation.IsRegulatedForProvider = false;
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
+        validator.Setup(x => x.Validate(It.IsAny<SelectAStandardSubmitModel>())).Returns(new ValidationResult());
         sut
             .AddDefaultContextWithUser()
             .AddUrlHelperMock()
@@ -74,12 +78,14 @@ public class SelectAStandardControllerPostTests
     public async Task SubmitAStandard_IfRegulatedStandard_RedirectsToRespectiveConfirmationPage(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectAStandardSubmitModel>> validator,
         [Greedy] SelectAStandardController sut,
         SelectAStandardSubmitModel submitModel,
         GetStandardInformationQueryResult standardInformation)
     {
         standardInformation.IsRegulatedForProvider = true;
         mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(g => g.LarsCode == submitModel.SelectedLarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
+        validator.Setup(x => x.Validate(It.IsAny<SelectAStandardSubmitModel>())).Returns(new ValidationResult());
         sut
             .AddDefaultContextWithUser()
             .AddUrlHelperMock()

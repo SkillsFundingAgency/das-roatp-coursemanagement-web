@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -14,6 +16,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.AddShortCourseContactDetailsControllerTests;
+
 public class AddShortCourseContactDetailsControllerPostTests
 {
     [Test]
@@ -74,6 +77,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void AddShortCourseContactDetails_ValidState_SetsSessionAndRedirectsToSelectShortCourseLocation(
     [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
     [Greedy] AddShortCourseContactDetailsController sut,
     ShortCourseSessionModel sessionModel,
     CourseContactDetailsSubmitModel submitModel)
@@ -84,6 +88,7 @@ public class AddShortCourseContactDetailsControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
@@ -98,6 +103,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void AddShortCourseContactDetails_HasSeenSummaryPageIsTrue_SetsSessionAndRedirectsToReviewShortCourseDetails(
     [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
     [Greedy] AddShortCourseContactDetailsController sut,
     ShortCourseSessionModel sessionModel,
     CourseContactDetailsSubmitModel submitModel)
@@ -108,6 +114,7 @@ public class AddShortCourseContactDetailsControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
