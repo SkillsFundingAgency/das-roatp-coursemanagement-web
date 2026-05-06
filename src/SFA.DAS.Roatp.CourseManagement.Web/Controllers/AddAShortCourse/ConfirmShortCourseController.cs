@@ -44,15 +44,15 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = new ConfirmShortCourseViewModel()
             {
                 ShortCourseInformation = sessionModel.ShortCourseInformation,
                 ApprenticeshipType = apprenticeshipType
             };
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

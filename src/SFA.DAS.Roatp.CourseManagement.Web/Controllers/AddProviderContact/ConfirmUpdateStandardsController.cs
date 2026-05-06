@@ -39,7 +39,9 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService, I
     {
         var validatedResult = _validator.Validate(submitViewModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = new ConfirmUpdateStandardsViewModel
             {
@@ -50,8 +52,6 @@ public class ConfirmUpdateStandardsController(ISessionService _sessionService, I
             model.EmailAddressOnlyUpdate = IsEmailAddressOnlyUpdate(model);
             model.PhoneNumberOnlyUpdate = IsPhoneNumberOnlyUpdate(model);
             model.EmailAddressAndPhoneNumberUpdate = IsEmailAndPhoneNumberUpdate(model);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

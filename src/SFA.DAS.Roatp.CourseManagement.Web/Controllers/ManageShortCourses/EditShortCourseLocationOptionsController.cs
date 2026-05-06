@@ -51,11 +51,11 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

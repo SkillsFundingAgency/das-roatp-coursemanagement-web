@@ -42,7 +42,9 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
 
         var validatedResult = _validator.Validate(submitViewModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = new AddProviderContactViewModel
             {
@@ -50,8 +52,6 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
                 PhoneNumber = submitViewModel.PhoneNumber,
                 ExistingContactDetailsAvailable = sessionModel.HasExistingContactDetails
             };
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

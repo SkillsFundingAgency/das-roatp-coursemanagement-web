@@ -70,11 +70,11 @@ public class SelectShortCourseTrainingVenuesController(ISessionService _sessionS
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             ShortCourseTrainingVenuesViewModel model = GetViewModel(sessionModel, apprenticeshipType);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

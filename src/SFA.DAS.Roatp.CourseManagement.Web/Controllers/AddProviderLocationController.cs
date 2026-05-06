@@ -97,10 +97,10 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
-        {
-            ModelState.AddValidationErrors(validatedResult.Errors);
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
+        if (!ModelState.IsValid)
+        {
             return View(ViewPath, model);
         }
 
@@ -160,10 +160,10 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
-        {
-            ModelState.AddValidationErrors(validatedResult.Errors);
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
+        if (!ModelState.IsValid)
+        {
             return View(ViewPath, model);
         }
 

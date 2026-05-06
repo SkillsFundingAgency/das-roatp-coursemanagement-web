@@ -67,11 +67,12 @@ public class EditProviderCourseRegionsController : ControllerBase
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = await BuildRegionsViewModel(larsCode);
             model.AllRegions.ForEach(s => s.IsSelected = false);
-            ModelState.AddValidationErrors(validatedResult.Errors);
             return View(ViewPath, model);
         }
 

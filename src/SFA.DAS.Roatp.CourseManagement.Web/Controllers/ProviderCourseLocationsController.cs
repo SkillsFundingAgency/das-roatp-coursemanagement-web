@@ -83,10 +83,10 @@ public class ProviderCourseLocationsController : ControllerBase
         model = await BuildViewModel(model.LarsCode);
         var validatedResult = _validator.Validate(model);
 
-        if (!validatedResult.IsValid)
-        {
-            ModelState.AddValidationErrors(validatedResult.Errors);
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
+        if (!ModelState.IsValid)
+        {
             return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
         }
 

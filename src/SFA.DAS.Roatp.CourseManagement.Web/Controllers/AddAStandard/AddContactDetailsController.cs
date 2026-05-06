@@ -58,7 +58,9 @@ public class AddContactDetailsController : AddAStandardControllerBase
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = new AddStandardContactDetailsViewModel()
             {
@@ -67,8 +69,6 @@ public class AddContactDetailsController : AddAStandardControllerBase
                 StandardInfoUrl = submitModel.StandardInfoUrl,
                 ShowSavedContactDetailsText = IsUsingSavedContactDetails(sessionModel)
             };
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

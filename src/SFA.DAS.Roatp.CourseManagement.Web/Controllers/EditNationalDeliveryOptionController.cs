@@ -50,11 +50,11 @@ public class EditNationalDeliveryOptionController : ControllerBase
     {
         var validatedResult = _validator.Validate(model);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             _logger.LogInformation("National delivery option was not selected ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(new EditNationalDeliveryOptionViewModel());
         }

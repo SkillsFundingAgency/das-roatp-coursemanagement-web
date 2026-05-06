@@ -75,10 +75,10 @@ public class StandardTrainingLocationsController : AddAStandardControllerBase
 
         var validatedResult = _validator.Validate(model);
 
-        if (!validatedResult.IsValid)
-        {
-            ModelState.AddValidationErrors(validatedResult.Errors);
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
+        if (!ModelState.IsValid)
+        {
             return View(ViewPath, model);
         }
 

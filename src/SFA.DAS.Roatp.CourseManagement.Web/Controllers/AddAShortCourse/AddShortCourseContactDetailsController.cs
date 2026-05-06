@@ -53,7 +53,9 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = new ShortCourseContactDetailsViewModel()
             {
@@ -66,8 +68,6 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
                 Route = RouteNames.AddShortCourseContactDetails,
                 IsAddJourney = true
             };
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

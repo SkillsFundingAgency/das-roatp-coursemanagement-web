@@ -47,11 +47,11 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
         }

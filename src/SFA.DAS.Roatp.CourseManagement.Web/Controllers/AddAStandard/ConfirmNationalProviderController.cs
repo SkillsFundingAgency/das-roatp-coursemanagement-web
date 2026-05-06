@@ -52,10 +52,10 @@ public class ConfirmNationalProviderController : AddAStandardControllerBase
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
-        {
-            ModelState.AddValidationErrors(validatedResult.Errors);
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
+        if (!ModelState.IsValid)
+        {
             return View(ViewPath, new ConfirmNationalProviderViewModel());
         }
 

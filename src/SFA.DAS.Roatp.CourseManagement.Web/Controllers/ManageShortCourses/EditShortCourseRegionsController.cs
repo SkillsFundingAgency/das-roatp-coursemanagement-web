@@ -49,13 +49,13 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var regionsResponse = await _regionsService.GetRegions();
 
             var viewModel = GetViewModel(regionsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
         }
