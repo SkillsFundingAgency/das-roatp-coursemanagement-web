@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -24,6 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         private static string DetailsUrl = Guid.NewGuid().ToString();
         private Mock<ILogger<EditProviderCourseRegionsController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<RegionsSubmitModel>> _validatorMock;
         private EditProviderCourseRegionsController _sut;
 
         [SetUp]
@@ -31,8 +34,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         {
             _loggerMock = new Mock<ILogger<EditProviderCourseRegionsController>>();
             _mediatorMock = new Mock<IMediator>();
+            _validatorMock = new Mock<IValidator<RegionsSubmitModel>>();
 
-            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object);
+            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object);
             _sut
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -44,6 +48,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         {
             string[] selectedSubRegions = new string[] { "1", "2" };
             model.SelectedSubRegions = selectedSubRegions;
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
 
             var result = await _sut.UpdateStandardSubRegions(larsCode, model);
             _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -59,7 +65,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         [Test, AutoData]
         public async Task Post_InValidData_RedirectToSameView(RegionsSubmitModel model, GetAllStandardRegionsQueryResult queryResult, string larsCode)
         {
-            _sut.ModelState.AddModelError("key", "error");
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(validationResult);
+
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);

@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -12,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmShortCourseControllerTests;
+
 public class ConfirmShortCourseControllerPostTests
 {
     [Test, MoqAutoData]
@@ -45,6 +48,7 @@ public class ConfirmShortCourseControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmShortCourse_ValidState_IsCorrectShortCourseIsFalse_ClearsSessionAndRedirectsToSelectAnApprenticeshipUnit(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmShortCourseSubmitModel>> validator,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -54,6 +58,7 @@ public class ConfirmShortCourseControllerPostTests
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmShortCourseSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = false, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
@@ -68,6 +73,7 @@ public class ConfirmShortCourseControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmShortCourse_ValidState_IsCorrectShortCourseIsTrue_RedirectsToConfirmSavedContactDetailsForShortCourse(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmShortCourseSubmitModel>> validator,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -77,6 +83,7 @@ public class ConfirmShortCourseControllerPostTests
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmShortCourseSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
@@ -114,6 +121,7 @@ public class ConfirmShortCourseControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmShortCourse_ValidState_LatestProviderContactIsNullInSession_RedirectsToAddShortCourseContactDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmShortCourseSubmitModel>> validator,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -125,6 +133,8 @@ public class ConfirmShortCourseControllerPostTests
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmShortCourseSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
@@ -139,6 +149,7 @@ public class ConfirmShortCourseControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmShortCourse_ValidState_EmailAddressAndPhoneNumberAreNullInSession_RedirectsToAddShortCourseContactDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmShortCourseSubmitModel>> validator,
         [Greedy] ConfirmShortCourseController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -154,6 +165,7 @@ public class ConfirmShortCourseControllerPostTests
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmShortCourseSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.ConfirmShortCourse(new ConfirmShortCourseSubmitModel() { IsCorrectShortCourse = true, ApprenticeshipType = apprenticeshipType }, apprenticeshipType);

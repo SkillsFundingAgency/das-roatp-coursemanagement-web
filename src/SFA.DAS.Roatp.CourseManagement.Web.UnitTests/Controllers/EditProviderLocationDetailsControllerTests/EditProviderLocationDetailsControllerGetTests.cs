@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.AddTrainingLocation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
@@ -21,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
     {
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ProviderLocationDetailsSubmitModel>> _validatorMock;
         private EditProviderLocationDetailsController _sut;
         string verifyUrl = "http://test";
 
@@ -28,7 +31,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
         public void Before_Each_Test()
         {
             _mediatorMock = new Mock<IMediator>();
-            _sut = new EditProviderLocationDetailsController(_mediatorMock.Object, Mock.Of<ILogger<EditProviderLocationDetailsController>>());
+            _validatorMock = new Mock<IValidator<ProviderLocationDetailsSubmitModel>>();
+            _sut = new EditProviderLocationDetailsController(_mediatorMock.Object, Mock.Of<ILogger<EditProviderLocationDetailsController>>(), _validatorMock.Object);
             _sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, verifyUrl);

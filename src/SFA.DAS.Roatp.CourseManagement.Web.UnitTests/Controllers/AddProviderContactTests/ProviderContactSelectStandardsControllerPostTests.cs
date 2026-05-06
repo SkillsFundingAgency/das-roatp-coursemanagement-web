@@ -2,6 +2,8 @@
 using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -63,6 +65,7 @@ public class SelectStandardsForUpdateControllerPostTests
     public void Post_RedirectsToPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactStandardsSubmitViewModel>> validator,
         [Greedy] SelectStandardsForUpdateController sut,
         List<ProviderContactStandardModel> standards,
         int ukprn)
@@ -80,6 +83,7 @@ public class SelectStandardsForUpdateControllerPostTests
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactStandardsSubmitViewModel>())).Returns(new ValidationResult());
 
         var result = sut.PostStandards(ukprn, submitViewModel);
 

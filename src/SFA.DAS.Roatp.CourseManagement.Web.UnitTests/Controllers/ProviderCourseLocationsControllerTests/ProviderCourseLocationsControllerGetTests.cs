@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -25,6 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     {
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ProviderCourseLocationListViewModel>> _validatorMock;
         private ProviderCourseLocationsController _sut;
         readonly string verifyUrlGetStandardDetails = "http://test-GetStandardDetails";
 
@@ -41,8 +43,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         {
             _mediatorMock = new Mock<IMediator>();
             _sessionServiceMock = new Mock<ISessionService>();
+            _validatorMock = new Mock<IValidator<ProviderCourseLocationListViewModel>>();
 
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object);
+            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object, _validatorMock.Object);
 
             _sut.AddDefaultContextWithUser()
                .AddUrlHelperMock()

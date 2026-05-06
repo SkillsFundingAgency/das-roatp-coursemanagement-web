@@ -1,5 +1,9 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -13,8 +17,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.ConfirmRegulatedStandardControllerTests
 {
@@ -63,6 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Post_IsNotCorrectStandard_RedirectsToSelectStandard(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNewRegulatedStandardSubmitModel>> validator,
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
@@ -70,6 +73,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             submitModel.IsApprovedByRegulator = false;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNewRegulatedStandardSubmitModel>())).Returns(new ValidationResult());
 
             var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
 
@@ -83,6 +87,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Post_StandardConfirmed_UpdatesSessionModel(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNewRegulatedStandardSubmitModel>> validator,
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel,
@@ -94,6 +99,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             submitModel.IsApprovedByRegulator = true;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNewRegulatedStandardSubmitModel>())).Returns(new ValidationResult());
 
             await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
 
@@ -115,6 +121,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task Post_StandardConfirmed_HasContactDetails_RedirectsUseSavedContactDetails(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNewRegulatedStandardSubmitModel>> validator,
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel,
@@ -125,6 +132,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionModel.LatestProviderContactModel = latestProviderContactModel;
             sessionModel.IsUsingSavedContactDetails = null;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNewRegulatedStandardSubmitModel>())).Returns(new ValidationResult());
 
             var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
 
@@ -136,6 +144,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         [Test, MoqAutoData]
         public async Task Post_StandardConfirmed_RedirectsToContactDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<ConfirmNewRegulatedStandardSubmitModel>> validator,
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
@@ -144,6 +153,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionModel.LatestProviderContactModel = null;
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
+            validator.Setup(x => x.Validate(It.IsAny<ConfirmNewRegulatedStandardSubmitModel>())).Returns(new ValidationResult());
 
             var response = await sut.SubmitConfirmationOfRegulatedStandard(submitModel);
 

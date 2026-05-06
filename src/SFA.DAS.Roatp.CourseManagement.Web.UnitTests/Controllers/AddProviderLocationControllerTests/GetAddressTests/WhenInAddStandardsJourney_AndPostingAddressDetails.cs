@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
@@ -17,6 +19,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests.GetAddressTests;
+
 public class WhenInAddStandardsJourney_AndPostingAddressDetails
 {
     private ApprenticeshipType _learningType;
@@ -155,6 +158,7 @@ public class WhenInAddStandardsJourney_AndPostingAddressDetails
 
     [Test, MoqAutoData]
     public void When_ModelStateIsValid_Then_VerifySelectedAddressIsSetInTempData(
+        [Frozen] Mock<IValidator<AddressSearchSubmitModel>> validator,
         [Greedy] AddProviderLocationController sut,
         AddressSearchSubmitModel submitModel,
         Mock<ITempDataDictionary> tempDataMock)
@@ -174,6 +178,7 @@ public class WhenInAddStandardsJourney_AndPostingAddressDetails
         };
 
         var expectedValueInTempData = JsonSerializer.Serialize(selectedAddress);
+        validator.Setup(x => x.Validate(It.IsAny<AddressSearchSubmitModel>())).Returns(new ValidationResult());
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
 
@@ -186,11 +191,13 @@ public class WhenInAddStandardsJourney_AndPostingAddressDetails
 
     [Test, MoqAutoData]
     public void When_ModelStateIsValid_Then_RedirectsToGetConfirmAddTrainingVenue(
+        [Frozen] Mock<IValidator<AddressSearchSubmitModel>> validator,
         [Greedy] AddProviderLocationController sut,
         AddressSearchSubmitModel submitModel,
         Mock<ITempDataDictionary> tempDataMock)
     {
         // Arrange
+        validator.Setup(x => x.Validate(It.IsAny<AddressSearchSubmitModel>())).Returns(new ValidationResult());
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
 

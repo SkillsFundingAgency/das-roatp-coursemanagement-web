@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -12,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmSavedContactDetailsControllerTests;
+
 public class ConfirmSavedContactDetailsControllerPostTests
 {
     [Test, MoqAutoData]
@@ -41,6 +44,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmSavedContactDetails_ValidState_UseContactDetailsIsTrue_SetsContactDetailsInSessionAndRedirectsToAddShortCourseContactDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmSavedContactDetailsSubmitModel>> validator,
         [Greedy] ConfirmSavedContactDetailsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -50,6 +54,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
         var submitModel = new ConfirmSavedContactDetailsSubmitModel() { IsUsingSavedContactDetails = true };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmSavedContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -66,6 +71,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmSavedContactDetails_ValidState_UseContactDetailsIsFalse_DoesNotSetContactDetailsInSessionAndRedirectsToAddShortCourseContactDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmSavedContactDetailsSubmitModel>> validator,
         [Greedy] ConfirmSavedContactDetailsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -75,6 +81,8 @@ public class ConfirmSavedContactDetailsControllerPostTests
         var submitModel = new ConfirmSavedContactDetailsSubmitModel() { IsUsingSavedContactDetails = false };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmSavedContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -92,6 +100,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmSavedContactDetails_SessionIsNull_RedirectsToReviewYourDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ConfirmSavedContactDetailsSubmitModel>> validator,
         [Greedy] ConfirmSavedContactDetailsController sut)
     {
         // Arrange
@@ -99,6 +108,7 @@ public class ConfirmSavedContactDetailsControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmSavedContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var result = sut.ConfirmSavedContactDetails(new ConfirmSavedContactDetailsSubmitModel(), apprenticeshipType);

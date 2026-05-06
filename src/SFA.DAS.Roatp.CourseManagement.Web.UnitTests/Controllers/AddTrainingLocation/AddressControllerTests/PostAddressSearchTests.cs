@@ -1,6 +1,8 @@
 ﻿using System.Text.Json;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
@@ -38,6 +40,7 @@ public class PostAddressSearchTests
 
     [Test, MoqAutoData]
     public void Valid_SetsSelectedAddressInTempData(
+        [Frozen] Mock<IValidator<AddressSearchSubmitModel>> validator,
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] AddressController sut,
         AddressSearchSubmitModel submitModel,
@@ -56,6 +59,7 @@ public class PostAddressSearchTests
         };
 
         var expectedValueInTempData = JsonSerializer.Serialize(selectedAddress);
+        validator.Setup(x => x.Validate(It.IsAny<AddressSearchSubmitModel>())).Returns(new ValidationResult());
         sut.AddDefaultContextWithUser();
         sut.TempData = tempDataMock.Object;
 

@@ -15,6 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards")]
 public class StandardsController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -25,12 +26,11 @@ public class StandardsController : ControllerBase
         _mediator = mediator;
     }
 
-    [Route("{ukprn}/standards", Name = RouteNames.ViewStandards)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.ViewStandards)]
     [ClearSession(nameof(StandardSessionModel))]
     public async Task<IActionResult> ViewStandards()
     {
-        _logger.LogInformation("Getting standards for {ukprn}", Ukprn);
+        _logger.LogInformation("Getting standards for {Ukprn}", Ukprn);
 
         var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.Apprenticeship));
 
@@ -41,7 +41,7 @@ public class StandardsController : ControllerBase
 
         if (result == null)
         {
-            _logger.LogInformation("Standards data not found for {ukprn}", Ukprn);
+            _logger.LogInformation("Standards data not found for {Ukprn}", Ukprn);
             return View("~/Views/Standards/ViewStandards.cshtml", model);
         }
 
@@ -68,12 +68,11 @@ public class StandardsController : ControllerBase
         return View("~/Views/Standards/ViewStandards.cshtml", model);
     }
 
-    [Route("{ukprn}/standards/{larsCode}", Name = RouteNames.GetStandardDetails)]
-    [HttpGet]
+    [HttpGet("{larsCode}", Name = RouteNames.GetStandardDetails)]
     [ClearSession(SessionKeys.SelectedLocationOption)]
     public async Task<IActionResult> ViewStandard(string larsCode)
     {
-        _logger.LogInformation("Getting Course details for ukprn {ukprn} LarsCode {larsCode}", Ukprn, larsCode);
+        _logger.LogInformation("Getting Course details for ukprn {Ukprn} LarsCode {LarsCode}", Ukprn, larsCode);
 
         var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 

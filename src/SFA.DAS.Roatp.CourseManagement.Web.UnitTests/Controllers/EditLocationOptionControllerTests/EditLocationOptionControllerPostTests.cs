@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -21,6 +22,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test]
         public async Task Post_InvalidModel_ReturnsViewWithValidationError()
         {
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(validationResult);
+
             var model = new EditLocationOptionViewModel();
             _sut.ModelState.AddModelError("key", "message");
 
@@ -35,6 +42,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test, AutoData]
         public async Task Post_LocationOptionProvider_DeletesEmployerLocations(EditLocationOptionViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+
             model.LocationOption = LocationOption.ProviderLocation;
 
             await _sut.Index(LarsCode, Ukprn, model);
@@ -46,6 +55,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test, AutoData]
         public async Task Post_LocationOptionEmployer_DeletesProviderLocations(EditLocationOptionViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+
             model.LocationOption = LocationOption.EmployerLocation;
 
             await _sut.Index(LarsCode, Ukprn, model);
@@ -57,6 +68,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test, AutoData]
         public async Task Post_LocationOptionBoth_DoesNotDeleteAnyProviderLocations(EditLocationOptionViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+
             model.LocationOption = LocationOption.Both;
 
             await _sut.Index(LarsCode, Ukprn, model);
@@ -68,6 +81,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test, AutoData]
         public async Task Post_LocationOptionProvider_SetsLocationOptionInSession(EditLocationOptionViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+
             model.LocationOption = LocationOption.ProviderLocation;
 
             await _sut.Index(LarsCode, Ukprn, model);
@@ -78,6 +93,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test, AutoData]
         public async Task Post_LocationOptionProvider_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+
             model.LocationOption = LocationOption.ProviderLocation;
 
             var result = await _sut.Index("123", Ukprn, model);
@@ -90,6 +107,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
         [Test, AutoData]
         public async Task Post_LocationOptionBoth_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+
             model.LocationOption = LocationOption.Both;
 
             var result = await _sut.Index("123", Ukprn, model);

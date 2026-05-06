@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
@@ -11,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new/use-provider-contact", Name = RouteNames.ConfirmSavedContactDetailsForShortCourse)]
-public class ConfirmSavedContactDetailsController(ISessionService _sessionService, ILogger<ConfirmSavedContactDetailsController> _logger) : ControllerBase
+public class ConfirmSavedContactDetailsController(ISessionService _sessionService, ILogger<ConfirmSavedContactDetailsController> _logger, IValidator<ConfirmSavedContactDetailsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmSavedContactDetails.cshtml";
 
@@ -43,9 +45,14 @@ public class ConfirmSavedContactDetailsController(ISessionService _sessionServic
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
         if (!ModelState.IsValid)
         {
             var viewModel = GetViewModel(sessionModel, Ukprn, apprenticeshipType);
+
             return View(ViewPath, viewModel);
         }
 

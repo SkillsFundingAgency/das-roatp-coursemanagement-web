@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,31 +10,33 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
-using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[Route("{ukprn}/standards/{larsCode}/providerlocations")]
 public class ProviderCourseLocationsController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ILogger<ProviderCourseLocationsController> _logger;
     private readonly ISessionService _sessionService;
+    private readonly IValidator<ProviderCourseLocationListViewModel> _validator;
 
-    public ProviderCourseLocationsController(IMediator mediator, ILogger<ProviderCourseLocationsController> logger, ISessionService sessionService)
+    public ProviderCourseLocationsController(IMediator mediator, ILogger<ProviderCourseLocationsController> logger, ISessionService sessionService, IValidator<ProviderCourseLocationListViewModel> validator)
     {
         _mediator = mediator;
         _logger = logger;
         _sessionService = sessionService;
+        _validator = validator;
     }
 
-    [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.GetProviderCourseLocations)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetProviderCourseLocations)]
     public async Task<IActionResult> GetProviderCourseLocations([FromRoute] string larsCode)
     {
         _logger.LogInformation("Getting Provider Course Locations for ukprn {Ukprn} ", Ukprn);
@@ -74,14 +77,15 @@ public class ProviderCourseLocationsController : ControllerBase
         return model;
     }
 
-    [Route("{ukprn}/standards/{larsCode}/providerlocations", Name = RouteNames.PostProviderCourseLocations)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostProviderCourseLocations)]
     public async Task<IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
     {
         model = await BuildViewModel(model.LarsCode);
-        var validator = new ProviderCourseLocationListViewModelValidator();
-        var validatorResult = validator.Validate(model);
-        if (!validatorResult.IsValid)
+        var validatedResult = _validator.Validate(model);
+
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
         }

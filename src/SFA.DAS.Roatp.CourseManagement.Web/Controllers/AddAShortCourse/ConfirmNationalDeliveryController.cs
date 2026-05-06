@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -14,7 +16,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/new/confirm-national", Name = RouteNames.ConfirmNationalDelivery)]
-public class ConfirmNationalDeliveryController(ISessionService _sessionService, ILogger<ConfirmNationalDeliveryController> _logger) : ControllerBase
+public class ConfirmNationalDeliveryController(ISessionService _sessionService, ILogger<ConfirmNationalDeliveryController> _logger, IValidator<ConfirmNationalDeliverySubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ConfirmNationalDelivery.cshtml";
 
@@ -51,15 +53,21 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
         if (!ModelState.IsValid)
         {
-            return View(ViewPath, new ConfirmNationalDeliveryViewModel()
+            var vieModel = new ConfirmNationalDeliveryViewModel()
             {
                 ApprenticeshipType = apprenticeshipType,
                 SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
                 IsAddJourney = true,
                 Route = RouteNames.ConfirmNationalDelivery
-            });
+            };
+
+            return View(ViewPath, vieModel);
         }
 
         sessionModel.HasNationalDeliveryOption = submitModel.HasNationalDeliveryOption;

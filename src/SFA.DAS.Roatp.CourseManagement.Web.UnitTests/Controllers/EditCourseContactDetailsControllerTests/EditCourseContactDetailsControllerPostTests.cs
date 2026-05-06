@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,14 +24,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
     {
         private static string DetailsUrl = Guid.NewGuid().ToString();
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<CourseContactDetailsSubmitModel>> _validatorMock;
         private EditCourseContactDetailsController _sut;
 
         [SetUp]
         public void Before_Each_Test()
         {
             _mediatorMock = new Mock<IMediator>();
+            _validatorMock = new Mock<IValidator<CourseContactDetailsSubmitModel>>();
 
-            _sut = new EditCourseContactDetailsController(_mediatorMock.Object, Mock.Of<ILogger<EditCourseContactDetailsController>>());
+            _sut = new EditCourseContactDetailsController(_mediatorMock.Object, Mock.Of<ILogger<EditCourseContactDetailsController>>(), _validatorMock.Object);
             _sut
                 .AddDefaultContextWithUser();
         }
@@ -37,6 +41,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         [Test, AutoData]
         public async Task Post_ValidModel_SendsUpdateCommand(CourseContactDetailsSubmitModel model, string larsCode)
         {
+            _validatorMock.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+
             var result = await _sut.Index(larsCode, model);
 
             _mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
@@ -54,7 +60,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
-            _sut.ModelState.AddModelError("key", "error");
+
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(validationResult);
 
             var result = await _sut.Index(larsCode, model);
 
@@ -70,7 +81,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetProviderCourseDetailsQueryResult)null);
-            _sut.ModelState.AddModelError("key", "error");
+
+            var validationResult = new ValidationResult();
+
+            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+            _validatorMock.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(validationResult);
 
             Func<Task> action = () => _sut.Index(larsCode, submitModel);
 

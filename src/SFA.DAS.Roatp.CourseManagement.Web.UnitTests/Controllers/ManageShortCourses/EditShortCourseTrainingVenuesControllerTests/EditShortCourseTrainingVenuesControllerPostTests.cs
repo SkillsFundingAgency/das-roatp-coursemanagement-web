@@ -5,6 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -24,6 +26,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.EditShortCourseTrainingVenuesControllerTests;
+
 public class EditShortCourseTrainingVenuesControllerPostTests
 {
     [Test, MoqAutoData]
@@ -87,11 +90,13 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseTrainingVenues_TrainingVenueAddedOnly_SendsAddCommandAndVerifyMediatorIsInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] EditShortCourseTrainingVenuesController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
         string larsCode)
     {
+        // Arrange
         var providerCourseLocationId = Guid.NewGuid();
         var providerLocationsId = Guid.NewGuid();
         var addProviderLocationsId = Guid.NewGuid();
@@ -131,8 +136,9 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -159,11 +165,13 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseTrainingVenues_TrainingVenueRemovedOnly_SendsDeleteCommandAndVerifyMediatorIsInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] EditShortCourseTrainingVenuesController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
         string larsCode)
     {
+        // Arrange
         var providerCourseLocationId = Guid.NewGuid();
         var deleteProviderCourseLocationId = Guid.NewGuid();
         var providerLocationsId = Guid.NewGuid();
@@ -209,8 +217,9 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -235,11 +244,13 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseTrainingVenues_TrainingVenueAddedAndRemoved_SendsAddAndDeleteCommandAndVerifyMediatorIsInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] EditShortCourseTrainingVenuesController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
         string larsCode)
     {
+        // Arrange
         var deleteProviderCourseLocationId = Guid.NewGuid();
         var providerLocationsId = Guid.NewGuid();
         var addProviderLocationsId = Guid.NewGuid();
@@ -278,8 +289,9 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -311,11 +323,13 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     public async Task EditShortCourseTrainingVenues_NoChange_VerifyMediatorIsNotInvokedAndRedirectsToManageShortCourseDetails(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] EditShortCourseTrainingVenuesController sut,
         GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
         GetAllProviderLocationsQueryResult providerLocationsApiResponse,
         string larsCode)
     {
+        // Arrange
         var providerCourseLocationId = Guid.NewGuid();
         var providerLocationsId = Guid.NewGuid();
 
@@ -347,8 +361,9 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -434,6 +449,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     public async Task EditShortCourseTrainingVenues_EmployerLocationExistsInSession_RedirectsToEditShortCourseNationalDelivery(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
     [Greedy] EditShortCourseTrainingVenuesController sut,
     GetProviderCourseDetailsQueryResult providerCourseDetailsApiResponse,
     GetAllProviderLocationsQueryResult providerLocationsApiResponse,
@@ -451,6 +467,8 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
+
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var result = await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);

@@ -3,6 +3,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -17,6 +19,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseRegionsControllerTests;
+
 public class SelectShortCourseRegionsControllerPostTests
 {
     [Test, MoqAutoData]
@@ -51,6 +54,7 @@ public class SelectShortCourseRegionsControllerPostTests
     public async Task SelectShortCourseRegions_IsValidState_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IRegionsService> regionsService,
+        [Frozen] Mock<IValidator<RegionsSubmitModel>> validator,
         [Greedy] SelectShortCourseRegionsController sut,
         ShortCourseSessionModel sessionModel,
         List<RegionModel> regions)
@@ -68,6 +72,7 @@ public class SelectShortCourseRegionsControllerPostTests
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act

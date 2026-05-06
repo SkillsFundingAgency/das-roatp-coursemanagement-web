@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -11,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourse
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
@@ -21,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-course-locations", Name = RouteNames.EditShortCourseLocationOptions)]
-public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogger<EditShortCourseLocationOptionsController> _logger, ISessionService _sessionService) : ControllerBase
+public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogger<EditShortCourseLocationOptionsController> _logger, ISessionService _sessionService, IValidator<SelectShortCourseLocationOptionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseLocationOptions.cshtml";
 
@@ -47,6 +49,10 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
     [HttpPost]
     public async Task<IActionResult> EditShortCourseLocationOptions(SelectShortCourseLocationOptionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
     {
+        var validatedResult = _validator.Validate(submitModel);
+
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
         if (!ModelState.IsValid)
         {
             var model = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);

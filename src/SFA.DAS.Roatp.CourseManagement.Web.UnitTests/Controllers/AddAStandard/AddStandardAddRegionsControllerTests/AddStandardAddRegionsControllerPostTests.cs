@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -59,6 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task SubmitRegions_UpdatesCourseLocationInSessionModel(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<IValidator<RegionsSubmitModel>> validator,
             [Greedy] AddStandardAddRegionsController sut,
             StandardSessionModel standardSessionModel,
             GetAllRegionsAndSubRegionsQueryResult queryResult)
@@ -66,6 +69,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+            validator.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
             standardSessionModel.CourseLocations.Clear();
             var submitModel = new RegionsSubmitModel();
             submitModel.SelectedSubRegions = queryResult.Regions.Select(r => r.Id.ToString()).ToArray();
@@ -80,6 +84,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         public async Task SubmitRegions_NavigatesToReviewPage(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<IValidator<RegionsSubmitModel>> validator,
             [Greedy] AddStandardAddRegionsController sut,
             StandardSessionModel standardSessionModel,
             RegionsSubmitModel submitModel,
@@ -88,6 +93,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllRegionsAndSubRegionsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+            validator.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
 
             var result = await sut.SubmitRegions(submitModel);
 

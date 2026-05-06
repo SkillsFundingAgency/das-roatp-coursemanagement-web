@@ -1,5 +1,9 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -14,10 +18,9 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseControllerTests;
+
 public class SelectShortCourseControllerPostTests
 {
     [Test, MoqAutoData]
@@ -53,6 +56,7 @@ public class SelectShortCourseControllerPostTests
     public async Task SelectShortCourse_ValidState_SetsSessionAndRedirectsToConfirmApprenticeshipUnit(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<SelectShortCourseSubmitModel>> validator,
             [Greedy] SelectShortCourseController sut,
             GetLatestProviderContactQueryResult queryResult)
     {
@@ -64,6 +68,8 @@ public class SelectShortCourseControllerPostTests
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = await sut.SelectShortCourse(submitModel, apprenticeshipType);

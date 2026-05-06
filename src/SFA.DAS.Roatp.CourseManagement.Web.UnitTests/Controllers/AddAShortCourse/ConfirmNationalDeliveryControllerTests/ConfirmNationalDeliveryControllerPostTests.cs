@@ -2,6 +2,8 @@
 using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -16,6 +18,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.ConfirmNationalDeliveryControllerTests;
+
 public class ConfirmNationalDeliveryControllerPostTests
 {
     [Test, MoqAutoData]
@@ -93,6 +96,7 @@ public class ConfirmNationalDeliveryControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmNationalProviderDelivery_HasNationalDeliveryOptionIsTrue_SetsSessionAndRedirectsToReviewShortCourseDetails(
     [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IValidator<ConfirmNationalDeliverySubmitModel>> validator,
     [Greedy] ConfirmNationalDeliveryController sut,
     ShortCourseSessionModel sessionModel,
     ConfirmNationalDeliverySubmitModel submitModel)
@@ -103,6 +107,7 @@ public class ConfirmNationalDeliveryControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var result = sut.ConfirmNationalProviderDelivery(submitModel, apprenticeshipType);
@@ -117,6 +122,7 @@ public class ConfirmNationalDeliveryControllerPostTests
     [Test, MoqAutoData]
     public void ConfirmNationalProviderDelivery_HasNationalDeliveryOptionIsFalse_SetsSessionAndRedirectsToSelectShortCourseRegions(
     [Frozen] Mock<ISessionService> sessionServiceMock,
+    [Frozen] Mock<IValidator<ConfirmNationalDeliverySubmitModel>> validator,
     [Greedy] ConfirmNationalDeliveryController sut,
     ShortCourseSessionModel sessionModel,
     ConfirmNationalDeliverySubmitModel submitModel)
@@ -128,6 +134,7 @@ public class ConfirmNationalDeliveryControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var result = sut.ConfirmNationalProviderDelivery(submitModel, apprenticeshipType);

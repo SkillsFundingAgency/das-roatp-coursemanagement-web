@@ -2,6 +2,8 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -18,6 +20,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.EditShortCourseContactDetailsControllerTests;
+
 public class EditShortCourseContactDetailsControllerPostTests
 {
     [Test, MoqAutoData]
@@ -73,6 +76,7 @@ public class EditShortCourseContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseContactDetails_ChangeToContactDetails_SendsUpdateCommandAndVerifyMediatorIsInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
         [Greedy] EditShortCourseContactDetailsController sut,
         CourseContactDetailsSubmitModel model,
         GetProviderCourseDetailsQueryResult queryResult,
@@ -82,6 +86,8 @@ public class EditShortCourseContactDetailsControllerPostTests
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -102,6 +108,7 @@ public class EditShortCourseContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseContactDetails_NoChangeToContactDetails_RedirectsToManageShortCourseDetailsAndVerifyMediatorIsNotInvoked(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
         [Greedy] EditShortCourseContactDetailsController sut,
         CourseContactDetailsSubmitModel model,
         GetProviderCourseDetailsQueryResult queryResult,
@@ -114,6 +121,8 @@ public class EditShortCourseContactDetailsControllerPostTests
         queryResult.StandardInfoUrl = model.StandardInfoUrl;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -129,6 +138,7 @@ public class EditShortCourseContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseContactDetails_ChangeToContactDetails_VerifyMediatorIsInvokedWithTrimmedFields(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
     [Greedy] EditShortCourseContactDetailsController sut,
     CourseContactDetailsSubmitModel model,
     GetProviderCourseDetailsQueryResult queryResult,
@@ -146,6 +156,8 @@ public class EditShortCourseContactDetailsControllerPostTests
         var standardInfoUrlTrimmed = "test@gmail.com";
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -165,6 +177,7 @@ public class EditShortCourseContactDetailsControllerPostTests
     [Test, MoqAutoData]
     public async Task EditShortCourseContactDetails_GetStardardsReturnsNull_RedirectsToEditShortCourseContactDetails(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
         [Greedy] EditShortCourseContactDetailsController sut,
         CourseContactDetailsSubmitModel model,
         string larsCode)
@@ -173,6 +186,8 @@ public class EditShortCourseContactDetailsControllerPostTests
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
+
+        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

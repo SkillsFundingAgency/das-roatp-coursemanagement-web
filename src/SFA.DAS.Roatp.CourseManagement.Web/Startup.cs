@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,6 +25,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.AppStart;
 using SFA.DAS.Roatp.CourseManagement.Web.HealthCheck;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web
 {
@@ -129,10 +129,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
             .EnableGoogleAnalytics();
             /// .SetZenDeskConfiguration(_configuration.GetSection("ProviderZenDeskSettings").Get<ZenDeskConfiguration>());
 
-            services
-            .AddFluentValidationAutoValidation()
-            .AddFluentValidationClientsideAdapters()
-            .AddValidatorsFromAssemblyContaining<Startup>();
+            services.AddValidatorsFromAssembly(typeof(LocationOptionSubmitModelValidator).Assembly);
 
             services.AddHttpContextAccessor();
 
