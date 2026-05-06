@@ -42,11 +42,11 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = GetModel(sessionModel, apprenticeshipType, false);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, model);
         }

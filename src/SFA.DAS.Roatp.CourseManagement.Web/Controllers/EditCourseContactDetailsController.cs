@@ -42,11 +42,11 @@ public class EditCourseContactDetailsController : ControllerBase
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var viewModel = await GetViewModel(larsCode);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(viewModel);
         }

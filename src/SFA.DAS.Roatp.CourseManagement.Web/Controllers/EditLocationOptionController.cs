@@ -60,11 +60,11 @@ public class EditLocationOptionController : ControllerBase
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var model = new EditLocationOptionViewModel();
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(model);
         }

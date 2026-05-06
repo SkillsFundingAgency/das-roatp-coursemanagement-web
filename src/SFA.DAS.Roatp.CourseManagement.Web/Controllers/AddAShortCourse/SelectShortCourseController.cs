@@ -35,11 +35,11 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
     {
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var viewModel = await GetModel(apprenticeshipType);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
 

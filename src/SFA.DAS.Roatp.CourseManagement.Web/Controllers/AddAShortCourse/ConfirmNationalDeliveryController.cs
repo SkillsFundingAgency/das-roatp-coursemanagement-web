@@ -55,7 +55,9 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
 
         var validatedResult = _validator.Validate(submitModel);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var vieModel = new ConfirmNationalDeliveryViewModel()
             {
@@ -64,8 +66,6 @@ public class ConfirmNationalDeliveryController(ISessionService _sessionService, 
                 IsAddJourney = true,
                 Route = RouteNames.ConfirmNationalDelivery
             };
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, vieModel);
         }

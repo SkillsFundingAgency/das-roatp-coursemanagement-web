@@ -46,11 +46,11 @@ public class UseSavedContactDetailsController : AddAStandardControllerBase
 
         var validatedResult = _validator.Validate(model);
 
-        if (!validatedResult.IsValid)
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
         {
             var viewModel = GetViewModel(sessionModel, Ukprn);
-
-            ModelState.AddValidationErrors(validatedResult.Errors);
 
             return View(ViewPath, viewModel);
         }
