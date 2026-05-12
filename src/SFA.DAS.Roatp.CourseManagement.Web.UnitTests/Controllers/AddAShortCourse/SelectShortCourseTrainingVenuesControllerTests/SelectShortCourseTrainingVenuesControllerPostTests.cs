@@ -2,6 +2,8 @@
 using System.Linq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -15,6 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseTrainingVenuesControllerTests;
+
 public class SelectShortCourseTrainingVenuesControllerPostTests
 {
     [Test, MoqAutoData]
@@ -50,6 +53,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public void SelectShortCourseTrainingVenue_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -66,6 +70,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
@@ -80,6 +85,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public void SelectShortCourseTrainingVenue_SessionContainsEmployerLocationOption_SetsSessionCorrectlyAndRedirectsToConfirmNationalProviderDelivery(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -98,6 +104,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
@@ -112,6 +119,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
     [Test, MoqAutoData]
     public void SelectShortCourseTrainingVenue_HasNationalDeliveryOptionIsFalseAndRegionsMissing_SetsSessionCorrectlyAndRedirectsToSelectShortCourseRegions(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<ShortCourseTrainingVenuesSubmitModel>> validator,
         [Greedy] SelectShortCourseTrainingVenuesController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -132,6 +140,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         };
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
         var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);

@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -25,6 +27,7 @@ public class ProviderContactControllerPostTests
     public async Task Post_NullStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactSubmitViewModel>> validator,
         [Greedy] ProviderContactController sut,
         GetAllProviderStandardsQueryResult standardsResult,
         int ukprn)
@@ -44,6 +47,8 @@ public class ProviderContactControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
 
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
         var redirectResult = result as RedirectToRouteResult;
@@ -56,6 +61,7 @@ public class ProviderContactControllerPostTests
     public async Task Post_NoStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactSubmitViewModel>> validator,
         [Greedy] ProviderContactController sut,
         int ukprn)
     {
@@ -69,6 +75,8 @@ public class ProviderContactControllerPostTests
         };
 
         sessionServiceMock.Setup(x => x.Get<ProviderContactSessionModel>()).Returns(new ProviderContactSessionModel { Standards = new List<ProviderContactStandardModel>() });
+
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -84,6 +92,7 @@ public class ProviderContactControllerPostTests
     public async Task Post_NoEmail_WithStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactSubmitViewModel>> validator,
         [Greedy] ProviderContactController sut,
         GetAllProviderStandardsQueryResult standardsResult,
         int ukprn)
@@ -99,6 +108,8 @@ public class ProviderContactControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
 
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
         var redirectResult = result as RedirectToRouteResult;
@@ -111,6 +122,7 @@ public class ProviderContactControllerPostTests
     public async Task Post_NoPhoneNumber_WithStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactSubmitViewModel>> validator,
         [Greedy] ProviderContactController sut,
         GetAllProviderStandardsQueryResult standardsResult,
         int ukprn)
@@ -126,6 +138,8 @@ public class ProviderContactControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
 
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
         var redirectResult = result as RedirectToRouteResult;
@@ -138,6 +152,7 @@ public class ProviderContactControllerPostTests
     public async Task Post_EmailAndPhoneNumberAndStandards_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactSubmitViewModel>> validator,
         [Greedy] ProviderContactController sut,
         GetAllProviderStandardsQueryResult standardsResult,
         int ukprn)
@@ -152,6 +167,8 @@ public class ProviderContactControllerPostTests
         };
 
         sessionServiceMock.Setup(x => x.Get<ProviderContactSessionModel>()).Returns(new ProviderContactSessionModel());
+
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -170,6 +187,7 @@ public class ProviderContactControllerPostTests
     public async Task Post_EmailAndPhoneNumberAndStandards_NoSession_RedirectsToExpectedPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<AddProviderContactSubmitViewModel>> validator,
         [Greedy] ProviderContactController sut,
         GetAllProviderStandardsQueryResult standardsResult,
         int ukprn)
@@ -184,6 +202,8 @@ public class ProviderContactControllerPostTests
         };
 
         sessionServiceMock.Setup(x => x.Get<ProviderContactSessionModel>()).Returns((ProviderContactSessionModel)null);
+
+        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

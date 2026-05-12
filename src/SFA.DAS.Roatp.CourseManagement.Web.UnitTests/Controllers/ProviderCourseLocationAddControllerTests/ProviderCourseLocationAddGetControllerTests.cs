@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -21,6 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     {
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ProviderCourseLocationAddSubmitModel>> _validatorMock;
         private ProviderCourseLocationAddController _sut;
         string verifyUrl = "http://test";
 
@@ -28,7 +30,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public void Before_Each_Test()
         {
             _mediatorMock = new Mock<IMediator>();
-            _sut = new ProviderCourseLocationAddController(Mock.Of<ILogger<ProviderCourseLocationAddController>>(), _mediatorMock.Object);
+            _validatorMock = new Mock<IValidator<ProviderCourseLocationAddSubmitModel>>();
+            _sut = new ProviderCourseLocationAddController(Mock.Of<ILogger<ProviderCourseLocationAddController>>(), _mediatorMock.Object, _validatorMock.Object);
             _sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderCourseLocations, verifyUrl);

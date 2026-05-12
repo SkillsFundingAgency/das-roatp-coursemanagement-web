@@ -1,5 +1,7 @@
 ﻿using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -60,6 +62,7 @@ public class ProviderContactConfirmUpdateStandardsControllerPostTests
     public void Post_UpdateExistingStandards_RedirectsToPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ConfirmUpdateStandardsSubmitViewModel>> validator,
         [Greedy] ConfirmUpdateStandardsController sut,
         int ukprn)
     {
@@ -73,6 +76,8 @@ public class ProviderContactConfirmUpdateStandardsControllerPostTests
             PhoneNumber = phoneNumber,
             HasOptedToUpdateExistingStandards = updateExistingStandards
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmUpdateStandardsSubmitViewModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -88,6 +93,7 @@ public class ProviderContactConfirmUpdateStandardsControllerPostTests
     public void Post_UpdateExistingStandardsFalse_RedirectsToPage(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ConfirmUpdateStandardsSubmitViewModel>> validator,
         [Greedy] ConfirmUpdateStandardsController sut,
         int ukprn)
     {
@@ -100,6 +106,8 @@ public class ProviderContactConfirmUpdateStandardsControllerPostTests
             PhoneNumber = phoneNumber,
             HasOptedToUpdateExistingStandards = false
         };
+
+        validator.Setup(x => x.Validate(It.IsAny<ConfirmUpdateStandardsSubmitViewModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

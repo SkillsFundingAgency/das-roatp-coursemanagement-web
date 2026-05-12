@@ -4,6 +4,8 @@ using System.Threading.Tasks;
 using AutoFixture;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -22,6 +24,7 @@ public class GetCourseForecastsTests
 {
     private IActionResult _actual;
     private Mock<IMediator> _mediatorMock;
+    private Mock<IValidator<CourseForecastsSubmitModel>> _validatorMock;
     private GetProviderCourseForecastsQuery _query;
     private GetProviderCourseForecastsQueryResult _queryResult;
 
@@ -34,7 +37,8 @@ public class GetCourseForecastsTests
 
         _mediatorMock = new();
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseForecastsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(_queryResult);
-        ProviderCourseForecastsController sut = new(_mediatorMock.Object);
+        _validatorMock = new Mock<IValidator<CourseForecastsSubmitModel>>();
+        ProviderCourseForecastsController sut = new(_mediatorMock.Object, _validatorMock.Object);
         sut.AddDefaultContextWithUser();
 
         _actual = await sut.GetCourseForecasts(_query.LarsCode, default);
@@ -90,8 +94,11 @@ public class PostCourseForecastsTests
         CourseForecastsSubmitModel submitModel,
         string larsCode,
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<CourseForecastsSubmitModel>> validator,
         [Greedy] ProviderCourseForecastsController sut)
     {
+        validator.Setup(x => x.Validate(It.IsAny<CourseForecastsSubmitModel>())).Returns(new ValidationResult());
+
         sut.AddDefaultContextWithUser();
 
         await sut.PostCourseForecasts(larsCode, submitModel, default);

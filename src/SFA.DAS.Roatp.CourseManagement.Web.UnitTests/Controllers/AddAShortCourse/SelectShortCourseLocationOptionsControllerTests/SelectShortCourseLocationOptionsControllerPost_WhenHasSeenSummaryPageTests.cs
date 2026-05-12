@@ -1,5 +1,9 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
@@ -11,15 +15,15 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAShortCourse.SelectShortCourseLocationOptionsControllerTests;
+
 public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPageTests
 {
     [Test, MoqAutoData]
     public void OnlineOptionIsSelected_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -31,6 +35,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online } };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -48,6 +53,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
     [Test, MoqAutoData]
     public void EmployerLocationOptionIsSelected_HasNationalDeliveryOptionIsNullInSession_SetsSessionCorrectlyAndRedirectsToConfirmNationalProviderDelivery(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -61,6 +67,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation } };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -78,6 +85,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
     [Test, MoqAutoData]
     public void EmployerLocationOptionIsSelected_HasNationalDeliveryOptionHasValueInSession_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -89,6 +97,8 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation } };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -106,6 +116,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
     [Test, MoqAutoData]
     public void ProviderLocationOptionIsSelected_TrainingVenuesDoNotExistInSession_SetsSessionCorrectlyAndRedirectsToSelectShortCourseTrainingVenue(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -119,6 +130,8 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation } };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -136,6 +149,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
     [Test, MoqAutoData]
     public void ProviderLocationOptionIsSelected_TrainingVenuesExistsInSession_SetsSessionCorrectlyAndRedirectsToReviewShortCourseDetails(
         [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
         [Greedy] SelectShortCourseLocationOptionsController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -147,6 +161,8 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.ProviderLocation } };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -164,6 +180,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
     [Test, MoqAutoData]
     public void HasNationalDeliveryOptionIsFalseAndRegionsIsMissing_SetsSessionCorrectlyAndRedirectsToSelectShortCourseRegions(
        [Frozen] Mock<ISessionService> sessionServiceMock,
+       [Frozen] Mock<IValidator<SelectShortCourseLocationOptionsSubmitModel>> validator,
        [Greedy] SelectShortCourseLocationOptionsController sut,
        ShortCourseSessionModel sessionModel)
     {
@@ -184,6 +201,8 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasSeenSummaryPa
         var submitModel = new SelectShortCourseLocationOptionsSubmitModel() { SelectedLocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation } };
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

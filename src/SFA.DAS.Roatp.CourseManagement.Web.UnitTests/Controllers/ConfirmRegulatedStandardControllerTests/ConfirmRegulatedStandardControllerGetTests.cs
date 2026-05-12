@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         private const string Ukprn = "10012002";
         private Mock<ILogger<ConfirmRegulatedStandardController>> _loggerMock;
         private Mock<IMediator> _mediatorMock;
+        private Mock<IValidator<ConfirmRegulatedStandardViewModel>> _validatorMock;
         private ConfirmRegulatedStandardController _sut;
 
         [SetUp]
@@ -30,10 +32,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmRegula
         {
             _loggerMock = new Mock<ILogger<ConfirmRegulatedStandardController>>();
             _mediatorMock = new Mock<IMediator>();
+            _validatorMock = new Mock<IValidator<ConfirmRegulatedStandardViewModel>>();
 
             var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, Ukprn), }, "mock"));
             var httpContext = new DefaultHttpContext() { User = user };
-            _sut = new ConfirmRegulatedStandardController(_mediatorMock.Object, _loggerMock.Object)
+            _sut = new ConfirmRegulatedStandardController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object)
             {
                 ControllerContext = new ControllerContext
                 {

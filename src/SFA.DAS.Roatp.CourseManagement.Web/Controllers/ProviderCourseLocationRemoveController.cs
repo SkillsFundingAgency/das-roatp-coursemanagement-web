@@ -1,16 +1,17 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
-using System;
-using System.Threading.Tasks;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
+[Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation")]
 public class ProviderCourseLocationRemoveController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -22,11 +23,10 @@ public class ProviderCourseLocationRemoveController : ControllerBase
         _logger = logger;
     }
 
-    [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation", Name = RouteNames.GetRemoveProviderCourseLocation)]
-    [HttpGet]
+    [HttpGet(Name = RouteNames.GetRemoveProviderCourseLocation)]
     public async Task<IActionResult> GetProviderCourseLocation(string larsCode, Guid id)
     {
-        _logger.LogInformation("Getting Provider Course Location for ukprn {ukprn} ", Ukprn);
+        _logger.LogInformation("Getting Provider Course Location for ukprn {Ukprn} ", Ukprn);
 
         var result = await _mediator.Send(new GetProviderCourseLocationsQuery(Ukprn, larsCode));
 
@@ -50,8 +50,7 @@ public class ProviderCourseLocationRemoveController : ControllerBase
         return View("~/Views/ProviderCourseLocations/RemoveProviderCourseLocation.cshtml", model);
     }
 
-    [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation", Name = RouteNames.PostRemoveProviderCourseLocation)]
-    [HttpPost]
+    [HttpPost(Name = RouteNames.PostRemoveProviderCourseLocation)]
     public async Task<IActionResult> RemoveProviderCourseLocation(ProviderCourseLocationViewModel model)
     {
         var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode, model.Id, UserId, UserDisplayName);

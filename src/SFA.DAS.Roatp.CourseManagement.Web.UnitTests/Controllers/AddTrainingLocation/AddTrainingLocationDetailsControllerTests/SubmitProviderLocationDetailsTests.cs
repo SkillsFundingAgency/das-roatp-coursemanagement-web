@@ -3,6 +3,8 @@ using System.Text.Json;
 using System.Threading;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -68,11 +70,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         public void ModelStateIsValid_InvokesMediatorWithCreateCommand(
             Mock<ITempDataDictionary> tempDataMock,
             [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
             [Greedy] AddProviderLocationDetailsController sut,
             ProviderLocationDetailsSubmitModel submitModel,
             AddressItem addressItem)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
+            validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
             object address = JsonSerializer.Serialize(addressItem);
             sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
@@ -102,6 +106,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         public void LocationNameIsNotDistinct_ReturnsViewResult(
             Mock<ITempDataDictionary> tempDataMock,
             [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<IValidator<ProviderLocationDetailsSubmitModel>> validator,
             [Greedy] AddProviderLocationDetailsController sut,
             ProviderLocationDetailsSubmitModel model,
             AddressItem addressItem,
@@ -109,6 +114,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddTrainingLo
         {
             allLocations.ProviderLocations.First().LocationName = model.LocationName;
             mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(allLocations);
+            validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
             object address = JsonSerializer.Serialize(addressItem);
             sut.AddDefaultContextWithUser();
             sut.TempData = tempDataMock.Object;
