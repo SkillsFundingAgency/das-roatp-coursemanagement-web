@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.ShortCourses.AddAShortCourse;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.ShortCourses.AddAShortCourse;
+
 public class ReviewShortCourseDetailsViewModelValidatorTests
 {
     [Test]
