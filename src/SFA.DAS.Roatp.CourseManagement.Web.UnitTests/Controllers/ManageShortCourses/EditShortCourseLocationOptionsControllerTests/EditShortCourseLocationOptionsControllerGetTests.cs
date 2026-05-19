@@ -29,7 +29,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         List<ShortCourseLocationOptionModel> locationOptions = new()
         {
@@ -46,13 +46,13 @@ public class EditShortCourseLocationOptionsControllerGetTests
 
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(apprenticeshipType, larscode);
+        var result = await sut.EditShortCourseLocationOptions(learningType, larscode);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult.Model as SelectShortCourseLocationOptionsViewModel;
         model.LocationOptions.Should().BeEquivalentTo(locationOptions);
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.SubmitButtonText.Should().Be(ButtonText.Confirm);
         model.Route.Should().Be(RouteNames.EditShortCourseLocationOptions);
         model.IsAddJourney.Should().BeFalse();
@@ -66,7 +66,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         List<ShortCourseLocationOptionModel> locationOptions = new()
         {
@@ -94,7 +94,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(apprenticeshipType, larscode);
+        var result = await sut.EditShortCourseLocationOptions(learningType, larscode);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -111,7 +111,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
 
         sut.AddDefaultContextWithUser();
@@ -120,7 +120,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 
 
         // Act
-        await sut.EditShortCourseLocationOptions(apprenticeshipType, larscode);
+        await sut.EditShortCourseLocationOptions(learningType, larscode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larscode), It.IsAny<CancellationToken>()), Times.Once);
@@ -134,7 +134,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
 
         sut.AddDefaultContextWithUser();
@@ -143,7 +143,7 @@ public class EditShortCourseLocationOptionsControllerGetTests
 
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(apprenticeshipType, larscode);
+        var result = await sut.EditShortCourseLocationOptions(learningType, larscode);
 
         // Assert
         var viewResult = result as ViewResult;

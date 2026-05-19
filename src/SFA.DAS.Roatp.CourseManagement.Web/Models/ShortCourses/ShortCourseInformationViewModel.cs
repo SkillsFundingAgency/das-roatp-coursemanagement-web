@@ -13,7 +13,7 @@ public class ShortCourseInformationViewModel
     public string IfateReferenceNumber { get; set; }
     public string Sector { get; set; }
     public string RegulatorName { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
+    public LearningType LearningType { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public int Duration { get; set; }
     public DurationUnits DurationUnits { get; set; }
@@ -25,7 +25,7 @@ public class ShortCourseInformationViewModel
         {
             LarsCode = source.LarsCode,
             IfateReferenceNumber = source.IfateReferenceNumber,
-            ApprenticeshipType = source.ApprenticeshipType,
+            LearningType = source.LearningType,
             Sector = source.Route,
             CourseName = source.Title,
             Level = source.Level,

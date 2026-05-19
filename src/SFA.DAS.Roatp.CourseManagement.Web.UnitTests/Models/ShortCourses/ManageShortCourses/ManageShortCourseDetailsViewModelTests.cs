@@ -25,7 +25,7 @@ public class ManageShortCourseDetailsViewModelTests
         Assert.That(sut.ShortCourseInformation.IfateReferenceNumber, Is.EqualTo(source.IFateReferenceNumber));
         Assert.That(sut.ShortCourseInformation.Sector, Is.EqualTo(source.Sector));
         Assert.That(sut.ShortCourseInformation.RegulatorName, Is.EqualTo(source.RegulatorName));
-        Assert.That(sut.ShortCourseInformation.ApprenticeshipType, Is.EqualTo(source.ApprenticeshipType));
+        Assert.That(sut.ShortCourseInformation.LearningType, Is.EqualTo(source.LearningType));
         Assert.That(sut.ShortCourseInformation.IsRegulatedForProvider, Is.EqualTo(source.IsRegulatedForProvider));
         Assert.That(sut.ShortCourseInformation.Duration, Is.EqualTo(source.Duration));
         Assert.That(sut.ShortCourseInformation.DurationUnits, Is.EqualTo(source.DurationUnits));

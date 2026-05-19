@@ -2,19 +2,19 @@
 @using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts
 @model CourseForecastsViewModel
 @{
-    ViewData["Title"] = $"Add forecast for {Model.ApprenticeshipTypeLower}";
+    ViewData["Title"] = $"Add forecast for {Model.LearningTypeLower}";
 }
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-three-quarters">
         <partial name="_validationSummary" />
-        <span class="govuk-caption-l">Add your delivery forecast for @(Model.ApprenticeshipTypeLowerPlural)</span>
+        <span class="govuk-caption-l">Add your delivery forecast for @(Model.LearningTypeLowerPlural)</span>
         <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">@Model.CourseDisplayName</h1>
     </div>
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <p class="govuk-body">Add in how many learners will start an @Model.ApprenticeshipTypeLower during the following time periods.</p>
+        <p class="govuk-body">Add in how many learners will start an @Model.LearningTypeLower during the following time periods.</p>
 
         <p class="govuk-body">This can be an estimate and you are not committed to training this amount of learners. We will use this data for our own reporting.</p>
 

@@ -29,12 +29,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddPro
 
 public class WhenInAddStandardsJourney_AndPostingLocationConfirmation
 {
-    private ApprenticeshipType _learningType;
+    private LearningType _learningType;
 
     [SetUp]
     public void Before_Each_Test()
     {
-        _learningType = ApprenticeshipType.Apprenticeship;
+        _learningType = LearningType.Apprenticeship;
     }
 
     [Test, MoqAutoData]

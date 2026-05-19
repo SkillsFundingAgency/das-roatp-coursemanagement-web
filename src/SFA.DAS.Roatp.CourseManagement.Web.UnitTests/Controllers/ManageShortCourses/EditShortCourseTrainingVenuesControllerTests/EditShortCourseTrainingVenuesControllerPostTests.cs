@@ -39,7 +39,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         List<TrainingVenueModel> trainingVenues = providerLocationsApiResponse.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).OrderBy(l => l.LocationName).ToList();
 
         sut.AddDefaultContextWithUser();
@@ -49,13 +49,13 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larscode);
+        var result = await sut.EditShortCourseTrainingVenues(submitModel, learningType, larscode);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult.Model as ShortCourseTrainingVenuesViewModel;
         model.TrainingVenues.Should().BeEquivalentTo(trainingVenues);
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.SubmitButtonText.Should().Be(ButtonText.Confirm);
         model.Route.Should().Be(RouteNames.EditShortCourseTrainingVenues);
         model.IsAddJourney.Should().BeFalse();
@@ -70,7 +70,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -79,7 +79,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllProviderLocationsQueryResult());
 
         // Act
-        var result = await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larscode);
+        var result = await sut.EditShortCourseTrainingVenues(submitModel, learningType, larscode);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -136,7 +136,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
@@ -147,7 +147,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseTrainingVenues(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
@@ -217,7 +217,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
@@ -228,7 +228,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseTrainingVenues(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
@@ -289,7 +289,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
@@ -300,7 +300,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseTrainingVenues(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
@@ -361,7 +361,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
 
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
@@ -374,7 +374,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseTrainingVenues(submitModel, learningType, larsCode);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -430,7 +430,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         providerLocationsApiResponse.ProviderLocations = providerLocations;
 
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -439,7 +439,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(providerLocationsApiResponse);
 
         // Act
-        await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseTrainingVenues(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Id == nonProviderCourseLocationsId), It.IsAny<CancellationToken>()), Times.Never);
@@ -458,7 +458,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
     {
 
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -471,7 +471,7 @@ public class EditShortCourseTrainingVenuesControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var result = await sut.EditShortCourseTrainingVenues(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseTrainingVenues(submitModel, learningType, larsCode);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

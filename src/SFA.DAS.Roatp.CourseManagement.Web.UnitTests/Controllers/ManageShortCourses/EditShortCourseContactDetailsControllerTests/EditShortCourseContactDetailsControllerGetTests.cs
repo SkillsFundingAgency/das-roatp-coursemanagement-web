@@ -26,14 +26,14 @@ public class EditShortCourseContactDetailsControllerGetTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseContactDetails(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -54,14 +54,14 @@ public class EditShortCourseContactDetailsControllerGetTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode);
+        await sut.EditShortCourseContactDetails(learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
@@ -74,14 +74,14 @@ public class EditShortCourseContactDetailsControllerGetTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseContactDetails(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;

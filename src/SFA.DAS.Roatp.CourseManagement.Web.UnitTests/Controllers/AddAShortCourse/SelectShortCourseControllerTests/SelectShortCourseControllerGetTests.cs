@@ -24,14 +24,14 @@ public class SelectShortCourseControllerGetTests
         GetAvailableProviderStandardsQueryResult queryResult)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var response = await sut.SelectShortCourse(apprenticeshipType);
+        var response = await sut.SelectShortCourse(learningType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -39,7 +39,7 @@ public class SelectShortCourseControllerGetTests
         var model = viewResult.Model as SelectShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourses.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Once());
     }
 }

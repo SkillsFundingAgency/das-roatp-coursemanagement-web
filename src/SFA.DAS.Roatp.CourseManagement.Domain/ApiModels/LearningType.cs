@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
-public enum ApprenticeshipType
+public enum LearningType
 {
     [Description("Standard")]
     Apprenticeship,

@@ -31,7 +31,7 @@ public class SelectShortCourseControllerPostTests
             GetAvailableProviderStandardsQueryResult queryResult)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sut.ModelState.AddModelError("key", "message");
@@ -39,7 +39,7 @@ public class SelectShortCourseControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var response = await sut.SelectShortCourse(new SelectShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType }, apprenticeshipType);
+        var response = await sut.SelectShortCourse(new SelectShortCourseSubmitModel() { LearningType = learningType }, learningType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -47,7 +47,7 @@ public class SelectShortCourseControllerPostTests
         var model = viewResult.Model as SelectShortCourseViewModel;
         model.Should().NotBeNull();
         model!.ShortCourses.Should().BeEquivalentTo(queryResult.AvailableCourses, o => o.ExcludingMissingMembers());
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Once());
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
     }
@@ -61,9 +61,9 @@ public class SelectShortCourseControllerPostTests
             GetLatestProviderContactQueryResult queryResult)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
-        var submitModel = new SelectShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType };
+        var submitModel = new SelectShortCourseSubmitModel() { LearningType = learningType };
 
         sut.AddDefaultContextWithUser();
 
@@ -72,7 +72,7 @@ public class SelectShortCourseControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var response = await sut.SelectShortCourse(submitModel, apprenticeshipType);
+        var response = await sut.SelectShortCourse(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

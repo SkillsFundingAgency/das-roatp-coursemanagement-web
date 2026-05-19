@@ -30,14 +30,14 @@ public class AddShortCourseContactDetailsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = seenSummaryPage;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), apprenticeshipType);
+        var response = sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), learningType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -50,7 +50,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         model!.IsAddJourney.Should().BeTrue();
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
 
@@ -60,13 +60,13 @@ public class AddShortCourseContactDetailsControllerPostTests
     [Greedy] AddShortCourseContactDetailsController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), apprenticeshipType);
+        var result = sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -83,7 +83,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     CourseContactDetailsSubmitModel submitModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = false;
 
         sut.AddDefaultContextWithUser();
@@ -91,7 +91,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
+        var result = sut.AddShortCourseContactDetails(submitModel, learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -109,7 +109,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     CourseContactDetailsSubmitModel submitModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = true;
 
         sut.AddDefaultContextWithUser();
@@ -117,7 +117,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
+        var result = sut.AddShortCourseContactDetails(submitModel, learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

@@ -6,8 +6,8 @@
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <span class="govuk-caption-l">Manage an @Model.ApprenticeshipTypeLower</span>
-        <h1 class="govuk-heading-xl">Are you sure you want to delete this @Model.ApprenticeshipTypeLower?</h1>
+        <span class="govuk-caption-l">Manage an @Model.LearningTypeLower</span>
+        <h1 class="govuk-heading-xl">Are you sure you want to delete this @Model.LearningTypeLower?</h1>
         <form method="post" asp-route="@RouteNames.DeleteShortCourse" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="ShortCourseInformation.LarsCode" />
 
@@ -36,15 +36,15 @@
                 </tbody>
             </table>
 
-            <p>This @Model.ApprenticeshipTypeLower will be removed from your record. It will no longer show as training you deliver.</p>
+            <p>This @Model.LearningTypeLower will be removed from your record. It will no longer show as training you deliver.</p>
 
             <div class="govuk-button-group">
                 <button id="submit" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
-                    Delete @Model.ApprenticeshipTypeLower
+                    Delete @Model.LearningTypeLower
                 </button>
             </div>
 
-            <a href="@Model.BackToManageShortCoursesLink" class="govuk-link govuk-body">Back to managing your @Model.ApprenticeshipTypeLowerPlural</a>
+            <a href="@Model.BackToManageShortCoursesLink" class="govuk-link govuk-body">Back to managing your @Model.LearningTypeLowerPlural</a>
         </form>
     </div>
 </div>

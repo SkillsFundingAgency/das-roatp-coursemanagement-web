@@ -11,8 +11,8 @@ public class ConfirmShortCourseSubmitModelValidatorTests
     [TestCase(false)]
     public void IsCorrectShortCourse_Valid_NoErrors(bool value)
     {
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var model = new ConfirmShortCourseSubmitModel { IsCorrectShortCourse = value, ApprenticeshipType = apprenticeshipType };
+        var learningType = LearningType.ApprenticeshipUnit;
+        var model = new ConfirmShortCourseSubmitModel { IsCorrectShortCourse = value, LearningType = learningType };
         var sut = new ConfirmShortCourseSubmitModelValidator();
 
         var result = sut.TestValidate(model);
@@ -23,8 +23,8 @@ public class ConfirmShortCourseSubmitModelValidatorTests
     [Test]
     public void IsCorrectShortCourse_Invalid_WithExpectedError()
     {
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
-        var model = new ConfirmShortCourseSubmitModel() { ApprenticeshipType = apprenticeshipType };
+        var learningType = LearningType.ApprenticeshipUnit;
+        var model = new ConfirmShortCourseSubmitModel() { LearningType = learningType };
         var sut = new ConfirmShortCourseSubmitModelValidator();
 
         var result = sut.TestValidate(model);

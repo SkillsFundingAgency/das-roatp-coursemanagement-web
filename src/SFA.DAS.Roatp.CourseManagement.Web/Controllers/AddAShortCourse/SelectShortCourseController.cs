@@ -17,21 +17,21 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/new/select-course", Name = RouteNames.SelectShortCourse)]
+[Route("{ukprn}/courses/{learningType}/new/select-course", Name = RouteNames.SelectShortCourse)]
 public class SelectShortCourseController(IMediator _mediator, ISessionService _sessionService, IValidator<SelectShortCourseSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/SelectShortCourse.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
-    public async Task<IActionResult> SelectShortCourse(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> SelectShortCourse(LearningType learningType)
     {
-        var viewModel = await GetModel(apprenticeshipType);
+        var viewModel = await GetModel(learningType);
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> SelectShortCourse(SelectShortCourseSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> SelectShortCourse(SelectShortCourseSubmitModel submitModel, LearningType learningType)
     {
         var validatedResult = _validator.Validate(submitModel);
 
@@ -39,7 +39,7 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
 
         if (!ModelState.IsValid)
         {
-            var viewModel = await GetModel(apprenticeshipType);
+            var viewModel = await GetModel(learningType);
 
             return View(ViewPath, viewModel);
 
@@ -62,16 +62,16 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, learningType });
     }
 
-    private async Task<SelectShortCourseViewModel> GetModel(ApprenticeshipType apprenticeshipType)
+    private async Task<SelectShortCourseViewModel> GetModel(LearningType learningType)
     {
         var result = await _mediator.Send(new GetAvailableProviderStandardsQuery(Ukprn, CourseType.ShortCourse));
         var model = new SelectShortCourseViewModel()
         {
             ShortCourses = result.AvailableCourses.OrderBy(c => c.Title).Select(s => new SelectListItem($"{s.Title} (Level {s.Level})", s.LarsCode.ToString())),
-            ApprenticeshipType = apprenticeshipType
+            LearningType = learningType
         };
 
         return model;

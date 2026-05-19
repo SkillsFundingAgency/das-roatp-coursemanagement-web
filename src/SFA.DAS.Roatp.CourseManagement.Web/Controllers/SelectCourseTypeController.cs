@@ -31,14 +31,14 @@ public class SelectCourseTypeController(IProviderCourseTypeService _providerCour
 
             if (providerCourseTypeResponse.Any(x => x.CourseType == CourseType.ShortCourse))
             {
-                return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit });
+                return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType = LearningType.ApprenticeshipUnit });
             }
         }
 
         var viewModel = new SelectCourseTypeViewModel()
         {
             ApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, new { ukprn = Ukprn, }),
-            ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit })
+            ApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType = LearningType.ApprenticeshipUnit })
         };
 
         return View(viewModel);

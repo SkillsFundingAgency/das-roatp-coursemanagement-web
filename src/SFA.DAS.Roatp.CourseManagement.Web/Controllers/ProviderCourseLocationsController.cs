@@ -45,7 +45,7 @@ public class ProviderCourseLocationsController : ControllerBase
 
         if (!providerLocations.ProviderLocations.Any(l => l.LocationType == LocationType.Provider))
         {
-            return RedirectToRoute(RouteNames.GetAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.Apprenticeship, larsCode });
+            return RedirectToRoute(RouteNames.GetAddProviderLocationEditCourse, new { ukprn = Ukprn, learningType = LearningType.Apprenticeship, larsCode });
         }
 
         ProviderCourseLocationListViewModel model = await BuildViewModel(larsCode);
