@@ -28,7 +28,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.HasSeenSummaryPage = false;
 
@@ -41,7 +41,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseLocation(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -59,7 +59,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.HasSeenSummaryPage = false;
 
@@ -72,7 +72,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseLocation(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -90,7 +90,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.HasSeenSummaryPage = false;
 
@@ -103,7 +103,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseLocation(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -121,7 +121,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
        ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions =
         [
@@ -143,7 +143,7 @@ public class SelectShortCourseLocationOptionsControllerPost_WhenHasNotSeenSummar
         sut.AddDefaultContextWithUser();
 
         // Act
-        var response = sut.SelectShortCourseLocation(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseLocation(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;

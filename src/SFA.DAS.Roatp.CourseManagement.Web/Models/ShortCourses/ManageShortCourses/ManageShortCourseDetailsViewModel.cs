@@ -36,7 +36,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
                 IfateReferenceNumber = source.IFateReferenceNumber,
                 Sector = source.Sector,
                 RegulatorName = source.RegulatorName,
-                ApprenticeshipType = source.ApprenticeshipType,
+                LearningType = source.LearningType,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Duration = source.Duration,
                 DurationUnits = source.DurationUnits,

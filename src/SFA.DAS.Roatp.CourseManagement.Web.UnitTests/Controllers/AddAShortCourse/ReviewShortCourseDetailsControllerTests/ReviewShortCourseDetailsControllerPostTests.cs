@@ -35,12 +35,12 @@ public class ReviewShortCourseDetailsControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         SaveShortCourseConfirmationViewModel viewModel = new SaveShortCourseConfirmationViewModel
         {
             CourseName = sessionModel.ShortCourseInformation.CourseName,
-            ApprenticeshipType = apprenticeshipType
+            LearningType = learningType
         };
 
         var expectedValueInTempData = JsonSerializer.Serialize(viewModel);
@@ -53,7 +53,7 @@ public class ReviewShortCourseDetailsControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<ReviewShortCourseDetailsViewModel>())).Returns(new ValidationResult());
 
         // Act
-        var result = await sut.ReviewShortCourseDetailsPost(apprenticeshipType);
+        var result = await sut.ReviewShortCourseDetailsPost(learningType);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<AddProviderCourseCommand>(c => c.Ukprn.ToString() == TestConstants.DefaultUkprn && c.LarsCode == sessionModel.LarsCode && c.UserId == TestConstants.DefaultUserId), It.IsAny<CancellationToken>()));
@@ -69,7 +69,7 @@ public class ReviewShortCourseDetailsControllerPostTests
        ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111") }, "mock"));
 
@@ -87,7 +87,7 @@ public class ReviewShortCourseDetailsControllerPostTests
         };
 
         // Act
-        var result = await sut.ReviewShortCourseDetailsPost(apprenticeshipType);
+        var result = await sut.ReviewShortCourseDetailsPost(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -101,13 +101,13 @@ public class ReviewShortCourseDetailsControllerPostTests
         [Greedy] ReviewShortCourseDetailsController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.ReviewShortCourseDetailsPost(apprenticeshipType);
+        var result = await sut.ReviewShortCourseDetailsPost(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

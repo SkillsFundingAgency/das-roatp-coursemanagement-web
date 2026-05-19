@@ -28,14 +28,14 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, learningType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -43,7 +43,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         var model = viewResult.Model as ShortCourseTrainingVenuesViewModel;
         model.Should().NotBeNull();
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         model!.Route.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
         model!.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -63,7 +63,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         [
             ShortCourseLocationOption.ProviderLocation
         ];
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         var submitModel = new ShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
@@ -73,7 +73,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -97,7 +97,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
             ShortCourseLocationOption.ProviderLocation,
             ShortCourseLocationOption.EmployerLocation
         ];
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         var submitModel = new ShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
@@ -107,7 +107,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -133,7 +133,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ];
         sessionModel.HasNationalDeliveryOption = false;
         sessionModel.TrainingRegions = new List<TrainingRegionModel>();
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         var submitModel = new ShortCourseTrainingVenuesSubmitModel()
         {
             SelectedProviderLocationIds = sessionModel.TrainingVenues.Select(l => l.ProviderLocationId).ToList(),
@@ -143,7 +143,7 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         validator.Setup(x => x.Validate(It.IsAny<ShortCourseTrainingVenuesSubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var response = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+        var response = sut.SelectShortCourseTrainingVenue(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -159,13 +159,13 @@ public class SelectShortCourseTrainingVenuesControllerPostTests
         ShortCourseTrainingVenuesSubmitModel submitModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.SelectShortCourseTrainingVenue(submitModel, apprenticeshipType);
+        var result = sut.SelectShortCourseTrainingVenue(submitModel, learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

@@ -28,7 +28,7 @@ public class ManageShortCourseDetailsControllerGetTests
         GetProviderCourseDetailsQueryResult apiResponse)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         int ukprn = 12345;
         string larsCode = "ABC1234";
@@ -59,13 +59,13 @@ public class ManageShortCourseDetailsControllerGetTests
         };
 
         // Act
-        var result = await sut.ManageShortCourseDetails(apprenticeshipType, larsCode);
+        var result = await sut.ManageShortCourseDetails(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ManageShortCourseDetailsViewModel;
         model!.Should().NotBeNull();
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.BackToManageShortCoursesLink.Should().Be(backToManageShortCoursesLink);
         model.DeleteShortCourseLink.Should().Be(deleteShortCourseLink);
         model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
@@ -73,7 +73,7 @@ public class ManageShortCourseDetailsControllerGetTests
         model.LocationInformation.TrainingVenuesChangeLink.Should().Be(trainingVenuesChangeLink);
         model.LocationInformation.NationalProviderChangeLink.Should().Be(nationalDeliveryChangeLink);
         model.LocationInformation.LocationOptionsChangeLink.Should().Be(locationOptionsChangeLink);
-        model.Banner.ApprenticeshipType.Should().Be(model.ApprenticeshipTypeLower);
+        model.Banner.LearningType.Should().Be(model.LearningTypeLower);
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 
@@ -84,13 +84,13 @@ public class ManageShortCourseDetailsControllerGetTests
     {
         // Arrange
         string larsCode = "ABC1234";
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         // Act
-        var result = await sut.ManageShortCourseDetails(apprenticeshipType, larsCode);
+        var result = await sut.ManageShortCourseDetails(learningType, larsCode);
 
         // Assert
         result.Should().NotBeNull();

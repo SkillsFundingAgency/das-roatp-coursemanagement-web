@@ -27,7 +27,7 @@ public class AddShortCourseContactDetailsControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
         sut.AddDefaultContextWithUser();
@@ -35,7 +35,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(apprenticeshipType);
+        var result = sut.AddShortCourseContactDetails(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -43,7 +43,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().Be(sessionModel.ContactInformation.ContactUsEmail);
         model!.ContactUsPhoneNumber.Should().Be(sessionModel.ContactInformation.ContactUsPhoneNumber);
         model!.StandardInfoUrl.Should().Be(sessionModel.ContactInformation.StandardInfoUrl);
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         model!.SubmitButtonText.Should().Be(expectedSubmitButtonText);
         model!.IsAddJourney.Should().BeTrue();
@@ -58,7 +58,7 @@ public class AddShortCourseContactDetailsControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.ContactInformation = new ContactInformationModel();
 
@@ -67,7 +67,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(apprenticeshipType);
+        var result = sut.AddShortCourseContactDetails(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -75,7 +75,7 @@ public class AddShortCourseContactDetailsControllerGetTests
         model!.ContactUsEmail.Should().BeNull();
         model!.ContactUsPhoneNumber.Should().BeNull();
         model!.StandardInfoUrl.Should().BeNull();
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         model!.ShowSavedContactDetailsText.Should().Be(sessionModel.IsUsingSavedContactDetails == true);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
     }
@@ -86,13 +86,13 @@ public class AddShortCourseContactDetailsControllerGetTests
     [Greedy] AddShortCourseContactDetailsController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(apprenticeshipType);
+        var result = sut.AddShortCourseContactDetails(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

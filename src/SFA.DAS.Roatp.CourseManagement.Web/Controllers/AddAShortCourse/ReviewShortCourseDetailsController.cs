@@ -16,14 +16,14 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/new")]
+[Route("{ukprn}/courses/{learningType}/new")]
 public class ReviewShortCourseDetailsController(ISessionService _sessionService, IValidator<ReviewShortCourseDetailsViewModel> _validator, IMediator _mediator, ILogger<ReviewShortCourseDetailsController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ReviewShortCourseDetails.cshtml";
     public const string ConfirmationPageViewPath = "~/Views/ShortCourses/AddAShortCourse/SaveShortCourseConfirmation.cshtml";
 
     [HttpGet("review-details", Name = RouteNames.ReviewShortCourseDetails)]
-    public IActionResult ReviewShortCourseDetails(ApprenticeshipType apprenticeshipType)
+    public IActionResult ReviewShortCourseDetails(LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -35,15 +35,15 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
 
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = apprenticeshipType;
-        model.ContactInformation.ApprenticeshipType = apprenticeshipType;
-        model.LocationInformation.ApprenticeshipType = apprenticeshipType;
+        model.LearningType = learningType;
+        model.ContactInformation.LearningType = learningType;
+        model.LocationInformation.LearningType = learningType;
         model.CancelLink = Url.RouteUrl(RouteNames.ReviewYourDetails, new { Ukprn });
-        model.ContactInformation.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, apprenticeshipType });
-        model.LocationInformation.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
-        model.LocationInformation.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
-        model.LocationInformation.NationalProviderChangeLink = Url.RouteUrl(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
-        model.LocationInformation.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
+        model.ContactInformation.ContactDetailsChangeLink = Url.RouteUrl(RouteNames.AddShortCourseContactDetails, new { ukprn = Ukprn, learningType });
+        model.LocationInformation.TrainingRegionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, learningType });
+        model.LocationInformation.TrainingVenuesChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, learningType });
+        model.LocationInformation.NationalProviderChangeLink = Url.RouteUrl(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, learningType });
+        model.LocationInformation.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, learningType });
 
         var result = _validator.Validate(model);
 
@@ -56,7 +56,7 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
     }
 
     [HttpPost("review-details", Name = RouteNames.ReviewShortCourseDetails)]
-    public async Task<IActionResult> ReviewShortCourseDetailsPost(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> ReviewShortCourseDetailsPost(LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -68,7 +68,7 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
 
         if (!result.IsValid)
         {
-            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, learningType });
         }
 
         AddProviderCourseCommand command = sessionModel;
@@ -81,12 +81,12 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
         var bannerData = new SaveShortCourseConfirmationViewModel()
         {
             CourseName = sessionModel.ShortCourseInformation.CourseName,
-            ApprenticeshipType = apprenticeshipType,
+            LearningType = learningType,
         };
 
         TempData.Add(TempDataKeys.SaveShortCourseBannerTempDataKey, JsonSerializer.Serialize(bannerData));
 
-        return RedirectToRoute(RouteNames.SaveShortCourseConfirmation, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.SaveShortCourseConfirmation, new { ukprn = Ukprn, learningType });
     }
 
     [HttpGet("training-confirmation", Name = RouteNames.SaveShortCourseConfirmation)]
@@ -113,7 +113,7 @@ public class ReviewShortCourseDetailsController(ISessionService _sessionService,
         }
         var model = JsonSerializer.Deserialize<SaveShortCourseConfirmationViewModel>(bannerData.ToString()!);
         model.DashboardLink = Url.RouteUrl(RouteNames.ReviewYourDetails, new { Ukprn });
-        model.ManageTrainingTypeLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, model.ApprenticeshipType });
+        model.ManageTrainingTypeLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, model.LearningType });
 
         return model;
     }

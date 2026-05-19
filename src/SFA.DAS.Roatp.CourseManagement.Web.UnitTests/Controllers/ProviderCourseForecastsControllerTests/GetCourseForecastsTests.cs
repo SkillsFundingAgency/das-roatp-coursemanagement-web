@@ -62,7 +62,7 @@ public class GetCourseForecastsTests
     {
         CourseForecastsViewModel actualModel = _actual.As<ViewResult>().Model.As<CourseForecastsViewModel>();
 
-        actualModel.ApprenticeshipType.Should().Be(ApprenticeshipType.ApprenticeshipUnit);
+        actualModel.LearningType.Should().Be(LearningType.ApprenticeshipUnit);
         actualModel.CourseDisplayName.Should().Be($"{_queryResult.CourseName} (level {_queryResult.CourseLevel})");
         actualModel.Ukprn.ToString().Should().Be(TestConstants.DefaultUkprn);
         actualModel.LarsCode.Should().Be(_query.LarsCode);

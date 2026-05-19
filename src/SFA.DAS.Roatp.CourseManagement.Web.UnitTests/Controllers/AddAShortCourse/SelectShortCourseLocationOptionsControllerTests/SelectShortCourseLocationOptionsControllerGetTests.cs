@@ -24,7 +24,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions =
         [
@@ -45,13 +45,13 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.SelectShortCourseLocation(apprenticeshipType);
+        var result = sut.SelectShortCourseLocation(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseLocationOptionsViewModel;
         model!.LocationOptions.Should().BeEquivalentTo(locationOptions);
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.Route.Should().Be(RouteNames.SelectShortCourseLocationOption);
         model.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -68,7 +68,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
@@ -77,7 +77,7 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.SelectShortCourseLocation(apprenticeshipType);
+        var result = sut.SelectShortCourseLocation(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -91,13 +91,13 @@ public class SelectShortCourseLocationOptionsControllerGetTests
         [Greedy] SelectShortCourseLocationOptionsController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.SelectShortCourseLocation(apprenticeshipType);
+        var result = sut.SelectShortCourseLocation(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

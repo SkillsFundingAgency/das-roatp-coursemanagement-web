@@ -23,17 +23,17 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.ShortCourse, CourseType.Apprenticeship)]
-[Route("{ukprn}/courses/{apprenticeshipType}")]
+[Route("{ukprn}/courses/{learningType}")]
 public class AddProviderLocationController(ISessionService _sessionService, ILogger<AddProviderLocationController> _logger, IMediator _mediator, IValidator<AddressSearchSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderLocation.cshtml";
 
     [HttpGet("new/add-provider-location/lookup-address", Name = RouteNames.GetAddProviderLocation)]
-    public async Task<IActionResult> GetAddress(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> GetAddress(LearningType learningType)
     {
         bool hasSeenSummaryPage = false;
 
-        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        if (learningType == LearningType.Apprenticeship)
         {
             var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
 
@@ -49,7 +49,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
             }
         }
 
-        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        if (learningType == LearningType.ApprenticeshipUnit)
         {
             var shortCourseSessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -59,7 +59,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
             {
                 _logger.LogWarning("User: {UserId} unexpectedly landed on add training venue page when locations are available for provider.", UserId);
 
-                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+                return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, learningType });
             }
 
             hasSeenSummaryPage = shortCourseSessionModel.HasSeenSummaryPage;
@@ -67,24 +67,24 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
-        var model = GetViewModel(apprenticeshipType, true, hasSeenSummaryPage);
+        var model = GetViewModel(learningType, true, hasSeenSummaryPage);
 
         return View(ViewPath, model);
     }
 
     [HttpPost("new/add-provider-location/lookup-address", Name = RouteNames.PostAddProviderLocation)]
-    public IActionResult GetAddress([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public IActionResult GetAddress([FromForm] AddressSearchSubmitModel submitModel, LearningType learningType)
     {
         bool hasSeenSummaryPage = false;
 
-        if (apprenticeshipType == ApprenticeshipType.Apprenticeship)
+        if (learningType == LearningType.Apprenticeship)
         {
             var standardsSessionModel = _sessionService.Get<StandardSessionModel>();
 
             if (standardsSessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
         }
 
-        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit)
+        if (learningType == LearningType.ApprenticeshipUnit)
         {
             var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -93,7 +93,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
             hasSeenSummaryPage = sessionModel.HasSeenSummaryPage;
         }
 
-        var model = GetViewModel(apprenticeshipType, true, hasSeenSummaryPage);
+        var model = GetViewModel(learningType, true, hasSeenSummaryPage);
 
         var validatedResult = _validator.Validate(submitModel);
 
@@ -117,11 +117,11 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-        return RedirectToRoute(RouteNames.GetConfirmAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.GetConfirmAddProviderLocation, new { ukprn = Ukprn, learningType });
     }
 
     [HttpGet("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.GetAddProviderLocationEditCourse)]
-    public async Task<IActionResult> GetAddress(ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public async Task<IActionResult> GetAddress(LearningType learningType, [FromRoute] string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
@@ -136,27 +136,27 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         if (providerLocationsResponse.Count > 0)
         {
-            switch (apprenticeshipType)
+            switch (learningType)
             {
-                case ApprenticeshipType.Apprenticeship:
+                case LearningType.Apprenticeship:
                     return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
 
-                case ApprenticeshipType.ApprenticeshipUnit:
-                    return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+                case LearningType.ApprenticeshipUnit:
+                    return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, learningType, larsCode });
             }
         }
 
         TempData.Remove(TempDataKeys.SelectedTrainingVenueAddressTempDataKey);
 
-        var model = GetViewModel(apprenticeshipType, false, false);
+        var model = GetViewModel(learningType, false, false);
 
         return View(ViewPath, model);
     }
 
     [HttpPost("{larsCode}/add-provider-location/lookup-address", Name = RouteNames.PostAddProviderLocationEditCourse)]
-    public IActionResult GetAddress([FromForm] AddressSearchSubmitModel submitModel, ApprenticeshipType apprenticeshipType, [FromRoute] string larsCode)
+    public IActionResult GetAddress([FromForm] AddressSearchSubmitModel submitModel, LearningType learningType, [FromRoute] string larsCode)
     {
-        var model = GetViewModel(apprenticeshipType, false, false);
+        var model = GetViewModel(learningType, false, false);
 
         var validatedResult = _validator.Validate(submitModel);
 
@@ -180,7 +180,7 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         TempData.Add(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, JsonSerializer.Serialize(selectedAddress));
 
-        return RedirectToRoute(RouteNames.GetConfirmAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.GetConfirmAddProviderLocationEditCourse, new { ukprn = Ukprn, learningType, larsCode });
     }
 
     private async Task<List<ProviderLocation>> GetProviderLocations()
@@ -203,13 +203,13 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
         return result;
     }
 
-    private static AddProviderLocationViewModel GetViewModel(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    private static AddProviderLocationViewModel GetViewModel(LearningType learningType, bool isAddJourney, bool hasSeenSummaryPage)
     {
-        string submitButtonText = GetButtonText(apprenticeshipType, isAddJourney, hasSeenSummaryPage);
+        string submitButtonText = GetButtonText(learningType, isAddJourney, hasSeenSummaryPage);
 
         var viewModel = new AddProviderLocationViewModel()
         {
-            ApprenticeshipType = apprenticeshipType,
+            LearningType = learningType,
             SubmitButtonText = submitButtonText,
             Route = isAddJourney ? RouteNames.PostAddProviderLocation : RouteNames.PostAddProviderLocationEditCourse,
             IsAddJourney = isAddJourney
@@ -217,19 +217,19 @@ public class AddProviderLocationController(ISessionService _sessionService, ILog
 
         if (isAddJourney)
         {
-            viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Add a {viewModel.ApprenticeshipTypeLower}" : $"Add an {viewModel.ApprenticeshipTypeLower}";
+            viewModel.DisplayHeader = learningType == LearningType.Apprenticeship ? $"Add a {viewModel.LearningTypeLower}" : $"Add an {viewModel.LearningTypeLower}";
         }
         else
         {
-            viewModel.DisplayHeader = apprenticeshipType == ApprenticeshipType.Apprenticeship ? $"Manage a {viewModel.ApprenticeshipTypeLower}" : $"Manage an {viewModel.ApprenticeshipTypeLower}";
+            viewModel.DisplayHeader = learningType == LearningType.Apprenticeship ? $"Manage a {viewModel.LearningTypeLower}" : $"Manage an {viewModel.LearningTypeLower}";
         }
 
         return viewModel;
     }
 
-    private static string GetButtonText(ApprenticeshipType apprenticeshipType, bool isAddJourney, bool hasSeenSummaryPage)
+    private static string GetButtonText(LearningType learningType, bool isAddJourney, bool hasSeenSummaryPage)
     {
-        if (apprenticeshipType == ApprenticeshipType.ApprenticeshipUnit && isAddJourney && hasSeenSummaryPage)
+        if (learningType == LearningType.ApprenticeshipUnit && isAddJourney && hasSeenSummaryPage)
         {
             return ButtonText.Confirm;
         }

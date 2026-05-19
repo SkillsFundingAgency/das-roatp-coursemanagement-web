@@ -35,7 +35,7 @@ public class EditShortCourseRegionsControllerPostTests
             string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -44,14 +44,14 @@ public class EditShortCourseRegionsControllerPostTests
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act
-        var result = await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseRegions(model, learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var viewModel = viewResult.Model as SelectShortCourseRegionsViewModel;
         viewModel.SubregionsGroupedByRegions.Should().NotBeEmpty();
-        viewModel.ApprenticeshipType.Should().Be(apprenticeshipType);
+        viewModel.LearningType.Should().Be(learningType);
         viewModel.SubmitButtonText.Should().Be(ButtonText.Confirm);
         viewModel.Route.Should().Be(RouteNames.EditShortCourseRegions);
         viewModel.IsAddJourney.Should().BeFalse();
@@ -67,7 +67,7 @@ public class EditShortCourseRegionsControllerPostTests
             string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
@@ -76,7 +76,7 @@ public class EditShortCourseRegionsControllerPostTests
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act
-        await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
+        await sut.EditShortCourseRegions(model, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never());
@@ -92,7 +92,7 @@ public class EditShortCourseRegionsControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         model.SelectedSubRegions = ["1", "2"];
 
         validator.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
@@ -100,7 +100,7 @@ public class EditShortCourseRegionsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseRegions(model, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseRegions(model, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;

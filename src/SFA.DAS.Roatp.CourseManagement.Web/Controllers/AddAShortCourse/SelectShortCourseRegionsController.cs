@@ -18,13 +18,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/new/select-regions", Name = RouteNames.SelectShortCourseRegions)]
+[Route("{ukprn}/courses/{learningType}/new/select-regions", Name = RouteNames.SelectShortCourseRegions)]
 public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegionsController> _logger, ISessionService _sessionService, IRegionsService _regionsService, IValidator<RegionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegions.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> SelectShortCourseRegions(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> SelectShortCourseRegions(LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -39,7 +39,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         var regionsResponse = await _regionsService.GetRegions();
 
-        SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType, sessionModel);
+        SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, learningType, sessionModel);
 
         foreach (var subregionsGroupedByRegion in model.SubregionsGroupedByRegions)
         {
@@ -53,7 +53,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
     }
 
     [HttpPost]
-    public async Task<IActionResult> SelectShortCourseRegions(RegionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> SelectShortCourseRegions(RegionsSubmitModel submitModel, LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -67,7 +67,7 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         if (!ModelState.IsValid)
         {
-            SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, apprenticeshipType, sessionModel);
+            SelectShortCourseRegionsViewModel model = GetViewModel(regionsResponse, learningType, sessionModel);
 
             return View(ViewPath, model);
         }
@@ -76,13 +76,13 @@ public class SelectShortCourseRegionsController(ILogger<SelectShortCourseRegions
 
         _sessionService.Set(sessionModel);
 
-        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, learningType });
     }
 
-    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, ApprenticeshipType apprenticeshipType, ShortCourseSessionModel sessionModel)
+    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, LearningType learningType, ShortCourseSessionModel sessionModel)
     {
         var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
-        model.ApprenticeshipType = apprenticeshipType;
+        model.LearningType = learningType;
         model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
         model.Route = RouteNames.SelectShortCourseRegions;
         model.IsAddJourney = true;

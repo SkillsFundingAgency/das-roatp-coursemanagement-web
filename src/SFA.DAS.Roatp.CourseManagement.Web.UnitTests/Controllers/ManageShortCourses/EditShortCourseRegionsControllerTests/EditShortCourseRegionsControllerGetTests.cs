@@ -31,7 +31,7 @@ public class EditShortCourseRegionsControllerGetTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -40,14 +40,14 @@ public class EditShortCourseRegionsControllerGetTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseRegions(apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseRegions(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var model = viewResult.Model as SelectShortCourseRegionsViewModel;
         model.SubregionsGroupedByRegions.Should().NotBeEmpty();
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.SubmitButtonText.Should().Be(ButtonText.Confirm);
         model.Route.Should().Be(RouteNames.EditShortCourseRegions);
         model.IsAddJourney.Should().BeFalse();
@@ -62,7 +62,7 @@ public class EditShortCourseRegionsControllerGetTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         List<RegionModel> regions = new List<RegionModel>()
         {
@@ -99,7 +99,7 @@ public class EditShortCourseRegionsControllerGetTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseRegions(apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseRegions(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -117,7 +117,7 @@ public class EditShortCourseRegionsControllerGetTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -126,7 +126,7 @@ public class EditShortCourseRegionsControllerGetTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        await sut.EditShortCourseRegions(apprenticeshipType, larsCode);
+        await sut.EditShortCourseRegions(learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
@@ -140,14 +140,14 @@ public class EditShortCourseRegionsControllerGetTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseRegions(apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseRegions(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;

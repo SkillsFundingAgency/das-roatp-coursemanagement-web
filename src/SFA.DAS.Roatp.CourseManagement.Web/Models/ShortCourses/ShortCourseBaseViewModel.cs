@@ -5,8 +5,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 public class ShortCourseBaseViewModel
 {
-    public ApprenticeshipType? ApprenticeshipType { get; set; }
-    public string ApprenticeshipTypeLower => ApprenticeshipType?.Humanize(LetterCasing.LowerCase);
-    public string ApprenticeshipTypeLowerPlural => ApprenticeshipType?.Humanize(LetterCasing.LowerCase).Pluralize();
-    public string ApprenticeshipTypeHumanize => ApprenticeshipType?.Humanize();
+    public LearningType? LearningType { get; set; }
+    public string LearningTypeLower => LearningType?.Humanize(LetterCasing.LowerCase);
+    public string LearningTypeLowerPlural => LearningType?.Humanize(LetterCasing.LowerCase).Pluralize();
+    public string LearningTypeHumanize => LearningType?.Humanize();
 }

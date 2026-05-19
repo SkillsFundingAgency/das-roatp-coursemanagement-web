@@ -31,14 +31,14 @@ public class EditShortCourseContactDetailsControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "error");
 
         // Act
-        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
+        var result = await sut.EditShortCourseContactDetails(learningType, larsCode, model);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -59,14 +59,14 @@ public class EditShortCourseContactDetailsControllerPostTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "error");
 
         // Act
-        await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
+        await sut.EditShortCourseContactDetails(learningType, larsCode, model);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Never());
@@ -83,7 +83,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
@@ -92,7 +92,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
+        var result = await sut.EditShortCourseContactDetails(learningType, larsCode, model);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -100,7 +100,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(3);
         routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(int.Parse(TestConstants.DefaultUkprn));
         routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(larsCode);
-        routeResult.RouteValues.Should().ContainKey("apprenticeshipType").WhoseValue.Should().Be(apprenticeshipType);
+        routeResult.RouteValues.Should().ContainKey("learningType").WhoseValue.Should().Be(learningType);
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
         mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
     }
@@ -115,7 +115,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         queryResult.ContactUsPhoneNumber = model.ContactUsPhoneNumber;
         queryResult.ContactUsEmail = model.ContactUsEmail;
         queryResult.StandardInfoUrl = model.StandardInfoUrl;
@@ -127,7 +127,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
+        var result = await sut.EditShortCourseContactDetails(learningType, larsCode, model);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -145,7 +145,7 @@ public class EditShortCourseContactDetailsControllerPostTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         model.ContactUsEmail = " test@test.com ";
         model.ContactUsPhoneNumber = " 012345 ";
@@ -162,7 +162,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
+        await sut.EditShortCourseContactDetails(learningType, larsCode, model);
 
         // Assert
         mediatorMock.Verify(m => m.Send(
@@ -183,7 +183,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
@@ -192,7 +192,7 @@ public class EditShortCourseContactDetailsControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode, model);
+        var result = await sut.EditShortCourseContactDetails(learningType, larsCode, model);
 
         // Assert
         var viewResult = result as RedirectToRouteResult;

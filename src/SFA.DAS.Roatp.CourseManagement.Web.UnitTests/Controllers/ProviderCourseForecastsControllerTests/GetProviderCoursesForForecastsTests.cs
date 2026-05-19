@@ -45,7 +45,7 @@ public class GetProviderCoursesForForecastsTests
     [Test]
     public async Task GetProviderCoursesForForecasts_SetsCorrectApprenticeshipTypeInModel()
     {
-        _actualModel.ApprenticeshipType.Should().Be(ApprenticeshipType.ApprenticeshipUnit);
+        _actualModel.LearningType.Should().Be(LearningType.ApprenticeshipUnit);
     }
 
     [Test]

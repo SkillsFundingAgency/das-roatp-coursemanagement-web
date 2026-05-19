@@ -28,20 +28,20 @@ public class ConfirmNationalDeliveryControllerPostTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.ConfirmNationalProviderDelivery(new ConfirmNationalDeliverySubmitModel(), apprenticeshipType);
+        var response = sut.ConfirmNationalProviderDelivery(new ConfirmNationalDeliverySubmitModel(), learningType);
 
         // Assert
         var viewResult = response as ViewResult;
         Assert.IsNotNull(viewResult);
         var model = viewResult.Model as ConfirmNationalDeliveryViewModel;
         model.Should().NotBeNull();
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         model!.IsAddJourney.Should().BeTrue();
         model!.Route.Should().Be(RouteNames.ConfirmNationalDelivery);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -58,14 +58,14 @@ public class ConfirmNationalDeliveryControllerPostTests
     ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = seenSummaryPage;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.ConfirmNationalProviderDelivery(new ConfirmNationalDeliverySubmitModel(), apprenticeshipType);
+        var response = sut.ConfirmNationalProviderDelivery(new ConfirmNationalDeliverySubmitModel(), learningType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -79,13 +79,13 @@ public class ConfirmNationalDeliveryControllerPostTests
     [Greedy] ConfirmNationalDeliveryController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(new ConfirmNationalDeliverySubmitModel(), apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(new ConfirmNationalDeliverySubmitModel(), learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -103,14 +103,14 @@ public class ConfirmNationalDeliveryControllerPostTests
     {
         // Arrange
         submitModel.HasNationalDeliveryOption = true;
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(submitModel, apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(submitModel, learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -130,14 +130,14 @@ public class ConfirmNationalDeliveryControllerPostTests
         // Arrange
         submitModel.HasNationalDeliveryOption = false;
         sessionModel.TrainingRegions = new List<TrainingRegionModel>();
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         validator.Setup(x => x.Validate(It.IsAny<ConfirmNationalDeliverySubmitModel>())).Returns(new ValidationResult());
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(submitModel, apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(submitModel, learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

@@ -20,12 +20,12 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLocationControllerTests.GetAddressTests;
 public class WhenInEditStandardsJourney_AndGettingAddressDetails
 {
-    private ApprenticeshipType _learningType;
+    private LearningType _learningType;
 
     [SetUp]
     public void Before_Each_Test()
     {
-        _learningType = ApprenticeshipType.Apprenticeship;
+        _learningType = LearningType.Apprenticeship;
     }
 
     [Test, MoqAutoData]

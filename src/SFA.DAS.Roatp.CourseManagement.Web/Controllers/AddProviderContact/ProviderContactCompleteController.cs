@@ -27,7 +27,7 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
         var showBoth = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
         var showPhoneOnly = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && string.IsNullOrEmpty(sessionModel.EmailAddress);
         var showEmailOnly = string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit.ToString();
+        var learningType = LearningType.ApprenticeshipUnit.ToString();
 
         var model = new AddProviderContactCompleteViewModel
         {
@@ -36,7 +36,7 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
             CheckedStandards = checkedStandards,
             CheckedApprenticeshipUnits = checkedApprenticeshipUnits,
             ReviewYourDetailsUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails),
-            ManageShortCoursesUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType }),
+            ManageShortCoursesUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType }),
             ShowBoth = showBoth,
             ShowEmailOnly = showEmailOnly,
             ShowPhoneOnly = showPhoneOnly,

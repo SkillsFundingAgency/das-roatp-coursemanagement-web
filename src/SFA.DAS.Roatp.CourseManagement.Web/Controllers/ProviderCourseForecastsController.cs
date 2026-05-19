@@ -30,7 +30,7 @@ public class ProviderCourseForecastsController(IMediator _mediator, IValidator<C
         var standards = await GetShortCourses(cancellationToken);
         ForecastCoursesViewModel model = new()
         {
-            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+            LearningType = LearningType.ApprenticeshipUnit,
             CourseLinks = new(standards.Select(s => new CourseLink(s.DisplayName, Url.RouteUrl(RouteNames.CourseForecasts, new { Ukprn, s.LarsCode }))).OrderBy(c => c.Name))
         };
         return View(AllCoursesViewPath, model);
@@ -50,7 +50,7 @@ public class ProviderCourseForecastsController(IMediator _mediator, IValidator<C
 
         CourseForecastsViewModel model = new()
         {
-            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+            LearningType = LearningType.ApprenticeshipUnit,
             CourseDisplayName = $"{result.CourseName} (level {result.CourseLevel})",
             Ukprn = Ukprn,
             LarsCode = larsCode,
