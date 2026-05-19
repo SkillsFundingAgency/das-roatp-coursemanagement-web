@@ -12,12 +12,9 @@
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.WsFederation" Version="10.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.8" />
     <PackageReference Include="Microsoft.AspNetCore.DataProtection.StackExchangeRedis" Version="10.0.8" />
+    <PackageReference Include="Microsoft.Data.OData" Version="5.8.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="10.0.8" />
-    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions" Version="10.0.8" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.18.0" />
     <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.109" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="17.1.165" />
@@ -28,14 +25,6 @@
     <PackageReference Include="StackExchange.Redis" Version="2.13.1" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
   </ItemGroup>
-
-  <!-- Transitive -->
-  <ItemGroup>
-    <PackageReference Include="System.Formats.Asn1" Version="10.0.8" />
-    <PackageReference Include="System.Text.Json" Version="10.0.8" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
-  </ItemGroup>
-  <!--// Transitive-->
 
 
   <ItemGroup>

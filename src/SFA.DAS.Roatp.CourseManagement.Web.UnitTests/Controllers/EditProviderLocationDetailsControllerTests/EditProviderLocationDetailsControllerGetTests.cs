@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderL
         private Mock<IMediator> _mediatorMock;
         private Mock<IValidator<ProviderLocationDetailsSubmitModel>> _validatorMock;
         private EditProviderLocationDetailsController _sut;
-        string verifyUrl = "http://test";
+        readonly string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_Each_Test()
