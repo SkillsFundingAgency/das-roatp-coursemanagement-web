@@ -22,13 +22,6 @@
     </PackageReference>
     <PackageReference Include="SFA.DAS.Testing.AutoFixture" Version="17.1.165" />
   </ItemGroup>
-  <!-- Transitive -->
-  <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.23.0" />
-    <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.18.0" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.18.0" />
-  </ItemGroup>
-  <!--// Transitive-->
 
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.CourseManagement.Web\SFA.DAS.Roatp.CourseManagement.Web.csproj" />
