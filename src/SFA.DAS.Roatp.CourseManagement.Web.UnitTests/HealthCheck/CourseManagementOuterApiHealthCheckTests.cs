@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit4;
 using MediatR;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Moq;

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     {
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseDeleteController _sut;
-        string verifyUrl = "http://test";
+        readonly string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_Each_Test()

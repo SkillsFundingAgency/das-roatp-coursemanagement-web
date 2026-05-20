@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+
+[Route("ping")]
+public class PingController : Controller
 {
-    public class PingController : Controller
+    [HttpGet]
+    public IActionResult Index()
     {
-        [HttpGet]
-        [Route("ping")]
-        public IActionResult Index()
-        {
-            return new OkObjectResult("Pong");
-        }
+        return new OkObjectResult("Pong");
     }
 }

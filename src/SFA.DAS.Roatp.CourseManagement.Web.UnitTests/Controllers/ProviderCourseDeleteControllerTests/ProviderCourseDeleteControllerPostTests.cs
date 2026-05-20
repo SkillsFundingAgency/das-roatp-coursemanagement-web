@@ -1,7 +1,10 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -11,9 +14,6 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
-using System.Threading;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseDeleteControllerTests
 {
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
     {
         private Mock<IMediator> _mediatorMock;
         private ProviderCourseDeleteController _sut;
-        string verifyUrl = "http://test";
+        readonly string verifyUrl = "http://test";
 
         [SetUp]
         public void Before_Each_Test()
@@ -44,14 +44,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             var tempDataMock = new Mock<ITempDataDictionary>();
             _sut.TempData = tempDataMock.Object;
 
-            var result =  await _sut.DeleteProviderCourse(model);
+            var result = await _sut.DeleteProviderCourse(model);
 
             _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteProviderCourseCommand>(), It.IsAny<CancellationToken>()), Times.Once);
 
             var actual = (RedirectToRouteResult)result;
             Assert.NotNull(actual);
             actual.RouteName.Should().Be(RouteNames.ViewStandards);
-            tempDataMock.Verify(t=>t.Add(TempDataKeys.ShowStandardDeletedBannerTempDataKey, true));
+            tempDataMock.Verify(t => t.Add(TempDataKeys.ShowStandardDeletedBannerTempDataKey, true));
         }
     }
 }

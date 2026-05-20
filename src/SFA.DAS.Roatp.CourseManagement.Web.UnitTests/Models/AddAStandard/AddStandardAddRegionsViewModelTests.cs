@@ -1,10 +1,10 @@
-﻿using AutoFixture;
-using AutoFixture.NUnit3;
+﻿using System.Linq;
+using AutoFixture;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.AddAStandard
 {

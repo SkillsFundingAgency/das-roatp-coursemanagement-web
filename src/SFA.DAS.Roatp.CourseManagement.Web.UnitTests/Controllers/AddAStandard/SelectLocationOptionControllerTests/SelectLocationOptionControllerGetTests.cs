@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;

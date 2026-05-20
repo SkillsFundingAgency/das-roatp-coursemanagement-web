@@ -7,34 +7,34 @@ using Microsoft.Extensions.Options;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers
+namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+
+[ExcludeFromCodeCoverage]
+[Route("signout")]
+public class ProviderAccountController : Controller
 {
-    [ExcludeFromCodeCoverage]
-    public class ProviderAccountController : Controller
+    private readonly IOptions<RoatpCourseManagement> _configOptions;
+
+    public ProviderAccountController(IOptions<RoatpCourseManagement> configOptions)
     {
-        private readonly IOptions<RoatpCourseManagement> _configOptions;
+        _configOptions = configOptions;
+    }
 
-        public ProviderAccountController(IOptions<RoatpCourseManagement> configOptions)
-        {
-            _configOptions = configOptions;
-        }
+    [HttpGet(Name = RouteNames.ProviderSignOut)]
+    public IActionResult SignOut()
+    {
+        // choose the authentication scheme based on the UseDfESignIn property value.
+        var authScheme = _configOptions.Value.UseDfESignIn
+            ? OpenIdConnectDefaults.AuthenticationScheme
+            : WsFederationDefaults.AuthenticationScheme;
 
-        [Route("signout", Name = RouteNames.ProviderSignOut)]
-        public IActionResult SignOut()
-        {
-            // choose the authentication scheme based on the UseDfESignIn property value.
-            var authScheme = _configOptions.Value.UseDfESignIn
-                ? OpenIdConnectDefaults.AuthenticationScheme
-                : WsFederationDefaults.AuthenticationScheme;
-
-            return SignOut(
-                new Microsoft.AspNetCore.Authentication.AuthenticationProperties
-                {
-                    RedirectUri = "",
-                    AllowRefresh = true
-                },
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                authScheme);
-        }
+        return SignOut(
+            new Microsoft.AspNetCore.Authentication.AuthenticationProperties
+            {
+                RedirectUri = "",
+                AllowRefresh = true
+            },
+            CookieAuthenticationDefaults.AuthenticationScheme,
+            authScheme);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
@@ -15,18 +14,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
     public class EditLocationOptionControllerGetTests : EditLocationOptionControllerTestBase
     {
         private const string LarsCode = "123";
-        [Test, AutoData]
-        public async Task Get_BackLinkIsSetToStandardDetails()
-        {
-            SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
-
-            var actionResult = await _sut.Index(LarsCode);
-
-            var viewResult = (ViewResult)actionResult;
-            Assert.IsNotNull(viewResult);
-            var model = (EditLocationOptionViewModel)viewResult.Model;
-            model!.LocationOption.Should().Be(LocationOption.None);
-        }
 
         [Test]
         public async Task Get_NoCourseLocation_ResturnNullLocationOption()
