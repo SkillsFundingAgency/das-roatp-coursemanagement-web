@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
@@ -51,12 +52,12 @@ public class AddContactDetailsController : AddAStandardControllerBase
     }
 
     [HttpPost(Name = RouteNames.PostAddStandardAddContactDetails)]
-    public IActionResult SubmitContactDetails(CourseContactDetailsSubmitModel submitModel)
+    public async Task<IActionResult> SubmitContactDetails(CourseContactDetailsSubmitModel submitModel)
     {
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
         if (sessionModel == null) return redirectResult;
 
-        var validatedResult = _validator.Validate(submitModel);
+        var validatedResult = await _validator.ValidateAsync(submitModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 

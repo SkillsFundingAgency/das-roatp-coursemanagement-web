@@ -1,9 +1,13 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using DnsClient;
+using DnsClient.Protocol;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.Services;
+
 public static class EmailCheckingService
 {
-    public static bool IsValidDomain(string email)
+    public static async Task<bool> IsValidDomain(string? email)
     {
         if (email == null)
         {
@@ -19,15 +23,10 @@ public static class EmailCheckingService
             return false;
         }
 
-        try
-        {
-            var hostEntry = Dns.GetHostEntry(domain);
+        var lookup = new LookupClient();
 
-            return hostEntry.AddressList.Length > 0;
-        }
-        catch
-        {
-            return false;
-        }
+        var results = await lookup.QueryAsync(domain, QueryType.MX);
+
+        return results.Answers.Any(x => x.RecordType == ResourceRecordType.MX);
     }
 }
