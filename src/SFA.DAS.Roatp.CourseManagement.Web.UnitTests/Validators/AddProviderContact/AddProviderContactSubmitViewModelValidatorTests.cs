@@ -1,10 +1,10 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators.AddProviderContact;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.AddProviderContact;
 
@@ -27,12 +27,12 @@ public class AddProviderContactSubmitViewModelValidatorTests
             result.ShouldHaveValidationErrorFor(m => m.EmailAddress).WithErrorMessage(CommonValidationErrorMessage.EmailInvalidMessage);
     }
 
-    [TestCase("test@account.com", "")]
-    [TestCase("test//@account.com", "")]
+    [TestCase("test@google.com", "")]
+    [TestCase("test//@google.com", "")]
     [TestCase("test", CommonValidationErrorMessage.EmailInvalidMessage)]
     [TestCase("test.com", CommonValidationErrorMessage.EmailInvalidMessage)]
     [TestCase("test test@account.com", CommonValidationErrorMessage.EmailInvalidMessage)]
-    [TestCase("aaaa@NonExistentDomain50c2413d-e8e4-4330-9859-222567ad0f64.co.uk", AddProviderContactSubmitViewModelValidator.InvalidDomainErrorMessage)]
+    [TestCase("aaaa@NonExistentDomain.co.uk", AddProviderContactSubmitViewModelValidator.InvalidDomainErrorMessage)]
     public async Task ValidEmailInModel_IsValid(string email, string validationMessage)
     {
         var model = new AddProviderContactSubmitViewModel()
@@ -56,12 +56,12 @@ public class AddProviderContactSubmitViewModelValidatorTests
     }
 
     [Test]
-    public void EmailAndPostcodeIsEmpty()
+    public async Task EmailAndPostcodeIsEmpty()
     {
         var model = new AddProviderContactSubmitViewModel();
         var sut = new AddProviderContactSubmitViewModelValidator();
 
-        var result = sut.TestValidate(model);
+        var result = await sut.TestValidateAsync(model);
 
         result.Errors.Count.Should().Be(2);
         result.ShouldHaveValidationErrorFor(m => m.EmailAddress)
@@ -75,34 +75,33 @@ public class AddProviderContactSubmitViewModelValidatorTests
     [TestCase("123")]
     [TestCase("1234")]
     [TestCase("123456789")]
-    public void Phone_Too_Short_ProducesValidationError(string phone)
+    public async Task Phone_Too_Short_ProducesValidationError(string phone)
     {
         var sut = new AddProviderContactSubmitViewModelValidator();
 
         var command = new AddProviderContactSubmitViewModel()
         {
             PhoneNumber = phone,
-            EmailAddress = "test@test.com"
+            EmailAddress = "test@google.com"
         };
 
-        var result = sut.TestValidate(command);
+        var result = await sut.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
     }
 
     [Test]
-    public void PhoneTooLong_ProducesValidationError()
+    public async Task PhoneTooLong_ProducesValidationError()
     {
         string phone = new string('1', 257);
         var sut = new AddProviderContactSubmitViewModelValidator();
 
         var command = new AddProviderContactSubmitViewModel()
         {
-            PhoneNumber = phone,
-            EmailAddress = "test@test.com"
+            PhoneNumber = phone
         };
 
-        var result = sut.TestValidate(command);
+        var result = await sut.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
     }
@@ -121,17 +120,16 @@ public class AddProviderContactSubmitViewModelValidatorTests
     [TestCase(">123456 7890")]
     [TestCase(";123456 7890")]
     [TestCase("/123456 7890")]
-    public void ExcludedSpecialCharacters_ProducesValidationError(string phoneNumber)
+    public async Task ExcludedSpecialCharacters_ProducesValidationError(string phoneNumber)
     {
         var sut = new AddProviderContactSubmitViewModelValidator();
 
         var command = new AddProviderContactSubmitViewModel()
         {
-            EmailAddress = "Test@test.com",
             PhoneNumber = phoneNumber
         };
 
-        var result = sut.TestValidate(command);
+        var result = await sut.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CommonValidationErrorMessage.TelephoneHasExcludedCharacter);
     }
