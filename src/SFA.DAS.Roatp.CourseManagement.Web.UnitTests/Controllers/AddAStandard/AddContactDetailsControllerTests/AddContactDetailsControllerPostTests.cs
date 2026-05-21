@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -20,14 +22,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     public class AddContactDetailsControllerPostTests
     {
         [Test, MoqAutoData]
-        public void Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
+        public async Task Get_ModelMissingFromSession_RedirectsToReviewYourDetails(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns((StandardSessionModel)null);
 
-            var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
+            var result = await sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.ReviewYourDetails);
@@ -35,7 +37,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
 
         [Test, MoqAutoData]
-        public void Get_ModelStateIsInvalid_ReturnsViewResult(
+        public async Task Get_ModelStateIsInvalid_ReturnsViewResult(
             bool? isUsingSavedContactDetails,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] AddContactDetailsController sut,
@@ -64,7 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
             sut.ModelState.AddModelError("key", "message");
 
-            var result = sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
+            var result = await sut.SubmitContactDetails(new CourseContactDetailsSubmitModel());
 
             result.As<ViewResult>().Should().NotBeNull();
             result.As<ViewResult>().ViewName.Should().Be(AddContactDetailsController.ViewPath);
@@ -72,7 +74,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void Get_ModelStateIsValid_UpdatesStandardSessionModel(
+        public async Task Get_ModelStateIsValid_UpdatesStandardSessionModel(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
             [Greedy] AddContactDetailsController sut,
@@ -81,9 +83,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
-            validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+            validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
-            sut.SubmitContactDetails(submitModel);
+            await sut.SubmitContactDetails(submitModel);
 
             sessionServiceMock.Verify(s => s.Set(standardSessionModel));
 
@@ -93,7 +95,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public void Get_ModelStateIsValid_RedirectToSelectLocationOption(
+        public async Task Get_ModelStateIsValid_RedirectToSelectLocationOption(
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
             [Greedy] AddContactDetailsController sut,
@@ -102,9 +104,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(standardSessionModel);
-            validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+            validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
-            var result = sut.SubmitContactDetails(submitModel);
+            var result = await sut.SubmitContactDetails(submitModel);
 
             result.As<RedirectToRouteResult>().Should().NotBeNull();
             result.As<RedirectToRouteResult>().RouteName.Should().Be(RouteNames.GetAddStandardSelectLocationOption);

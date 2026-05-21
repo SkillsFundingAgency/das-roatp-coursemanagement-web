@@ -12,12 +12,15 @@ public class AddProviderContactSubmitViewModelValidator : AbstractValidator<AddP
 
     public AddProviderContactSubmitViewModelValidator()
     {
-        RuleFor(p => p.EmailAddress)
+        When(x => !string.IsNullOrWhiteSpace(x.EmailAddress), () =>
+        {
+            RuleFor(p => p.EmailAddress)
             .Cascade(CascadeMode.Stop)
             .Matches(Constants.RegularExpressions.EmailRegex)
             .WithMessage(CommonValidationErrorMessage.EmailInvalidMessage)
-            .Must(IsDomainValid)
+            .MustAsync(async (email, cancellationToken) => await EmailCheckingService.IsValidDomain(email))
             .WithMessage(InvalidDomainErrorMessage);
+        });
 
         RuleFor(x => x.EmailAddress)
             .NotEmpty()
@@ -35,11 +38,5 @@ public class AddProviderContactSubmitViewModelValidator : AbstractValidator<AddP
             .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage)
             .MaximumLength(50)
             .WithMessage(CommonValidationErrorMessage.TelephoneLengthMessage);
-    }
-
-    private static bool IsDomainValid(string email)
-    {
-        return string.IsNullOrEmpty(email) ||
-               EmailCheckingService.IsValidDomain(email);
     }
 }

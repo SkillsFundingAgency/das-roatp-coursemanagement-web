@@ -47,7 +47,7 @@ public class ProviderContactControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
 
-        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.Is<AddProviderContactSubmitViewModel>(v => v.EmailAddress == email && v.PhoneNumber == phoneNumber), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
@@ -76,7 +76,7 @@ public class ProviderContactControllerPostTests
 
         sessionServiceMock.Setup(x => x.Get<ProviderContactSessionModel>()).Returns(new ProviderContactSessionModel { Standards = new List<ProviderContactStandardModel>() });
 
-        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<AddProviderContactSubmitViewModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -108,7 +108,7 @@ public class ProviderContactControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
 
-        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<AddProviderContactSubmitViewModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
@@ -138,7 +138,7 @@ public class ProviderContactControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderStandardsQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(standardsResult);
 
-        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<AddProviderContactSubmitViewModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         var result = await sut.PostProviderContact(ukprn, submitViewModel);
 
@@ -168,7 +168,7 @@ public class ProviderContactControllerPostTests
 
         sessionServiceMock.Setup(x => x.Get<ProviderContactSessionModel>()).Returns(new ProviderContactSessionModel());
 
-        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<AddProviderContactSubmitViewModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -203,7 +203,7 @@ public class ProviderContactControllerPostTests
 
         sessionServiceMock.Setup(x => x.Get<ProviderContactSessionModel>()).Returns((ProviderContactSessionModel)null);
 
-        validator.Setup(x => x.Validate(It.IsAny<AddProviderContactSubmitViewModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<AddProviderContactSubmitViewModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

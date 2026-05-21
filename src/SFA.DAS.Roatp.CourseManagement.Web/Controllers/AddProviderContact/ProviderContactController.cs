@@ -40,7 +40,7 @@ public class ProviderContactController(IMediator _mediator, ISessionService _ses
     {
         var sessionModel = _sessionService.Get<ProviderContactSessionModel>();
 
-        var validatedResult = _validator.Validate(submitViewModel);
+        var validatedResult = await _validator.ValidateAsync(submitViewModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 

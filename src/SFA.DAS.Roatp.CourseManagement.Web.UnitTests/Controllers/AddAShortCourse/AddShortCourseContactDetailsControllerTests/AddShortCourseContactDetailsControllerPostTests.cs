@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -22,7 +24,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     [Test]
     [MoqInlineAutoData(false, "Continue")]
     [MoqInlineAutoData(true, "Confirm")]
-    public void AddShortCourseContactDetails_InvalidState_ReturnsView(
+    public async Task AddShortCourseContactDetails_InvalidState_ReturnsView(
         bool seenSummaryPage,
         string expectedSubmitButtonText,
         [Frozen] Mock<ISessionService> sessionServiceMock,
@@ -37,7 +39,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var response = sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), apprenticeshipType);
+        var response = await sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), apprenticeshipType);
 
         // Assert
         var viewResult = response as ViewResult;
@@ -55,7 +57,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void AddShortCourseContactDetails_SessionIsNull_RedirectsToReviewYourDetails(
+    public async Task AddShortCourseContactDetails_SessionIsNull_RedirectsToReviewYourDetails(
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Greedy] AddShortCourseContactDetailsController sut)
     {
@@ -66,7 +68,7 @@ public class AddShortCourseContactDetailsControllerPostTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), apprenticeshipType);
+        var result = await sut.AddShortCourseContactDetails(new CourseContactDetailsSubmitModel(), apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -75,7 +77,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void AddShortCourseContactDetails_ValidState_SetsSessionAndRedirectsToSelectShortCourseLocation(
+    public async Task AddShortCourseContactDetails_ValidState_SetsSessionAndRedirectsToSelectShortCourseLocation(
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
     [Greedy] AddShortCourseContactDetailsController sut,
@@ -88,10 +90,10 @@ public class AddShortCourseContactDetailsControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         // Act
-        var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
+        var result = await sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -101,7 +103,7 @@ public class AddShortCourseContactDetailsControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void AddShortCourseContactDetails_HasSeenSummaryPageIsTrue_SetsSessionAndRedirectsToReviewShortCourseDetails(
+    public async Task AddShortCourseContactDetails_HasSeenSummaryPageIsTrue_SetsSessionAndRedirectsToReviewShortCourseDetails(
     [Frozen] Mock<ISessionService> sessionServiceMock,
     [Frozen] Mock<IValidator<CourseContactDetailsSubmitModel>> validator,
     [Greedy] AddShortCourseContactDetailsController sut,
@@ -114,10 +116,10 @@ public class AddShortCourseContactDetailsControllerPostTests
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
-        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         // Act
-        var result = sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
+        var result = await sut.AddShortCourseContactDetails(submitModel, apprenticeshipType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
