@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.Services;
 
 public static class EmailCheckingService
 {
-    public static async Task<bool> IsValidDomain(string? email)
+    public static async Task<bool> IsValidDomain(string email)
     {
         if (email == null)
         {
