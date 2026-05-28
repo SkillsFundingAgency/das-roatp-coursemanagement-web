@@ -64,8 +64,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Standards = standards,
                 ApprenticeshipUnits = apprenticeshipUnits,
                 HasCourses = source.Standards?.Count > 0,
-                ShowStandards = standards?.Count > 0,
-                ShowApprenticeshipUnits = apprenticeshipUnits?.Count > 0
+                ShowStandards = standards.Count > 0,
+                ShowApprenticeshipUnits = apprenticeshipUnits.Count > 0
             };
         }
     }
