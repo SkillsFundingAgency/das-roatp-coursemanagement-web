@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetProviderLocationDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
 
@@ -46,6 +47,12 @@ public class ViewProviderLocationDetailsController : ControllerBase
         {
             standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails,
                 new { Ukprn, larsCode = standard.LarsCode });
+        }
+
+        foreach (var apprenticeshipUnit in model.ApprenticeshipUnits)
+        {
+            apprenticeshipUnit.StandardUrl = Url.RouteUrl(RouteNames.ManageShortCourseDetails,
+                new { Ukprn, ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit, larsCode = apprenticeshipUnit.LarsCode });
         }
 
         return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);

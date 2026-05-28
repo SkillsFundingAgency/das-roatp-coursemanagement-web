@@ -8,4 +8,5 @@ public class LocationStandardModel
     public string StandardUrl { get; set; }
     public string CourseDisplayName { get; set; }
     public bool HasOtherVenues { get; set; }
+    public ApprenticeshipType LearningType { get; set; }
 }
