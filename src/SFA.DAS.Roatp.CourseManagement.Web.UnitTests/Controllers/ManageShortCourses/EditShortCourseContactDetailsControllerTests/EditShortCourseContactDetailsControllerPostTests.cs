@@ -33,6 +33,10 @@ public class EditShortCourseContactDetailsControllerPostTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
+        model.ContactUsEmail = null;
+        model.ContactUsPhoneNumber = null;
+        model.StandardInfoUrl = null;
+
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "error");

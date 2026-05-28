@@ -54,11 +54,34 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         }
 
         [Test, AutoData]
+        public async Task Post_ValidModel_VerifyFieldsAreTrimmed(CourseContactDetailsSubmitModel model, string larsCode)
+        {
+            model.ContactUsEmail = $" {model.ContactUsEmail} ";
+            model.ContactUsPhoneNumber = $" {model.ContactUsPhoneNumber} ";
+            model.StandardInfoUrl = $" {model.StandardInfoUrl} ";
+
+            _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
+
+            await _sut.Index(larsCode, model);
+
+            _mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseContactDetailsCommand>(c =>
+            c.ContactUsEmail == model.ContactUsEmail.Trim() && c.ContactUsPhoneNumber == model.ContactUsPhoneNumber.Trim() && c.StandardInfoUrl == model.StandardInfoUrl.Trim() &&
+            c.Ukprn == int.Parse(TestConstants.DefaultUkprn) &&
+            c.UserId == TestConstants.DefaultUserId &&
+            c.LarsCode == larsCode),
+            It.IsAny<CancellationToken>()));
+        }
+
+        [Test, AutoData]
         public async Task Post_InvalidModel_ReturnsView(CourseContactDetailsSubmitModel model, GetProviderCourseDetailsQueryResult queryResult, string larsCode)
         {
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
+
+            model.ContactUsEmail = null;
+            model.ContactUsPhoneNumber = null;
+            model.StandardInfoUrl = null;
 
             var validationResult = new ValidationResult();
 
