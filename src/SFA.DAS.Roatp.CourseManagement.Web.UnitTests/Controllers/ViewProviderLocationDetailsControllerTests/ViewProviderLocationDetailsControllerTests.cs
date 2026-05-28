@@ -22,8 +22,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
         private const string Ukprn = "10012002";
         private Mock<IMediator> _mediatorMock;
         private ViewProviderLocationDetailsController _sut;
-        string verifyUrl = "http://test";
-        string verifyUpdateProviderLocationDetailsUrl = "http://test-UpdateProviderLocationDetailsUrl";
+        private readonly string verifyUrl = "http://test";
+        private readonly string verifyUpdateProviderLocationDetailsUrl = "http://test-UpdateProviderLocationDetailsUrl";
+        private readonly string verifySelectCourseTypeUrl = "http://test-SelectCourseType";
 
         [SetUp]
         public void Before_Each_Test()
@@ -33,7 +34,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             _sut.AddDefaultContextWithUser()
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, verifyUrl)
-                .AddUrlForRoute(RouteNames.GetUpdateProviderLocationDetails, verifyUpdateProviderLocationDetailsUrl);
+                .AddUrlForRoute(RouteNames.GetUpdateProviderLocationDetails, verifyUpdateProviderLocationDetailsUrl)
+                .AddUrlForRoute(RouteNames.SelectCourseType, verifySelectCourseTypeUrl);
         }
 
         [Test, AutoData]
@@ -53,6 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             var model = viewResult.Model as ProviderLocationViewModel;
             model.Should().NotBeNull();
             model.UpdateContactDetailsUrl.Should().Be(verifyUpdateProviderLocationDetailsUrl);
+            model.ManageYourStandardsUrl.Should().Be(verifySelectCourseTypeUrl);
         }
 
         [Test, AutoData]
