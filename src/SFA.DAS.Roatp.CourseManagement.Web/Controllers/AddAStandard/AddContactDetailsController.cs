@@ -57,6 +57,10 @@ public class AddContactDetailsController : AddAStandardControllerBase
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
         if (sessionModel == null) return redirectResult;
 
+        submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber?.Trim();
+        submitModel.ContactUsEmail = submitModel.ContactUsEmail?.Trim();
+        submitModel.StandardInfoUrl = submitModel.StandardInfoUrl?.Trim();
+
         var validatedResult = await _validator.ValidateAsync(submitModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);

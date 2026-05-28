@@ -40,7 +40,11 @@ public class EditCourseContactDetailsController : ControllerBase
     [HttpPost(Name = RouteNames.PostCourseContactDetails)]
     public async Task<IActionResult> Index([FromRoute] string larsCode, CourseContactDetailsSubmitModel submitModel)
     {
-        var validatedResult = _validator.Validate(submitModel);
+        submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber?.Trim();
+        submitModel.ContactUsEmail = submitModel.ContactUsEmail?.Trim();
+        submitModel.StandardInfoUrl = submitModel.StandardInfoUrl?.Trim();
+
+        var validatedResult = await _validator.ValidateAsync(submitModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 

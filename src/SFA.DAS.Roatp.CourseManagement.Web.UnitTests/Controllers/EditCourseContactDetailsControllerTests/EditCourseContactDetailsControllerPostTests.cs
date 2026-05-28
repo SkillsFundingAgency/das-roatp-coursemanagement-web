@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
         [Test, AutoData]
         public async Task Post_ValidModel_SendsUpdateCommand(CourseContactDetailsSubmitModel model, string larsCode)
         {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+            _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
             var result = await _sut.Index(larsCode, model);
 
@@ -64,7 +64,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
 
             validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(validationResult);
+            _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
             var result = await _sut.Index(larsCode, model);
 
@@ -85,7 +85,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
 
             validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(validationResult);
+            _validatorMock.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(validationResult);
 
             Func<Task> action = () => _sut.Index(larsCode, submitModel);
 

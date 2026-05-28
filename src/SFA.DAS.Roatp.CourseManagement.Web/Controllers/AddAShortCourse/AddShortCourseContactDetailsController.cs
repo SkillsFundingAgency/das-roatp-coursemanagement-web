@@ -52,6 +52,10 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
+        submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber?.Trim();
+        submitModel.ContactUsEmail = submitModel.ContactUsEmail?.Trim();
+        submitModel.StandardInfoUrl = submitModel.StandardInfoUrl?.Trim();
+
         var validatedResult = await _validator.ValidateAsync(submitModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
@@ -73,9 +77,9 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             return View(ViewPath, model);
         }
 
-        sessionModel.ContactInformation.ContactUsEmail = submitModel.ContactUsEmail.Trim();
-        sessionModel.ContactInformation.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber.Trim();
-        sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl.Trim();
+        sessionModel.ContactInformation.ContactUsEmail = submitModel.ContactUsEmail;
+        sessionModel.ContactInformation.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber;
+        sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl;
 
         _sessionService.Set(sessionModel);
 
