@@ -63,9 +63,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Postcode = source.Postcode,
                 Standards = standards,
                 ApprenticeshipUnits = apprenticeshipUnits,
-                HasCourses = source.Standards?.Any() == true,
-                ShowStandards = standards?.Any() == true,
-                ShowApprenticeshipUnits = apprenticeshipUnits?.Any() == true
+                HasCourses = source.Standards?.Count > 0,
+                ShowStandards = standards?.Count > 0,
+                ShowApprenticeshipUnits = apprenticeshipUnits?.Count > 0
             };
         }
     }
