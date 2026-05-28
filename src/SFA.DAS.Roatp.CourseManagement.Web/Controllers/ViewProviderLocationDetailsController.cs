@@ -40,7 +40,7 @@ public class ViewProviderLocationDetailsController : ControllerBase
         model.DeleteLocationUrl = Url.RouteUrl(RouteNames.GetConfirmDeleteLocation, new { ukprn = Ukprn, id = Id });
 
         model.UpdateContactDetailsUrl = Url.RouteUrl(RouteNames.GetUpdateProviderLocationDetails, new { ukprn = Ukprn, Id });
-        model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.ViewStandards);
+        model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.SelectCourseType);
         model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
 
         foreach (var standard in model.Standards)

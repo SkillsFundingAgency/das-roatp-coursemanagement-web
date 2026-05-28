@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
             });
 
             var sutFirstStandard = sut.Standards.First();
-            var providerLocationFirstStandard = providerLocation.Standards.OrderBy(s => s.Title).First();
+            var providerLocationFirstStandard = providerLocation.Standards.Where(s => s.LearningType == ApprenticeshipType.Apprenticeship).OrderBy(s => s.Title).First();
 
             sutFirstStandard.Should()
                 .BeEquivalentTo(providerLocationFirstStandard,
@@ -31,6 +31,45 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
                         o.Excluding(s => s.StandardUrl)
                         .Excluding(s => s.HasOtherVenues)
                         .Excluding(s => s.CourseDisplayName));
+        }
+
+        [Test]
+        public void ImplicitOperator_CourseFlagsAreTrue()
+        {
+            var providerLocation = new ProviderLocation
+            {
+                Standards = new List<LocationStandardModel>
+                {
+                    new LocationStandardModel
+                    {
+                        LearningType = ApprenticeshipType.Apprenticeship,
+                        Title = "Standard 1"
+                    },
+                    new LocationStandardModel
+                    {
+                        LearningType = ApprenticeshipType.ApprenticeshipUnit,
+                        Title = "Apprenticeship Unit 1"
+                    }
+                }
+            };
+
+            ProviderLocationViewModel sut = providerLocation;
+
+            sut.HasCourses.Should().BeTrue();
+            sut.ShowStandards.Should().BeTrue();
+            sut.ShowApprenticeshipUnits.Should().BeTrue();
+        }
+
+        [Test]
+        public void ImplicitOperator_CourseFlagsAreFalse()
+        {
+            var providerLocation = new ProviderLocation();
+
+            ProviderLocationViewModel sut = providerLocation;
+
+            sut.HasCourses.Should().BeFalse();
+            sut.ShowStandards.Should().BeFalse();
+            sut.ShowApprenticeshipUnits.Should().BeFalse();
         }
 
         [TestCaseSource(nameof(AddressData))]
