@@ -1,10 +1,10 @@
-# ![crest](https://assets.publishing.service.gov.uk/government/assets/crests/org_crest_27px-916806dcf065e7273830577de490d5c7c42f36ddec83e907efe62086785f24fb.png) Digital Apprenticeships Service
+## ⛔Never push sensitive information such as client id's, secrets or keys into repositories including in the README file⛔
 
-##  RoATP Course Management UI
+##  RoATP Course Management Web
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 
-[![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status/SkillsFundingAgency_das-roatp-coursemanagement-web?branchName=master)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=SkillsFundingAgency_das-roatp-coursemanagement-web&branchName=master)
+[![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status%2FApprenticeships%20Providers%2Fdas-roatp-coursemanagement-web?repoName=SkillsFundingAgency%2Fdas-roatp-coursemanagement-web&branchName=main)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=2826&repoName=SkillsFundingAgency%2Fdas-roatp-coursemanagement-web&branchName=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-roatp-coursemanagement-web&metric=alert_status)](https://sonarcloud.io/dashboard?id=SkillsFundingAgency_das-roatp-coursemanagement-web)
 [![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
@@ -13,26 +13,29 @@
 
 The front end for providers to view and administer the courses they offer, and the venues or subregions where the courses are offered, and the provider description.
 
-It interacts with an outer api (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement), which in turn interacts with several other sources of data, but most significantly the inner api for roatp data (https://github.com/SkillsFundingAgency/das-roatp-api)
+It interacts with an outer api, which in turn interacts with several other sources of data, but most significantly the inner api for roatp data.
 
 
-### Developer Setup
+## 🚀 Installation
 
-#### Requirements
-- Clone this repository
-- Install [Visual Studio 2022](https://www.visualstudio.com/downloads/) with these workloads:
-    - ASP.NET and web development
-    - Azure development
-- Install [Azure Storage Emulator]
-- Install [Azure Storage Explorer](http://storageexplorer.com/)
+### Pre-Requisites
+* A clone of this repository
+* Visual Studio or similar IDE
+* A storage emulator (for example Azurite)
 
-#### Setup
+### Dependencies
 
-- Create a Configuration table in your (Development) local storage account.
-- Obtain the local config json from the das-employer-config for das-roatp-coursemanagement-web repo (https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-roatp-course-management-web/SFA.DAS.Roatp.CourseManagement.Web.json) 
-  - PartitionKey: LOCAL
-  - RowKey: SFA.DAS.Roatp.CourseManagement.Web_1.0
-  - Data: {The contents of the local config json file}
+* Roatp V2 Api: https://github.com/SkillsFundingAgency/das-roatp-api
+* Course Management Outer Api: https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement
+* Location Api: https://github.com/SkillsFundingAgency/das-location-api
+
+### Config
+
+* Create a Configuration table in your (Development) local storage account.
+* Obtain the local config json from the das-employer-config for das-roatp-coursemanagement-web repo (https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-roatp-course-management-web/SFA.DAS.Roatp.CourseManagement.Web.json) 
+  * PartitionKey: LOCAL
+  * RowKey: SFA.DAS.Roatp.CourseManagement.Web_1.0
+  * Data: {The contents of the local config json file}
   
 In the web project, if not exist already, add `AppSettings.Development.json` file with following content:
 ```json
@@ -56,16 +59,9 @@ In the web project, if not exist already, add `AppSettings.Development.json` fil
   }
 }
 ```  
-  
-You will also need to setup the roatp outer api and have it running (see https://github.com/SkillsFundingAgency/das-apim-endpoints/ and go to the section for 'Course Management')
-
-Open the solution with Visual Studio, and run the project SFA.DAS.Roatp.CourseManagement.Web, running under process 'SFA.DAS.Roatp.CourseManagement.Web' (not IIS)
 
 ## Technologies
-* .Net 8.0
+* .Net 10.0
 * NUnit
 * Moq
 * FluentAssertions
-
-
-  

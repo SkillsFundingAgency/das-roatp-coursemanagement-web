@@ -1,13 +1,13 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Standards.Queries.GetStandardInformation
 {
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.Standards.Queries
             GetStandardInformationQueryHandler sut,
             GetStandardInformationQuery request)
         {
-            apiClientMock.Setup(c => c.Get<GetStandardInformationQueryResult>($"lookup/standards/{request.LarsCode}")).ReturnsAsync((GetStandardInformationQueryResult) null);
+            apiClientMock.Setup(c => c.Get<GetStandardInformationQueryResult>($"lookup/standards/{request.LarsCode}")).ReturnsAsync((GetStandardInformationQueryResult)null);
 
             Func<Task> action = () => sut.Handle(request, new CancellationToken());
 

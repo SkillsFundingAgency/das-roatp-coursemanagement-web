@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
     [TestFixture]
     public class AddStandardTrainingLocationControllerPostTests
     {
-        private string larsCode = "1";
+        private readonly string larsCode = "1";
 
         [Test, MoqAutoData]
         public async Task Post_ModelMissingFromSession_RedirectsToReviewYourDetails(

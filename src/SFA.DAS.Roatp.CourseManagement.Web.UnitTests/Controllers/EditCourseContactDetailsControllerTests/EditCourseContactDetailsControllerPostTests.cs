@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
@@ -22,7 +22,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
     [TestFixture]
     public class EditCourseContactDetailsControllerPostTests
     {
-        private static string DetailsUrl = Guid.NewGuid().ToString();
         private Mock<IMediator> _mediatorMock;
         private Mock<IValidator<CourseContactDetailsSubmitModel>> _validatorMock;
         private EditCourseContactDetailsController _sut;
