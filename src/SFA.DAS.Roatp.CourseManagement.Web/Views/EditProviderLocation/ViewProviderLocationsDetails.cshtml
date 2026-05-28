@@ -8,7 +8,7 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-l">Training venue</div>
-        <h1 class="govuk-heading-xl margin-bottom-30">Venue details and standards</h1>
+        <h1 class="govuk-heading-xl margin-bottom-30">Venue details and training delivery</h1>
 
 
         <table class="govuk-table">
@@ -41,25 +41,36 @@
 </div>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">Manage your standards at this venue</h2>
-        @if (Model.Standards.Count == 0)
+        <h2 class="govuk-heading-l">Manage your training at this venue</h2>
+        @if (!Model.HasCourses)
         {
             <p class="govuk-body">
-                You do not deliver any standards at this venue. Go to <a href="@Model.ManageYourStandardsUrl">Manage your standards</a> to add this venue to a new or existing standard.
+                You currently do not deliver any training at this location. Go to <a href="@Model.ManageYourStandardsUrl">Manage courses</a> to add this venue to a new or existing type of training.
             </p>
         }
         else
         {
             <p class="govuk-body">
-                You can select the standard name to change your training or venue options, edit its contact details, or delete it from your standards.
+                Select a type of training to change its location, update its contact details or delete it.
             </p>
 
+            <h3 asp-show="Model.ShowStandards" class="govuk-heading-m">Apprenticeships</h3>
             @foreach (var standard in Model.Standards)
             {
                 <p class="govuk-body">
                         <a class="govuk-link" href="@standard.StandardUrl">
                             @standard.CourseDisplayName
                         </a>
+                </p>
+            }
+
+            <h4 asp-show="Model.ShowApprenticeshipUnits" class="govuk-heading-m">Apprenticeship Units</h4>
+            @foreach (var apprenticeshipUnit in Model.ApprenticeshipUnits)
+            {
+                <p class="govuk-body">                    
+                    <a class="govuk-link" href="@apprenticeshipUnit.StandardUrl">
+                        @apprenticeshipUnit.CourseDisplayName
+                    </a>
                 </p>
             }
 

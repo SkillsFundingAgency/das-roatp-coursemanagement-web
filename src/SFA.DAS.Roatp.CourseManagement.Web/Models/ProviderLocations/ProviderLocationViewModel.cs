@@ -22,6 +22,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string TrainingVenuesUrl { get; set; }
 
         public List<ProviderLocationStandardModel> Standards { get; set; }
+        public List<ProviderLocationStandardModel> ApprenticeshipUnits { get; set; }
+        public bool HasCourses { get; set; }
+        public bool ShowStandards { get; set; }
+        public bool ShowApprenticeshipUnits { get; set; }
 
         public List<string> AddressDetails
         {
@@ -40,7 +44,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public static implicit operator ProviderLocationViewModel(ProviderLocation source)
         {
             var standards = source.Standards is { Count: > 0 }
-                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).OrderBy(s => s.CourseDisplayName).ToList()
+                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).Where(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.Apprenticeship).OrderBy(s => s.CourseDisplayName).ToList()
+                : [];
+
+            var apprenticeshipUnits = source.Standards is { Count: > 0 }
+                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).Where(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.ApprenticeshipUnit).OrderBy(s => s.CourseDisplayName).ToList()
                 : [];
 
             return new ProviderLocationViewModel
@@ -53,7 +61,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Town = source.Town,
                 County = source.County,
                 Postcode = source.Postcode,
-                Standards = standards
+                Standards = standards,
+                ApprenticeshipUnits = apprenticeshipUnits,
+                HasCourses = source.Standards?.Any() == true,
+                ShowStandards = standards?.Any() == true,
+                ShowApprenticeshipUnits = apprenticeshipUnits?.Any() == true
             };
         }
     }
