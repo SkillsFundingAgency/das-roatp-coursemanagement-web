@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
@@ -35,6 +36,14 @@ public class ProviderCourseLocationAddController : ControllerBase
     [HttpGet(Name = RouteNames.GetAddProviderCourseLocation)]
     public async Task<IActionResult> SelectAProviderlocation([FromRoute] string larsCode)
     {
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+        if (result.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         var model = await GetModel(larsCode);
         return View(ViewPath, model);
     }

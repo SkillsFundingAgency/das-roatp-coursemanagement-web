@@ -9,7 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
@@ -38,8 +40,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
             GetProviderCourseLocationsQueryResult queryResult,
+            GetProviderCourseDetailsQueryResult apiResponse,
             string larsCode)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
@@ -53,8 +60,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         }
 
         [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode, Guid id)
+        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode, Guid id, GetProviderCourseDetailsQueryResult apiResponse)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
@@ -62,6 +73,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             Func<Task> action = () => _sut.GetProviderCourseLocation(larsCode, id);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Test, AutoData]
+        public async Task Get_InvalidRequest_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(string larsCode, Guid id, GetProviderCourseDetailsQueryResult apiResponse)
+        {
+            apiResponse.CourseType = CourseType.ShortCourse;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
+
+            var result = await _sut.GetProviderCourseLocation(larsCode, id);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

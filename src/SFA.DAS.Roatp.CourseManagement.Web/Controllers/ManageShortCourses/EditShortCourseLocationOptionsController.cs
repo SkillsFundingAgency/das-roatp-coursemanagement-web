@@ -41,6 +41,12 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
             return View(ViewsPath.PageNotFoundPath);
         }
 
+        if (providerCourseDetailsResponse.CourseType != CourseType.ShortCourse)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid short course.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         var model = GetViewModel(providerCourseDetailsResponse, apprenticeshipType);
 
         return View(ViewPath, model);

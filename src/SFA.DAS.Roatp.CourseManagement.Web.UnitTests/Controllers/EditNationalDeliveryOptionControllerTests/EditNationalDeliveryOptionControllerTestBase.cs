@@ -1,8 +1,11 @@
-﻿using FluentValidation;
+﻿using System.Threading;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -32,5 +35,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         }
 
         public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(locationOption.ToString());
+
+        public void SetUpCorrectCourseTypeGetProviderCourseDetailsApiResponse()
+        {
+            MediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderCourseDetailsQueryResult()
+            {
+                CourseType = CourseType.Apprenticeship
+            });
+        }
+
+        public void SetUpIncorrectCourseTypeGetProviderCourseDetailsApiResponse()
+        {
+            MediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderCourseDetailsQueryResult()
+            {
+                CourseType = CourseType.ShortCourse
+            });
+        }
     }
 }

@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -59,11 +61,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         [Test, AutoData]
         public async Task Get_ValidRequest_ReturnsView(
             GetAllStandardRegionsQueryResult queryResult,
-            string larsCode)
+            string larsCode,
+            GetProviderCourseDetailsQueryResult apiResponse)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
             var result = await _sut.GetAllRegions(larsCode);
 
@@ -79,12 +86,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         [Test, AutoData]
         public async Task Get_ValidRequestNoRegions_RedirectToNotFoundPage(
            GetAllStandardRegionsQueryResult queryResult,
-           string larsCode)
+           string larsCode,
+           GetProviderCourseDetailsQueryResult apiResponse)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
             queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.CourseRegionModel>();
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetAllStandardRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
             var expectedUrl = $"Error/{HttpStatusCode.NotFound}";
             var result = await _sut.GetAllRegions(larsCode);
@@ -95,15 +107,40 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderC
         }
 
         [Test, AutoData]
-        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode)
+        public async Task Get_InvalidRequest_ThrowsInvalidOperationException(string larsCode, GetProviderCourseDetailsQueryResult apiResponse)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetAllStandardRegionsQueryResult)null);
 
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             Func<Task> action = () => _sut.GetAllRegions(larsCode);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Test, AutoData]
+        public async Task Get_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(
+           GetAllStandardRegionsQueryResult queryResult,
+           string larsCode,
+           GetProviderCourseDetailsQueryResult apiResponse)
+        {
+            apiResponse.CourseType = CourseType.ShortCourse;
+
+            queryResult.Regions = new System.Collections.Generic.List<Domain.ApiModels.CourseRegionModel>();
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetAllStandardRegionsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+            var result = await _sut.GetAllRegions(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

@@ -11,8 +11,10 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
@@ -59,8 +61,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_ValidRequest_ReturnsView(
             GetProviderCourseLocationsQueryResult queryResult,
             GetAllProviderLocationsQueryResult providerLocationsResponse,
+            GetProviderCourseDetailsQueryResult apiResponse,
             string larsCode)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
@@ -81,8 +88,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
 
         [Test, AutoData]
         public async Task GetProviderCourseLocations_ProviderLocationsAreNotAvailable_RedirectsToGetAddProviderLocationEditCourse(
+            GetProviderCourseDetailsQueryResult apiResponse,
             string larsCode)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn)), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new GetAllProviderLocationsQueryResult());
@@ -95,8 +107,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         [Test, AutoData]
         public async Task GetProviderCourseLocations_InvalidRequest_ReturnsEmptyResponse(
             GetAllProviderLocationsQueryResult providerLocationsResponse,
+            GetProviderCourseDetailsQueryResult apiResponse,
             string larsCode)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((GetProviderCourseLocationsQueryResult)null);
@@ -118,11 +135,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_validRequestLocationOptionBoth_ReturnGetLocationOption(
             string larsCode,
             GetProviderCourseLocationsQueryResult queryResult,
-            GetAllProviderLocationsQueryResult providerLocationsResponse)
+            GetAllProviderLocationsQueryResult providerLocationsResponse,
+            GetProviderCourseDetailsQueryResult apiResponse)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
 
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -147,10 +168,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_validRequestLocationOptionProviderLocation_ReturnsGetLocationOption(
             string larsCode,
             GetProviderCourseLocationsQueryResult queryResult,
-            GetAllProviderLocationsQueryResult providerLocationsResponse)
+            GetAllProviderLocationsQueryResult providerLocationsResponse,
+            GetProviderCourseDetailsQueryResult apiResponse)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
+
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -175,10 +201,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_validRequest_ReturnsGetLocationOption(
             string larsCode,
             GetProviderCourseLocationsQueryResult queryResult,
-            GetAllProviderLocationsQueryResult providerLocationsResponse)
+            GetAllProviderLocationsQueryResult providerLocationsResponse,
+            GetProviderCourseDetailsQueryResult apiResponse)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
+
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>()))
@@ -201,10 +232,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task GetProviderCourseLocations_validRequest_ReturnLocationHaveRemoveUrl(
             string larsCode,
             GetProviderCourseLocationsQueryResult queryResult,
-            GetAllProviderLocationsQueryResult providerLocationsResponse)
+            GetAllProviderLocationsQueryResult providerLocationsResponse,
+            GetProviderCourseDetailsQueryResult apiResponse)
         {
             var refererUrl = "http://test-referer-url/";
             _sut.HttpContext.Request.Headers.Referer = refererUrl;
+
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
 
             queryResult = new GetProviderCourseLocationsQueryResult { ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation> { new Domain.ApiModels.ProviderCourseLocation { LocationType = Domain.ApiModels.LocationType.Provider, Id = Guid.NewGuid() } } };
             _mediatorMock
@@ -223,6 +259,25 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             modelResult.Should().NotBeNull();
             modelResult!.ProviderCourseLocations.Should().NotBeEmpty();
             modelResult.ProviderCourseLocations.FirstOrDefault()!.RemoveUrl.Should().Be(verifyRemoveProviderCourseLocationUrlGet);
+        }
+
+        [Test, AutoData]
+        public async Task GetProviderCourseLocations_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(
+            GetProviderCourseDetailsQueryResult apiResponse,
+            string larsCode)
+        {
+            apiResponse.CourseType = CourseType.ShortCourse;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn)), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new GetAllProviderLocationsQueryResult());
+
+            var result = await _sut.GetProviderCourseLocations(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

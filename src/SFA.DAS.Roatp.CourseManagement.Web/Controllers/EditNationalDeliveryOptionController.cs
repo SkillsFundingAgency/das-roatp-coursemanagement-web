@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddNationalLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -34,8 +35,16 @@ public class EditNationalDeliveryOptionController : ControllerBase
     }
 
     [HttpGet(Name = RouteNames.GetNationalDeliveryOption)]
-    public IActionResult Index([FromRoute] string larsCode)
+    public async Task<IActionResult> Index([FromRoute] string larsCode)
     {
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+        if (result.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         if (!IsCorrectLocationOptionSetInSession())
         {
             _logger.LogWarning("Location option is not set in session, navigating back to the question ukprn:{Ukprn} larscode: {LarsCode}", Ukprn, larsCode);

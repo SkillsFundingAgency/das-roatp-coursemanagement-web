@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAllProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -39,6 +40,14 @@ public class ProviderCourseLocationsController : ControllerBase
     [HttpGet(Name = RouteNames.GetProviderCourseLocations)]
     public async Task<IActionResult> GetProviderCourseLocations([FromRoute] string larsCode)
     {
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+        if (result.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         _logger.LogInformation("Getting Provider Course Locations for ukprn {Ukprn} ", Ukprn);
 
         var providerLocations = await _mediator.Send(new GetAllProviderLocationsQuery(Ukprn));

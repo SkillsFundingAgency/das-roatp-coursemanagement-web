@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
@@ -35,6 +36,14 @@ public class EditProviderCourseRegionsController : ControllerBase
     [HttpGet(Name = RouteNames.GetStandardSubRegions)]
     public async Task<IActionResult> GetAllRegions(string larsCode)
     {
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+        if (result.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         _logger.LogInformation("Getting All Sub Regions");
         var model = await BuildRegionsViewModel(larsCode);
         if (!model.AllRegions.Any())

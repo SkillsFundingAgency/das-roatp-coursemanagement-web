@@ -10,6 +10,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -33,6 +34,8 @@ public class EditShortCourseRegionsControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        providerCourseDetailsApiResponse.CourseType = CourseType.ShortCourse;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -93,6 +96,8 @@ public class EditShortCourseRegionsControllerGetTests
             }
         };
 
+        providerCourseDetailsApiResponse.CourseType = CourseType.ShortCourse;
+
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
@@ -119,6 +124,8 @@ public class EditShortCourseRegionsControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        providerCourseDetailsApiResponse.CourseType = CourseType.ShortCourse;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -153,6 +160,32 @@ public class EditShortCourseRegionsControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
+    }
+
+    [Test, MoqAutoData]
+    public async Task EditShortCourseRegions_GetStardardsReturnsIncorrectCourseType_RedirectsToPageNotFound(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] EditShortCourseRegionsController sut,
+        string larsCode)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        var apiResponse = new GetProviderCourseDetailsQueryResult
+        {
+            CourseType = CourseType.Apprenticeship,
+        };
+
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+        sut.AddDefaultContextWithUser();
+
+        // Act
+        var result = await sut.EditShortCourseRegions(apprenticeshipType, larsCode);
+
+        // Assert
+        var viewResult = result as ViewResult;
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 }

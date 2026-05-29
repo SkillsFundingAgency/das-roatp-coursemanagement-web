@@ -9,7 +9,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
@@ -41,8 +43,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
         public async Task SelectAProviderlocation_ValidRequest_ReturnsView(
             GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult,
             GetProviderCourseLocationsQueryResult resultProviderCourseLocations,
+            GetProviderCourseDetailsQueryResult apiResponse,
             string larsCode)
         {
+            apiResponse.CourseType = CourseType.Apprenticeship;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(availableProviderLocationsQueryResult);
@@ -54,6 +61,27 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             viewResult!.ViewName.Should().Contain(ProviderCourseLocationAddController.ViewPath);
             var model = viewResult.Model as ProviderCourseLocationAddViewModel;
             model.Should().NotBeNull();
+        }
+
+        [Test, AutoData]
+        public async Task SelectAProviderlocation_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(
+            GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult,
+            GetProviderCourseLocationsQueryResult resultProviderCourseLocations,
+            GetProviderCourseDetailsQueryResult apiResponse,
+            string larsCode)
+        {
+            apiResponse.CourseType = CourseType.ShortCourse;
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(availableProviderLocationsQueryResult);
+
+            var result = await _sut.SelectAProviderlocation(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

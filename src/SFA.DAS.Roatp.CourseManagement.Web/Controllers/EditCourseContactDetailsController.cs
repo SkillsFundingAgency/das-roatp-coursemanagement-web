@@ -32,7 +32,21 @@ public class EditCourseContactDetailsController : ControllerBase
     [HttpGet(Name = RouteNames.GetCourseContactDetails)]
     public async Task<IActionResult> Index([FromRoute] string larsCode)
     {
-        EditCourseContactDetailsViewModel model = await GetViewModel(larsCode);
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+        if (result == null)
+        {
+            _logger.LogError("Standard details not found for ukprn {Ukprn} and larscode {LarsCode}", Ukprn, larsCode);
+            throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
+        }
+
+        if (result.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
+        EditCourseContactDetailsViewModel model = GetViewModel(result);
 
         return View(model);
     }
@@ -46,7 +60,15 @@ public class EditCourseContactDetailsController : ControllerBase
 
         if (!ModelState.IsValid)
         {
-            var viewModel = await GetViewModel(larsCode);
+            var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+            if (result == null)
+            {
+                _logger.LogError("Standard details not found for ukprn {Ukprn} and larscode {LarsCode}", Ukprn, larsCode);
+                throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
+            }
+
+            var viewModel = GetViewModel(result);
 
             return View(viewModel);
         }
@@ -62,16 +84,8 @@ public class EditCourseContactDetailsController : ControllerBase
         return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
     }
 
-    private async Task<EditCourseContactDetailsViewModel> GetViewModel(string larsCode)
+    private static EditCourseContactDetailsViewModel GetViewModel(GetProviderCourseDetailsQueryResult result)
     {
-        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
-
-        if (result == null)
-        {
-            _logger.LogError("Standard details not found for ukprn {Ukprn} and larscode {LarsCode}", Ukprn, larsCode);
-            throw new InvalidOperationException($"Standard details not found for ukprn {Ukprn} and larscode {larsCode}");
-        }
-
         var model = (EditCourseContactDetailsViewModel)result;
 
         return model;

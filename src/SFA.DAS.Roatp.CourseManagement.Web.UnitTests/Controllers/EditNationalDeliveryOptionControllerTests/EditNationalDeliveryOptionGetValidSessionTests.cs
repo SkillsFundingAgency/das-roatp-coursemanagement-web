@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -13,11 +14,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
         protected EditNationalDeliveryOptionViewModel Model;
 
         [SetUp]
-        public void Before_Each_Test()
+        public async Task Before_Each_Test()
         {
             SetupController();
             SetLocationOptionInSession(LocationOption.Both);
-            ViewResult = (ViewResult)Sut.Index(LarsCode);
+            SetUpCorrectCourseTypeGetProviderCourseDetailsApiResponse();
+            ViewResult = await Sut.Index(LarsCode) as ViewResult;
             Model = (EditNationalDeliveryOptionViewModel)ViewResult.Model;
         }
 

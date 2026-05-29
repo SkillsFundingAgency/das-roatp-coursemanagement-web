@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -11,16 +12,31 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditNationalD
     {
         [TestCase(LocationOption.ProviderLocation)]
         [TestCase(LocationOption.None)]
-        public void Get_SessionIsInvalid_RedirectToLocationOptionQuestion(LocationOption option)
+        public async Task Get_SessionIsInvalid_RedirectToLocationOptionQuestion(LocationOption option)
         {
             SetupController();
 
             SetLocationOptionInSession(option);
 
-            var result = (RedirectToRouteResult)Sut.Index(LarsCode);
+            SetUpCorrectCourseTypeGetProviderCourseDetailsApiResponse();
+
+            var result = await Sut.Index(LarsCode) as RedirectToRouteResult;
 
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetLocationOption);
+        }
+
+        [Test]
+        public async Task Get_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds()
+        {
+            SetupController();
+
+            SetUpIncorrectCourseTypeGetProviderCourseDetailsApiResponse();
+
+            var result = await Sut.Index(LarsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

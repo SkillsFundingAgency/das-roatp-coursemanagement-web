@@ -37,6 +37,12 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
             return View(ViewsPath.PageNotFoundPath);
         }
 
+        if (providerCourseDetailsResponse.CourseType != CourseType.ShortCourse)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid short course.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         var regionsResponse = await _regionsService.GetRegions();
 
         var viewModel = GetViewModel(regionsResponse, providerCourseDetailsResponse, apprenticeshipType);

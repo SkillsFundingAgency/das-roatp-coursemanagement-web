@@ -81,6 +81,12 @@ public class StandardsController : ControllerBase
             throw new InvalidOperationException();
         }
 
+        if (result.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         var standardDetails = result;
 
         var model = (StandardDetailsViewModel)standardDetails;

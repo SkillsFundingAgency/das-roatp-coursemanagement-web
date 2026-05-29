@@ -31,6 +31,12 @@ public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShor
             return View(ViewsPath.PageNotFoundPath);
         }
 
+        if (courseDetailsResponse.CourseType != CourseType.ShortCourse)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid short course.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         var courseInformationResponse = await _mediator.Send(new GetStandardInformationQuery(larsCode));
 
         if (courseInformationResponse == null)

@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -18,6 +19,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.EditShortCourseNationalDeliveryControllerTests;
+
 public class EditShortCourseNationalDeliveryControllerGetTests
 {
     [Test, MoqAutoData]
@@ -29,6 +31,8 @@ public class EditShortCourseNationalDeliveryControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        providerCourseDetailsApiResponse.CourseType = CourseType.ShortCourse;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
@@ -72,6 +76,8 @@ public class EditShortCourseNationalDeliveryControllerGetTests
                 LocationType = locationType
             }
         };
+
+        providerCourseDetailsApiResponse.CourseType = CourseType.ShortCourse;
 
         sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedShortCourseLocationOption)).Returns(sessionLocation);
 
@@ -128,6 +134,32 @@ public class EditShortCourseNationalDeliveryControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
+    }
+
+    [Test, MoqAutoData]
+    public async Task EditShortCourseNationalDelivery_GetStardardsReturnsIncorrectCourseType_RedirectsToPageNotFound(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] EditShortCourseNationalDeliveryController sut,
+        string larsCode)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        var apiResponse = new GetProviderCourseDetailsQueryResult
+        {
+            CourseType = CourseType.Apprenticeship,
+        };
+
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+        sut.AddDefaultContextWithUser();
+
+        // Act
+        var result = await sut.EditShortCourseNationalDelivery(apprenticeshipType, larsCode);
+
+        // Assert
+        var viewResult = result as ViewResult;
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 }

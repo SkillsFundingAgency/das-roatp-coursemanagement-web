@@ -8,6 +8,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -28,6 +29,8 @@ public class EditShortCourseContactDetailsControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        queryResult.CourseType = CourseType.ShortCourse;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
@@ -87,6 +90,30 @@ public class EditShortCourseContactDetailsControllerGetTests
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
+    }
+
+    [Test, MoqAutoData]
+    public async Task EditShortCourseContactDetails_GetStardardsReturnsIncorrectCourseType_RedirectsToPageNotFound(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] EditShortCourseContactDetailsController sut,
+        string larsCode,
+        GetProviderCourseDetailsQueryResult queryResult)
+    {
+        // Arrange
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        queryResult.CourseType = CourseType.Apprenticeship;
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        sut.AddDefaultContextWithUser();
+
+        // Act
+        var result = await sut.EditShortCourseContactDetails(apprenticeshipType, larsCode);
+
+        // Assert
+        var viewResult = result as ViewResult;
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 }

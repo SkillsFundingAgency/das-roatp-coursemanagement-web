@@ -40,6 +40,12 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
             return View(ViewsPath.PageNotFoundPath);
         }
 
+        if (providerCourseDetailsResponse.CourseType != CourseType.ShortCourse)
+        {
+            _logger.LogInformation("LarsCode {LarsCode} is not a valid short course.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
+
         var providerLocationsResponse = await GetProviderLocations();
 
         if (providerLocationsResponse.Count == 0)

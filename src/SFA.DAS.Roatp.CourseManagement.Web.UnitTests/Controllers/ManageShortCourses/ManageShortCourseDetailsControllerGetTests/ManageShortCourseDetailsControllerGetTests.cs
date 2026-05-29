@@ -11,6 +11,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
@@ -30,6 +31,8 @@ public class ManageShortCourseDetailsControllerGetTests
     {
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+
+        apiResponse.CourseType = CourseType.ShortCourse;
 
         int ukprn = 12345;
         string larsCode = "ABC1234";
@@ -99,5 +102,30 @@ public class ManageShortCourseDetailsControllerGetTests
         viewResult.Should().NotBeNull();
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Test, MoqAutoData]
+    public async Task ManageShortCourseDetails_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ManageShortCourseDetailsController sut)
+    {
+        // Arrange
+        string larsCode = "ABC1234";
+        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var apiResponse = new GetProviderCourseDetailsQueryResult
+        {
+            CourseType = CourseType.Apprenticeship,
+        };
+
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+        sut.AddDefaultContextWithUser();
+
+        // Act
+        var result = await sut.ManageShortCourseDetails(apprenticeshipType, larsCode);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
     }
 }
