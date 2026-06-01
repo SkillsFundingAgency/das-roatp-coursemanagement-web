@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using System.Threading.Tasks;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -45,13 +46,17 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
     }
 
     [HttpPost]
-    public IActionResult AddShortCourseContactDetails(CourseContactDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> AddShortCourseContactDetails(CourseContactDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var validatedResult = _validator.Validate(submitModel);
+        submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber?.Trim();
+        submitModel.ContactUsEmail = submitModel.ContactUsEmail?.Trim();
+        submitModel.StandardInfoUrl = submitModel.StandardInfoUrl?.Trim();
+
+        var validatedResult = await _validator.ValidateAsync(submitModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
@@ -72,9 +77,9 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             return View(ViewPath, model);
         }
 
-        sessionModel.ContactInformation.ContactUsEmail = submitModel.ContactUsEmail.Trim();
-        sessionModel.ContactInformation.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber.Trim();
-        sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl.Trim();
+        sessionModel.ContactInformation.ContactUsEmail = submitModel.ContactUsEmail;
+        sessionModel.ContactInformation.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber;
+        sessionModel.ContactInformation.StandardInfoUrl = submitModel.StandardInfoUrl;
 
         _sessionService.Set(sessionModel);
 

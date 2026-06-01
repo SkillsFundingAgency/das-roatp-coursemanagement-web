@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Validators
                 .WithMessage(CommonValidationErrorMessage.EmailLengthMessage)
                 .Matches(Constants.RegularExpressions.EmailRegex)
                 .WithMessage(CommonValidationErrorMessage.EmailInvalidMessage)
-                .Must(EmailCheckingService.IsValidDomain)
+                .MustAsync(async (email, cancellationToken) => await EmailCheckingService.IsValidDomain(email))
                 .WithMessage(CommonValidationErrorMessage.EmailInvalidDomainMessage);
 
             RuleFor(p => p.ContactUsPhoneNumber)

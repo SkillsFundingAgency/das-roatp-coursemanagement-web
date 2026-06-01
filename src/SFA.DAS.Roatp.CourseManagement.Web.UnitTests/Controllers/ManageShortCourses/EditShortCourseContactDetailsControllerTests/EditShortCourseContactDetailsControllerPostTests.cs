@@ -33,6 +33,10 @@ public class EditShortCourseContactDetailsControllerPostTests
         // Arrange
         var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
 
+        model.ContactUsEmail = null;
+        model.ContactUsPhoneNumber = null;
+        model.StandardInfoUrl = null;
+
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "error");
@@ -87,7 +91,7 @@ public class EditShortCourseContactDetailsControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
-        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -122,7 +126,7 @@ public class EditShortCourseContactDetailsControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
-        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -157,7 +161,7 @@ public class EditShortCourseContactDetailsControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
-        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 
@@ -187,7 +191,7 @@ public class EditShortCourseContactDetailsControllerPostTests
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
-        validator.Setup(x => x.Validate(It.IsAny<CourseContactDetailsSubmitModel>())).Returns(new ValidationResult());
+        validator.Setup(x => x.ValidateAsync(It.IsAny<CourseContactDetailsSubmitModel>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidationResult());
 
         sut.AddDefaultContextWithUser();
 

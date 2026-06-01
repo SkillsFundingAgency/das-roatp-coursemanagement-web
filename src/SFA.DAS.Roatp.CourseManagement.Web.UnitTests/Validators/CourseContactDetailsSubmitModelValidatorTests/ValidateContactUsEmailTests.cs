@@ -1,4 +1,5 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Validators;
@@ -61,9 +62,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
         }
 
         [Test]
-        public void WhenDomainInvalid_ProducesValidationError()
+        public async Task WhenDomainInvalid_ProducesValidationError()
         {
-            string email = "aaaa@NonExistentDomain50c2413d-e8e4-4330-9859-222567ad0f64.co.uk";
+            string email = "aaaa@NonExistentDomain.co.uk";
 
             var sut = new CourseContactDetailsSubmitModelValidator();
 
@@ -72,16 +73,16 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
                 ContactUsEmail = email
             };
 
-            var result = sut.TestValidate(command);
+            var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.ContactUsEmail).WithErrorMessage(CommonValidationErrorMessage.EmailInvalidDomainMessage);
         }
 
         [TestCase("q@q.com")]
-        [TestCase("2@3.4")]
-        [TestCase("test@account.com")]
-        [TestCase("test//@account.com")]
-        public void WhenValid_ShouldNotHaveErrorForEmail(string email)
+        [TestCase("2@google.com")]
+        [TestCase("test@google.com")]
+        [TestCase("test//@google.com")]
+        public async Task WhenValid_ShouldNotHaveErrorForEmail(string email)
         {
             var sut = new CourseContactDetailsSubmitModelValidator();
 
@@ -90,7 +91,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Validators.CourseContactD
                 ContactUsEmail = email
             };
 
-            var result = sut.TestValidate(command);
+            var result = await sut.TestValidateAsync(command);
 
             result.ShouldNotHaveValidationErrorFor(c => c.ContactUsEmail);
         }
