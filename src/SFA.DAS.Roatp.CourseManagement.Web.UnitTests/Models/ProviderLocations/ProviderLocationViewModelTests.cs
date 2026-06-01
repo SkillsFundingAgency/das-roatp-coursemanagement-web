@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
             });
 
             var sutFirstStandard = sut.Standards.First();
-            var providerLocationFirstStandard = providerLocation.Standards.Where(s => s.LearningType == ApprenticeshipType.Apprenticeship).OrderBy(s => s.Title).First();
+            var providerLocationFirstStandard = providerLocation.Standards.OrderBy(s => s.Title).First();
 
             sutFirstStandard.Should()
                 .BeEquivalentTo(providerLocationFirstStandard,
