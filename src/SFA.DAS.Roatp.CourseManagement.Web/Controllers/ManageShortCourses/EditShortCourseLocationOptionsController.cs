@@ -43,7 +43,7 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
 
         if (providerCourseDetailsResponse.CourseType != CourseType.ShortCourse)
         {
-            _logger.LogInformation("LarsCode {LarsCode} is not a valid short course.", larsCode);
+            _logger.LogWarning("LarsCode {LarsCode} is not a valid short course.", larsCode);
             return View(ViewsPath.PageNotFoundPath);
         }
 

@@ -40,22 +40,22 @@ public class EditLocationOptionController : ControllerBase
         var model = new EditLocationOptionViewModel();
         var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption);
 
-        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+        var providerCourseDetailsResponse = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
-        if (result.CourseType != CourseType.Apprenticeship)
+        if (providerCourseDetailsResponse.CourseType != CourseType.Apprenticeship)
         {
-            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            _logger.LogWarning("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
             return View(ViewsPath.PageNotFoundPath);
         }
 
         if (string.IsNullOrEmpty(locationOption))
         {
-            model.LocationOption = result.LocationOption;
+            model.LocationOption = providerCourseDetailsResponse.LocationOption;
         }
         else
         {
-            Enum.TryParse<LocationOption>(locationOption, out var outputResult);
-            model.LocationOption = outputResult;
+            Enum.TryParse<LocationOption>(locationOption, out var result);
+            model.LocationOption = result;
         }
         _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is set to {LocationOption}", Ukprn, larsCode, model.LocationOption);
         _sessionService.Delete(SessionKeys.SelectedLocationOption);

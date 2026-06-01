@@ -10,7 +10,9 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
@@ -63,6 +65,23 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditCourseCon
             Func<Task> action = () => _sut.Index(larsCode);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Test, AutoData]
+        public async Task Get_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(
+            GetProviderCourseDetailsQueryResult queryResult,
+            string larsCode)
+        {
+            queryResult.CourseType = CourseType.ShortCourse;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn == int.Parse(TestConstants.DefaultUkprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.Index(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

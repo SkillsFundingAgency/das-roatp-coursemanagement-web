@@ -42,15 +42,15 @@ public class ProviderCourseDeleteController : ControllerBase
             throw new InvalidOperationException(message);
         }
 
-        if (result.CourseType != CourseType.Apprenticeship)
-        {
-            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
-            return View(ViewsPath.PageNotFoundPath);
-        }
-
         var standardResult = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
         if (standardResult == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
+
+        if (standardResult.CourseType != CourseType.Apprenticeship)
+        {
+            _logger.LogWarning("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            return View(ViewsPath.PageNotFoundPath);
+        }
 
         var model = (ConfirmDeleteStandardViewModel)result;
 

@@ -1,10 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
@@ -120,6 +124,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationO
             Assert.IsNotNull(viewResult);
             var model = (EditLocationOptionViewModel)viewResult.Model;
             model!.LocationOption.Should().Be(LocationOption.EmployerLocation);
+        }
+
+        [Test]
+        public async Task Get_NoCourseLocation_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds()
+        {
+            var apiResponse = new GetProviderCourseDetailsQueryResult
+            {
+                CourseType = CourseType.ShortCourse
+            };
+
+            _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+
+            var actionResult = await _sut.Index(LarsCode);
+
+            var viewResult = (ViewResult)actionResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

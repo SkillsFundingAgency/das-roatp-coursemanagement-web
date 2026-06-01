@@ -9,6 +9,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -331,6 +332,29 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
             model.DeleteStandardUrl.Should().Be(verifydeleteStandardUrl);
+        }
+
+        [Test]
+        public async Task ViewStandard_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds()
+        {
+            var response = new GetProviderCourseDetailsQueryResult
+            {
+                CourseType = CourseType.ShortCourse
+            };
+
+            _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(response);
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller
+                .AddDefaultContextWithUser()
+                .AddUrlHelperMock()
+                .AddUrlForRoute(RouteNames.GetStandardSubRegions, verifyeditProviderCourseRegionsUrl);
+
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

@@ -10,6 +10,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
@@ -41,6 +42,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
             string larsCode)
         {
+            getStandardDetailsQueryResult.CourseType = CourseType.Apprenticeship;
+
             _mediatorMock
                 .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(queryResult);
@@ -94,6 +97,28 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCours
             Func<Task> action = () => _sut.GetProviderCourse(larsCode);
 
             await action.Should().ThrowAsync<InvalidOperationException>();
+        }
+
+        [Test, AutoData]
+        public async Task Get_GetStandardsDetailsApiReturnsIncorrectCourseType_RedirectsPageNotFounds(
+            GetStandardInformationQueryResult queryResult,
+            GetProviderCourseDetailsQueryResult getStandardDetailsQueryResult,
+            string larsCode)
+        {
+            getStandardDetailsQueryResult.CourseType = CourseType.ShortCourse;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(getStandardDetailsQueryResult);
+
+            var result = await _sut.GetProviderCourse(larsCode);
+
+            var viewResult = result as ViewResult;
+            viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         }
     }
 }

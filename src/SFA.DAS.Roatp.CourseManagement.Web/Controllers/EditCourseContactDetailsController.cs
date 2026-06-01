@@ -42,7 +42,7 @@ public class EditCourseContactDetailsController : ControllerBase
 
         if (result.CourseType != CourseType.Apprenticeship)
         {
-            _logger.LogInformation("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
+            _logger.LogWarning("LarsCode {LarsCode} is not a valid apprenticeship.", larsCode);
             return View(ViewsPath.PageNotFoundPath);
         }
 
