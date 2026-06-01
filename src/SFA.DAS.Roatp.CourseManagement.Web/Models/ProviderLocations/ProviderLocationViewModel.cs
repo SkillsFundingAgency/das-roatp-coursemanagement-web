@@ -22,7 +22,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string TrainingVenuesUrl { get; set; }
 
         public List<ProviderLocationStandardModel> Standards { get; set; }
-        public List<ProviderLocationStandardModel> ApprenticeshipUnits { get; set; }
+        public ProviderLocationCourseLinksViewModel StandardLinks { get; set; }
+        public ProviderLocationCourseLinksViewModel ApprenticeshipUnitLinks { get; set; }
         public bool HasCourses { get; set; }
         public bool ShowStandards { get; set; }
         public bool ShowApprenticeshipUnits { get; set; }
@@ -44,11 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public static implicit operator ProviderLocationViewModel(ProviderLocation source)
         {
             var standards = source.Standards is { Count: > 0 }
-                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).Where(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.Apprenticeship).OrderBy(s => s.CourseDisplayName).ToList()
-                : [];
-
-            var apprenticeshipUnits = source.Standards is { Count: > 0 }
-                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).Where(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.ApprenticeshipUnit).OrderBy(s => s.CourseDisplayName).ToList()
+                ? source.Standards.Select(s => (ProviderLocationStandardModel)s).OrderBy(s => s.CourseDisplayName).ToList()
                 : [];
 
             return new ProviderLocationViewModel
@@ -62,10 +59,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 County = source.County,
                 Postcode = source.Postcode,
                 Standards = standards,
-                ApprenticeshipUnits = apprenticeshipUnits,
                 HasCourses = source.Standards?.Count > 0,
-                ShowStandards = standards.Count > 0,
-                ShowApprenticeshipUnits = apprenticeshipUnits.Count > 0
+                ShowStandards = standards.Any(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.Apprenticeship),
+                ShowApprenticeshipUnits = standards.Any(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.ApprenticeshipUnit),
             };
         }
     }

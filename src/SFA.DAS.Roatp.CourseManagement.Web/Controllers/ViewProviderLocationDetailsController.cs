@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -43,17 +44,15 @@ public class ViewProviderLocationDetailsController : ControllerBase
         model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.SelectCourseType);
         model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
 
-        foreach (var standard in model.Standards)
-        {
-            standard.StandardUrl = Url.RouteUrl(RouteNames.GetStandardDetails,
-                new { Ukprn, larsCode = standard.LarsCode });
-        }
+        model.StandardLinks = new ProviderLocationCourseLinksViewModel(model.Standards
+        .Where(s => s.LearningType == ApprenticeshipType.Apprenticeship)
+        .Select(s => new ProviderLocationCourseLink(s.CourseDisplayName, Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, s.LarsCode })))
+        .OrderBy(c => c.CourseName));
 
-        foreach (var apprenticeshipUnit in model.ApprenticeshipUnits)
-        {
-            apprenticeshipUnit.StandardUrl = Url.RouteUrl(RouteNames.ManageShortCourseDetails,
-                new { Ukprn, ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit, larsCode = apprenticeshipUnit.LarsCode });
-        }
+        model.ApprenticeshipUnitLinks = new ProviderLocationCourseLinksViewModel(model.Standards
+        .Where(s => s.LearningType == ApprenticeshipType.ApprenticeshipUnit)
+        .Select(s => new ProviderLocationCourseLink(s.CourseDisplayName, Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit, s.LarsCode })))
+        .OrderBy(c => c.CourseName));
 
         return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
     }

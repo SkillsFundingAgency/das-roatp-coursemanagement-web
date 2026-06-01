@@ -55,24 +55,12 @@
             </p>
 
             <h3 asp-show="Model.ShowStandards" class="govuk-heading-m">Apprenticeships</h3>
-            @foreach (var standard in Model.Standards)
-            {
-                <p class="govuk-body">
-                        <a class="govuk-link" href="@standard.StandardUrl">
-                            @standard.CourseDisplayName
-                        </a>
-                </p>
-            }
+            
+            <partial name="_ProviderLocationCourseLinks" for="StandardLinks" />
 
             <h4 asp-show="Model.ShowApprenticeshipUnits" class="govuk-heading-m">Apprenticeship Units</h4>
-            @foreach (var apprenticeshipUnit in Model.ApprenticeshipUnits)
-            {
-                <p class="govuk-body">                    
-                    <a class="govuk-link" href="@apprenticeshipUnit.StandardUrl">
-                        @apprenticeshipUnit.CourseDisplayName
-                    </a>
-                </p>
-            }
+            
+            <partial name="_ProviderLocationCourseLinks" for="ApprenticeshipUnitLinks" />
 
         }
     </div>

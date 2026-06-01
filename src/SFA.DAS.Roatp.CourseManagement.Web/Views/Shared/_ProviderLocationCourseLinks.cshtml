@@ -1,0 +1,11 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
+@model ProviderLocationCourseLinksViewModel
+
+@foreach (var course in Model.Courses)
+{
+    <p class="govuk-body">
+        <a class="govuk-link" href="@course.Url">
+            @course.CourseName
+        </a>
+    </p>
+}
