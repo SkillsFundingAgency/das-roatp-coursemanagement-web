@@ -5,12 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
+[AuthorizeCourseType(CourseType.Apprenticeship)]
+[ValidateProviderCourse(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation")]
 public class ProviderCourseLocationRemoveController : ControllerBase
 {

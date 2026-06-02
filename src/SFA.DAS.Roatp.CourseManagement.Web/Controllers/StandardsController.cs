@@ -69,6 +69,7 @@ public class StandardsController : ControllerBase
     }
 
     [HttpGet("{larsCode}", Name = RouteNames.GetStandardDetails)]
+    [ValidateProviderCourse(CourseType.Apprenticeship)]
     [ClearSession(SessionKeys.SelectedLocationOption)]
     public async Task<IActionResult> ViewStandard(string larsCode)
     {

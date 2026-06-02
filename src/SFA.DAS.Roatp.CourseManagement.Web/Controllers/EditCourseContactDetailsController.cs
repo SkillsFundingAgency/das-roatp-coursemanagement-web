@@ -15,6 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[ValidateProviderCourse(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/{larsCode}/edit-contact-details")]
 public class EditCourseContactDetailsController : ControllerBase
 {

@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
+[ValidateProviderCourse(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/delete-course", Name = RouteNames.DeleteShortCourse)]
 public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShortCourseController> _logger) : ControllerBase
 {
