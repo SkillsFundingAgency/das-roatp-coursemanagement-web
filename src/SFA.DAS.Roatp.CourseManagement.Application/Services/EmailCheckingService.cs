@@ -1,9 +1,14 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using DnsClient;
+using DnsClient.Protocol;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.Services;
+
 public static class EmailCheckingService
 {
-    public static bool IsValidDomain(string email)
+    public static async Task<bool> IsValidDomain(string email)
     {
         if (email == null)
         {
@@ -19,15 +24,26 @@ public static class EmailCheckingService
             return false;
         }
 
+        // Check DNS lookup first
         try
         {
-            var hostEntry = Dns.GetHostEntry(domain);
+            var hostEntry = await Dns.GetHostEntryAsync(domain);
+            if (hostEntry.AddressList.Length > 0)
+            {
+                return true;
+            }
 
-            return hostEntry.AddressList.Length > 0;
         }
         catch
         {
-            return false;
+            // Ignore DNS lookup failures and proceed to check MX records
         }
+
+        // If DNS lookup fails, check for MX records
+        var lookup = new LookupClient();
+
+        var results = await lookup.QueryAsync(domain, QueryType.MX);
+
+        return results.Answers.Any(x => x.RecordType == ResourceRecordType.MX);
     }
 }

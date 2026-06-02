@@ -42,7 +42,11 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
     [HttpPost]
     public async Task<IActionResult> EditShortCourseContactDetails(LearningType learningType, string larsCode, CourseContactDetailsSubmitModel submitModel)
     {
-        var validatedResult = _validator.Validate(submitModel);
+        submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber?.Trim();
+        submitModel.ContactUsEmail = submitModel.ContactUsEmail?.Trim();
+        submitModel.StandardInfoUrl = submitModel.StandardInfoUrl?.Trim();
+
+        var validatedResult = await _validator.ValidateAsync(submitModel);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
 
@@ -52,10 +56,6 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
 
             return View(ViewPath, viewModel);
         }
-
-        submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber.Trim();
-        submitModel.ContactUsEmail = submitModel.ContactUsEmail.Trim();
-        submitModel.StandardInfoUrl = submitModel.StandardInfoUrl.Trim();
 
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
