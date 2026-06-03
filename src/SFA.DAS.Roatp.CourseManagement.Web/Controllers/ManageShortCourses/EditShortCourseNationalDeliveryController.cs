@@ -20,7 +20,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[ValidateProviderCourse(CourseType.ShortCourse)]
+[CheckCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-national-delivery", Name = RouteNames.EditShortCourseNationalDelivery)]
 public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILogger<EditShortCourseNationalDeliveryController> _logger, ISessionService _sessionService, IValidator<ConfirmNationalDeliverySubmitModel> _validator) : ControllerBase
 {

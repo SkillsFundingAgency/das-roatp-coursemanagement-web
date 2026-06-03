@@ -18,7 +18,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
-[ValidateProviderCourse(CourseType.Apprenticeship)]
+[CheckCourseType(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/{larsCode}/edit-location-option")]
 public class EditLocationOptionController : ControllerBase
 {

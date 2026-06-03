@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
+using SFA.DAS.Roatp.CourseManagement.Infrastructure.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
@@ -20,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
             services.AddTransient<IProviderCourseTypeService, ProviderCourseTypeService>();
             services.AddTransient<IDistributedCacheService, DistributedCacheService>();
             services.AddTransient<IRegionsService, RegionsService>();
-            services.AddTransient<IProviderCourseDetailsService, ProviderCourseDetailsService>();
+            services.AddScoped<IProviderCourseDetailsCachedService, ProviderCourseDetailsCachedService>();
         }
         private static void ConfigureHttpClient(IServiceCollection services, IConfiguration configuration)
         {

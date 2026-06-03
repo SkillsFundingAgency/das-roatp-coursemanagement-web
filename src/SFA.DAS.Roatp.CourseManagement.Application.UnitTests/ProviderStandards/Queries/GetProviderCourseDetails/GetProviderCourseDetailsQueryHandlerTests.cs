@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
     public class GetProviderCourseDetailsQueryHandlerTests
     {
         private GetProviderCourseDetailsQueryHandler _handler;
-        private Mock<IApiClient> _apiClient;
+        private Mock<IProviderCourseDetailsCachedService> _providerCourseDetailsCachedService;
         private Mock<ILogger<GetProviderCourseDetailsQueryHandler>> _logger;
         private GetProviderCourseDetailsQuery _query;
         private Domain.ApiModels.StandardDetails _standardDetails;
@@ -26,15 +26,15 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
 
             _query = autoFixture.Create<GetProviderCourseDetailsQuery>();
             _standardDetails = autoFixture.Create<Domain.ApiModels.StandardDetails>();
-            _apiClient = new Mock<IApiClient>();
+            _providerCourseDetailsCachedService = new Mock<IProviderCourseDetailsCachedService>();
             _logger = new Mock<ILogger<GetProviderCourseDetailsQueryHandler>>();
         }
 
         [Test]
         public async Task ValidRequest_ReturnsValidResponse()
         {
-            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).ReturnsAsync(() => _standardDetails);
-            _handler = new GetProviderCourseDetailsQueryHandler(_apiClient.Object, _logger.Object);
+            _providerCourseDetailsCachedService.Setup(m => m.GetCachedProviderCourseDetails(_query.Ukprn, _query.LarsCode)).ReturnsAsync(() => _standardDetails);
+            _handler = new GetProviderCourseDetailsQueryHandler(_providerCourseDetailsCachedService.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
             result.Should().NotBeNull();
@@ -44,9 +44,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
         [Test]
         public async Task NoStandardDetailsReturned_ReturnsNullResponse()
         {
-            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).ReturnsAsync(() => null);
+            _providerCourseDetailsCachedService.Setup(m => m.GetCachedProviderCourseDetails(_query.Ukprn, _query.LarsCode)).ReturnsAsync(() => null);
 
-            _handler = new GetProviderCourseDetailsQueryHandler(_apiClient.Object, _logger.Object);
+            _handler = new GetProviderCourseDetailsQueryHandler(_providerCourseDetailsCachedService.Object, _logger.Object);
 
             var result = await _handler.Handle(_query, CancellationToken.None);
 
@@ -57,8 +57,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.UnitTests.ProviderStandards
         [Test]
         public void Returns_Exception()
         {
-            _apiClient.Setup(x => x.Get<Domain.ApiModels.StandardDetails>($"providers/{_query.Ukprn}/courses/{_query.LarsCode}")).Throws(new Exception());
-            _handler = new GetProviderCourseDetailsQueryHandler(_apiClient.Object, _logger.Object);
+            _providerCourseDetailsCachedService.Setup(m => m.GetCachedProviderCourseDetails(_query.Ukprn, _query.LarsCode)).Throws(new Exception());
+            _handler = new GetProviderCourseDetailsQueryHandler(_providerCourseDetailsCachedService.Object, _logger.Object);
             Assert.ThrowsAsync<Exception>(() => _handler.Handle(_query, CancellationToken.None));
         }
     }

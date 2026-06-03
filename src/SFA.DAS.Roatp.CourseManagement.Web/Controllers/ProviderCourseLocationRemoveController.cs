@@ -14,7 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
-[ValidateProviderCourse(CourseType.Apprenticeship)]
+[CheckCourseType(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation")]
 public class ProviderCourseLocationRemoveController : ControllerBase
 {

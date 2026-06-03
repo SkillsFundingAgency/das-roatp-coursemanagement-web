@@ -7,5 +7,4 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 public static class CacheSetting
 {
     public static CacheInfo Regions => new(CacheKeys.Regions, TimeSpan.FromHours(24));
-    public static CacheInfo ProviderCourseDetails => new(CacheKeys.ProviderCourseDetails, TimeSpan.FromHours(24));
 }
