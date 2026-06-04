@@ -21,13 +21,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [CheckCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-regions", Name = RouteNames.EditShortCourseRegions)]
+[Route("{ukprn}/courses/{learningType}/{larsCode}/edit-regions", Name = RouteNames.EditShortCourseRegions)]
 public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditShortCourseRegionsController> _logger, IRegionsService _regionsService, IValidator<RegionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseRegions.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> EditShortCourseRegions(ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseRegions(LearningType learningType, string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
@@ -40,13 +40,13 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
 
         var regionsResponse = await _regionsService.GetRegions();
 
-        var viewModel = GetViewModel(regionsResponse, providerCourseDetailsResponse, apprenticeshipType);
+        var viewModel = GetViewModel(regionsResponse, providerCourseDetailsResponse, learningType);
 
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditShortCourseRegions(RegionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseRegions(RegionsSubmitModel submitModel, LearningType learningType, string larsCode)
     {
         var validatedResult = _validator.Validate(submitModel);
 
@@ -56,7 +56,7 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
         {
             var regionsResponse = await _regionsService.GetRegions();
 
-            var viewModel = GetViewModel(regionsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+            var viewModel = GetViewModel(regionsResponse, new GetProviderCourseDetailsQueryResult(), learningType);
 
             return View(ViewPath, viewModel);
         }
@@ -72,7 +72,7 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
 
         await _mediator.Send(command);
 
-        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, learningType, larsCode });
     }
 
     private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
@@ -84,10 +84,10 @@ public class EditShortCourseRegionsController(IMediator _mediator, ILogger<EditS
         return result;
     }
 
-    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static SelectShortCourseRegionsViewModel GetViewModel(List<RegionModel> regions, GetProviderCourseDetailsQueryResult providerCourseDetails, LearningType learningType)
     {
         var model = new SelectShortCourseRegionsViewModel(regions.Select(r => (ShortCourseRegionViewModel)r).ToList());
-        model.ApprenticeshipType = apprenticeshipType;
+        model.LearningType = learningType;
         model.SubmitButtonText = ButtonText.Confirm;
         model.Route = RouteNames.EditShortCourseRegions;
         model.IsAddJourney = false;

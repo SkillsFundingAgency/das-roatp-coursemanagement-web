@@ -14,20 +14,20 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}", Name = RouteNames.ManageShortCourses)]
+[Route("{ukprn}/courses/{learningType}", Name = RouteNames.ManageShortCourses)]
 public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCourses.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
-    public async Task<IActionResult> Index(ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> Index(LearningType learningType)
     {
-        var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, apprenticeshipType });
+        var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, learningType });
 
         var viewModel = new ManageShortCoursesViewModel()
         {
-            ApprenticeshipType = apprenticeshipType,
+            LearningType = learningType,
             AddAShortCourseLink = selectShortCourseUrl,
         };
 
@@ -36,7 +36,7 @@ public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
         if (showShortCourseDeleteBanner != null)
         {
             viewModel.ShowDeleteShortCourseNotificationBanner = true;
-            viewModel.Banner.ApprenticeshipType = viewModel.ApprenticeshipTypeHumanize;
+            viewModel.Banner.LearningType = viewModel.LearningTypeHumanize;
             TempData.Remove(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey);
         }
 
@@ -46,7 +46,7 @@ public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
 
         foreach (var shortCourse in viewModel.ShortCourses)
         {
-            shortCourse.StandardUrl = Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, ApprenticeshipType = apprenticeshipType, larsCode = shortCourse.LarsCode });
+            shortCourse.StandardUrl = Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, LearningType = learningType, larsCode = shortCourse.LarsCode });
         }
 
         viewModel.ShowShortCourseHeading = viewModel.ShortCourses.Count > 0;

@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
         private const string LarsCode = "123";
-        private const ApprenticeshipType ApprenticeshipType = Domain.ApiModels.ApprenticeshipType.Apprenticeship;
+        private const LearningType LearningType = Domain.ApiModels.LearningType.Apprenticeship;
         private const string verifyUrl = "http://test";
         private const string verifyEditContactDetailsUrl = "http://test-verifyEditContactDetailsUrl";
         private const string verifyEditLocationOptionUrl = "http://test-verifyEditLocationOptionUrl";
@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 Sector = "Digital",
                 LarsCode = LarsCode,
                 RegulatorName = "",
-                ApprenticeshipType = ApprenticeshipType,
+                LearningType = LearningType,
                 StandardInfoUrl = "www.test.com",
                 ContactUsEmail = "test@test.com",
                 ContactUsPhoneNumber = "123456789",
@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var model = viewResult.Model as StandardDetailsViewModel;
             model.Should().NotBeNull();
             model!.StandardInformation.LarsCode.Should().Be(LarsCode);
-            model.StandardInformation.ApprenticeshipType.Should().Be(ApprenticeshipType);
+            model.StandardInformation.LearningType.Should().Be(LearningType);
             model.BackUrl.Should().Be(verifyUrl);
             _logger.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Never);
         }

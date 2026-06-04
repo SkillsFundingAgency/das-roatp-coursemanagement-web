@@ -18,13 +18,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [CheckCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-contact-details", Name = RouteNames.EditShortCourseContactDetails)]
+[Route("{ukprn}/courses/{learningType}/{larsCode}/edit-contact-details", Name = RouteNames.EditShortCourseContactDetails)]
 public class EditShortCourseContactDetailsController(IMediator _mediator, ILogger<EditShortCourseContactDetailsController> _logger, IValidator<CourseContactDetailsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetails.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> EditShortCourseContactDetails(ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseContactDetails(LearningType learningType, string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
@@ -35,13 +35,13 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var viewModel = GetViewModel(providerCourseDetailsResponse, apprenticeshipType);
+        var viewModel = GetViewModel(providerCourseDetailsResponse, learningType);
 
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditShortCourseContactDetails(ApprenticeshipType apprenticeshipType, string larsCode, CourseContactDetailsSubmitModel submitModel)
+    public async Task<IActionResult> EditShortCourseContactDetails(LearningType learningType, string larsCode, CourseContactDetailsSubmitModel submitModel)
     {
         submitModel.ContactUsPhoneNumber = submitModel.ContactUsPhoneNumber?.Trim();
         submitModel.ContactUsEmail = submitModel.ContactUsEmail?.Trim();
@@ -53,7 +53,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
 
         if (!ModelState.IsValid)
         {
-            var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+            var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), learningType);
 
             return View(ViewPath, viewModel);
         }
@@ -62,7 +62,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
 
         if (providerCourseDetailsResponse == null)
         {
-            return RedirectToRoute(RouteNames.EditShortCourseContactDetails, new { Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseContactDetails, new { Ukprn, learningType, larsCode });
         }
 
         if (!(providerCourseDetailsResponse.ContactUsPhoneNumber == submitModel.ContactUsPhoneNumber && providerCourseDetailsResponse.ContactUsEmail == submitModel.ContactUsEmail && providerCourseDetailsResponse.StandardInfoUrl == submitModel.StandardInfoUrl))
@@ -76,7 +76,7 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
             await _mediator.Send(command);
         }
 
-        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, learningType, larsCode });
     }
 
     private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
@@ -88,11 +88,11 @@ public class EditShortCourseContactDetailsController(IMediator _mediator, ILogge
         return result;
     }
 
-    private static ShortCourseContactDetailsViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static ShortCourseContactDetailsViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, LearningType learningType)
     {
         var model = (ShortCourseContactDetailsViewModel)providerCourseDetails;
 
-        model.ApprenticeshipType = apprenticeshipType;
+        model.LearningType = learningType;
         model.SubmitButtonText = ButtonText.Confirm;
         model.Route = RouteNames.EditShortCourseContactDetails;
         model.IsAddJourney = false;

@@ -23,13 +23,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [CheckCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-course-locations", Name = RouteNames.EditShortCourseLocationOptions)]
+[Route("{ukprn}/courses/{learningType}/{larsCode}/edit-course-locations", Name = RouteNames.EditShortCourseLocationOptions)]
 public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogger<EditShortCourseLocationOptionsController> _logger, ISessionService _sessionService, IValidator<SelectShortCourseLocationOptionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseLocationOptions.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> EditShortCourseLocationOptions(ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseLocationOptions(LearningType learningType, string larsCode)
     {
         _sessionService.Delete(SessionKeys.SelectedShortCourseLocationOption);
 
@@ -42,13 +42,13 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var model = GetViewModel(providerCourseDetailsResponse, apprenticeshipType);
+        var model = GetViewModel(providerCourseDetailsResponse, learningType);
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditShortCourseLocationOptions(SelectShortCourseLocationOptionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseLocationOptions(SelectShortCourseLocationOptionsSubmitModel submitModel, LearningType learningType, string larsCode)
     {
         var validatedResult = _validator.Validate(submitModel);
 
@@ -56,7 +56,7 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
 
         if (!ModelState.IsValid)
         {
-            var model = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+            var model = GetViewModel(new GetProviderCourseDetailsQueryResult(), learningType);
 
             return View(ViewPath, model);
         }
@@ -65,7 +65,7 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
 
         if (providerCourseDetailsResponse == null)
         {
-            return RedirectToRoute(RouteNames.EditShortCourseLocationOptions, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseLocationOptions, new { ukprn = Ukprn, learningType, larsCode });
         }
 
         var currentLocationOptions = MapCurrentLocationOptions(providerCourseDetailsResponse);
@@ -112,15 +112,15 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
         if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation) && !currentLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation))
         {
 
-            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { Ukprn, learningType, larsCode });
         }
 
         if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && !currentLocationOptions.Contains(ShortCourseLocationOption.EmployerLocation))
         {
-            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, learningType, larsCode });
         }
 
-        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, learningType, larsCode });
     }
 
     private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
@@ -132,7 +132,7 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
         return result;
     }
 
-    private static SelectShortCourseLocationOptionsViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static SelectShortCourseLocationOptionsViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, LearningType learningType)
     {
         var currentLocationOptions = MapCurrentLocationOptions(providerCourseDetails);
 
@@ -146,7 +146,7 @@ public class EditShortCourseLocationOptionsController(IMediator _mediator, ILogg
         return new SelectShortCourseLocationOptionsViewModel()
         {
             LocationOptions = locationOptions,
-            ApprenticeshipType = apprenticeshipType,
+            LearningType = learningType,
             SubmitButtonText = ButtonText.Confirm,
             Route = RouteNames.EditShortCourseLocationOptions,
             IsAddJourney = false

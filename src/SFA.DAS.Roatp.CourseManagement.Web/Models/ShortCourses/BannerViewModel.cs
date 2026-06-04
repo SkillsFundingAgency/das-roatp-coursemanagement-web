@@ -2,5 +2,5 @@
 
 public class BannerViewModel
 {
-    public string ApprenticeshipType { get; set; }
+    public string LearningType { get; set; }
 }

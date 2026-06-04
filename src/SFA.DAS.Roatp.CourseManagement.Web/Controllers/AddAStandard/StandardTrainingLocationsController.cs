@@ -56,7 +56,7 @@ public class StandardTrainingLocationsController : AddAStandardControllerBase
 
         if (!providerLocations.ProviderLocations.Any(l => l.LocationType == LocationType.Provider))
         {
-            return RedirectToRoute(RouteNames.GetAddProviderLocation, new { ukprn = Ukprn, apprenticeshipType = ApprenticeshipType.Apprenticeship });
+            return RedirectToRoute(RouteNames.GetAddProviderLocation, new { ukprn = Ukprn, learningType = LearningType.Apprenticeship });
         }
 
         var model = GetModel();

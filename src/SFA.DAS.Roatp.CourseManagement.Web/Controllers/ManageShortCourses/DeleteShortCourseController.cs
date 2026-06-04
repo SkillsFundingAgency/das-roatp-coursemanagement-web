@@ -15,13 +15,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [CheckCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/delete-course", Name = RouteNames.DeleteShortCourse)]
+[Route("{ukprn}/courses/{learningType}/{larsCode}/delete-course", Name = RouteNames.DeleteShortCourse)]
 public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShortCourseController> _logger) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/DeleteShortCourse.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> DeleteShortCourse(ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> DeleteShortCourse(LearningType learningType, string larsCode)
     {
         var courseDetailsResponse = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
@@ -42,14 +42,14 @@ public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShor
         }
 
         var model = (DeleteShortCourseViewModel)courseInformationResponse;
-        model.ApprenticeshipType = apprenticeshipType;
-        model.BackToManageShortCoursesLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType });
+        model.LearningType = learningType;
+        model.BackToManageShortCoursesLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType });
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> DeleteShortCourse(ApprenticeshipType apprenticeshipType, DeleteShortCourseSubmitModel model)
+    public async Task<IActionResult> DeleteShortCourse(LearningType learningType, DeleteShortCourseSubmitModel model)
     {
         var command = new DeleteProviderCourseCommand(Ukprn, model.LarsCode, UserId, UserDisplayName);
 
@@ -57,6 +57,6 @@ public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShor
 
         TempData.Add(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, true);
 
-        return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType });
     }
 }

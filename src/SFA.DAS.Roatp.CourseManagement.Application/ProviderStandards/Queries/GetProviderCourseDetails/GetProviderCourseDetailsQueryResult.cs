@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public string Sector { get; set; }
         public string LarsCode { get; set; }
         public string RegulatorName { get; set; }
-        public ApprenticeshipType ApprenticeshipType { get; set; }
+        public LearningType LearningType { get; set; }
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 RegulatorName = v.RegulatorName,
                 Sector = v.Sector,
                 StandardInfoUrl = v.StandardInfoUrl,
-                ApprenticeshipType = v.ApprenticeshipType,
+                LearningType = v.LearningType,
                 IsApprovedByRegulator = v.IsApprovedByRegulator,
                 IsRegulatedForProvider = v.IsRegulatedForProvider,
                 HasLocations = v.HasLocations,

@@ -9,6 +9,6 @@ public class SelectShortCourseSubmitModelValidator : AbstractValidator<SelectSho
     {
         RuleFor(m => m.SelectedLarsCode)
             .NotEmpty()
-            .WithMessage(m => $"Select an {m.ApprenticeshipTypeLower}");
+            .WithMessage(m => $"Select an {m.LearningTypeLower}");
     }
 }

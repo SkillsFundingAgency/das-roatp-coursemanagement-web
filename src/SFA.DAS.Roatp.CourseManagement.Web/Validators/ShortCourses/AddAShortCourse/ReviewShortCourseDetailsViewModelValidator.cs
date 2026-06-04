@@ -14,11 +14,11 @@ public class ReviewShortCourseDetailsViewModelValidator : AbstractValidator<Revi
             !string.IsNullOrWhiteSpace(s.ContactInformation.ContactUsEmail) &&
             !string.IsNullOrWhiteSpace(s.ContactInformation.ContactUsPhoneNumber) &&
             !string.IsNullOrWhiteSpace(s.ContactInformation.StandardInfoUrl))
-            .WithMessage(s => $"Enter all contact details for this {s.ApprenticeshipTypeLower}");
+            .WithMessage(s => $"Enter all contact details for this {s.LearningTypeLower}");
 
         RuleFor(s => s.LocationInformation.DeliveryLocations)
             .NotEmpty()
-            .WithMessage(s => $"Select training options for this {s.ApprenticeshipTypeLower}");
+            .WithMessage(s => $"Select training options for this {s.LearningTypeLower}");
 
         RuleFor(s => s.LocationInformation.TrainingVenues)
             .NotEmpty()

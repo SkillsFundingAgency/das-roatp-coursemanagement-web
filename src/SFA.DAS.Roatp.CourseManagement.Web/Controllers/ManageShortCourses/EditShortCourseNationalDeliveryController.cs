@@ -21,13 +21,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [CheckCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-national-delivery", Name = RouteNames.EditShortCourseNationalDelivery)]
+[Route("{ukprn}/courses/{learningType}/{larsCode}/edit-national-delivery", Name = RouteNames.EditShortCourseNationalDelivery)]
 public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILogger<EditShortCourseNationalDeliveryController> _logger, ISessionService _sessionService, IValidator<ConfirmNationalDeliverySubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ConfirmNationalDelivery.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> EditShortCourseNationalDelivery(ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseNationalDelivery(LearningType learningType, string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
@@ -38,13 +38,13 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var viewModel = GetViewModel(providerCourseDetailsResponse, apprenticeshipType);
+        var viewModel = GetViewModel(providerCourseDetailsResponse, learningType);
 
         return View(ViewPath, viewModel);
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditShortCourseNationalDelivery(ConfirmNationalDeliverySubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseNationalDelivery(ConfirmNationalDeliverySubmitModel submitModel, LearningType learningType, string larsCode)
     {
         var validatedResult = _validator.Validate(submitModel);
 
@@ -52,7 +52,7 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
 
         if (!ModelState.IsValid)
         {
-            var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+            var viewModel = GetViewModel(new GetProviderCourseDetailsQueryResult(), learningType);
 
             return View(ViewPath, viewModel);
         }
@@ -61,7 +61,7 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
 
         if (providerCourseDetailsResponse == null)
         {
-            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, learningType, larsCode });
         }
 
         var hasSelectionChanged = providerCourseDetailsResponse.ProviderCourseLocations.Any(x => x.LocationType == LocationType.National) != submitModel.HasNationalDeliveryOption;
@@ -74,10 +74,10 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
 
         if (submitModel.HasNationalDeliveryOption == false && !providerCourseDetailsResponse.ProviderCourseLocations.Any(x => x.LocationType == LocationType.Regional))
         {
-            return RedirectToRoute(RouteNames.EditShortCourseRegions, new { Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseRegions, new { Ukprn, learningType, larsCode });
         }
 
-        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, learningType, larsCode });
     }
 
     private async Task<GetProviderCourseDetailsQueryResult> GetProviderCourseDetails(string larsCode)
@@ -89,13 +89,13 @@ public class EditShortCourseNationalDeliveryController(IMediator _mediator, ILog
         return result;
     }
 
-    private ConfirmNationalDeliveryViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private ConfirmNationalDeliveryViewModel GetViewModel(GetProviderCourseDetailsQueryResult providerCourseDetails, LearningType learningType)
     {
         bool? hasNationalDeliveryOption = HasNationalDeliveryOption(providerCourseDetails);
 
         var model = new ConfirmNationalDeliveryViewModel();
 
-        model.ApprenticeshipType = apprenticeshipType;
+        model.LearningType = learningType;
         model.HasNationalDeliveryOption = hasNationalDeliveryOption;
         model.SubmitButtonText = ButtonText.Confirm;
         model.Route = RouteNames.EditShortCourseNationalDelivery;

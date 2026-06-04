@@ -32,20 +32,20 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sut.ModelState.AddModelError("key", "error");
 
         // Act
-        var result = await sut.EditShortCourseNationalDelivery(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseNationalDelivery(submitModel, learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var model = viewResult.Model as ConfirmNationalDeliveryViewModel;
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.SubmitButtonText.Should().Be(ButtonText.Confirm);
         model.Route.Should().Be(RouteNames.EditShortCourseNationalDelivery);
         model.IsAddJourney.Should().BeFalse();
@@ -60,7 +60,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(() => null);
 
@@ -69,7 +69,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.EditShortCourseNationalDelivery(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseNationalDelivery(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -87,7 +87,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         providerCourseDetailsApiResponse.ProviderCourseLocations = new List<ProviderCourseLocation>()
         {
@@ -108,7 +108,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
 
 
         // Act
-        await sut.EditShortCourseNationalDelivery(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseNationalDelivery(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<DeleteCourseLocationsCommand>(c => c.Ukprn == int.Parse(TestConstants.DefaultUkprn) && c.UserId == TestConstants.DefaultUserId && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteEmployerLocations), It.IsAny<CancellationToken>()), Times.Once);
@@ -125,7 +125,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         providerCourseDetailsApiResponse.ProviderCourseLocations = new List<ProviderCourseLocation>()
         {
@@ -146,7 +146,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
 
 
         // Act
-        var result = await sut.EditShortCourseNationalDelivery(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseNationalDelivery(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -169,7 +169,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         providerCourseDetailsApiResponse.ProviderCourseLocations = new List<ProviderCourseLocation>()
         {
@@ -190,7 +190,7 @@ public class EditShortCourseNationalDeliveryControllerPostTests
 
 
         // Act
-        var result = await sut.EditShortCourseNationalDelivery(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseNationalDelivery(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;

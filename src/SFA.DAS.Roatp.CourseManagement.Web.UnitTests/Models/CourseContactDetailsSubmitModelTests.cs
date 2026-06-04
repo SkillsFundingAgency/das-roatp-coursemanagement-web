@@ -15,10 +15,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models
             var command = (UpdateProviderCourseContactDetailsCommand)sut;
 
             command.Should().BeEquivalentTo(sut, options => options
-            .Excluding(x => x.ApprenticeshipType)
-            .Excluding(x => x.ApprenticeshipTypeLower)
-            .Excluding(x => x.ApprenticeshipTypeLowerPlural)
-            .Excluding(x => x.ApprenticeshipTypeHumanize));
+            .Excluding(x => x.LearningType)
+            .Excluding(x => x.LearningTypeLower)
+            .Excluding(x => x.LearningTypeLowerPlural)
+            .Excluding(x => x.LearningTypeHumanize));
         }
     }
 }

@@ -28,7 +28,7 @@ public class DeleteShortCourseControllerGetTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         string backToManageShortCoursesLink = Guid.NewGuid().ToString();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
@@ -40,13 +40,13 @@ public class DeleteShortCourseControllerGetTests
             .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink);
 
         // Act
-        var result = await sut.DeleteShortCourse(apprenticeshipType, larsCode);
+        var result = await sut.DeleteShortCourse(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
         var model = viewResult!.Model as DeleteShortCourseViewModel;
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.BackToManageShortCoursesLink.Should().Be(backToManageShortCoursesLink);
     }
 
@@ -59,7 +59,7 @@ public class DeleteShortCourseControllerGetTests
        string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         string backToManageShortCoursesLink = Guid.NewGuid().ToString();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
@@ -71,7 +71,7 @@ public class DeleteShortCourseControllerGetTests
             .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink);
 
         // Act
-        await sut.DeleteShortCourse(apprenticeshipType, larsCode);
+        await sut.DeleteShortCourse(learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once);
@@ -86,7 +86,7 @@ public class DeleteShortCourseControllerGetTests
         string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync((GetProviderCourseDetailsQueryResult)null);
 
@@ -95,7 +95,7 @@ public class DeleteShortCourseControllerGetTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.DeleteShortCourse(apprenticeshipType, larsCode);
+        var result = await sut.DeleteShortCourse(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -110,7 +110,7 @@ public class DeleteShortCourseControllerGetTests
     string larsCode)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(getStandardDetailsQueryResult);
 
@@ -119,7 +119,7 @@ public class DeleteShortCourseControllerGetTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.DeleteShortCourse(apprenticeshipType, larsCode);
+        var result = await sut.DeleteShortCourse(learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;

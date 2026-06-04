@@ -35,7 +35,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         List<ShortCourseLocationOptionModel> locationOptions = new()
         {
@@ -54,13 +54,13 @@ public class EditShortCourseLocationOptionsControllerPostTests
 
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult.Model as SelectShortCourseLocationOptionsViewModel;
         model.LocationOptions.Should().BeEquivalentTo(locationOptions);
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.SubmitButtonText.Should().Be(ButtonText.Confirm);
         model.Route.Should().Be(RouteNames.EditShortCourseLocationOptions);
         model.IsAddJourney.Should().BeFalse();
@@ -76,7 +76,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseLocationOptionsSubmitModel>())).Returns(new ValidationResult());
 
@@ -86,7 +86,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
 
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -104,7 +104,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
         submitModel.SelectedLocationOptions.Add(ShortCourseLocationOption.Online);
@@ -127,7 +127,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<UpdateOnlineDeliveryOptionCommand>(c =>
@@ -147,7 +147,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
 )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
         submitModel.SelectedLocationOptions.Add(ShortCourseLocationOption.ProviderLocation);
@@ -170,7 +170,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         mediatorMock.Verify(m => m.Send(It.Is<UpdateOnlineDeliveryOptionCommand>(c =>
@@ -190,7 +190,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
         submitModel.SelectedLocationOptions.Add(ShortCourseLocationOption.ProviderLocation);
@@ -212,7 +212,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -234,7 +234,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
 
@@ -254,7 +254,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -277,7 +277,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
         submitModel.SelectedLocationOptions.Add(ShortCourseLocationOption.EmployerLocation);
@@ -298,7 +298,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         sessionServiceMock.Verify(s => s.Set(ShortCourseLocationOption.EmployerLocation.ToString(), SessionKeys.SelectedShortCourseLocationOption), Times.Once());
@@ -314,7 +314,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
         submitModel.SelectedLocationOptions.Add(ShortCourseLocationOption.EmployerLocation);
@@ -335,7 +335,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -357,7 +357,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
 
@@ -377,7 +377,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;
@@ -399,7 +399,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         submitModel.SelectedLocationOptions = new List<ShortCourseLocationOption>();
         submitModel.SelectedLocationOptions.Add(ShortCourseLocationOption.Online);
@@ -424,7 +424,7 @@ public class EditShortCourseLocationOptionsControllerPostTests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseDetailsApiResponse);
 
         // Act
-        var result = await sut.EditShortCourseLocationOptions(submitModel, apprenticeshipType, larsCode);
+        var result = await sut.EditShortCourseLocationOptions(submitModel, learningType, larsCode);
 
         // Assert
         var routeResult = result as RedirectToRouteResult;

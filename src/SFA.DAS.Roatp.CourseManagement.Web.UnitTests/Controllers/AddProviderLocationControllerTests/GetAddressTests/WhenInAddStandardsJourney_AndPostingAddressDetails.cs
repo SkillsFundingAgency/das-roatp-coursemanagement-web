@@ -22,12 +22,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddProviderLo
 
 public class WhenInAddStandardsJourney_AndPostingAddressDetails
 {
-    private ApprenticeshipType _learningType;
+    private LearningType _learningType;
 
     [SetUp]
     public void Before_Each_Test()
     {
-        _learningType = ApprenticeshipType.Apprenticeship;
+        _learningType = LearningType.Apprenticeship;
     }
 
     [Test, MoqAutoData]
