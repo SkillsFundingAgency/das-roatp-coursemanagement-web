@@ -25,20 +25,20 @@ public class ConfirmNationalDeliveryControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ConfirmNationalDeliveryViewModel;
         model!.HasNationalDeliveryOption.Should().Be(sessionModel.HasNationalDeliveryOption);
-        model!.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model!.LearningType.Should().Be(learningType);
         model!.IsAddJourney.Should().BeTrue();
         model!.Route.Should().Be(RouteNames.ConfirmNationalDelivery);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -56,7 +56,7 @@ public class ConfirmNationalDeliveryControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = seenSummaryPage;
 
         sut.AddDefaultContextWithUser();
@@ -64,7 +64,7 @@ public class ConfirmNationalDeliveryControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -83,13 +83,13 @@ public class ConfirmNationalDeliveryControllerGetTests
         [
             ShortCourseLocationOption.ProviderLocation
         ];
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -103,13 +103,13 @@ public class ConfirmNationalDeliveryControllerGetTests
     [Greedy] ConfirmNationalDeliveryController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.ConfirmNationalProviderDelivery(apprenticeshipType);
+        var result = sut.ConfirmNationalProviderDelivery(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

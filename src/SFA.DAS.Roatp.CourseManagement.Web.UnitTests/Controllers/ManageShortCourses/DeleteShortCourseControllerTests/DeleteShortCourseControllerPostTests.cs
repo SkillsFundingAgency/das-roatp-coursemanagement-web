@@ -26,13 +26,13 @@ public class DeleteShortCourseControllerPostTests
         DeleteShortCourseSubmitModel model)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sut.TempData = tempDataMock.Object;
 
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = await sut.DeleteShortCourse(apprenticeshipType, model);
+        var result = await sut.DeleteShortCourse(learningType, model);
 
         // Assert
         var redirectResult = (RedirectToRouteResult)result;

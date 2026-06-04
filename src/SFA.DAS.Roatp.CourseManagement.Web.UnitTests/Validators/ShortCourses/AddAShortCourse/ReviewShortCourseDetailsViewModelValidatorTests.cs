@@ -33,14 +33,14 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.LearningType = LearningType.ApprenticeshipUnit;
 
         var sut = new ReviewShortCourseDetailsViewModelValidator();
 
         var result = sut.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(s => s)
-            .WithErrorMessage($"Enter all contact details for this {model.ApprenticeshipTypeLower}");
+            .WithErrorMessage($"Enter all contact details for this {model.LearningTypeLower}");
     }
 
     [Test, AutoData]
@@ -51,14 +51,14 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.LearningType = LearningType.ApprenticeshipUnit;
 
         var sut = new ReviewShortCourseDetailsViewModelValidator();
 
         var result = sut.TestValidate(model);
 
         result.ShouldHaveValidationErrorFor(s => s.LocationInformation.DeliveryLocations)
-            .WithErrorMessage($"Select training options for this {model.ApprenticeshipTypeLower}");
+            .WithErrorMessage($"Select training options for this {model.LearningTypeLower}");
     }
 
     [Test, AutoData]
@@ -71,7 +71,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.LearningType = LearningType.ApprenticeshipUnit;
 
         var sut = new ReviewShortCourseDetailsViewModelValidator();
 
@@ -91,7 +91,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.LearningType = LearningType.ApprenticeshipUnit;
 
         var sut = new ReviewShortCourseDetailsViewModelValidator();
 
@@ -113,7 +113,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
 
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.LearningType = LearningType.ApprenticeshipUnit;
 
         var sut = new ReviewShortCourseDetailsViewModelValidator();
 
@@ -129,7 +129,7 @@ public class ReviewShortCourseDetailsViewModelValidatorTests
     {
         ReviewShortCourseDetailsViewModel model = sessionModel;
 
-        model.ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        model.LearningType = LearningType.ApprenticeshipUnit;
 
         var sut = new ReviewShortCourseDetailsViewModelValidator();
 

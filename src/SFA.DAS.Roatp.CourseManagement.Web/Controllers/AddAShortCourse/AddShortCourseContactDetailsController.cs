@@ -16,13 +16,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
+[Route("{ukprn}/courses/{learningType}/new/contact-details", Name = RouteNames.AddShortCourseContactDetails)]
 public class AddShortCourseContactDetailsController(ISessionService _sessionService, ILogger<AddShortCourseContactDetailsController> _logger, IValidator<CourseContactDetailsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseContactDetails.cshtml";
 
     [HttpGet]
-    public IActionResult AddShortCourseContactDetails(ApprenticeshipType apprenticeshipType)
+    public IActionResult AddShortCourseContactDetails(LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -35,7 +35,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
             model.ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail;
             model.ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber;
             model.StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl;
-            model.ApprenticeshipType = apprenticeshipType;
+            model.LearningType = learningType;
             model.ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true;
             model.SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue;
             model.Route = RouteNames.AddShortCourseContactDetails;
@@ -46,7 +46,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
     }
 
     [HttpPost]
-    public async Task<IActionResult> AddShortCourseContactDetails(CourseContactDetailsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public async Task<IActionResult> AddShortCourseContactDetails(CourseContactDetailsSubmitModel submitModel, LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -67,7 +67,7 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
                 ContactUsEmail = sessionModel.ContactInformation.ContactUsEmail,
                 ContactUsPhoneNumber = sessionModel.ContactInformation.ContactUsPhoneNumber,
                 StandardInfoUrl = sessionModel.ContactInformation.StandardInfoUrl,
-                ApprenticeshipType = apprenticeshipType,
+                LearningType = learningType,
                 ShowSavedContactDetailsText = sessionModel.IsUsingSavedContactDetails == true,
                 SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
                 Route = RouteNames.AddShortCourseContactDetails,
@@ -85,11 +85,11 @@ public class AddShortCourseContactDetailsController(ISessionService _sessionServ
 
         if (sessionModel.HasSeenSummaryPage)
         {
-            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, learningType });
         }
 
-        _logger.LogInformation("Add {ApprenticeshipType}: Contact details added for ukprn:{Ukprn} larscode:{Larscode}", apprenticeshipType, Ukprn, sessionModel.LarsCode);
+        _logger.LogInformation("Add {LearningType}: Contact details added for ukprn:{Ukprn} larscode:{Larscode}", learningType, Ukprn, sessionModel.LarsCode);
 
-        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.SelectShortCourseLocationOption, new { ukprn = Ukprn, learningType });
     }
 }

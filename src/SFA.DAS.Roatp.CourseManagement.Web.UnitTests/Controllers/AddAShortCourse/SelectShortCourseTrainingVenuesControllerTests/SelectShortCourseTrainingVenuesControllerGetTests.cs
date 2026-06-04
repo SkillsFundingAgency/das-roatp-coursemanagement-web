@@ -32,7 +32,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.ProviderLocations = queryResult.ProviderLocations;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
         foreach (var trainingVenue in sessionModel.TrainingVenues)
@@ -47,13 +47,13 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
+        var result = await sut.SelectShortCourseTrainingVenue(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ShortCourseTrainingVenuesViewModel;
         model!.TrainingVenues.Should().BeEquivalentTo(sessionModel.TrainingVenues);
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.Route.Should().Be(RouteNames.SelectShortCourseTrainingVenue);
         model.IsAddJourney.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -75,7 +75,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sessionModel.HasSeenSummaryPage = seenSummaryPage;
         sessionModel.ProviderLocations = queryResult.ProviderLocations;
         sessionModel.TrainingVenues = sessionModel.ProviderLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).ToList();
@@ -91,7 +91,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderLocationsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
+        var result = await sut.SelectShortCourseTrainingVenue(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -107,13 +107,13 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         GetAllProviderLocationsQueryResult queryResult)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
+        var result = await sut.SelectShortCourseTrainingVenue(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -132,7 +132,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online };
 
@@ -141,7 +141,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
+        var result = await sut.SelectShortCourseTrainingVenue(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -160,7 +160,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         GetAllProviderLocationsQueryResult queryResult = new();
 
@@ -177,7 +177,7 @@ public class SelectShortCourseTrainingVenuesControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.SelectShortCourseTrainingVenue(apprenticeshipType);
+        var result = await sut.SelectShortCourseTrainingVenue(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

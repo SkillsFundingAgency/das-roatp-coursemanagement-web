@@ -11,7 +11,7 @@ public class GetStandardInformationQueryResult
     public string LarsCode { get; set; }
     public string Title { get; set; }
     public int Level { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
+    public LearningType LearningType { get; set; }
     public string ApprovalBody { get; set; }
     public string Route { get; set; }
     public int Duration { get; set; }

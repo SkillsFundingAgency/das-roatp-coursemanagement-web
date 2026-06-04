@@ -4,6 +4,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ShortCourses;
+
 public class ShortCourseBaseViewModelTests
 {
     [Test]
@@ -11,10 +12,10 @@ public class ShortCourseBaseViewModelTests
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+            LearningType = LearningType.ApprenticeshipUnit,
         };
 
-        sut.ApprenticeshipTypeLower.Should().Be("apprenticeship unit");
+        sut.LearningTypeLower.Should().Be("apprenticeship unit");
     }
 
     [Test]
@@ -22,10 +23,10 @@ public class ShortCourseBaseViewModelTests
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+            LearningType = LearningType.ApprenticeshipUnit,
         };
 
-        sut.ApprenticeshipTypeLowerPlural.Should().Be("apprenticeship units");
+        sut.LearningTypeLowerPlural.Should().Be("apprenticeship units");
     }
 
     [Test]
@@ -33,10 +34,10 @@ public class ShortCourseBaseViewModelTests
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit,
+            LearningType = LearningType.ApprenticeshipUnit,
         };
 
-        sut.ApprenticeshipTypeHumanize.Should().Be("Apprenticeship unit");
+        sut.LearningTypeHumanize.Should().Be("Apprenticeship unit");
     }
 
     [Test]
@@ -44,11 +45,11 @@ public class ShortCourseBaseViewModelTests
     {
         var sut = new ShortCourseBaseViewModel()
         {
-            ApprenticeshipType = null
+            LearningType = null
         };
 
-        sut.ApprenticeshipTypeLower.Should().BeNull();
-        sut.ApprenticeshipTypeLowerPlural.Should().BeNull();
-        sut.ApprenticeshipTypeHumanize.Should().BeNull();
+        sut.LearningTypeLower.Should().BeNull();
+        sut.LearningTypeLowerPlural.Should().BeNull();
+        sut.LearningTypeHumanize.Should().BeNull();
     }
 }

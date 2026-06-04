@@ -11,7 +11,7 @@ public class StandardInformationViewModel
     public string IfateReferenceNumber { get; set; }
     public string Sector { get; set; }
     public string RegulatorName { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
+    public LearningType LearningType { get; set; }
     public string CourseDisplayName => $"{CourseName} (level {Level})";
     public bool IsRegulatedForProvider { get; set; }
 
@@ -20,7 +20,7 @@ public class StandardInformationViewModel
         {
             LarsCode = source.LarsCode,
             IfateReferenceNumber = source.IfateReferenceNumber,
-            ApprenticeshipType = source.ApprenticeshipType,
+            LearningType = source.LearningType,
             Sector = source.Route,
             CourseName = source.Title,
             Level = source.Level,

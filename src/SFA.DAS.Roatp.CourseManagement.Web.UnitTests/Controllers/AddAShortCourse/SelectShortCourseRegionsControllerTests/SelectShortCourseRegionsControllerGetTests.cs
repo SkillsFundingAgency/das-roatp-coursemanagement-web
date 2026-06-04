@@ -29,7 +29,7 @@ public class SelectShortCourseRegionsControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation };
 
@@ -42,13 +42,13 @@ public class SelectShortCourseRegionsControllerGetTests
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act
-        var result = await sut.SelectShortCourseRegions(apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseRegionsViewModel;
         model!.SubregionsGroupedByRegions.Should().NotBeEmpty();
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.IsAddJourney.Should().BeTrue();
         model.Route.Should().Be(RouteNames.SelectShortCourseRegions);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -69,7 +69,7 @@ public class SelectShortCourseRegionsControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation };
 
@@ -83,7 +83,7 @@ public class SelectShortCourseRegionsControllerGetTests
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act
-        var result = await sut.SelectShortCourseRegions(apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
@@ -98,13 +98,13 @@ public class SelectShortCourseRegionsControllerGetTests
         [Greedy] SelectShortCourseRegionsController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.SelectShortCourseRegions(apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -122,7 +122,7 @@ public class SelectShortCourseRegionsControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.Online };
 
@@ -131,7 +131,7 @@ public class SelectShortCourseRegionsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.SelectShortCourseRegions(apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -149,7 +149,7 @@ public class SelectShortCourseRegionsControllerGetTests
     )
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sessionModel.LocationOptions = new List<ShortCourseLocationOption>() { ShortCourseLocationOption.EmployerLocation };
 
@@ -160,7 +160,7 @@ public class SelectShortCourseRegionsControllerGetTests
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
 
         // Act
-        var result = await sut.SelectShortCourseRegions(apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

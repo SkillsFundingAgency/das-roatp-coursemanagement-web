@@ -16,25 +16,25 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/new/select-course-locations", Name = RouteNames.SelectShortCourseLocationOption)]
+[Route("{ukprn}/courses/{learningType}/new/select-course-locations", Name = RouteNames.SelectShortCourseLocationOption)]
 public class SelectShortCourseLocationOptionsController(ISessionService _sessionService, IValidator<SelectShortCourseLocationOptionsSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseLocationOptions.cshtml";
 
     [HttpGet]
-    public IActionResult SelectShortCourseLocation(ApprenticeshipType apprenticeshipType)
+    public IActionResult SelectShortCourseLocation(LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = GetModel(sessionModel, apprenticeshipType, true);
+        var model = GetModel(sessionModel, learningType, true);
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public IActionResult SelectShortCourseLocation(SelectShortCourseLocationOptionsSubmitModel submitModel, ApprenticeshipType apprenticeshipType)
+    public IActionResult SelectShortCourseLocation(SelectShortCourseLocationOptionsSubmitModel submitModel, LearningType learningType)
     {
         var sessionModel = _sessionService.Get<ShortCourseSessionModel>();
 
@@ -46,7 +46,7 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         if (!ModelState.IsValid)
         {
-            var model = GetModel(sessionModel, apprenticeshipType, false);
+            var model = GetModel(sessionModel, learningType, false);
 
             return View(ViewPath, model);
         }
@@ -71,23 +71,23 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
 
         if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.ProviderLocation) && sessionModel.IsProviderInfoMissing())
         {
-            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.SelectShortCourseTrainingVenue, new { ukprn = Ukprn, learningType });
         }
 
         if (submitModel.SelectedLocationOptions.Contains(ShortCourseLocationOption.EmployerLocation) && sessionModel.IsEmployerInfoMissing())
         {
-            return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.ConfirmNationalDelivery, new { ukprn = Ukprn, learningType });
         }
 
         if (sessionModel.HasNationalDeliveryOption == false && sessionModel.IsEmployerRegionsMissing())
         {
-            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, apprenticeshipType });
+            return RedirectToRoute(RouteNames.SelectShortCourseRegions, new { ukprn = Ukprn, learningType });
         }
 
-        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, apprenticeshipType });
+        return RedirectToRoute(RouteNames.ReviewShortCourseDetails, new { ukprn = Ukprn, learningType });
     }
 
-    private static SelectShortCourseLocationOptionsViewModel GetModel(ShortCourseSessionModel sessionModel, ApprenticeshipType apprenticeshipType, bool setIsSelected)
+    private static SelectShortCourseLocationOptionsViewModel GetModel(ShortCourseSessionModel sessionModel, LearningType learningType, bool setIsSelected)
     {
         List<ShortCourseLocationOptionModel> locationOptions = new List<ShortCourseLocationOptionModel>();
 
@@ -106,7 +106,7 @@ public class SelectShortCourseLocationOptionsController(ISessionService _session
         return new SelectShortCourseLocationOptionsViewModel()
         {
             LocationOptions = locationOptions,
-            ApprenticeshipType = apprenticeshipType,
+            LearningType = learningType,
             SubmitButtonText = sessionModel.HasSeenSummaryPage ? ButtonText.Confirm : ButtonText.Continue,
             Route = RouteNames.SelectShortCourseLocationOption,
             IsAddJourney = true

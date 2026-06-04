@@ -61,7 +61,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                     LarsCode = standardDetails.LarsCode,
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,
-                    ApprenticeshipType = standardDetails.ApprenticeshipType,
+                    LearningType = standardDetails.LearningType,
                     IsRegulatedForProvider = standardDetails.IsRegulatedForProvider
                 },
                 ContactInformation = new StandardContactInformationViewModel

@@ -28,7 +28,7 @@
                 </div>
             </div>
         }
-        <div class="govuk-caption-l">Add an @Model.ApprenticeshipTypeLower</div>
+        <div class="govuk-caption-l">Add an @Model.LearningTypeLower</div>
         <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
 
     </div>
@@ -40,7 +40,7 @@
 
 <form method="post" asp-route="@RouteNames.ReviewShortCourseDetails" enctype="multipart/form-data" novalidate>
     <div class="govuk-button-group">
-        <button id="submit" type="submit" class="govuk-button">Save @Model.ApprenticeshipTypeLower</button>
+        <button id="submit" type="submit" class="govuk-button">Save @Model.LearningTypeLower</button>
         <a href="@Model.CancelLink" class="govuk-link">Cancel and return to dashboard</a>
     </div>
 </form>

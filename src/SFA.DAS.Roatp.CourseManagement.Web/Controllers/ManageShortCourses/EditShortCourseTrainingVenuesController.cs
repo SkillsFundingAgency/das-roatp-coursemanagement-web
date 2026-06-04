@@ -23,13 +23,13 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
-[Route("{ukprn}/courses/{apprenticeshipType}/{larsCode}/edit-training-venues", Name = RouteNames.EditShortCourseTrainingVenues)]
+[Route("{ukprn}/courses/{learningType}/{larsCode}/edit-training-venues", Name = RouteNames.EditShortCourseTrainingVenues)]
 public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger, ISessionService _sessionService, IValidator<ShortCourseTrainingVenuesSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ShortCourseTrainingVenues.cshtml";
 
     [HttpGet]
-    public async Task<IActionResult> EditShortCourseTrainingVenues(ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseTrainingVenues(LearningType learningType, string larsCode)
     {
         var providerCourseDetailsResponse = await GetProviderCourseDetails(larsCode);
 
@@ -44,16 +44,16 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
 
         if (providerLocationsResponse.Count == 0)
         {
-            return RedirectToRoute(RouteNames.GetAddProviderLocationEditCourse, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.GetAddProviderLocationEditCourse, new { ukprn = Ukprn, learningType, larsCode });
         }
 
-        var model = GetViewModel(providerLocationsResponse, providerCourseDetailsResponse, apprenticeshipType);
+        var model = GetViewModel(providerLocationsResponse, providerCourseDetailsResponse, learningType);
 
         return View(ViewPath, model);
     }
 
     [HttpPost]
-    public async Task<IActionResult> EditShortCourseTrainingVenues(ShortCourseTrainingVenuesSubmitModel submitModel, ApprenticeshipType apprenticeshipType, string larsCode)
+    public async Task<IActionResult> EditShortCourseTrainingVenues(ShortCourseTrainingVenuesSubmitModel submitModel, LearningType learningType, string larsCode)
     {
         var validatedResult = _validator.Validate(submitModel);
 
@@ -65,10 +65,10 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
 
             if (providerLocationsResponse.Count == 0)
             {
-                return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, apprenticeshipType, larsCode });
+                return RedirectToRoute(RouteNames.EditShortCourseTrainingVenues, new { ukprn = Ukprn, learningType, larsCode });
             }
 
-            var model = GetViewModel(providerLocationsResponse, new GetProviderCourseDetailsQueryResult(), apprenticeshipType);
+            var model = GetViewModel(providerLocationsResponse, new GetProviderCourseDetailsQueryResult(), learningType);
 
             return View(ViewPath, model);
         }
@@ -110,10 +110,10 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
 
         if (IsEmployerLocationOptionSetInSession())
         {
-            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, apprenticeshipType, larsCode });
+            return RedirectToRoute(RouteNames.EditShortCourseNationalDelivery, new { Ukprn, learningType, larsCode });
         }
 
-        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, apprenticeshipType, larsCode });
+        return RedirectToRoute(RouteNames.ManageShortCourseDetails, new { Ukprn, learningType, larsCode });
     }
 
     private async Task<List<ProviderLocation>> GetProviderLocations()
@@ -136,7 +136,7 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
         return result;
     }
 
-    private static ShortCourseTrainingVenuesViewModel GetViewModel(List<ProviderLocation> providerLocations, GetProviderCourseDetailsQueryResult providerCourseDetails, ApprenticeshipType apprenticeshipType)
+    private static ShortCourseTrainingVenuesViewModel GetViewModel(List<ProviderLocation> providerLocations, GetProviderCourseDetailsQueryResult providerCourseDetails, LearningType learningType)
     {
         List<TrainingVenueModel> trainingVenues = providerLocations.Select(p => (TrainingVenueModel)p).Where(p => p.LocationType == LocationType.Provider).OrderBy(l => l.LocationName).ToList();
 
@@ -153,7 +153,7 @@ public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogge
         var model = new ShortCourseTrainingVenuesViewModel()
         {
             TrainingVenues = trainingVenues,
-            ApprenticeshipType = apprenticeshipType,
+            LearningType = learningType,
             SubmitButtonText = ButtonText.Confirm,
             Route = RouteNames.EditShortCourseTrainingVenues,
             IsAddJourney = false

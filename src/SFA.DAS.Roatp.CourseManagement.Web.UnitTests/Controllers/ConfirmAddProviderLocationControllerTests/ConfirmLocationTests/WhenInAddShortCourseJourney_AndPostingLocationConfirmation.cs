@@ -31,12 +31,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ConfirmAddPro
 
 public class WhenInAddShortCourseJourney_AndPostingLocationConfirmation
 {
-    private ApprenticeshipType _learningType;
+    private LearningType _learningType;
 
     [SetUp]
     public void Before_Each_Test()
     {
-        _learningType = ApprenticeshipType.ApprenticeshipUnit;
+        _learningType = LearningType.ApprenticeshipUnit;
     }
 
     [Test, MoqAutoData]
@@ -580,7 +580,7 @@ public class WhenInAddShortCourseJourney_AndPostingLocationConfirmation
             ShortCourseLocationOption.EmployerLocation,
         ];
         sessionModel.HasNationalDeliveryOption = null;
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         validator.Setup(x => x.Validate(It.IsAny<ProviderLocationDetailsSubmitModel>())).Returns(new ValidationResult());
@@ -590,7 +590,7 @@ public class WhenInAddShortCourseJourney_AndPostingLocationConfirmation
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.SelectedTrainingVenueAddressTempDataKey, out address));
 
         // Act
-        var result = sut.ConfirmLocation(submitModel, apprenticeshipType).Result as RedirectToRouteResult;
+        var result = sut.ConfirmLocation(submitModel, learningType).Result as RedirectToRouteResult;
 
         // Assert
         result.RouteName.Should().Be(RouteNames.ConfirmNationalDelivery);

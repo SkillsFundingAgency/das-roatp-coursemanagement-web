@@ -31,19 +31,19 @@ public class SelectShortCourseRegionsControllerPostTests
         RegionsSubmitModel submitModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         sut.ModelState.AddModelError("key", "message");
 
         // Act
-        var result = await sut.SelectShortCourseRegions(submitModel, apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(submitModel, learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as SelectShortCourseRegionsViewModel;
         model!.SubregionsGroupedByRegions.Should().NotBeEmpty();
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.IsAddJourney.Should().BeTrue();
         model.Route.Should().Be(RouteNames.SelectShortCourseRegions);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
@@ -65,7 +65,7 @@ public class SelectShortCourseRegionsControllerPostTests
         [
             ShortCourseLocationOption.EmployerLocation
         ];
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
         var submitModel = new RegionsSubmitModel()
         {
             SelectedSubRegions = sessionModel.TrainingRegions.Select(l => l.SubregionId.ToString()).ToArray()
@@ -76,7 +76,7 @@ public class SelectShortCourseRegionsControllerPostTests
         regionsService.Setup(m => m.GetRegions()).ReturnsAsync(regions);
 
         // Act
-        var response = await sut.SelectShortCourseRegions(submitModel, apprenticeshipType);
+        var response = await sut.SelectShortCourseRegions(submitModel, learningType);
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
@@ -94,13 +94,13 @@ public class SelectShortCourseRegionsControllerPostTests
         RegionsSubmitModel submitModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = await sut.SelectShortCourseRegions(submitModel, apprenticeshipType);
+        var result = await sut.SelectShortCourseRegions(submitModel, learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;

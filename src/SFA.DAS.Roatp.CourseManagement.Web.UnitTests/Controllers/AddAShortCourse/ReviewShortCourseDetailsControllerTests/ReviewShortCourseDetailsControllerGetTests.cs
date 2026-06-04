@@ -31,7 +31,7 @@ public class ReviewShortCourseDetailsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111") }, "mock"));
 
@@ -60,13 +60,13 @@ public class ReviewShortCourseDetailsControllerGetTests
             .AddUrlForRoute(RouteNames.SelectShortCourseLocationOption, locationOptionsChangeLink); ;
 
         // Act
-        var result = sut.ReviewShortCourseDetails(apprenticeshipType);
+        var result = sut.ReviewShortCourseDetails(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ReviewShortCourseDetailsViewModel;
         model!.Should().NotBeNull();
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         model.CancelLink.Should().Be(cancelLink);
         model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
         model.LocationInformation.TrainingRegionsChangeLink.Should().Be(regionsChangeLink);
@@ -86,7 +86,7 @@ public class ReviewShortCourseDetailsControllerGetTests
         ShortCourseSessionModel sessionModel)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ProviderClaims.ProviderUkprn, "111") }, "mock"));
 
@@ -109,13 +109,13 @@ public class ReviewShortCourseDetailsControllerGetTests
             .AddUrlForRoute(RouteNames.ReviewYourDetails, cancelLink);
 
         // Act
-        var result = sut.ReviewShortCourseDetails(apprenticeshipType);
+        var result = sut.ReviewShortCourseDetails(learningType);
 
         // Assert
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ReviewShortCourseDetailsViewModel;
         model!.Should().NotBeNull();
-        model.ApprenticeshipType.Should().Be(apprenticeshipType);
+        model.LearningType.Should().Be(learningType);
         sut.ModelState.ErrorCount.Should().Be(1);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.HasSeenSummaryPage)), Times.Once());
@@ -127,13 +127,13 @@ public class ReviewShortCourseDetailsControllerGetTests
         [Greedy] ReviewShortCourseDetailsController sut)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns((ShortCourseSessionModel)null);
 
         // Act
-        var result = sut.ReviewShortCourseDetails(apprenticeshipType);
+        var result = sut.ReviewShortCourseDetails(learningType);
 
         // Assert
         var redirectResult = result as RedirectToRouteResult;
@@ -151,12 +151,12 @@ public class ReviewShortCourseDetailsControllerGetTests
         string manageTrainingTypeLink)
     {
         // Arrange
-        var apprenticeshipType = ApprenticeshipType.ApprenticeshipUnit;
+        var learningType = LearningType.ApprenticeshipUnit;
 
         SaveShortCourseConfirmationViewModel viewModel = new SaveShortCourseConfirmationViewModel
         {
             CourseName = sessionModel.ShortCourseInformation.CourseName,
-            ApprenticeshipType = apprenticeshipType
+            LearningType = learningType
         };
 
         string json = JsonSerializer.Serialize(viewModel);
