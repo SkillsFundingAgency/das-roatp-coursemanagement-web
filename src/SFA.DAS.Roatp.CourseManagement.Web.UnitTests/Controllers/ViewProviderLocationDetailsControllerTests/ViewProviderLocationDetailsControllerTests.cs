@@ -91,14 +91,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
                     Title = "Test Standard",
                     Level = 2,
                     LarsCode = "12345678",
-                    LearningType = ApprenticeshipType.Apprenticeship
+                    LearningType = LearningType.Apprenticeship
                 },
                 new LocationStandardModel()
                 {
                     Title = "Test Apprenticeship Unit",
                     Level = 2,
                     LarsCode = "98765432",
-                    LearningType = ApprenticeshipType.ApprenticeshipUnit
+                    LearningType = LearningType.ApprenticeshipUnit
                 }
             };
 
@@ -128,14 +128,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
                     Title = "Test Standard",
                     Level = 2,
                     LarsCode = "12345678",
-                    LearningType = ApprenticeshipType.Apprenticeship
+                    LearningType = LearningType.Apprenticeship
                 },
                 new LocationStandardModel()
                 {
                     Title = "Test Apprenticeship Unit",
                     Level = 2,
                     LarsCode = "98765432",
-                    LearningType = ApprenticeshipType.ApprenticeshipUnit
+                    LearningType = LearningType.ApprenticeshipUnit
                 }
             };
 

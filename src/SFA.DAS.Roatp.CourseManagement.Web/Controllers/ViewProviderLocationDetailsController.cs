@@ -45,17 +45,17 @@ public class ViewProviderLocationDetailsController : ControllerBase
         model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
 
         model.HasCourses = result.ProviderLocation.Standards.Count > 0;
-        model.ShowStandards = result.ProviderLocation.Standards.Any(s => s.LearningType == ApprenticeshipType.Apprenticeship);
-        model.ShowApprenticeshipUnits = result.ProviderLocation.Standards.Any(s => s.LearningType == ApprenticeshipType.ApprenticeshipUnit);
+        model.ShowStandards = result.ProviderLocation.Standards.Any(s => s.LearningType == LearningType.Apprenticeship);
+        model.ShowApprenticeshipUnits = result.ProviderLocation.Standards.Any(s => s.LearningType == LearningType.ApprenticeshipUnit);
 
         model.StandardLinks = new ProviderLocationCourseLinksViewModel(model.Standards
-        .Where(s => s.LearningType == ApprenticeshipType.Apprenticeship)
+        .Where(s => s.LearningType == LearningType.Apprenticeship)
         .Select(s => new ProviderLocationCourseLink(s.CourseDisplayName, Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, s.LarsCode })))
         .OrderBy(c => c.CourseName));
 
         model.ApprenticeshipUnitLinks = new ProviderLocationCourseLinksViewModel(model.Standards
-        .Where(s => s.LearningType == ApprenticeshipType.ApprenticeshipUnit)
-        .Select(s => new ProviderLocationCourseLink(s.CourseDisplayName, Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, ApprenticeshipType = ApprenticeshipType.ApprenticeshipUnit, s.LarsCode })))
+        .Where(s => s.LearningType == LearningType.ApprenticeshipUnit)
+        .Select(s => new ProviderLocationCourseLink(s.CourseDisplayName, Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, LearningType = LearningType.ApprenticeshipUnit, s.LarsCode })))
         .OrderBy(c => c.CourseName));
 
         return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);

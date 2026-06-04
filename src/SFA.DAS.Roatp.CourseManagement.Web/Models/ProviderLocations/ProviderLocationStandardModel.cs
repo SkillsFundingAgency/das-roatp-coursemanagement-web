@@ -9,7 +9,7 @@ public class ProviderLocationStandardModel
     public string LarsCode { get; set; }
     public string CourseDisplayName { get; set; }
     public string StandardUrl { get; set; }
-    public ApprenticeshipType LearningType { get; set; }
+    public LearningType LearningType { get; set; }
 
     public static implicit operator ProviderLocationStandardModel(LocationStandardModel source)
     {
