@@ -4,6 +4,9 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.Services;
 
+// <summary>
+// This service is registered with Scoped lifetime to make the api call only once per request. The results are stored in private variable to enable request based caching.
+// </summary>
 public class ProviderCourseDetailsCachedService(IApiClient _apiClient) : IProviderCourseDetailsCachedService
 {
     private StandardDetails _cachedProviderCourseDetails;

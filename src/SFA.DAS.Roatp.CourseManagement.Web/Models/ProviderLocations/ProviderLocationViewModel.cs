@@ -58,10 +58,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
                 Town = source.Town,
                 County = source.County,
                 Postcode = source.Postcode,
-                Standards = standards,
-                HasCourses = source.Standards?.Count > 0,
-                ShowStandards = standards.Any(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.Apprenticeship),
-                ShowApprenticeshipUnits = standards.Any(s => s.LearningType == Domain.ApiModels.ApprenticeshipType.ApprenticeshipUnit),
+                Standards = standards
             };
         }
     }

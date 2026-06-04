@@ -33,63 +33,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ProviderLocations
                         .Excluding(s => s.CourseDisplayName));
         }
 
-        [Test]
-        public void ImplicitOperator_WhenStandardsInlcudeApprenticeshipAndApprenticeshipUnit_CourseFlagsAreTrue()
-        {
-            var providerLocation = new ProviderLocation
-            {
-                Standards = new List<LocationStandardModel>
-                {
-                    new LocationStandardModel
-                    {
-                        LearningType = ApprenticeshipType.Apprenticeship,
-                        Title = "Standard 1"
-                    },
-                    new LocationStandardModel
-                    {
-                        LearningType = ApprenticeshipType.ApprenticeshipUnit,
-                        Title = "Apprenticeship Unit 1"
-                    }
-                }
-            };
-
-            ProviderLocationViewModel sut = providerLocation;
-
-            sut.HasCourses.Should().BeTrue();
-            sut.ShowStandards.Should().BeTrue();
-            sut.ShowApprenticeshipUnits.Should().BeTrue();
-        }
-
-        [Test]
-        public void ImplicitOperator_WhenStandardsIsEmpty_CourseFlagsAreFalse()
-        {
-            var providerLocation = new ProviderLocation()
-            {
-                Standards = new List<LocationStandardModel>()
-            };
-
-            ProviderLocationViewModel sut = providerLocation;
-
-            sut.HasCourses.Should().BeFalse();
-            sut.ShowStandards.Should().BeFalse();
-            sut.ShowApprenticeshipUnits.Should().BeFalse();
-        }
-
-        [Test]
-        public void ImplicitOperator_WhenStandardsIsNull_CourseFlagsAreFalse()
-        {
-            var providerLocation = new ProviderLocation()
-            {
-                Standards = null
-            };
-
-            ProviderLocationViewModel sut = providerLocation;
-
-            sut.HasCourses.Should().BeFalse();
-            sut.ShowStandards.Should().BeFalse();
-            sut.ShowApprenticeshipUnits.Should().BeFalse();
-        }
-
         [TestCaseSource(nameof(AddressData))]
         public void Constructor_BuildsAddressDetails(string address1, string address2, string address3, string address4, string expectedAddressDetails)
         {

@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
         }
 
         [Test, AutoData]
-        public async Task GetProviderLocationDetails_PopulateCourseLinks(
+        public async Task WhenStandardsInlcudeApprenticeshipAndApprenticeshipUnit_ThenPopulateCourseLinks(
             GetProviderLocationDetailsQueryResult queryResult,
             Guid id)
         {
@@ -114,6 +114,62 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             model.StandardLinks.Courses.First().Url.Should().Be(standardLinkUrl);
             model.ApprenticeshipUnitLinks.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
             model.ApprenticeshipUnitLinks.Courses.First().Url.Should().Be(apprenticeshipUnitUrl);
+        }
+
+        [Test, AutoData]
+        public async Task WhenStandardsInlcudeApprenticeshipAndApprenticeshipUnit_ThenCourseFlagsAreSetToTrue(
+            GetProviderLocationDetailsQueryResult queryResult,
+            Guid id)
+        {
+            queryResult.ProviderLocation.Standards = new List<LocationStandardModel>()
+            {
+                new LocationStandardModel()
+                {
+                    Title = "Test Standard",
+                    Level = 2,
+                    LarsCode = "12345678",
+                    LearningType = ApprenticeshipType.Apprenticeship
+                },
+                new LocationStandardModel()
+                {
+                    Title = "Test Apprenticeship Unit",
+                    Level = 2,
+                    LarsCode = "98765432",
+                    LearningType = ApprenticeshipType.ApprenticeshipUnit
+                }
+            };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.Id == id), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.GetProviderLocationDetails(id);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as ProviderLocationViewModel;
+            model.HasCourses.Should().BeTrue();
+            model.ShowStandards.Should().BeTrue();
+            model.ShowApprenticeshipUnits.Should().BeTrue();
+        }
+
+        [Test, AutoData]
+        public async Task WhenStandardsIsEmpty_ThenCourseFlagsAreSetToFalse(
+            GetProviderLocationDetailsQueryResult queryResult,
+            Guid id)
+        {
+            queryResult.ProviderLocation.Standards = new List<LocationStandardModel>();
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.Id == id), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.GetProviderLocationDetails(id);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as ProviderLocationViewModel;
+            model.HasCourses.Should().BeFalse();
+            model.ShowStandards.Should().BeFalse();
+            model.ShowApprenticeshipUnits.Should().BeFalse();
         }
     }
 }

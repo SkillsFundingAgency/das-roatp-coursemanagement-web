@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Infrastructure.UnitTests.Services;
 public class ProviderCourseDetailsCachedServiceTests
 {
     [Test, MoqAutoData]
-    public async Task WhenServiceCalledOnce_ThenReturnDataFromApiAndVerifyApiInvokedOnce(
+    public async Task WhenGettingProviderCourse_ThenInvokesApiForTheFirstTime(
         [Frozen] Mock<IApiClient> apiClientMock,
         StandardDetails apiResponse,
         ProviderCourseDetailsCachedService sut,
@@ -32,7 +32,7 @@ public class ProviderCourseDetailsCachedServiceTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenServiceCalledMultipleTimes_Then_ReturnCachedDataAndVerifyApiInvokedOnce(
+    public async Task WhenGettingProviderCourseMoreThanOnce_UsingTheSameInstance_ThenWillInvokeApiOnlyOnce(
         [Frozen] Mock<IApiClient> apiClientMock,
         StandardDetails apiResponse,
         ProviderCourseDetailsCachedService sut,

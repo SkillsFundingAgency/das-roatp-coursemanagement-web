@@ -44,6 +44,10 @@ public class ViewProviderLocationDetailsController : ControllerBase
         model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.SelectCourseType);
         model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
 
+        model.HasCourses = result.ProviderLocation.Standards.Count > 0;
+        model.ShowStandards = result.ProviderLocation.Standards.Any(s => s.LearningType == ApprenticeshipType.Apprenticeship);
+        model.ShowApprenticeshipUnits = result.ProviderLocation.Standards.Any(s => s.LearningType == ApprenticeshipType.ApprenticeshipUnit);
+
         model.StandardLinks = new ProviderLocationCourseLinksViewModel(model.Standards
         .Where(s => s.LearningType == ApprenticeshipType.Apprenticeship)
         .Select(s => new ProviderLocationCourseLink(s.CourseDisplayName, Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, s.LarsCode })))
