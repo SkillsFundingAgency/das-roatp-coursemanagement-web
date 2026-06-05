@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
         }
 
         [Test, AutoData]
-        public async Task WhenStandardsInlcudeApprenticeshipAndApprenticeshipUnit_ThenPopulateCourseLinks(
+        public async Task WhenStandardsInlcudeApprenticeshipAndFoundationApprenticeship_ThenPopulateStandardCourseLinks(
             GetProviderLocationDetailsQueryResult queryResult,
             Guid id)
         {
@@ -99,7 +99,32 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
                     Level = 2,
                     LarsCode = "23456787",
                     LearningType = LearningType.FoundationApprenticeship
-                },
+                }
+            };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.Id == id), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(queryResult);
+
+            var result = await _sut.GetProviderLocationDetails(id);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as ProviderLocationViewModel;
+            var standardCourses = model.StandardLinks.Courses.ToList();
+            standardCourses[0].CourseName.Should().Be("Test A Standard (level 2)");
+            standardCourses[0].Url.Should().Be(standardLinkUrl);
+            standardCourses[1].CourseName.Should().Be("Test B Foundation Apprenticeship (level 2)");
+            standardCourses[1].Url.Should().Be(standardLinkUrl);
+            model.StandardLinks.Courses.Count().Should().Be(2);
+        }
+
+        [Test, AutoData]
+        public async Task WhenStandardsApprenticeshipUnit_ThenPopulateApprenticeshipUnitCourseLinks(
+            GetProviderLocationDetailsQueryResult queryResult,
+            Guid id)
+        {
+            queryResult.ProviderLocation.Standards = new List<LocationStandardModel>()
+            {
                 new LocationStandardModel()
                 {
                     Title = "Test Apprenticeship Unit",
@@ -117,9 +142,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as ProviderLocationViewModel;
-            model.StandardLinks.Courses.First().CourseName.Should().Be("Test A Standard (level 2)");
-            model.StandardLinks.Courses.First().Url.Should().Be(standardLinkUrl);
-            model.StandardLinks.Courses.Count().Should().Be(2);
             model.ApprenticeshipUnitLinks.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
             model.ApprenticeshipUnitLinks.Courses.First().Url.Should().Be(apprenticeshipUnitUrl);
         }
