@@ -88,10 +88,17 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
             {
                 new LocationStandardModel()
                 {
-                    Title = "Test Standard",
+                    Title = "Test A Standard",
                     Level = 2,
                     LarsCode = "12345678",
                     LearningType = LearningType.Apprenticeship
+                },
+                new LocationStandardModel()
+                {
+                    Title = "Test B Foundation Apprenticeship",
+                    Level = 2,
+                    LarsCode = "23456787",
+                    LearningType = LearningType.FoundationApprenticeship
                 },
                 new LocationStandardModel()
                 {
@@ -110,8 +117,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
 
             var viewResult = result as ViewResult;
             var model = viewResult.Model as ProviderLocationViewModel;
-            model.StandardLinks.Courses.First().CourseName.Should().Be("Test Standard (level 2)");
+            model.StandardLinks.Courses.First().CourseName.Should().Be("Test A Standard (level 2)");
             model.StandardLinks.Courses.First().Url.Should().Be(standardLinkUrl);
+            model.StandardLinks.Courses.Count().Should().Be(2);
             model.ApprenticeshipUnitLinks.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
             model.ApprenticeshipUnitLinks.Courses.First().Url.Should().Be(apprenticeshipUnitUrl);
         }
@@ -129,6 +137,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
                     Level = 2,
                     LarsCode = "12345678",
                     LearningType = LearningType.Apprenticeship
+                },
+                new LocationStandardModel()
+                {
+                    Title = "Test Foundation Apprenticeship",
+                    Level = 2,
+                    LarsCode = "23456787",
+                    LearningType = LearningType.FoundationApprenticeship
                 },
                 new LocationStandardModel()
                 {
