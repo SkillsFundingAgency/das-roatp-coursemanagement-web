@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
         }
 
         [Test, AutoData]
-        public async Task WhenStandardsInlcudeApprenticeshipAndFoundationApprenticeship_ThenPopulateStandardCourseLinks(
+        public async Task WhenStandardsReturnsApprenticeshipAndFoundationApprenticeship_ThenPopulateStandardCourseLinks(
             GetProviderLocationDetailsQueryResult queryResult,
             Guid id)
         {
@@ -119,7 +119,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
         }
 
         [Test, AutoData]
-        public async Task WhenStandardsApprenticeshipUnit_ThenPopulateApprenticeshipUnitCourseLinks(
+        public async Task WhenStandardsReturnsApprenticeshipUnit_ThenPopulateApprenticeshipUnitCourseLinks(
             GetProviderLocationDetailsQueryResult queryResult,
             Guid id)
         {
