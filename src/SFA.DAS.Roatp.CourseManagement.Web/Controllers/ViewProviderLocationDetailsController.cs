@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetPr
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations;
+using static SFA.DAS.Roatp.CourseManagement.Web.Helpers.CourseDisplayNameHelper;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -50,12 +51,12 @@ public class ViewProviderLocationDetailsController : ControllerBase
 
         model.StandardLinks = new ProviderLocationCourseLinksViewModel(result.ProviderLocation.Standards
         .Where(s => s.LearningType == LearningType.Apprenticeship || s.LearningType == LearningType.FoundationApprenticeship)
-        .Select(s => new ProviderLocationCourseLink($"{s.Title} (level {s.Level})", Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, s.LarsCode })))
+        .Select(s => new ProviderLocationCourseLink(BuildCourseDisplayName(s.Title, s.Level), Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, s.LarsCode })))
         .OrderBy(c => c.CourseName));
 
         model.ApprenticeshipUnitLinks = new ProviderLocationCourseLinksViewModel(result.ProviderLocation.Standards
         .Where(s => s.LearningType == LearningType.ApprenticeshipUnit)
-        .Select(s => new ProviderLocationCourseLink($"{s.Title} (level {s.Level})", Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, LearningType = LearningType.ApprenticeshipUnit, s.LarsCode })))
+        .Select(s => new ProviderLocationCourseLink(BuildCourseDisplayName(s.Title, s.Level), Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, LearningType = LearningType.ApprenticeshipUnit, s.LarsCode })))
         .OrderBy(c => c.CourseName));
 
         return View("~/Views/EditProviderLocation/ViewProviderLocationsDetails.cshtml", model);
