@@ -17,6 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
+[CheckCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{learningType}/{larsCode}/edit-contact-details", Name = RouteNames.EditShortCourseContactDetails)]
 public class EditShortCourseContactDetailsController(IMediator _mediator, ILogger<EditShortCourseContactDetailsController> _logger, IValidator<CourseContactDetailsSubmitModel> _validator) : ControllerBase
 {

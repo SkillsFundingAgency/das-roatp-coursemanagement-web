@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
+[CheckCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{learningType}/{larsCode}", Name = RouteNames.ManageShortCourseDetails)]
 public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<ManageShortCourseDetailsController> _logger) : ControllerBase
 {

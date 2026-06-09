@@ -23,6 +23,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
+[CheckCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{learningType}/{larsCode}/edit-training-venues", Name = RouteNames.EditShortCourseTrainingVenues)]
 public class EditShortCourseTrainingVenuesController(IMediator _mediator, ILogger<EditShortCourseTrainingVenuesController> _logger, ISessionService _sessionService, IValidator<ShortCourseTrainingVenuesSubmitModel> _validator) : ControllerBase
 {

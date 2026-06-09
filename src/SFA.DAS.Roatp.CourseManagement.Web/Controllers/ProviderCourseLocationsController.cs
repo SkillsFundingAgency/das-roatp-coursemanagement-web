@@ -20,6 +20,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[CheckCourseType(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/{larsCode}/providerlocations")]
 public class ProviderCourseLocationsController : ControllerBase
 {

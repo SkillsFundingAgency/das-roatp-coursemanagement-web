@@ -66,7 +66,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 HasLocations = v.HasLocations,
                 HasOnlineDeliveryOption = v.HasOnlineDeliveryOption,
                 Duration = v.Duration,
-                DurationUnits = v.DurationUnits
+                DurationUnits = v.DurationUnits,
+                CourseType = v.CourseType
             };
         }
     }

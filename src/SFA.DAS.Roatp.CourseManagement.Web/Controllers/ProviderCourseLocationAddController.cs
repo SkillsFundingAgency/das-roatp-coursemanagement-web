@@ -17,6 +17,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [AuthorizeCourseType(CourseType.Apprenticeship)]
+[CheckCourseType(CourseType.Apprenticeship)]
 [Route("{ukprn}/standards/{larsCode}/providerlocations/add-new")]
 public class ProviderCourseLocationAddController : ControllerBase
 {
