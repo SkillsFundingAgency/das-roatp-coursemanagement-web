@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
         private Mock<IUrlHelper> _urlHelperMock;
         const string BackUrl = "http://test";
         readonly string _verifyVenueNameUrl = "http://test-VenueNameUrl";
-        readonly string _viewStandardsLink = Guid.NewGuid().ToString();
+        readonly string _viewTrainingLink = Guid.NewGuid().ToString();
         const string AddTrainingLocationUrl = "www.abc.com";
         private List<ProviderLocationViewModel> AlphabeticallyOrderedList;
 
@@ -99,8 +99,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
               .Returns(_verifyVenueNameUrl);
 
             _urlHelperMock
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ViewStandards))))
-                .Returns(_viewStandardsLink);
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.SelectCourseType))))
+                .Returns(_viewTrainingLink);
 
 
             _controller.Url = _urlHelperMock.Object;
@@ -124,7 +124,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             model.ProviderLocations.Count.Should().Be(3);
             model.AddTrainingLocationLink.Should().Be(AddTrainingLocationUrl);
             model.ShowNotificationBannerAddVenue.Should().Be(false);
-            model.ManageYourStandardsUrl.Should().BeNull();
+            model.ManageYourTrainingUrl.Should().BeNull();
         }
 
         [Test]
@@ -193,7 +193,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
             model.Should().NotBeNull();
 
             model!.ShowNotificationBannerAddVenue.Should().Be(true);
-            model.ManageYourStandardsUrl.Should().Be(_viewStandardsLink);
+            model.ManageYourTrainingUrl.Should().Be(_viewTrainingLink);
         }
     }
 }
