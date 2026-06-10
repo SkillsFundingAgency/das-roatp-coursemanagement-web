@@ -76,7 +76,7 @@ public class ProviderContactCompleteControllerTests
         model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
         model.CheckedApprenticeshipUnits.Should().BeEquivalentTo(expectedCheckedApprenticeshipUnits);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
-        model.ManageShortCoursesUrl.Should().Be(manageShortCoursesLink);
+        model.ManageCoursesUrl.Should().Be(manageShortCoursesLink);
         model.ShowBoth.Should().Be(true);
         model.ShowEmailOnly.Should().Be(false);
         model.ShowPhoneOnly.Should().Be(false);

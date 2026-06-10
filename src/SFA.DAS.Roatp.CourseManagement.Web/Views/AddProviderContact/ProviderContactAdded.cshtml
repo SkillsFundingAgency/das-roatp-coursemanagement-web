@@ -12,46 +12,39 @@
             </h1>
         </div>
         <p class="govuk-body" asp-show="@Model.ShowBoth">
-            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
+            The contact details for your chosen training is now <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
         </p>
 
         <p class="govuk-body" asp-show="@Model.ShowEmailOnly">
-            You have updated your contact details to <strong>@Model.EmailAddress</strong>.
+            The contact details for your chosen training is now <strong>@Model.EmailAddress</strong>.
         </p>
 
         <p class="govuk-body" asp-show="@Model.ShowPhoneOnly">
-            You have updated your contact details to <strong>@Model.PhoneNumber</strong>.
+            The contact details for your chosen training is now <strong>@Model.PhoneNumber</strong>.
         </p>
         @if(Model.ShowStandards || Model.ShowApprenticeshipUnits)
         {
             <p class="govuk-body">
-                We've updated contact details on Find apprenticeship training for these this training.
+                We've updated your contact details on find apprenticeship training.
             </p>
         }    
         <div class="govuk-form-group" asp-show="Model.ShowStandards">
             <fieldset class="govuk-fieldset">
                 <h2 class="govuk-heading-m">Apprenticeships</h2>
-                <ul class="govuk-list govuk-list--bullet">
-                    @foreach (var standardDetails in Model.CheckedStandards)
-                    {
-                        <li>@standardDetails</li>
-                    }
-                </ul>
+                <partial name="_CourseList" for="CheckedStandards" />
             </fieldset>
         </div>
         <div class="govuk-form-group" asp-show="Model.ShowApprenticeshipUnits">
             <fieldset class="govuk-fieldset">
                 <h3 class="govuk-heading-m">Apprenticeship units</h3>
-                <ul class="govuk-list govuk-list--bullet">
-                    @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits)
-                    {
-                        <li>@apprenticeshipUnitDetails</li>
-                    }
-                </ul>
+                <partial name="_CourseList" for="CheckedApprenticeshipUnits" />
             </fieldset>
         </div>
         <p class="govuk-body">
-            We've also saved your details to use next time you add a training type. Go to <a href="@Model.ReviewYourDetailsUrl" class="govuk-link">Manage your standards</a> or <a href="@Model.ManageShortCoursesUrl" class="govuk-link">Manage your apprenticeship units</a> to change contact details for individual training types.
+            We’ve also saved your details to use next time you add training.
         </p>
+        <div class="govuk-button-group">
+            <a id="Redirect" href="@Model.ManageCoursesUrl" class="govuk-button govuk-button">Go back to Manage your courses</a>
+        </div>
     </div>
 </div>
