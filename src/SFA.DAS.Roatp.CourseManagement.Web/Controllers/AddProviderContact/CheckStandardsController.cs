@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
@@ -25,16 +26,18 @@ public class CheckStandardsController(IMediator _mediator, ISessionService _sess
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
         var checkedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
 
+        var standardList = new CourseListViewModel(checkedStandards.Select(s => new CourseList(s)));
+        var apprenticeshipUnitList = new CourseListViewModel(checkedApprenticeshipUnits.Select(s => new CourseList(s)));
+
         var model = new ProviderContactCheckStandardsViewModel
         {
             EmailAddress = sessionModel.EmailAddress,
             PhoneNumber = sessionModel.PhoneNumber,
-            CheckedStandards = checkedStandards,
-            CheckedApprenticeshipUnits = checkedApprenticeshipUnits,
+            CheckedStandards = standardList,
+            CheckedApprenticeshipUnits = apprenticeshipUnitList,
             ReviewYourDetailsUrl = Url.RouteUrl(RouteNames.ReviewYourDetails, new { ukprn }),
             ChangeEmailPhoneUrl = Url.RouteUrl(RouteNames.AddProviderContactDetails, new { ukprn }),
             ChangeSelectedStandardsUrl = Url.RouteUrl(RouteNames.AddProviderContactSelectStandardsForUpdate, new { ukprn }),
-            UseBulletedList = checkedStandards.Count > 1,
             ShowEmail = !string.IsNullOrWhiteSpace(sessionModel.EmailAddress),
             ShowPhone = !string.IsNullOrWhiteSpace(sessionModel.PhoneNumber),
             ShowStandards = checkedStandards.Count > 0,

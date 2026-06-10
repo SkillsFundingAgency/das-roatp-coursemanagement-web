@@ -12,6 +12,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 public class ProviderContactCompleteController(ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/ProviderContactAdded.cshtml";
+    public const string NoCourseViewPath = "~/Views/AddProviderContact/ProviderContactAddedNoCourse.cshtml";
 
     [HttpGet]
     public IActionResult ContactDetailsSaved(int ukprn)
@@ -43,6 +44,11 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
             ShowStandards = checkedStandards.Count > 0,
             ShowApprenticeshipUnits = checkedApprenticeshipUnits.Count > 0
         };
+
+        if (sessionModel.UpdateExistingStandards == false)
+        {
+            return View(NoCourseViewPath, model);
+        }
 
         return View(ViewPath, model);
     }

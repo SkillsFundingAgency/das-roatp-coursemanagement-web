@@ -22,8 +22,8 @@ public class StandardDescriptionListServiceTests
 
         var expectedResults = new List<string>
         {
-            "course xyz (Level 1)",
-            "course xyz (Level 2)"
+            "course xyz (level 1)",
+            "course xyz (level 2)"
         };
 
         var generatedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);
@@ -45,11 +45,11 @@ public class StandardDescriptionListServiceTests
 
         var expectedResults = new List<string>
         {
-            "course abc (Level 1)",
-            "course abc (Level 2)",
-            "course def (Level 1)",
-            "course xyz (Level 1)",
-            "course xyz (Level 2)"
+            "course abc (level 1)",
+            "course abc (level 2)",
+            "course def (level 1)",
+            "course xyz (level 1)",
+            "course xyz (level 2)"
         };
 
         var generatedStandards = StandardDescriptionListService.BuildSelectedStandardsList(standards);

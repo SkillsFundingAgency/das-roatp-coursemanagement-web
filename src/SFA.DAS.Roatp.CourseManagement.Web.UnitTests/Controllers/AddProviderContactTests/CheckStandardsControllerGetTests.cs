@@ -40,7 +40,6 @@ public class CheckStandardsControllerGetTests
     public void Get_ModelInSession_PopulatesExpectedModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] CheckStandardsController sut,
-        List<ProviderContactStandardModel> standards,
         string reviewYourDetailsLink,
         string changeEmailPhoneUrl,
         string changeSelectedStandardsUrl,
@@ -55,7 +54,23 @@ public class CheckStandardsControllerGetTests
             EmailAddress = email,
             PhoneNumber = phoneNumber,
             UpdateExistingStandards = true,
-            Standards = standards
+            Standards = new List<ProviderContactStandardModel>()
+            {
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Standard",
+                    Level = 2,
+                    CourseType = CourseType.Apprenticeship,
+                    IsSelected = true
+                },
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Apprenticeship Unit",
+                    Level = 2,
+                    CourseType = CourseType.ShortCourse,
+                    IsSelected = true
+                }
+            }
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock()
@@ -69,57 +84,58 @@ public class CheckStandardsControllerGetTests
 
         var viewResult = result as ViewResult;
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
-        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
-        var expectedShowStandards = expectedCheckedStandards.Count > 0;
-        var expectedApprenticeshipUnits = expectedCheckedApprenticeshipUnits.Count > 0;
-
-        var hasBulletedList = expectedCheckedStandards.Count > 1;
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
         model!.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
-        model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
-        model.CheckedApprenticeshipUnits.Should().BeEquivalentTo(expectedCheckedApprenticeshipUnits);
         model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
         model.ChangeEmailPhoneUrl.Should().Be(changeEmailPhoneUrl);
         model.ChangeSelectedStandardsUrl.Should().Be(changeSelectedStandardsUrl);
-        model.UseBulletedList.Should().Be(hasBulletedList);
-        model.ShowStandards.Should().Be(expectedShowStandards);
-        model.ShowApprenticeshipUnits.Should().Be(expectedApprenticeshipUnits);
+        model.ShowStandards.Should().BeTrue();
+        model.ShowApprenticeshipUnits.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
     }
 
     [Test, MoqAutoData]
-    public void Get_ModelInSession_OneOnlyCheckedStandard_HasBulletedListIsFalse(
-       [Frozen] Mock<ISessionService> sessionServiceMock,
-       [Greedy] CheckStandardsController sut,
-       List<ProviderContactStandardModel> standards,
-       string reviewYourDetailsLink,
-       string changeEmailPhoneUrl,
-       string changeSelectedStandardsUrl,
-       string email,
-       string phone,
-       int ukprn
-   )
+    public void WhenApprenticeshipAndShortCourseCourseTypesAreReturnedInSession_ThenPopulateCheckedCourseLists(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] CheckStandardsController sut,
+        string reviewYourDetailsLink,
+        string changeEmailPhoneUrl,
+        string changeSelectedStandardsUrl,
+        int ukprn
+    )
     {
-
-
-        foreach (var standard in standards)
-        {
-            standard.IsSelected = false;
-        }
-
-        standards.First().IsSelected = true;
+        var email = "test@test.com";
+        var phoneNumber = "123445";
 
         var sessionModel = new ProviderContactSessionModel
         {
             EmailAddress = email,
-            PhoneNumber = phone,
+            PhoneNumber = phoneNumber,
             UpdateExistingStandards = true,
-            Standards = standards
+            Standards = new List<ProviderContactStandardModel>()
+            {
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Standard",
+                    Level = 2,
+                    CourseType = CourseType.Apprenticeship,
+                    IsSelected = true
+                },
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Apprenticeship Unit",
+                    Level = 2,
+                    CourseType = CourseType.ShortCourse,
+                    IsSelected = true
+                }
+            }
         };
 
-        sut.AddDefaultContextWithUser();
+        sut.AddDefaultContextWithUser().AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink)
+            .AddUrlForRoute(RouteNames.AddProviderContactDetails, changeEmailPhoneUrl)
+            .AddUrlForRoute(RouteNames.AddProviderContactSelectStandardsForUpdate, changeSelectedStandardsUrl);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -128,8 +144,7 @@ public class CheckStandardsControllerGetTests
         var viewResult = result as ViewResult;
 
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
-        model!.UseBulletedList.Should().Be(false);
-        model.ShowEmail.Should().Be(!string.IsNullOrEmpty(sessionModel.EmailAddress));
-        model.ShowPhone.Should().Be(!string.IsNullOrEmpty(sessionModel.PhoneNumber));
+        model.CheckedStandards.Courses.First().CourseName.Should().Be("Test Standard (level 2)");
+        model.CheckedApprenticeshipUnits.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
     }
 }

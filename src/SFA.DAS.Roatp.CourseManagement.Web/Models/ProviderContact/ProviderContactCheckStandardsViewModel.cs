@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
+﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
 
 public class ProviderContactCheckStandardsViewModel : IBackLink
 {
@@ -9,12 +7,10 @@ public class ProviderContactCheckStandardsViewModel : IBackLink
     public string ReviewYourDetailsUrl { get; set; }
     public string ChangeEmailPhoneUrl { get; set; } = "#";
     public string ChangeSelectedStandardsUrl { get; set; } = "#";
-    public List<string> CheckedStandards { get; set; }
-    public List<string> CheckedApprenticeshipUnits { get; set; }
+    public CourseListViewModel CheckedStandards { get; set; }
+    public CourseListViewModel CheckedApprenticeshipUnits { get; set; }
     public bool ShowEmail { get; set; } = true;
     public bool ShowPhone { get; set; } = true;
-
-    public bool UseBulletedList { get; set; }
     public bool ShowStandards { get; set; }
     public bool ShowApprenticeshipUnits { get; set; }
 }

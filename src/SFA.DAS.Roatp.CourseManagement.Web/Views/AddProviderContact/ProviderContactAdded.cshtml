@@ -1,14 +1,10 @@
 @model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.AddProviderContactCompleteViewModel
-@{
-    var title = (Model.ShowStandards || Model.ShowApprenticeshipUnits) ? "Contact details saved and training types updated" : "Contact details saved";
 
-    ViewBag.Title = @title;
-}
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
             <h1 class="govuk-panel__title">
-                @title
+                Contact details updated
             </h1>
         </div>
         <p class="govuk-body" asp-show="@Model.ShowBoth">
@@ -21,13 +17,7 @@
 
         <p class="govuk-body" asp-show="@Model.ShowPhoneOnly">
             The contact details for your chosen training is now <strong>@Model.PhoneNumber</strong>.
-        </p>
-        @if(Model.ShowStandards || Model.ShowApprenticeshipUnits)
-        {
-            <p class="govuk-body">
-                We've updated your contact details on find apprenticeship training.
-            </p>
-        }    
+        </p>  
         <div class="govuk-form-group" asp-show="Model.ShowStandards">
             <fieldset class="govuk-fieldset">
                 <h2 class="govuk-heading-m">Apprenticeships</h2>
@@ -40,6 +30,9 @@
                 <partial name="_CourseList" for="CheckedApprenticeshipUnits" />
             </fieldset>
         </div>
+        <p class="govuk-body">
+            We've updated your contact details on Find apprenticeship training.
+        </p>
         <p class="govuk-body">
             We’ve also saved your details to use next time you add training.
         </p>
