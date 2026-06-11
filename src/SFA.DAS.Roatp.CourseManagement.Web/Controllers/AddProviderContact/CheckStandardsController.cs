@@ -12,7 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Route("{ukprn}/contact-check-standards", Name = RouteNames.AddProviderContactCheckStandards)]
+[Route("{ukprn}/contact/edit/check-details", Name = RouteNames.AddProviderContactCheckStandards)]
 public class CheckStandardsController(IMediator _mediator, ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/CheckStandards.cshtml";

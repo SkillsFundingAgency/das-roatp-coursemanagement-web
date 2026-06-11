@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Route("{ukprn}/provider-contact-details-added", Name = RouteNames.AddProviderContactSaved)]
+[Route("{ukprn}/contact/edit/confirm", Name = RouteNames.AddProviderContactSaved)]
 public class ProviderContactCompleteController(ISessionService _sessionService) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/ProviderContactAdded.cshtml";
