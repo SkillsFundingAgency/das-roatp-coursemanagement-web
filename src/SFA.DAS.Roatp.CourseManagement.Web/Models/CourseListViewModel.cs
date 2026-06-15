@@ -2,6 +2,4 @@
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
 
-public record CourseListViewModel(IEnumerable<CourseList> Courses);
-
-public record CourseList(string CourseName);
+public record CourseListViewModel(IEnumerable<string> Courses);

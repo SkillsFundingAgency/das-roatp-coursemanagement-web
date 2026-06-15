@@ -60,14 +60,23 @@ public class ProviderLocationDeleteController : ControllerBase
         var model = (ProviderLocationConfirmDeleteViewModel)result.ProviderLocation;
         model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn, Id = id });
 
-        model.StandardList = new CourseListViewModel(result.ProviderLocation.Standards
-        .Where(s => (s.LearningType == LearningType.Apprenticeship || s.LearningType == LearningType.FoundationApprenticeship) && s.HasOtherVenues)
-        .Select(s => new CourseList(BuildCourseDisplayName(s.Title, s.Level)))
-        .OrderBy(c => c.CourseName));
-        model.ApprenticeshipUnitList = new CourseListViewModel(result.ProviderLocation.Standards
-        .Where(s => s.LearningType == LearningType.ApprenticeshipUnit && s.HasOtherVenues)
-        .Select(s => new CourseList(BuildCourseDisplayName(s.Title, s.Level)))
-        .OrderBy(c => c.CourseName));
+        model.StandardList = new CourseListViewModel(
+            result.ProviderLocation.Standards
+                .Where(s =>
+                    (s.LearningType == LearningType.Apprenticeship ||
+                     s.LearningType == LearningType.FoundationApprenticeship) &&
+                    s.HasOtherVenues)
+                .Select(s => BuildCourseDisplayName(s.Title, s.Level))
+                .OrderBy(c => c));
+
+        model.ApprenticeshipUnitList = new CourseListViewModel(
+            result.ProviderLocation.Standards
+                .Where(s =>
+                    s.LearningType == LearningType.ApprenticeshipUnit &&
+                    s.HasOtherVenues)
+                .Select(s => BuildCourseDisplayName(s.Title, s.Level))
+                .OrderBy(c => c));
+
         model.ShowStandards = result.ProviderLocation.Standards.Any(s => (s.LearningType == LearningType.Apprenticeship || s.LearningType == LearningType.FoundationApprenticeship) && s.HasOtherVenues);
         model.ShowApprenticeshipUnits = result.ProviderLocation.Standards.Any(s => s.LearningType == LearningType.ApprenticeshipUnit && s.HasOtherVenues);
 
@@ -123,14 +132,37 @@ public class ProviderLocationDeleteController : ControllerBase
         var model = new ProviderLocationNotDeletedViewModel()
         {
             LocationName = result.ProviderLocation.LocationName,
-            StandardLinks = new ProviderLocationCourseLinksViewModel(result.ProviderLocation.Standards
-            .Where(s => (s.LearningType == LearningType.Apprenticeship || s.LearningType == LearningType.FoundationApprenticeship) && !s.HasOtherVenues)
-            .Select(s => new ProviderLocationCourseLink(BuildCourseDisplayName(s.Title, s.Level), Url.RouteUrl(RouteNames.GetStandardDetails, new { Ukprn, s.LarsCode })))
-            .OrderBy(c => c.CourseName)),
-            ApprenticeshipUnitLinks = new ProviderLocationCourseLinksViewModel(result.ProviderLocation.Standards
-            .Where(s => s.LearningType == LearningType.ApprenticeshipUnit && !s.HasOtherVenues)
-            .Select(s => new ProviderLocationCourseLink(BuildCourseDisplayName(s.Title, s.Level), Url.RouteUrl(RouteNames.ManageShortCourseDetails, new { Ukprn, LearningType = LearningType.ApprenticeshipUnit, s.LarsCode })))
-            .OrderBy(c => c.CourseName)),
+
+            StandardLinks = new ProviderLocationCourseLinksViewModel(
+                result.ProviderLocation.Standards
+                    .Where(s =>
+                        (s.LearningType == LearningType.Apprenticeship ||
+                         s.LearningType == LearningType.FoundationApprenticeship) &&
+                        !s.HasOtherVenues)
+                    .Select(s => new ProviderLocationCourseLink(
+                        BuildCourseDisplayName(s.Title, s.Level),
+                        Url.RouteUrl(
+                            RouteNames.GetStandardDetails,
+                            new { Ukprn, s.LarsCode })))
+                    .OrderBy(c => c.CourseName)),
+
+            ApprenticeshipUnitLinks = new ProviderLocationCourseLinksViewModel(
+                result.ProviderLocation.Standards
+                    .Where(s =>
+                        s.LearningType == LearningType.ApprenticeshipUnit &&
+                        !s.HasOtherVenues)
+                    .Select(s => new ProviderLocationCourseLink(
+                        BuildCourseDisplayName(s.Title, s.Level),
+                        Url.RouteUrl(
+                            RouteNames.ManageShortCourseDetails,
+                            new
+                            {
+                                Ukprn,
+                                LearningType = LearningType.ApprenticeshipUnit,
+                                s.LarsCode
+                            })))
+                    .OrderBy(c => c.CourseName)),
+
             ShowStandards = result.ProviderLocation.Standards.Any(s => (s.LearningType == LearningType.Apprenticeship || s.LearningType == LearningType.FoundationApprenticeship) && !s.HasOtherVenues),
             ShowApprenticeshipUnits = result.ProviderLocation.Standards.Any(s => s.LearningType == LearningType.ApprenticeshipUnit && !s.HasOtherVenues)
         };

@@ -57,7 +57,7 @@ public class ProviderLocationNotDeletedTests
     }
 
     [Test, MoqAutoData]
-    public void WhenStandardsReturnsApprenticeshipAndFoundationApprenticeship_ThenPopulateStandardCourseLinks(
+    public void ProviderLocationNotDeleted_WhenCourseCannotBeDeleted_ThenAddsApprenticeshipAndFoundationApprenticesihpToStandardsList(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
         GetProviderLocationDetailsQueryResult queryResult,
@@ -105,7 +105,7 @@ public class ProviderLocationNotDeletedTests
     }
 
     [Test, MoqAutoData]
-    public void WhenStandardsReturnsApprenticeshipUnit_ThenPopulateApprenticeshipUnitCourseLinks(
+    public void ProviderLocationNotDeleted_WhenCourseCannotBeDeleted_ThenAddsApprenticeshipUnitToApprenticeshipUnitList(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
         GetProviderLocationDetailsQueryResult queryResult,
@@ -147,7 +147,7 @@ public class ProviderLocationNotDeletedTests
     [MoqInlineAutoData(false, false, true, true, false)]
     [MoqInlineAutoData(true, true, false, false, true)]
     [MoqInlineAutoData(false, false, false, true, true)]
-    public void WhenStandardsAreReturnedAndHasOtherVenuesIsTrueOrFalse_ThenShowCourseFlagsAreSetCorrectly(
+    public void ProviderLocationNotDeleted_WhenCourseCannotBeDeletedAndHasOtherVenuesIsTrueOrFalse_ThenShowCourseFlagsAreSetCorrectly(
         bool hasOtherVenuesStandard,
         bool hasOtherVenuesFoundationApprenticeship,
         bool hasOtherVenuesApprenticeshipUnit,

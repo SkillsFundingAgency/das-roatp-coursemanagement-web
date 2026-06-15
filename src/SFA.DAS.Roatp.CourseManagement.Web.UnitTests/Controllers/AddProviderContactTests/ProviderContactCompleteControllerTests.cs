@@ -94,7 +94,7 @@ public class ProviderContactCompleteControllerTests
     }
 
     [Test, MoqAutoData]
-    public void WhenApprenticeshipAndShortCourseCourseTypesAreReturnedInSession_ThenPopulateCheckedCourseLists(
+    public void Get_CoursesReturnedInSession_PopulateCheckedCourseLists(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ProviderContactCompleteController sut,
         string manageCoursesLink,
@@ -138,14 +138,14 @@ public class ProviderContactCompleteControllerTests
         var viewResult = result as ViewResult;
 
         var model = viewResult!.Model as AddProviderContactCompleteViewModel;
-        model.CheckedStandards.Courses.First().CourseName.Should().Be("Test Standard (level 2)");
-        model.CheckedApprenticeshipUnits.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
+        model.CheckedStandards.Courses.First().Should().Be("Test Standard (level 2)");
+        model.CheckedApprenticeshipUnits.Courses.First().Should().Be("Test Apprenticeship Unit (level 2)");
     }
 
     [Test]
     [MoqInlineAutoData(true, "~/Views/AddProviderContact/ProviderContactAdded.cshtml")]
     [MoqInlineAutoData(false, "~/Views/AddProviderContact/ProviderContactAddedNoCourse.cshtml")]
-    public void WhenUpdateExistingStandardsIsTrueOrFalse_ThenReturnsCorrectView(
+    public void Get_UpdateExistingStandardsIsTrueOrFalse_ReturnsCorrectView(
         bool updateExistingStandards,
         string expectedViewName,
         [Frozen] Mock<ISessionService> sessionServiceMock,

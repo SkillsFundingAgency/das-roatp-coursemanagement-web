@@ -24,8 +24,8 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
 
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
         var checkedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
-        var standardList = new CourseListViewModel(checkedStandards.Select(s => new CourseList(s)));
-        var apprenticeshipUnitList = new CourseListViewModel(checkedApprenticeshipUnits.Select(s => new CourseList(s)));
+        var standardList = new CourseListViewModel(checkedStandards);
+        var apprenticeshipUnitList = new CourseListViewModel(checkedApprenticeshipUnits);
 
         var showBoth = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && !string.IsNullOrEmpty(sessionModel.EmailAddress);
         var showPhoneOnly = !string.IsNullOrEmpty(sessionModel.PhoneNumber) && string.IsNullOrEmpty(sessionModel.EmailAddress);

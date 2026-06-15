@@ -26,8 +26,8 @@ public class CheckStandardsController(IMediator _mediator, ISessionService _sess
         var checkedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
         var checkedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
 
-        var standardList = new CourseListViewModel(checkedStandards.Select(s => new CourseList(s)));
-        var apprenticeshipUnitList = new CourseListViewModel(checkedApprenticeshipUnits.Select(s => new CourseList(s)));
+        var standardList = new CourseListViewModel(checkedStandards);
+        var apprenticeshipUnitList = new CourseListViewModel(checkedApprenticeshipUnits);
 
         var model = new ProviderContactCheckStandardsViewModel
         {

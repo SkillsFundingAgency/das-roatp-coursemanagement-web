@@ -144,7 +144,7 @@ public class CheckStandardsControllerGetTests
         var viewResult = result as ViewResult;
 
         var model = viewResult!.Model as ProviderContactCheckStandardsViewModel;
-        model.CheckedStandards.Courses.First().CourseName.Should().Be("Test Standard (level 2)");
-        model.CheckedApprenticeshipUnits.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
+        model.CheckedStandards.Courses.First().Should().Be("Test Standard (level 2)");
+        model.CheckedApprenticeshipUnits.Courses.First().Should().Be("Test Apprenticeship Unit (level 2)");
     }
 }

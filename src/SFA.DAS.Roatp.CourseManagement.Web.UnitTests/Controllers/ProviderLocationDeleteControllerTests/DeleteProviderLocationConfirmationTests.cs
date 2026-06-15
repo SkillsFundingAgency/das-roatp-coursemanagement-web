@@ -107,7 +107,7 @@ public class DeleteProviderLocationConfirmationTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenNoOrphanedApprenticeshipAndFoundationApprenticeshipAreReturned_ThenPopulateStandardCourseList(
+    public async Task Get_OtherVenuesForApprenticeshipsAreReturned_PopulateStandardCourseList(
     [Frozen] Mock<IMediator> mediatorMock,
     [Greedy] ProviderLocationDeleteController sut,
     GetProviderLocationDetailsQueryResult queryResult)
@@ -146,13 +146,13 @@ public class DeleteProviderLocationConfirmationTests
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
         var standardCourses = model.StandardList.Courses.ToList();
-        standardCourses[0].CourseName.Should().Be("Test A Standard (level 2)");
-        standardCourses[1].CourseName.Should().Be("Test B Foundation Apprenticeship (level 2)");
+        standardCourses[0].Should().Be("Test A Standard (level 2)");
+        standardCourses[1].Should().Be("Test B Foundation Apprenticeship (level 2)");
         model.StandardList.Courses.Count().Should().Be(2);
     }
 
     [Test, MoqAutoData]
-    public async Task WhenNoOrphanedApprenticeshipUnitIsReturned_ThenPopulateApprenticeshipUnitCourseList(
+    public async Task Get_OtherVenuesForApprenticeshipUnitIsReturned_PopulateApprenticeshipUnitCourseList(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
         GetProviderLocationDetailsQueryResult queryResult)
@@ -182,11 +182,11 @@ public class DeleteProviderLocationConfirmationTests
 
         var viewResult = result as ViewResult;
         var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
-        model.ApprenticeshipUnitList.Courses.First().CourseName.Should().Be("Test Apprenticeship Unit (level 2)");
+        model.ApprenticeshipUnitList.Courses.First().Should().Be("Test Apprenticeship Unit (level 2)");
     }
 
     [Test, MoqAutoData]
-    public async Task WhenNoOrphanedApprenticeshipAndFoundationApprenticeshipAreReturned_ThenShowStandardsIsSetToTrue(
+    public async Task Get_OtherVenuesForApprenticeshipsAreReturned_ShowStandardsIsSetToTrue(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
         GetProviderLocationDetailsQueryResult queryResult)
@@ -228,7 +228,7 @@ public class DeleteProviderLocationConfirmationTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenNoOrphanedApprenticeshipUnitIsReturned_ThenShowApprenticeshipUnitsIsSetToTrue(
+    public async Task Get_OtherVenuesForApprenticeshipUnitIsReturned_ShowApprenticeshipUnitsIsSetToTrue(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut,
         GetProviderLocationDetailsQueryResult queryResult)
