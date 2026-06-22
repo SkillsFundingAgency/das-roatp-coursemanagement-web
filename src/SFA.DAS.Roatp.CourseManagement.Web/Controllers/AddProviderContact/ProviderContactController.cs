@@ -13,7 +13,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Route("{ukprn}/add-provider-contact", Name = RouteNames.AddProviderContactDetails)]
+[Route("{ukprn}/contact/edit", Name = RouteNames.AddProviderContactDetails)]
 public class ProviderContactController(IMediator _mediator, ISessionService _sessionService, IValidator<AddProviderContactSubmitViewModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/AddProviderContact.cshtml";

@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Route("{ukprn}/contact-select-standards", Name = RouteNames.AddProviderContactSelectStandardsForUpdate)]
+[Route("{ukprn}/contact/edit/select-courses", Name = RouteNames.AddProviderContactSelectStandardsForUpdate)]
 public class SelectStandardsForUpdateController(ISessionService _sessionService, IValidator<AddProviderContactStandardsSubmitViewModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/AddProviderContact/SelectStandards.cshtml";

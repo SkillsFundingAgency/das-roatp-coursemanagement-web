@@ -41,9 +41,7 @@ public class ProviderContactCompleteControllerTests
     public void Get_ModelInSession_PopulatesExpectedModel(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ProviderContactCompleteController sut,
-        List<ProviderContactStandardModel> standards,
-        string reviewYourDetailsLink,
-        string manageShortCoursesLink,
+        string manageCoursesLink,
         int ukprn
     )
     {
@@ -54,12 +52,27 @@ public class ProviderContactCompleteControllerTests
         {
             EmailAddress = email,
             PhoneNumber = phoneNumber,
-            Standards = standards
+            Standards = new List<ProviderContactStandardModel>()
+            {
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Standard",
+                    Level = 2,
+                    CourseType = CourseType.Apprenticeship,
+                    IsSelected = true
+                },
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Apprenticeship Unit",
+                    Level = 2,
+                    CourseType = CourseType.ShortCourse,
+                    IsSelected = true
+                }
+            }
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink)
-            .AddUrlForRoute(RouteNames.ManageShortCourses, manageShortCoursesLink);
+            .AddUrlForRoute(RouteNames.SelectCourseType, manageCoursesLink);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -67,23 +80,98 @@ public class ProviderContactCompleteControllerTests
 
         var viewResult = result as ViewResult;
 
-        var expectedCheckedStandards = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.Apprenticeship).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
-        var expectedCheckedApprenticeshipUnits = StandardDescriptionListService.BuildSelectedStandardsList(sessionModel.Standards.Where(x => x.CourseType == CourseType.ShortCourse).OrderBy(x => x.CourseName).ThenBy(x => x.Level).ToList());
-
         var model = viewResult!.Model as AddProviderContactCompleteViewModel;
         model.EmailAddress.Should().Be(email);
         model.PhoneNumber.Should().Be(phoneNumber);
-        model.CheckedStandards.Should().BeEquivalentTo(expectedCheckedStandards);
-        model.CheckedApprenticeshipUnits.Should().BeEquivalentTo(expectedCheckedApprenticeshipUnits);
-        model.ReviewYourDetailsUrl.Should().Be(reviewYourDetailsLink);
-        model.ManageShortCoursesUrl.Should().Be(manageShortCoursesLink);
+        model.ManageCoursesUrl.Should().Be(manageCoursesLink);
         model.ShowBoth.Should().Be(true);
         model.ShowEmailOnly.Should().Be(false);
         model.ShowPhoneOnly.Should().Be(false);
-        model.ShowStandards.Should().Be(expectedCheckedStandards.Count > 0);
-        model.ShowApprenticeshipUnits.Should().Be(expectedCheckedApprenticeshipUnits.Count > 0);
+        model.ShowStandards.Should().BeTrue();
+        model.ShowApprenticeshipUnits.Should().BeTrue();
         sessionServiceMock.Verify(s => s.Get<ProviderContactSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Delete(nameof(ProviderContactSessionModel)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public void Get_CoursesReturnedInSession_PopulateCheckedCourseLists(
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ProviderContactCompleteController sut,
+        string manageCoursesLink,
+        int ukprn
+    )
+    {
+        var email = "test@test.com";
+        var phoneNumber = "123445";
+
+        var sessionModel = new ProviderContactSessionModel
+        {
+            EmailAddress = email,
+            PhoneNumber = phoneNumber,
+            UpdateExistingStandards = true,
+            Standards = new List<ProviderContactStandardModel>()
+            {
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Standard",
+                    Level = 2,
+                    CourseType = CourseType.Apprenticeship,
+                    IsSelected = true
+                },
+                new ProviderContactStandardModel
+                {
+                    CourseName = "Test Apprenticeship Unit",
+                    Level = 2,
+                    CourseType = CourseType.ShortCourse,
+                    IsSelected = true
+                }
+            }
+        };
+
+        sut.AddDefaultContextWithUser().AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.SelectCourseType, manageCoursesLink);
+
+        sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
+
+        var result = sut.ContactDetailsSaved(ukprn);
+
+        var viewResult = result as ViewResult;
+
+        var model = viewResult!.Model as AddProviderContactCompleteViewModel;
+        model.CheckedStandards.Courses.First().Should().Be("Test Standard (level 2)");
+        model.CheckedApprenticeshipUnits.Courses.First().Should().Be("Test Apprenticeship Unit (level 2)");
+    }
+
+    [Test]
+    [MoqInlineAutoData(true, "~/Views/AddProviderContact/ProviderContactAdded.cshtml")]
+    [MoqInlineAutoData(false, "~/Views/AddProviderContact/ProviderContactAddedNoCourse.cshtml")]
+    public void Get_UpdateExistingStandardsIsTrueOrFalse_ReturnsCorrectView(
+        bool updateExistingStandards,
+        string expectedViewName,
+        [Frozen] Mock<ISessionService> sessionServiceMock,
+        [Greedy] ProviderContactCompleteController sut,
+        List<ProviderContactStandardModel> standards,
+        int ukprn
+    )
+    {
+        var email = "test@test.com";
+
+        var sessionModel = new ProviderContactSessionModel
+        {
+            EmailAddress = email,
+            Standards = standards,
+            UpdateExistingStandards = updateExistingStandards,
+        };
+
+        sut.AddDefaultContextWithUser();
+
+        sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
+
+        var result = sut.ContactDetailsSaved(ukprn);
+
+        var viewResult = result as ViewResult;
+
+        viewResult!.ViewName.Should().Be(expectedViewName);
     }
 
     [Test, MoqAutoData]
@@ -91,7 +179,6 @@ public class ProviderContactCompleteControllerTests
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Greedy] ProviderContactCompleteController sut,
         List<ProviderContactStandardModel> standards,
-        string reviewYourDetailsLink,
         int ukprn
     )
     {
@@ -103,7 +190,7 @@ public class ProviderContactCompleteControllerTests
             Standards = standards
         };
 
-        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
+        sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -122,7 +209,6 @@ public class ProviderContactCompleteControllerTests
        [Frozen] Mock<ISessionService> sessionServiceMock,
        [Greedy] ProviderContactCompleteController sut,
        List<ProviderContactStandardModel> standards,
-       string reviewYourDetailsLink,
        int ukprn
    )
     {
@@ -134,7 +220,7 @@ public class ProviderContactCompleteControllerTests
             Standards = standards
         };
 
-        sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.ReviewYourDetails, reviewYourDetailsLink);
+        sut.AddDefaultContextWithUser();
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 

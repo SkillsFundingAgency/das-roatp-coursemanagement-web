@@ -107,6 +107,161 @@ public class DeleteProviderLocationConfirmationTests
     }
 
     [Test, MoqAutoData]
+    public async Task Get_OtherVenuesForApprenticeshipsAreReturned_PopulateStandardCourseList(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ProviderLocationDeleteController sut,
+    GetProviderLocationDetailsQueryResult queryResult)
+    {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
+
+        queryResult.ProviderLocation.Standards = new List<LocationStandardModel>()
+            {
+                new LocationStandardModel()
+                {
+                    Title = "Test A Standard",
+                    Level = 2,
+                    LarsCode = "12345678",
+                    LearningType = LearningType.Apprenticeship,
+                    HasOtherVenues = true
+                },
+                new LocationStandardModel()
+                {
+                    Title = "Test B Foundation Apprenticeship",
+                    Level = 2,
+                    LarsCode = "23456787",
+                    LearningType = LearningType.FoundationApprenticeship,
+                    HasOtherVenues = true
+                }
+            };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+
+        var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
+        var standardCourses = model.StandardList.Courses.ToList();
+        standardCourses[0].Should().Be("Test A Standard (level 2)");
+        standardCourses[1].Should().Be("Test B Foundation Apprenticeship (level 2)");
+        model.StandardList.Courses.Count().Should().Be(2);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Get_OtherVenuesForApprenticeshipUnitIsReturned_PopulateApprenticeshipUnitCourseList(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ProviderLocationDeleteController sut,
+        GetProviderLocationDetailsQueryResult queryResult)
+    {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
+
+        queryResult.ProviderLocation.Standards = new List<LocationStandardModel>()
+            {
+                new LocationStandardModel()
+                {
+                    Title = "Test Apprenticeship Unit",
+                    Level = 2,
+                    LarsCode = "98765432",
+                    LearningType = LearningType.ApprenticeshipUnit,
+                    HasOtherVenues = true
+                }
+            };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+
+        var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
+        model.ApprenticeshipUnitList.Courses.First().Should().Be("Test Apprenticeship Unit (level 2)");
+    }
+
+    [Test, MoqAutoData]
+    public async Task Get_OtherVenuesForApprenticeshipsAreReturned_ShowStandardsIsSetToTrue(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ProviderLocationDeleteController sut,
+        GetProviderLocationDetailsQueryResult queryResult)
+    {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
+
+        queryResult.ProviderLocation.Standards = new List<LocationStandardModel>()
+            {
+                new LocationStandardModel()
+                {
+                    Title = "Test Standard",
+                    Level = 2,
+                    LarsCode = "12345678",
+                    LearningType = LearningType.Apprenticeship,
+                    HasOtherVenues = true
+                },
+                new LocationStandardModel()
+                {
+                    Title = "Test Foundation Apprenticeship",
+                    Level = 2,
+                    LarsCode = "23456787",
+                    LearningType = LearningType.FoundationApprenticeship,
+                    HasOtherVenues = true
+                }
+            };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+
+        var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
+        model.ShowStandards.Should().Be(true);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Get_OtherVenuesForApprenticeshipUnitIsReturned_ShowApprenticeshipUnitsIsSetToTrue(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ProviderLocationDeleteController sut,
+        GetProviderLocationDetailsQueryResult queryResult)
+    {
+        var ukprn = 12345678;
+        var id = Guid.NewGuid();
+
+        queryResult.ProviderLocation.Standards = new List<LocationStandardModel>()
+            {
+                new LocationStandardModel()
+                {
+                    Title = "Test Apprenticeship Unit",
+                    Level = 2,
+                    LarsCode = "98765432",
+                    LearningType = LearningType.ApprenticeshipUnit,
+                    HasOtherVenues = true
+                }
+            };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock
+            .Setup(m => m.Send(It.Is<GetProviderLocationDetailsQuery>(r => r.Ukprn == ukprn && r.Id == id), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+
+        var result = await sut.DeleteProviderLocationConfirmation(ukprn, id);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ProviderLocationConfirmDeleteViewModel;
+        model.ShowApprenticeshipUnits.Should().Be(true);
+    }
+
+    [Test, MoqAutoData]
     public async Task Get_NoMatch_RedirectsToPageNotFound(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProviderLocationDeleteController sut)

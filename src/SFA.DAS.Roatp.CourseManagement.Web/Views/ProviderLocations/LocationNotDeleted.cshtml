@@ -13,42 +13,30 @@
         <h1 class="govuk-heading-xl margin-bottom-30">This venue cannot be deleted</h1>
         
         <p class="govuk-body">
-            This venue has not been deleted. This is because the standards linked below are delivered only at @Model.LocationName. 
+            This venue has not been deleted. This is because you deliver the training types linked below at @Model.LocationName.
         </p>
         <h2 class="govuk-heading-m">What do to next</h2>
 
         <p class="govuk-body">
             To delete the venue you can do any of these:
             <ul class="govuk-list govuk-list--bullet">
-                <li> delete the standards linked below</li>
+                <li>delete the training types linked below</li>
                 <li>change them to be delivered at another venue</li>
                 <li>change them to be delivered at an employer's location</li>
             </ul>
         </p>
         <p class="govuk-body">
-            The standards that need to be changed or deleted:
+            The training types that need to be changed or deleted:
         </p>
-        @if (Model.StandardsWithoutOtherVenues.Count==1)
-        {
-            <p class="govuk-body">
-                <a class="govuk-link" href="@Model.StandardsWithoutOtherVenues[0].StandardUrl">
-                    @Model.StandardsWithoutOtherVenues[0].CourseDisplayName
-                </a>
-            </p>
-        }
-        else
-        {
-            <ul class="govuk-list govuk-list--bullet">
-            @foreach (var standard in Model.StandardsWithoutOtherVenues)
-            {
-                <li>
-                    <a class="govuk-link" href="@standard.StandardUrl">
-                        @standard.CourseDisplayName
-                    </a>
-                </li>
-            }
-            </ul>
-        }
+        
+        <h3 asp-show="Model.ShowStandards" class="govuk-heading-m">Apprenticeships</h3>
+
+        <partial name="_ProviderLocationCourseLinks" for="StandardLinks" />
+
+        <h4 asp-show="Model.ShowApprenticeshipUnits" class="govuk-heading-m">Apprenticeship Units</h4>
+
+        <partial name="_ProviderLocationCourseLinks" for="ApprenticeshipUnitLinks" />
+
         <p class="govuk-body">
             You can then return to your list of venues and delete this venue.
         </p>

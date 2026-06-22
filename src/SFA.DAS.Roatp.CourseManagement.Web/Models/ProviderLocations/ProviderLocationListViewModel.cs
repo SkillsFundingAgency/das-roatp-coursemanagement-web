@@ -8,6 +8,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderLocations
         public string AddTrainingLocationLink { get; set; }
 
         public bool ShowNotificationBannerAddVenue { get; set; }
-        public string ManageYourStandardsUrl { get; set; }
+        public string ManageYourTrainingUrl { get; set; }
     }
 }

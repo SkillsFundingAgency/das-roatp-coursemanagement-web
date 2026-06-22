@@ -13,7 +13,7 @@ public static class StandardDescriptionListService
         foreach (var standard in standards.OrderBy(s => s.CourseName).ThenBy(s => s.Level)
                      .Where(s => s.IsSelected))
         {
-            checkedStandards.Add(standard.CourseName + " (Level " + standard.Level + ")");
+            checkedStandards.Add(standard.CourseName + " (level " + standard.Level + ")");
         }
 
         return checkedStandards;

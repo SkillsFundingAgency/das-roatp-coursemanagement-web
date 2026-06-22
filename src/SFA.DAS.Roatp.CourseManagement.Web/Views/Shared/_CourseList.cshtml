@@ -1,0 +1,8 @@
+﻿@model CourseListViewModel
+
+<ul class="govuk-list govuk-list--bullet">
+    @foreach (var course in Model.Courses)
+    {
+        <li>@course</li>
+    }
+</ul>

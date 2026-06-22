@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddProviderContact;
 
-[Route("{ukprn}/update-existing-standards", Name = RouteNames.AddProviderContactConfirmUpdateStandards)]
+[Route("{ukprn}/contact/edit/apply-to-courses", Name = RouteNames.AddProviderContactConfirmUpdateStandards)]
 
 public class ConfirmUpdateStandardsController(ISessionService _sessionService, IValidator<ConfirmUpdateStandardsSubmitViewModel> _validator) : ControllerBase
 {

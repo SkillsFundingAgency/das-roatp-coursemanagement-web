@@ -44,7 +44,7 @@ public class ProviderLocationsController : ControllerBase
         if (showAddBanner != null)
         {
             model.ShowNotificationBannerAddVenue = true;
-            model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.ViewStandards);
+            model.ManageYourTrainingUrl = GetUrlWithUkprn(RouteNames.SelectCourseType);
         }
 
 

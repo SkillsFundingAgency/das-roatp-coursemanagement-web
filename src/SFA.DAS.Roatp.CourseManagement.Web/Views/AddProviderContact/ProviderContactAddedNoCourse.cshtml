@@ -1,0 +1,25 @@
+﻿@model SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact.AddProviderContactCompleteViewModel
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-panel govuk-panel--confirmation govuk-!-margin-bottom-6">
+            <h1 class="govuk-panel__title">
+                Contact details updated
+            </h1>
+        </div>
+        <p class="govuk-body" asp-show="@Model.ShowBoth">
+            You have updated your contact details to <strong>@Model.EmailAddress</strong> and <strong>@Model.PhoneNumber</strong>.
+        </p>
+
+        <p class="govuk-body" asp-show="@Model.ShowEmailOnly">
+            You have updated your contact details to <strong>@Model.EmailAddress</strong>.
+        </p>
+
+        <p class="govuk-body" asp-show="@Model.ShowPhoneOnly">
+            You have updated your contact details to <strong>@Model.PhoneNumber</strong>.
+        </p>
+        <p class="govuk-body">
+            We’ve also saved your details to use next time you add a new apprenticeship unit or standard. Go to <a href="@Model.ManageCoursesUrl" class="govuk-link">Manage your courses </a> to change contact details for individual training types.
+        </p>
+    </div>
+</div>

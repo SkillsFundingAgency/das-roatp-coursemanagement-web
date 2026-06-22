@@ -40,13 +40,7 @@
             </p>
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
-
-                    <ul class="govuk-list govuk-list--bullet">
-                        @foreach (var standardDetails in Model.CheckedStandards)
-                        {
-                            <li>@standardDetails</li>
-                        }
-                    </ul>
+                    <partial name="_CourseList" for="CheckedStandards" />
                 </fieldset>
             </div>
         </div>
@@ -58,13 +52,7 @@
             </p>
             <div class="govuk-form-group">
                 <fieldset class="govuk-fieldset">
-
-                    <ul class="govuk-list govuk-list--bullet">
-                        @foreach (var apprenticeshipUnitDetails in Model.CheckedApprenticeshipUnits)
-                        {
-                            <li>@apprenticeshipUnitDetails</li>
-                        }
-                    </ul>
+                    <partial name="_CourseList" for="CheckedApprenticeshipUnits" />
                 </fieldset>
             </div>
         </div>
