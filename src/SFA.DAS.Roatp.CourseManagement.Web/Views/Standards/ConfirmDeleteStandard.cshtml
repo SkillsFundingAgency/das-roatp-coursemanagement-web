@@ -9,10 +9,13 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_validationSummary" /> 
-        <span class="govuk-caption-l">Manage a standard</span>
-        <h1 class="govuk-heading-xl">Are you sure you want to delete this standard?</h1>
+        <span class="govuk-caption-l">Manage an apprenticeship</span>
+        <h1 class="govuk-heading-xl">Are you sure you want to delete this apprenticeship?</h1>
         <form method="post" asp-route="@RouteNames.PostConfirmDeleteStandard" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="StandardInformation.LarsCode" />
+
+            <p>Deleting an apprenticeship will remove it from your account. This means it will no longer show on Find apprenticeship training.</p>
+            <p>Deleting it will also stop you from submitting Individualised Learning Records (ILR) for government funding.</p>
 
             <table class="govuk-table">
                 <caption class="govuk-visually-hidden">Details of the standard</caption>
@@ -71,12 +74,17 @@
                 </tbody>
             </table>
 
-            <p>This standard will be removed from your record. It will no longer show as training that you deliver.</p>
-
+            <div class="govuk-warning-text">
+              <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+              <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                Do not delete this course if you currently have active learners on it. It needs to stay in your offering to claim government funding.
+              </strong>
+            </div>
 
             <div class="govuk-button-group">
                 <button id="DeleteStandard" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
-                    Delete standard
+                    Delete apprenticeship
                 </button>
             </div>
         </form>
