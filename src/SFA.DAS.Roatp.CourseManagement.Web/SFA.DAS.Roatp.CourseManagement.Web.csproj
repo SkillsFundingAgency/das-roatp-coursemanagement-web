@@ -16,7 +16,6 @@
     <PackageReference Include="Microsoft.Data.OData" Version="5.8.4" />
     <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.8" />
     <PackageReference Include="Microsoft.IdentityModel.Protocols.OpenIdConnect" Version="8.18.0" />
-    <PackageReference Include="SFA.DAS.Authorization.Mvc" Version="6.0.109" />
     <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="17.1.165" />
     <PackageReference Include="SFA.DAS.DfESignIn.Auth" Version="17.1.165" />
     <PackageReference Include="SFA.DAS.Provider.Shared.UI" Version="2.0.57" />

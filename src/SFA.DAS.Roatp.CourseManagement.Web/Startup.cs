@@ -14,8 +14,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using SFA.DAS.Authorization.DependencyResolution.Microsoft;
-using SFA.DAS.Authorization.Mvc.Extensions;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Provider.Shared.UI;
 using SFA.DAS.Provider.Shared.UI.Startup;
@@ -99,11 +97,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web
 
             services.Configure<IISServerOptions>(options => { options.AutomaticAuthentication = false; });
 
-            services.AddAuthorization<AuthorizationContextProvider>();
             services.AddMvc(options =>
             {
-                options.AddAuthorization();
-
                 options.Filters.Add(
                     new AuthorizeFilter(
                         new AuthorizationPolicyBuilder()
