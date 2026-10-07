@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -25,7 +26,8 @@ public class ReviewYourDetailsController(ISessionService _sessionService, IMedia
 
         var model = new ReviewYourDetailsViewModel()
         {
-            SelectCourseTypeUrl = Url.RouteUrl(RouteNames.SelectCourseType, urlParams),
+            ManageApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, urlParams),
+            ManageApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType = LearningType.ApprenticeshipUnit }),
             ProviderLocationsUrl = Url.RouteUrl(RouteNames.GetProviderLocations, urlParams),
             ProviderDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, urlParams),
             ProviderContactUrl = Url.RouteUrl(RouteNames.CheckProviderContactDetails, urlParams),

@@ -19,7 +19,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers;
 [TestFixture]
 public class ReviewYourDetailsControllerGetTests
 {
-    private const string SelectCourseTypeUrl = "http://test/view-standards";
+    private const string ManageApprenticeshipsUrl = "http://test/view-standards";
+    private const string ManageApprenticeshipUnitsUrl = "http://test/manage-apprenticeshipunits";
     private const string ProviderLocationsUrl = "http://test/provider-locations";
     private const string ProviderDescriptionUrl = "http://test/provider-description";
     private const string ProviderContactUrl = "http://test/provider-contact";
@@ -42,7 +43,8 @@ public class ReviewYourDetailsControllerGetTests
         _sut
             .AddDefaultContextWithUser()
             .AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.SelectCourseType, SelectCourseTypeUrl)
+            .AddUrlForRoute(RouteNames.ViewStandards, ManageApprenticeshipsUrl)
+            .AddUrlForRoute(RouteNames.ManageShortCourses, ManageApprenticeshipUnitsUrl)
             .AddUrlForRoute(RouteNames.GetProviderLocations, ProviderLocationsUrl)
             .AddUrlForRoute(RouteNames.GetProviderDescription, ProviderDescriptionUrl)
             .AddUrlForRoute(RouteNames.CheckProviderContactDetails, ProviderContactUrl)
@@ -74,7 +76,8 @@ public class ReviewYourDetailsControllerGetTests
         var expectedModel = new ReviewYourDetailsViewModel()
         {
             ProviderLocationsUrl = ProviderLocationsUrl,
-            SelectCourseTypeUrl = SelectCourseTypeUrl,
+            ManageApprenticeshipsUrl = ManageApprenticeshipsUrl,
+            ManageApprenticeshipUnitsUrl = ManageApprenticeshipUnitsUrl,
             ProviderDescriptionUrl = ProviderDescriptionUrl,
             ProviderContactUrl = ProviderContactUrl,
             ForecastUrl = ForecastCoursesUrl,
