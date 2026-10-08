@@ -99,7 +99,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderLocat
               .Returns(_verifyVenueNameUrl);
 
             _urlHelperMock
-                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.SelectCourseType))))
+                .Setup(m => m.RouteUrl(It.Is<UrlRouteContext>(c => c.RouteName.Equals(RouteNames.ReviewYourDetails))))
                 .Returns(_viewTrainingLink);
 
 

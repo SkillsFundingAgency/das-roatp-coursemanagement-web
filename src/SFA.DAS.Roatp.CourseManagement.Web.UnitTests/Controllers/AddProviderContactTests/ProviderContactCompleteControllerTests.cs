@@ -72,7 +72,7 @@ public class ProviderContactCompleteControllerTests
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.SelectCourseType, manageCoursesLink);
+            .AddUrlForRoute(RouteNames.ReviewYourDetails, manageCoursesLink);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
@@ -129,7 +129,7 @@ public class ProviderContactCompleteControllerTests
         };
 
         sut.AddDefaultContextWithUser().AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.SelectCourseType, manageCoursesLink);
+            .AddUrlForRoute(RouteNames.ReviewYourDetails, manageCoursesLink);
 
         sessionServiceMock.Setup(s => s.Get<ProviderContactSessionModel>()).Returns(sessionModel);
 
