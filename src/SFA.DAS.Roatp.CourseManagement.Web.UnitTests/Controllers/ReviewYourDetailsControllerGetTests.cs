@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -25,7 +27,8 @@ public class ReviewYourDetailsControllerGetTests
     private const string ProviderDescriptionUrl = "http://test/provider-description";
     private const string ProviderContactUrl = "http://test/provider-contact";
     private const string ForecastCoursesUrl = "http://test/forecasts/courses";
-
+    private const string DashboardUrl = "http://test/dashboard";
+    private IOptions<ProviderSharedUIConfiguration> _config;
     Mock<ISessionService> _sessionServiceMock;
     Mock<IMediator> _mediatorMock;
     ReviewYourDetailsController _sut;
@@ -35,10 +38,15 @@ public class ReviewYourDetailsControllerGetTests
     {
         _sessionServiceMock = new();
         _mediatorMock = new();
+        _config = Options.Create(
+        new ProviderSharedUIConfiguration
+        {
+            DashboardUrl = DashboardUrl
+        });
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllProviderStandardsQueryResult() { Standards = [new Standard()] });
-        _sut = new(_sessionServiceMock.Object, _mediatorMock.Object);
+        _sut = new(_sessionServiceMock.Object, _mediatorMock.Object, _config);
 
         _sut
             .AddDefaultContextWithUser()
@@ -85,6 +93,19 @@ public class ReviewYourDetailsControllerGetTests
         };
 
         var result = await _sut.ReviewYourDetails(default);
-        result.As<ViewResult>().Model.As<ReviewYourDetailsViewModel>().Should().BeEquivalentTo(expectedModel);
+        result.As<ViewResult>().Model.As<ReviewYourDetailsViewModel>().Should().BeEquivalentTo(expectedModel, options => options.Excluding(model => model.Breadcrumbs));
+    }
+
+    [Test]
+    public async Task OnGet_AddsDashboardBreadcrumb()
+    {
+        var result = await _sut.ReviewYourDetails(default);
+
+        var model = result.As<ViewResult>().Model.As<ReviewYourDetailsViewModel>();
+
+        model.Breadcrumbs.Items.Should().Contain(
+            item =>
+                item.Description == BreadcrumbNames.ProviderDashboard &&
+                item.Url == DashboardUrl);
     }
 }

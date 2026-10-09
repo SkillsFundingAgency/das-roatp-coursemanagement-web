@@ -3,6 +3,12 @@
     ViewData["Title"] = "Review your details";
     ViewData["Description"] = "Check and confirm your standards and location details.";
 }
+
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
+}
+
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <h1 class="govuk-heading-xl margin-bottom-30">Manage your apprenticeships and apprenticeship units</h1>
