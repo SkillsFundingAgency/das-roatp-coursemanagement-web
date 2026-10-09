@@ -3,7 +3,7 @@
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 [ExcludeFromCodeCoverage]
-public class ReviewYourDetailsViewModel : IBackLink
+public class ReviewYourDetailsViewModel
 {
     public string ManageApprenticeshipsUrl { get; set; }
     public string ManageApprenticeshipUnitsUrl { get; set; }
@@ -12,4 +12,5 @@ public class ReviewYourDetailsViewModel : IBackLink
     public string ProviderContactUrl { get; set; }
     public string ForecastUrl { get; set; }
     public bool ShowForecastOption { get; set; }
+    public BreadcrumbsViewModel Breadcrumbs { get; set; }
 }
