@@ -42,7 +42,7 @@ public class ViewProviderLocationDetailsController : ControllerBase
         model.DeleteLocationUrl = Url.RouteUrl(RouteNames.GetConfirmDeleteLocation, new { ukprn = Ukprn, id = Id });
 
         model.UpdateContactDetailsUrl = Url.RouteUrl(RouteNames.GetUpdateProviderLocationDetails, new { ukprn = Ukprn, Id });
-        model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.SelectCourseType);
+        model.ManageYourStandardsUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails);
         model.TrainingVenuesUrl = Url.RouteUrl(RouteNames.GetProviderLocations, new { ukprn = Ukprn });
 
         model.HasCourses = result.ProviderLocation.Standards.Count > 0;

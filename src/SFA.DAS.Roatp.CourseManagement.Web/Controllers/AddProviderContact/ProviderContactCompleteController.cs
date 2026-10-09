@@ -37,7 +37,7 @@ public class ProviderContactCompleteController(ISessionService _sessionService) 
             PhoneNumber = sessionModel.PhoneNumber,
             CheckedStandards = standardList,
             CheckedApprenticeshipUnits = apprenticeshipUnitList,
-            ManageCoursesUrl = GetUrlWithUkprn(RouteNames.SelectCourseType),
+            ManageCoursesUrl = GetUrlWithUkprn(RouteNames.ReviewYourDetails),
             ShowBoth = showBoth,
             ShowEmailOnly = showEmailOnly,
             ShowPhoneOnly = showPhoneOnly,
