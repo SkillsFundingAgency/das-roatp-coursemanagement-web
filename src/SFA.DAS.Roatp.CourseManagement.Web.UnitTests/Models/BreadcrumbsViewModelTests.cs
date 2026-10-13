@@ -1,161 +1,78 @@
-﻿using System.Collections.Generic;
-using FluentAssertions;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.Extensions.Options;
-using Moq;
+﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Provider.Shared.UI.Models;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
-using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models;
 
 public class BreadcrumbsViewModelTests
 {
-    private const int Ukprn = 12345678;
-    private const string DashboardUrl = "https://test/dashboard";
-    private const string ReviewYourDetailsUrl = "https://test/review-your-details";
-    private const string ManageApprenticeshipsUrl = "https://test/manage-apprenticeships";
-    private const string ManageShortCoursesUrl = "https://test/manage-short-courses";
-
     [Test]
-    public void WhenDashboardIsProvided_ThenDashboardBreadcrumbIsAdded()
+    public void WhenItemIsAdded_ThenItemIsAddedToCollection()
     {
         // Arrange
-        var configuration = CreateConfiguration();
+        var sut = new BreadcrumbsViewModel();
 
         // Act
-        var sut = new BreadcrumbsViewModel(configuration);
+        sut.Add("Dashboard", "/dashboard");
 
         // Assert
         sut.Items.Should().BeEquivalentTo(
             new[]
             {
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ProviderDashboard,
-                    DashboardUrl)
+                new BreadcrumbItemModel("Dashboard", "/dashboard")
             },
             options => options.WithStrictOrdering());
     }
 
     [Test]
-    public void WhenNoBreadcrumbsAreProvided_ThenDefaultBreadcrumbsAreAdded()
+    public void WhenMultipleItemsAreAdded_ThenItemsAreAddedInOrder()
     {
         // Arrange
-        var configuration = CreateConfiguration();
-        var urlHelper = CreateUrlHelper();
+        var sut = new BreadcrumbsViewModel();
 
         // Act
-        var sut = new BreadcrumbsViewModel(configuration, urlHelper, Ukprn, null, new List<string>());
+        sut.Add("Dashboard", "/dashboard");
+        sut.Add("Review your details", "/review-your-details");
+        sut.Add("Manage apprenticeships", "/manage-apprenticeships");
 
         // Assert
         sut.Items.Should().BeEquivalentTo(
             new[]
             {
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ProviderDashboard,
-                    DashboardUrl),
+                new BreadcrumbItemModel( "Dashboard", "/dashboard"),
 
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ReviewYourDetails,
-                    ReviewYourDetailsUrl)
+                new BreadcrumbItemModel("Review your details", "/review-your-details"),
+
+                new BreadcrumbItemModel("Manage apprenticeships", "/manage-apprenticeships")
             },
             options => options.WithStrictOrdering());
     }
 
     [Test]
-    public void WhenManageApprenticeshipsIsProvided_ThenManageApprenticeshipsBreadcrumbIsAdded()
+    public void WhenNullUrlIsAdded_ThenUrlIsStoredAsEmptyString()
     {
         // Arrange
-        var configuration = CreateConfiguration();
-        var urlHelper = CreateUrlHelper();
+        var sut = new BreadcrumbsViewModel();
 
         // Act
-        var sut = new BreadcrumbsViewModel(configuration, urlHelper, Ukprn, null,
-            new[]
-            {
-                BreadcrumbNames.ManageApprenticeships
-            });
+        sut.Add("Dashboard", null);
 
         // Assert
         sut.Items.Should().BeEquivalentTo(
             new[]
             {
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ProviderDashboard,
-                    DashboardUrl),
-
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ReviewYourDetails,
-                    ReviewYourDetailsUrl),
-
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ManageApprenticeships,
-                    ManageApprenticeshipsUrl)
+                new BreadcrumbItemModel("Dashboard", string.Empty)
             },
             options => options.WithStrictOrdering());
     }
 
     [Test]
-    public void WhenManageShortCoursesIsProvided_ThenManageShortCoursesBreadcrumbIsAdded()
+    public void WhenNoItemsAreAdded_ThenItemsCollectionIsEmpty()
     {
         // Arrange
-        var configuration = CreateConfiguration();
-        var urlHelper = CreateUrlHelper();
-
-        // Act
-        var sut = new BreadcrumbsViewModel(configuration, urlHelper, Ukprn, LearningType.ApprenticeshipUnit,
-            new[]
-            {
-                BreadcrumbNames.ManageShortCourses
-            });
+        var sut = new BreadcrumbsViewModel();
 
         // Assert
-        sut.Items.Should().BeEquivalentTo(
-            new[]
-            {
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ProviderDashboard,
-                    DashboardUrl),
-
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ReviewYourDetails,
-                    ReviewYourDetailsUrl),
-
-                new BreadcrumbItemModel(
-                    BreadcrumbNames.ManageShortCourses,
-                    ManageShortCoursesUrl)
-            },
-            options => options.WithStrictOrdering());
-    }
-
-    private static IOptions<ProviderSharedUIConfiguration> CreateConfiguration()
-    {
-        return Options.Create(
-            new ProviderSharedUIConfiguration
-            {
-                DashboardUrl = DashboardUrl
-            });
-    }
-
-    private static IUrlHelper CreateUrlHelper()
-    {
-        var urlHelper = new Mock<IUrlHelper>();
-
-        urlHelper.
-            Setup(url => url.RouteUrl(It.Is<UrlRouteContext>(context => context.RouteName == RouteNames.ReviewYourDetails)))
-            .Returns(ReviewYourDetailsUrl);
-
-        urlHelper
-            .Setup(url => url.RouteUrl(It.Is<UrlRouteContext>(context => context.RouteName == RouteNames.ViewStandards)))
-            .Returns(ManageApprenticeshipsUrl);
-
-        urlHelper
-            .Setup(url => url.RouteUrl(It.Is<UrlRouteContext>(context => context.RouteName == RouteNames.ManageShortCourses)))
-            .Returns(ManageShortCoursesUrl);
-
-        return urlHelper.Object;
+        sut.Items.Should().BeEmpty();
     }
 }
