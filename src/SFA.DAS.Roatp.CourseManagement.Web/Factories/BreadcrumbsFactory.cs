@@ -25,7 +25,7 @@ public static class BreadcrumbsFactory
         {
             BreadcrumbNames.ProviderDashboard => model.DashboardUrl,
 
-            BreadcrumbNames.ReviewYourDetails => urlHelper.RouteUrl(RouteNames.ReviewYourDetails, new { model.Ukprn }) ?? string.Empty,
+            BreadcrumbNames.ManageYourCourses => urlHelper.RouteUrl(RouteNames.ReviewYourDetails, new { model.Ukprn }) ?? string.Empty,
 
             BreadcrumbNames.ManageApprenticeships => urlHelper.RouteUrl(RouteNames.ViewStandards, new { model.Ukprn }) ?? string.Empty,
 
