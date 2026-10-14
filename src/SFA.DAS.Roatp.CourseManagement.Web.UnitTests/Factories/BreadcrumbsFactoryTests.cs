@@ -21,7 +21,7 @@ public class BreadcrumbsFactoryTests
     private const string ManageShortCoursesUrl = "https://test/manage-short-courses";
 
     [Test, MoqAutoData]
-    public void WhenDashboardBreadcrumbIsRequested_ThenDashboardBreadcrumbIsCreated(
+    public void WhenProviderDashboardBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
         // Arrange
@@ -50,7 +50,7 @@ public class BreadcrumbsFactoryTests
     }
 
     [Test, MoqAutoData]
-    public void WhenReviewYourDetailsBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
+    public void WhenManageYourCoursesBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
         // Arrange
