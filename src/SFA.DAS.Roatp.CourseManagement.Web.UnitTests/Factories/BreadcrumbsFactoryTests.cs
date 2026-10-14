@@ -50,7 +50,7 @@ public class BreadcrumbsFactoryTests
     }
 
     [Test, MoqAutoData]
-    public void WhenReviewYourDetailsBreadcrumbIsRequested_ThenReviewBreadcrumbIsCreated(
+    public void WhenReviewYourDetailsBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
         // Arrange
@@ -61,7 +61,7 @@ public class BreadcrumbsFactoryTests
             Ukprn = Ukprn,
             BreadcrumbNames =
             [
-                BreadcrumbNames.ReviewYourDetails
+                BreadcrumbNames.ManageYourCourses
             ]
         };
 
@@ -72,7 +72,7 @@ public class BreadcrumbsFactoryTests
         result.Items.Should().BeEquivalentTo(new[]
         {
             new BreadcrumbItemModel(
-                    BreadcrumbNames.ReviewYourDetails,
+                    BreadcrumbNames.ManageYourCourses,
                     ReviewYourDetailsUrl)
         });
     }
@@ -151,7 +151,7 @@ public class BreadcrumbsFactoryTests
             BreadcrumbNames =
             [
                 BreadcrumbNames.ProviderDashboard,
-                BreadcrumbNames.ReviewYourDetails,
+                BreadcrumbNames.ManageYourCourses,
                 BreadcrumbNames.ManageApprenticeships
             ]
         };
@@ -168,7 +168,7 @@ public class BreadcrumbsFactoryTests
                     DashboardUrl),
 
                 new BreadcrumbItemModel(
-                    BreadcrumbNames.ReviewYourDetails,
+                    BreadcrumbNames.ManageYourCourses,
                     ReviewYourDetailsUrl),
 
                 new BreadcrumbItemModel(
