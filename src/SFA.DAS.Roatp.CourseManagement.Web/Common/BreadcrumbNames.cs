@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Common;
 
 public static class BreadcrumbNames
 {

@@ -1,13 +1,16 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using SFA.DAS.Provider.Shared.UI.Models;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Factories;
 
-public static class BreadcrumbsFactory
+public class BreadcrumbsViewModelFactory(IOptions<ProviderSharedUIConfiguration> providerConfiguration) : IBreadcrumbsViewModelFactory
 {
-    public static BreadcrumbsViewModel Create(IUrlHelper urlHelper, BreadcrumbsFactoryModel model)
+    public BreadcrumbsViewModel Create(IUrlHelper urlHelper, BreadcrumbsViewModelFactoryModel model)
     {
         var breadcrumbs = new BreadcrumbsViewModel();
 
@@ -19,11 +22,11 @@ public static class BreadcrumbsFactory
         return breadcrumbs;
     }
 
-    private static string GetUrl(IUrlHelper urlHelper, string breadcrumbName, BreadcrumbsFactoryModel model)
+    private string GetUrl(IUrlHelper urlHelper, string breadcrumbName, BreadcrumbsViewModelFactoryModel model)
     {
         return breadcrumbName switch
         {
-            BreadcrumbNames.ProviderDashboard => model.DashboardUrl,
+            BreadcrumbNames.ProviderDashboard => providerConfiguration.Value.DashboardUrl ?? string.Empty,
 
             BreadcrumbNames.ManageYourCourses => urlHelper.RouteUrl(RouteNames.ReviewYourDetails, new { model.Ukprn }) ?? string.Empty,
 

@@ -2,9 +2,12 @@
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -12,33 +15,37 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Factories;
 
-public class BreadcrumbsFactoryTests
+public class BreadcrumbsViewModelFactoryTests
 {
     private const int Ukprn = 12345678;
     private const string DashboardUrl = "https://test/dashboard";
     private const string ReviewYourDetailsUrl = "https://test/review-your-details";
     private const string ManageApprenticeshipsUrl = "https://test/manage-apprenticeships";
     private const string ManageShortCoursesUrl = "https://test/manage-short-courses";
+    private BreadcrumbsViewModelFactory _sut;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _sut = new BreadcrumbsViewModelFactory(
+            Options.Create(new ProviderSharedUIConfiguration
+            {
+                DashboardUrl = DashboardUrl
+            }));
+    }
 
     [Test, MoqAutoData]
     public void WhenProviderDashboardBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
-            DashboardUrl = DashboardUrl,
             Ukprn = Ukprn,
-            BreadcrumbNames =
-            [
-                BreadcrumbNames.ProviderDashboard
-            ]
+            BreadcrumbNames = [BreadcrumbNames.ProviderDashboard]
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
         result.Items.Should().BeEquivalentTo(
             new[]
             {
@@ -53,100 +60,81 @@ public class BreadcrumbsFactoryTests
     public void WhenManageYourCoursesBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
         SetupRouteUrl(urlHelper, RouteNames.ReviewYourDetails, ReviewYourDetailsUrl);
 
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
             Ukprn = Ukprn,
-            BreadcrumbNames =
-            [
-                BreadcrumbNames.ManageYourCourses
-            ]
+            BreadcrumbNames = [BreadcrumbNames.ManageYourCourses]
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
-        result.Items.Should().BeEquivalentTo(new[]
-        {
-            new BreadcrumbItemModel(
+        result.Items.Should().BeEquivalentTo(
+            new[]
+            {
+                new BreadcrumbItemModel(
                     BreadcrumbNames.ManageYourCourses,
                     ReviewYourDetailsUrl)
-        });
+            });
     }
 
     [Test, MoqAutoData]
     public void WhenManageApprenticeshipsBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
         SetupRouteUrl(urlHelper, RouteNames.ViewStandards, ManageApprenticeshipsUrl);
 
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
             Ukprn = Ukprn,
-            BreadcrumbNames =
-            [
-                BreadcrumbNames.ManageApprenticeships
-            ]
+            BreadcrumbNames = [BreadcrumbNames.ManageApprenticeships]
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
-
-        result.Items.Should().BeEquivalentTo(new[]
-        {
-            new BreadcrumbItemModel(
+        result.Items.Should().BeEquivalentTo(
+            new[]
+            {
+                new BreadcrumbItemModel(
                     BreadcrumbNames.ManageApprenticeships,
                     ManageApprenticeshipsUrl)
-        });
+            });
     }
 
     [Test, MoqAutoData]
     public void WhenManageShortCoursesBreadcrumbIsRequested_ThenBreadcrumbIsCreated(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
         SetupRouteUrl(urlHelper, RouteNames.ManageShortCourses, ManageShortCoursesUrl);
 
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
             Ukprn = Ukprn,
             LearningType = LearningType.ApprenticeshipUnit,
-            BreadcrumbNames =
-            [
-                BreadcrumbNames.ManageShortCourses
-            ]
+            BreadcrumbNames = [BreadcrumbNames.ManageShortCourses]
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
-        result.Items.Should().BeEquivalentTo(new[]
-        {
-            new BreadcrumbItemModel(
+        result.Items.Should().BeEquivalentTo(
+            new[]
+            {
+                new BreadcrumbItemModel(
                     BreadcrumbNames.ManageShortCourses,
                     ManageShortCoursesUrl)
-        });
+            });
     }
 
     [Test, MoqAutoData]
     public void WhenMultipleBreadcrumbsAreRequested_ThenBreadcrumbsAreCreatedInOrder(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
         SetupRouteUrl(urlHelper, RouteNames.ReviewYourDetails, ReviewYourDetailsUrl);
-
         SetupRouteUrl(urlHelper, RouteNames.ViewStandards, ManageApprenticeshipsUrl);
 
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
-            DashboardUrl = DashboardUrl,
             Ukprn = Ukprn,
             BreadcrumbNames =
             [
@@ -156,21 +144,17 @@ public class BreadcrumbsFactoryTests
             ]
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
         result.Items.Should().BeEquivalentTo(
             new[]
             {
                 new BreadcrumbItemModel(
                     BreadcrumbNames.ProviderDashboard,
                     DashboardUrl),
-
                 new BreadcrumbItemModel(
                     BreadcrumbNames.ManageYourCourses,
                     ReviewYourDetailsUrl),
-
                 new BreadcrumbItemModel(
                     BreadcrumbNames.ManageApprenticeships,
                     ManageApprenticeshipsUrl)
@@ -182,41 +166,33 @@ public class BreadcrumbsFactoryTests
     public void WhenNoBreadcrumbsAreRequested_ThenNoBreadcrumbsAreCreated(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
             Ukprn = Ukprn,
             BreadcrumbNames = []
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
         result.Items.Should().BeEmpty();
     }
 
     [Test, MoqAutoData]
     public void WhenRequiredRouteValuesAreNotPassed_ThenShouldReturnEmptyUrl(
-    Mock<IUrlHelper> urlHelper)
+        Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
         urlHelper
-            .Setup(x => x.RouteUrl(It.Is<UrlRouteContext>(context => context.RouteName == RouteNames.ManageShortCourses)))
+            .Setup(x => x.RouteUrl(It.Is<UrlRouteContext>(
+                context => context.RouteName == RouteNames.ManageShortCourses)))
             .Returns((string)null);
 
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
-            BreadcrumbNames =
-            [
-                BreadcrumbNames.ManageShortCourses
-            ]
+            BreadcrumbNames = [BreadcrumbNames.ManageShortCourses]
         };
 
-        // Act
-        var result = BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var result = _sut.Create(urlHelper.Object, model);
 
-        // Assert
         result.Items.Should().HaveCount(1);
         result.Items[0].Url.Should().BeEmpty();
     }
@@ -225,20 +201,16 @@ public class BreadcrumbsFactoryTests
     public void WhenUnknownBreadcrumbIsRequested_ThenArgumentExceptionIsThrown(
         Mock<IUrlHelper> urlHelper)
     {
-        // Arrange
-        var model = new BreadcrumbsFactoryModel
+        var model = new BreadcrumbsViewModelFactoryModel
         {
-            BreadcrumbNames =
-            [
-                "Unknown breadcrumb"
-            ]
+            BreadcrumbNames = ["Unknown breadcrumb"]
         };
 
-        // Act
-        var act = () => BreadcrumbsFactory.Create(urlHelper.Object, model);
+        var act = () => _sut.Create(urlHelper.Object, model);
 
-        // Assert
-        act.Should().Throw<ArgumentException>().WithMessage("*Unknown breadcrumb*");
+        act.Should()
+            .Throw<ArgumentException>()
+            .WithMessage("*Unknown breadcrumb*");
     }
 
     private static void SetupRouteUrl(Mock<IUrlHelper> urlHelper, string routeName, string url)

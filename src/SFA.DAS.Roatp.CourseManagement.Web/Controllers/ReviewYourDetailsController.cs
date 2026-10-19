@@ -2,11 +2,10 @@
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
-using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -16,7 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [Route("{ukprn}/review-your-details", Name = RouteNames.ReviewYourDetails)]
-public class ReviewYourDetailsController(ISessionService _sessionService, IMediator _mediator, IOptions<ProviderSharedUIConfiguration> providerConfiguration) : ControllerBase
+public class ReviewYourDetailsController(ISessionService _sessionService, IMediator _mediator, IBreadcrumbsViewModelFactory _breadcrumbsFactory) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> ReviewYourDetails(CancellationToken cancellationToken)
@@ -27,9 +26,8 @@ public class ReviewYourDetailsController(ISessionService _sessionService, IMedia
 
         bool showForecastOption = await HasShortCourses(cancellationToken);
 
-        var breadcrumbModel = new BreadcrumbsFactoryModel
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
         {
-            DashboardUrl = providerConfiguration.Value.DashboardUrl,
             BreadcrumbNames =
             [
                 BreadcrumbNames.ProviderDashboard
@@ -45,7 +43,7 @@ public class ReviewYourDetailsController(ISessionService _sessionService, IMedia
             ProviderContactUrl = Url.RouteUrl(RouteNames.CheckProviderContactDetails, urlParams),
             ForecastUrl = Url.RouteUrl(RouteNames.ForecastCourses, urlParams),
             ShowForecastOption = showForecastOption,
-            Breadcrumbs = BreadcrumbsFactory.Create(Url, breadcrumbModel)
+            Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel)
         };
 
         return View("ReviewYourDetails", model);

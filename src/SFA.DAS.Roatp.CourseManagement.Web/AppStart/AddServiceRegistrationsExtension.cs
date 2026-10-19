@@ -6,6 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Configuration;
 using SFA.DAS.Roatp.CourseManagement.Domain.Interfaces;
 using SFA.DAS.Roatp.CourseManagement.Infrastructure.ApiClients;
 using SFA.DAS.Roatp.CourseManagement.Infrastructure.Services;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
@@ -22,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.AppStart
             services.AddTransient<IDistributedCacheService, DistributedCacheService>();
             services.AddTransient<IRegionsService, RegionsService>();
             services.AddScoped<IProviderCourseDetailsCachedService, ProviderCourseDetailsCachedService>();
+            services.AddTransient<IBreadcrumbsViewModelFactory, BreadcrumbsViewModelFactory>();
         }
         private static void ConfigureHttpClient(IServiceCollection services, IConfiguration configuration)
         {

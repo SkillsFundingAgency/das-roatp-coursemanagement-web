@@ -3,13 +3,13 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Provider.Shared.UI.Models;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -28,9 +28,9 @@ public class ReviewYourDetailsControllerGetTests
     private const string ProviderContactUrl = "http://test/provider-contact";
     private const string ForecastCoursesUrl = "http://test/forecasts/courses";
     private const string DashboardUrl = "http://test/dashboard";
-    private IOptions<ProviderSharedUIConfiguration> _config;
     Mock<ISessionService> _sessionServiceMock;
     Mock<IMediator> _mediatorMock;
+    Mock<IBreadcrumbsViewModelFactory> _breadcrumbsFactoryMock;
     ReviewYourDetailsController _sut;
 
     [SetUp]
@@ -38,15 +38,18 @@ public class ReviewYourDetailsControllerGetTests
     {
         _sessionServiceMock = new();
         _mediatorMock = new();
-        _config = Options.Create(
-        new ProviderSharedUIConfiguration
-        {
-            DashboardUrl = DashboardUrl
-        });
+        _breadcrumbsFactoryMock = new();
+        var breadcrumbs = new BreadcrumbsViewModel();
+        breadcrumbs.Add(BreadcrumbNames.ProviderDashboard, DashboardUrl);
+
+        _breadcrumbsFactoryMock
+            .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+            .Returns(breadcrumbs);
+
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new GetAllProviderStandardsQueryResult() { Standards = [new Standard()] });
-        _sut = new(_sessionServiceMock.Object, _mediatorMock.Object, _config);
+        _sut = new(_sessionServiceMock.Object, _mediatorMock.Object, _breadcrumbsFactoryMock.Object);
 
         _sut
             .AddDefaultContextWithUser()
