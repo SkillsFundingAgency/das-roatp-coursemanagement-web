@@ -12,9 +12,12 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -28,6 +31,7 @@ public class ViewStandardsTests
     private StandardsController _controller;
     private Mock<ILogger<StandardsController>> _logger;
     private Mock<IMediator> _mediator;
+    private Mock<IBreadcrumbsViewModelFactory> _breadcrumbsFactoryMock;
     private readonly static string ReviewYourDetailsLink = Guid.NewGuid().ToString();
     private readonly static string GetStandardDetailsLink = Guid.NewGuid().ToString();
     private readonly static string GetConfirmRegulatedStandardLink = Guid.NewGuid().ToString();
@@ -62,7 +66,12 @@ public class ViewStandardsTests
                 Standards = [standard1, standard2]
             });
 
-        _controller = new StandardsController(_mediator.Object, _logger.Object);
+        _breadcrumbsFactoryMock = new Mock<IBreadcrumbsViewModelFactory>();
+        _breadcrumbsFactoryMock
+            .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+            .Returns(new BreadcrumbsViewModel());
+
+        _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
         _controller
             .AddDefaultContextWithUser()
             .AddUrlHelperMock()
@@ -136,6 +145,7 @@ public class ViewStandardsTests
     public async Task StandardsController_ViewStandards_Standards_Ordered_Alphabetically()
     {
         _logger = new Mock<ILogger<StandardsController>>();
+        _breadcrumbsFactoryMock = new Mock<IBreadcrumbsViewModelFactory>();
 
         var standard1 = new Standard
         {
@@ -178,7 +188,7 @@ public class ViewStandardsTests
 
             });
 
-        _controller = new StandardsController(_mediator.Object, _logger.Object);
+        _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
         _controller
             .AddDefaultContextWithUser()
             .AddUrlHelperMock()
@@ -195,5 +205,33 @@ public class ViewStandardsTests
         var viewResult = result as ViewResult;
         var model = viewResult.Model as StandardListViewModel;
         model.Standards.Should().BeInAscendingOrder(s => s.CourseDisplayName);
+    }
+
+    [Test]
+    public async Task StandardsController_ViewStandards_ReturnsBreadcrumbs()
+    {
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(new GetAllProviderStandardsQueryResult
+                 {
+                     Standards = []
+                 });
+
+        var expectedBreadcrumbs = new BreadcrumbsViewModel();
+        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, "https://test/dashboard");
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, "https://test/review-your-details");
+
+        _breadcrumbsFactoryMock
+            .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+            .Returns(expectedBreadcrumbs);
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        _controller.TempData = tempDataMock.Object;
+
+        var result = await _controller.ViewStandards();
+
+        var viewResult = result as ViewResult;
+        var model = viewResult.Model as StandardListViewModel;
+
+        model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
     }
 }
