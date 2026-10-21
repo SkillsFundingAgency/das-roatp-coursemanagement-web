@@ -3,7 +3,10 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderContact;
@@ -12,7 +15,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [Route("{ukprn}/review-your-details", Name = RouteNames.ReviewYourDetails)]
-public class ReviewYourDetailsController(ISessionService _sessionService, IMediator _mediator) : ControllerBase
+public class ReviewYourDetailsController(ISessionService _sessionService, IMediator _mediator, IBreadcrumbsViewModelFactory _breadcrumbsFactory) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> ReviewYourDetails(CancellationToken cancellationToken)
@@ -23,14 +26,24 @@ public class ReviewYourDetailsController(ISessionService _sessionService, IMedia
 
         bool showForecastOption = await HasShortCourses(cancellationToken);
 
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
+        {
+            BreadcrumbNames =
+            [
+                BreadcrumbNames.ProviderDashboard
+            ]
+        };
+
         var model = new ReviewYourDetailsViewModel()
         {
-            SelectCourseTypeUrl = Url.RouteUrl(RouteNames.SelectCourseType, urlParams),
+            ManageApprenticeshipsUrl = Url.RouteUrl(RouteNames.ViewStandards, urlParams),
+            ManageApprenticeshipUnitsUrl = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType = LearningType.ApprenticeshipUnit }),
             ProviderLocationsUrl = Url.RouteUrl(RouteNames.GetProviderLocations, urlParams),
             ProviderDescriptionUrl = Url.RouteUrl(RouteNames.GetProviderDescription, urlParams),
             ProviderContactUrl = Url.RouteUrl(RouteNames.CheckProviderContactDetails, urlParams),
             ForecastUrl = Url.RouteUrl(RouteNames.ForecastCourses, urlParams),
-            ShowForecastOption = showForecastOption
+            ShowForecastOption = showForecastOption,
+            Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel)
         };
 
         return View("ReviewYourDetails", model);

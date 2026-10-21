@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ViewProviderL
                 .AddUrlHelperMock()
                 .AddUrlForRoute(RouteNames.GetProviderLocations, verifyUrl)
                 .AddUrlForRoute(RouteNames.GetUpdateProviderLocationDetails, verifyUpdateProviderLocationDetailsUrl)
-                .AddUrlForRoute(RouteNames.SelectCourseType, verifySelectCourseTypeUrl)
+                .AddUrlForRoute(RouteNames.ReviewYourDetails, verifySelectCourseTypeUrl)
                 .AddUrlForRoute(RouteNames.GetStandardDetails, standardLinkUrl)
                 .AddUrlForRoute(RouteNames.ManageShortCourseDetails, apprenticeshipUnitUrl);
         }

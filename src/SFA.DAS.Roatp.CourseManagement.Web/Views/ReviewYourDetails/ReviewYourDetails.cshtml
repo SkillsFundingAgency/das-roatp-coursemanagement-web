@@ -3,10 +3,20 @@
     ViewData["Title"] = "Review your details";
     ViewData["Description"] = "Check and confirm your standards and location details.";
 }
+
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
+}
+
 <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl margin-bottom-30">Manage your apprenticeships and apprenticeship units</h1>
+    </div>
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl margin-bottom-30">Manage training and venues</h1>
-        <p class="govuk-body">Manage apprenticeship units or standards, training venues and contact details. Changes you make here will appear on Find apprenticeship training.</p>
+        <p class="govuk-body">Add, update or remove the training you offer. Manage your training venues, contact details and provider information.</p>
+        <p class="govuk-body">The information you add here will be used to verify any Individualised Learning Records (ILRs) you submit.</p>
+        <p class="govuk-body">Any changes you make will be reflected on Find apprenticeship training.</p>
     </div>
 </div>
 
@@ -15,14 +25,14 @@
         <div class="govuk-grid-row app-flex-row">
             <div class="govuk-grid-column-one-half">
                 <div class="app-feature-box">
-                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.SelectCourseTypeUrl" class="govuk-link">Training</a></h2>
-                    <p class="app-feature-box__content">Add, update or delete the training you deliver.</p>
+                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ManageApprenticeshipsUrl" class="govuk-link">Apprenticeships</a></h2>
+                    <p class="app-feature-box__content">Add, update or delete the apprenticeships you claim government funding for.</p>
                 </div>
             </div>
             <div class="govuk-grid-column-one-half">
                 <div class="app-feature-box">
-                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ProviderLocationsUrl" class="govuk-link">Training venues</a></h2>
-                    <p class="app-feature-box__content">Add, update or delete your training venues.</p>
+                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ManageApprenticeshipUnitsUrl" class="govuk-link">Apprenticeship units</a></h2>
+                    <p class="app-feature-box__content">Request, update or delete the apprenticeship units claim government funding for.</p>
                 </div>
             </div>
         </div>
@@ -30,21 +40,27 @@
         <div class="govuk-grid-row app-flex-row">
             <div class="govuk-grid-column-one-half">
                 <div class="app-feature-box">
+                    <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ProviderLocationsUrl" class="govuk-link">Training venues</a></h2>
+                    <p class="app-feature-box__content">Add, update or delete your training venues.</p>
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="app-feature-box">
                     <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ProviderContactUrl" class="govuk-link">Contact details</a></h2>
                     <p class="app-feature-box__content">Add or update the primary set of contact details you use for your training.</p>
                 </div>
-            </div>
+            </div>       
+        </div>
+
+        <div class="govuk-grid-row app-flex-row">
             <div class="govuk-grid-column-one-half">
                 <div class="app-feature-box">
                     <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ProviderDescriptionUrl" class="govuk-link">Overview</a></h2>
                     <p class="app-feature-box__content">View your provider overview that shows on Find apprenticeship training.</p>
                 </div>
             </div>
-        </div>
-
-        <div asp-show="Model.ShowForecastOption" class="govuk-grid-row app-flex-row">
-            <div class="govuk-grid-column-one-half">
-                <div class="app-feature-box">
+            <div asp-show="Model.ShowForecastOption" class="govuk-grid-column-one-half">
+                <div  class="app-feature-box">
                     <h2 class="govuk-heading-s app-feature-box__heading"><a href="@Model.ForecastUrl" class="govuk-link">Add your delivery forecast</a></h2>
                     <p class="app-feature-box__content">Tell us how many learners you expect will start an apprenticeship unit in the next 12 months.</p>
                 </div>
