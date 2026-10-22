@@ -12,6 +12,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Factories;
@@ -101,7 +102,7 @@ public class ViewStandardsTests
         object isStandardAdded = true;
         tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShowStandardAddBannerTempDataKey, out isStandardAdded));
 
-        var result = await _controller.ViewStandards();
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel());
 
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
@@ -116,6 +117,7 @@ public class ViewStandardsTests
         model.Standards[^1].ConfirmRegulatedStandardUrl.Should().Be(Empty);
         model.ShowNotificationBannerDeleteStandard.Should().Be((bool)isStandardDeleted);
         model.ShowNotificationBannerAddStandard.Should().Be((bool)isStandardAdded);
+        model.Filters.Route.Should().Be(RouteNames.ViewStandards);
         object resposeDeleteTempDataValue = null;
         tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShowStandardDeletedBannerTempDataKey, out resposeDeleteTempDataValue), Times.Once);
         object resposeAddTempDataValue = null;
@@ -128,7 +130,7 @@ public class ViewStandardsTests
         _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync(() => null);
 
-        var result = await _controller.ViewStandards();
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel());
 
         var viewResult = result as ViewResult;
         viewResult.Should().NotBeNull();
@@ -200,7 +202,7 @@ public class ViewStandardsTests
         var tempDataMock = new Mock<ITempDataDictionary>();
         _controller.TempData = tempDataMock.Object;
 
-        var result = await _controller.ViewStandards();
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel());
 
         var viewResult = result as ViewResult;
         var model = viewResult.Model as StandardListViewModel;
@@ -227,11 +229,148 @@ public class ViewStandardsTests
         var tempDataMock = new Mock<ITempDataDictionary>();
         _controller.TempData = tempDataMock.Object;
 
-        var result = await _controller.ViewStandards();
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel());
 
         var viewResult = result as ViewResult;
         var model = viewResult.Model as StandardListViewModel;
 
         model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
+    }
+
+    [Test]
+    public async Task ViewStandards_RequestFundingClosingFilter_ReturnsFilteredCourses()
+    {
+        _breadcrumbsFactoryMock = new Mock<IBreadcrumbsViewModelFactory>();
+
+        var requestModel = new ViewStandardsRequestModel
+        {
+            FundingStatus = [FundingStatus.FundingClosing]
+        };
+
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(new GetAllProviderStandardsQueryResult
+                 {
+                     Standards = new List<Standard>()
+                     {
+                         new Standard
+                         {
+                            CourseName = "Funding closing course",
+                            Level = 2,
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
+                         },
+                         new Standard
+                         {
+                            CourseName = "Funding closed course",
+                            Level = 2,
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+                         }
+                     }
+                 });
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        _controller.TempData = tempDataMock.Object;
+
+        var result = await _controller.ViewStandards(requestModel);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult.Model as StandardListViewModel;
+
+        var course = model!.FilteredCourses;
+        course.Should().ContainSingle();
+        course[0].CourseName.Should().Be("Funding closing course");
+    }
+
+    [Test]
+    public async Task ViewStandards_RequestFundingClosedFilter_ReturnsFilteredCourses()
+    {
+        _breadcrumbsFactoryMock = new Mock<IBreadcrumbsViewModelFactory>();
+
+        var requestModel = new ViewStandardsRequestModel
+        {
+            FundingStatus = [FundingStatus.FundingClosed]
+        };
+
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(new GetAllProviderStandardsQueryResult
+                 {
+                     Standards = new List<Standard>()
+                     {
+                         new Standard
+                         {
+                            CourseName = "Funding closing course",
+                            Level = 2,
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
+                         },
+                         new Standard
+                         {
+                            CourseName = "Funding closed course",
+                            Level = 2,
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+                         }
+                     }
+                 });
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        _controller.TempData = tempDataMock.Object;
+
+        var result = await _controller.ViewStandards(requestModel);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult.Model as StandardListViewModel;
+
+        var course = model!.FilteredCourses;
+        course.Should().ContainSingle();
+        course[0].CourseName.Should().Be("Funding closed course");
+    }
+
+    [Test]
+    public async Task ViewStandards_RequestSearchTermFilter_ReturnsFilteredCourses()
+    {
+        _breadcrumbsFactoryMock = new Mock<IBreadcrumbsViewModelFactory>();
+
+        var requestModel = new ViewStandardsRequestModel
+        {
+            SearchTerm = "Test"
+        };
+
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(new GetAllProviderStandardsQueryResult
+                 {
+                     Standards = new List<Standard>()
+                     {
+                         new Standard
+                         {
+                            CourseName = "Test 1",
+                            Level = 2,
+                            LarsCode = "LARS1",
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
+                         },
+                         new Standard
+                         {
+                            CourseName = "Course test",
+                            Level = 2,
+                            LarsCode = "LARS2",
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+                         },
+                         new Standard
+                         {
+                            CourseName = "Course 1",
+                            Level = 2,
+                            LarsCode = "LARS3",
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+                         }
+                     }
+                 });
+
+        var tempDataMock = new Mock<ITempDataDictionary>();
+        _controller.TempData = tempDataMock.Object;
+
+        var result = await _controller.ViewStandards(requestModel);
+
+        var viewResult = result as ViewResult;
+        var model = viewResult.Model as StandardListViewModel;
+
+        var course = model!.FilteredCourses;
+        course.Count.Should().Be(2);
     }
 }

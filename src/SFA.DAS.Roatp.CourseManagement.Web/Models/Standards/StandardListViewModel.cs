@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -16,7 +17,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public int TotalCourseCount { get; set; }
         public bool HasCourses { get; set; }
         public bool HasNoCourses { get; set; }
+        public List<StandardViewModel> FilteredCourses { get; set; } = new List<StandardViewModel>();
+        public int FilteredCourseCount { get; set; }
+        public bool HasFilteredResults { get; set; }
+        public bool HasNoFilteredResults { get; set; }
         public BreadcrumbsViewModel Breadcrumbs { get; set; }
+        public FiltersViewModel Filters { get; set; } = new() { Route = string.Empty };
 
         public void SetCourseValues()
         {
@@ -33,6 +39,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
             HasCourses = TotalCourseCount > 0;
 
             HasNoCourses = TotalCourseCount == 0;
+
+            FilteredCourseCount = FilteredCourses.Count;
+
+            HasFilteredResults = FilteredCourseCount > 0;
+
+            HasNoFilteredResults = FilteredCourseCount == 0;
         }
     }
 }

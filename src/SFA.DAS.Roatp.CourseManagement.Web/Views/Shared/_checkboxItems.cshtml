@@ -1,0 +1,28 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents
+@model CheckboxListFilterSectionViewModel
+
+@foreach (var filterItem in Model.Items)
+{
+    var inputId = $"filteritem-{Model.Id}-{filterItem.Value}";
+
+    <div class="govuk-checkboxes__item">
+        <input @(filterItem.IsSelected ? "checked='checked'" : null)
+        class="govuk-checkboxes__input"
+        id="@inputId"
+        name="@Model.For"
+        type="checkbox"
+        value="@filterItem.Value"
+        aria-describedby="@(string.IsNullOrWhiteSpace(filterItem.DisplayDescription) ? null : $"{inputId}-item-hint")" />
+
+        <label class="govuk-label govuk-checkboxes__label" for="@inputId">
+            @filterItem.DisplayText
+        </label>
+
+        @if (!string.IsNullOrWhiteSpace(filterItem.DisplayDescription))
+        {
+            <div id="@inputId-item-hint" class="govuk-hint govuk-checkboxes__hint">
+                @filterItem.DisplayDescription
+            </div>
+        }
+    </div>
+}
