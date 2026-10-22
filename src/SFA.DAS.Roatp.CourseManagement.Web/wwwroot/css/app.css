@@ -66,16 +66,16 @@
 /* Remove all accordion borders */
 #course-missing-info-accordion,
 #course-missing-info-accordion * {
-    border-top: 0 !important;
-    border-bottom: 0 !important;
+    border-top: 0;
+    border-bottom: 0;
 }
 
 /* Remove the yellow focus styling */
 #course-missing-info-accordion button:focus,
 #course-missing-info-accordion button:focus * {
-    background: transparent !important;
-    box-shadow: none !important;
-    outline: none !important;
+    background: transparent;
+    box-shadow: none;
+    outline: none;
 }
 
 .app-results-header {

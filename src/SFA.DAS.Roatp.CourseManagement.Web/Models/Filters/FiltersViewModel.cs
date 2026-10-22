@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿#nullable enable annotations
+
+using System.Collections.Generic;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.Abstract;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents;
 

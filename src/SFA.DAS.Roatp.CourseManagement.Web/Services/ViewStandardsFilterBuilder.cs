@@ -43,7 +43,7 @@ public static class ViewStandardsFilterBuilder
             [FilterType.SearchTerm] = CourseNameSectionHeading
         };
 
-        var clearFiltersBaseUrl = urlHelper.RouteUrl(RouteNames.ViewStandards, new { ukprn })!;
+        var clearFiltersBaseUrl = urlHelper.RouteUrl(RouteNames.ViewStandards, new { ukprn });
 
         return new FiltersViewModel
         {

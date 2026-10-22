@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents;
+﻿#nullable enable annotations
+
+namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents;
 
 public sealed class FilterItemViewModel
 {
