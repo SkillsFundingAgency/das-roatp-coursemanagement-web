@@ -137,4 +137,50 @@ public class StandardListViewModelTests
         sut.HasCourses.Should().BeFalse();
         sut.HasNoCourses.Should().BeTrue();
     }
+
+    [Test]
+    public void WhenModelCreated_ThenFilteredCourseCountIsSet()
+    {
+        var filteredCourses = new List<StandardViewModel>
+        {
+            new() { CourseName = "Test 1" },
+            new() { CourseName = "Test 2" }
+        };
+
+        var sut = new StandardListViewModel { FilteredCourses = filteredCourses };
+        sut.SetCourseValues();
+
+        sut.FilteredCourseCount.Should().Be(2);
+    }
+
+    [Test]
+    public void WhenModelCreated_AndHasFilteredCourses_ThenFilteredCourseFlagsAreSet()
+    {
+        var filteredCourses = new List<StandardViewModel>
+        {
+            new()
+            {
+                CourseName = "Test"
+            }
+        };
+
+        var sut = new StandardListViewModel { FilteredCourses = filteredCourses };
+        sut.SetCourseValues();
+
+        sut.HasFilteredResults.Should().BeTrue();
+        sut.HasNoFilteredResults.Should().BeFalse();
+    }
+
+    [Test]
+    public void WhenModelCreated_AndDoesntHaveFilteredCourses_ThenFilteredCourseFlagsAreSet()
+    {
+        var sut = new StandardListViewModel
+        {
+            FilteredCourses = new List<StandardViewModel>()
+        };
+        sut.SetCourseValues();
+
+        sut.HasFilteredResults.Should().BeFalse();
+        sut.HasNoFilteredResults.Should().BeTrue();
+    }
 }

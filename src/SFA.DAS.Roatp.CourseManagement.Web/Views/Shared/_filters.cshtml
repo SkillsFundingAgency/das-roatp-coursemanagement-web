@@ -1,0 +1,49 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.Abstract
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents
+@using SFA.DAS.Roatp.CourseManagement.Web.Services
+@model FiltersViewModel
+
+<div class="das-filter" id="fat-filter">
+    <div class="das-filter__header">
+        <h2 class="das-filter__heading">Filter</h2>
+    </div>
+
+    @if (Model.ShowFilterOptions)
+    {
+        <div class="das-filter__selected-filters">
+            <div class="das-filter__selected-header">
+                <h3 class="das-filter__selected-heading">Selected filters</h3>
+                <a class="das-filter__selected-action govuk-link govuk-link--no-visited-state"
+                   asp-route="@Model.Route"
+                   asp-route-ukprn="@Model.Ukprn"
+                   asp-fragment="@Model.FilterResultsFragment">
+                    Clear <span class="govuk-visually-hidden">the selected filters</span>
+                </a>
+            </div>
+
+            @foreach (ClearFilterSectionViewModel section in Model.ClearFilterSections)
+            {
+                @await Html.PartialAsync("_clearFilterSection", section)
+            }
+        </div>
+    }
+
+    <div class="das-filter__body" id="fat-filter-options">
+        <form asp-route="@Model.Route" asp-route-ukprn="@Model.Ukprn" asp-fragment="@Model.FilterResultsFragment" method="get">
+            @foreach (FilterSection section in Model.FilterSections)
+            {
+                switch (section.FilterComponentType)
+                {
+                    case FilterService.FilterComponentType.TextBox:
+                        @await Html.PartialAsync("_textBoxFilterSection", section)
+                        break;
+                    case FilterService.FilterComponentType.CheckboxList:
+                        @await Html.PartialAsync("_checkboxListGroup", section)
+                        break;
+                }
+            }
+            <button type="submit" class="govuk-button govuk-button" id="filters-submit">Apply filter</button>
+        </form>
+    </div>
+</div>

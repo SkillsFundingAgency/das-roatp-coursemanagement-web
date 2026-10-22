@@ -1,4 +1,5 @@
 ﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@using SFA.DAS.Roatp.CourseManagement.Web.Services
 @model StandardListViewModel
 @{
     ViewBag.Title = "Standards";
@@ -113,83 +114,97 @@
     </div>
 </div>
 
-<div class="govuk-grid-row">
-    <div asp-show="@Model.HasCourses" class="govuk-grid-column-two-thirds">
-            <div class="app-results-header govuk-!-margin-bottom-3">
-                <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@Model.TotalCourseCount courses</p>
-                <p class="govuk-body govuk-!-margin-bottom-0">
-                    Sorted by: <span class="govuk-!-font-weight-bold">Name of course</span>
-                </p>
-            </div>
 
-        <ul class="govuk-list app-results-list app-results-list--bordered">
-            @foreach (var standard in Model.Standards)
-            {
-                <li class="app-results-list__item">
+<div asp-show="Model.HasCourses" class="govuk-grid-row govuk-!-margin-top-6" id="@ViewStandardsFilterBuilder.ViewStandardsFilterResultsFragment">
+    <div class="govuk-grid-column-one-third">
+        @await Html.PartialAsync("_filters", Model.Filters)
+    </div>
+    <div asp-show="@Model.HasFilteredResults" class="govuk-grid-column-two-thirds">
+        <div class="app-results-header govuk-!-margin-bottom-3">
+            <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@Model.FilteredCourseCount @(Model.FilteredCourseCount == 1 ? "course" : "courses")</p>
+            <p class="govuk-body govuk-!-margin-bottom-0">
+                Sorted by: <span class="govuk-!-font-weight-bold">Name of course</span>
+            </p>
+        </div>
 
-                    <div class="govuk-!-margin-bottom-2">
-                        <div asp-show="@standard.FundingClosing">
-                            <strong class="govuk-tag govuk-tag--orange govuk-!-margin-bottom-2">
-                                Funding closing for new starts
-                            </strong>
-                        </div>
+    <ul class="govuk-list app-results-list app-results-list--bordered">
+        @foreach (var course in Model.FilteredCourses)
+        {
+            <li class="app-results-list__item">
 
-                        <div asp-show="@standard.FundingClosed">
-                            <strong class="govuk-tag govuk-tag--grey govuk-!-margin-bottom-2">
-                                Funding closed for new starts
-                            </strong>
-                        </div>
+                <div class="govuk-!-margin-bottom-2">
+                    <div asp-show="@course.FundingClosing">
+                        <strong class="govuk-tag govuk-tag--orange govuk-!-margin-bottom-2">
+                            Funding closing for new starts
+                        </strong>
                     </div>
 
-                    <div class="app-results-list__content">
-                        <h6 class="govuk-heading-m govuk-!-margin-bottom-1">
-                            <a class="govuk-link govuk-link--no-visited-state"
-                               href="@standard.StandardUrl">
-                                @standard.CourseDisplayName
-                            </a>
-                        </h6>
-                        <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-1">
-                            <span class="govuk-hint">LARS Code:</span>
-                            @standard.LarsCode
-                            </p>
-                        <div asp-show="@standard.FundingClosing"
-                             class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
-
-                            <p class="govuk-body govuk-!-margin-bottom-1">
-                                <span class="govuk-hint">Funding status:</span>
-                                We've added a last start date for learners to this course.
-                                You can claim funding for new learners enrolled up until this date.
-                            </p>
-
-                            <p class="govuk-body govuk-!-margin-bottom-0">
-                                <span class="govuk-hint">Last start date:</span>
-                                @standard.LastDateStarts?.ToString("dd MMM yyyy")
-                            </p>
-                        </div>
-                        <div asp-show="@standard.FundingClosed"
-                             class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
-
-                            <p class="govuk-body govuk-!-margin-bottom-1">
-                                <span class="govuk-hint">Funding status:</span>
-                                We've closed this apprenticeship to new starts.
-                                This means you can no longer claim funding for any learners you enrol.
-                            </p>
-
-                            <p class="govuk-body govuk-!-margin-bottom-0">
-                                <span class="govuk-hint">Last start date:</span>
-                                @standard.LastDateStarts?.ToString("dd MMM yyyy")
-                            </p>
-                        </div>
-                        <div asp-show="@standard.StandardRequiresMoreInfo" class="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
-                            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-                            <strong class="govuk-warning-text__text">
-                                <span class="govuk-visually-hidden">Warning</span>
-                                This apprenticeship is missing information, which means it's not showing on Find apprenticeship training. Update your details to advertise it.
-                            </strong>
-                        </div>
+                    <div asp-show="@course.FundingClosed">
+                        <strong class="govuk-tag govuk-tag--grey govuk-!-margin-bottom-2">
+                            Funding closed for new starts
+                        </strong>
                     </div>
-                </li>
+                </div>
+
+                <div class="app-results-list__content">
+                    <h6 class="govuk-heading-m govuk-!-margin-bottom-1">
+                        <a class="govuk-link govuk-link--no-visited-state"
+                            href="@course.StandardUrl">
+                            @course.CourseDisplayName
+                        </a>
+                    </h6>
+                    <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-1">
+                        <span class="govuk-hint">LARS Code:</span>
+                        @course.LarsCode
+                        </p>
+                    <div asp-show="@course.FundingClosing"
+                            class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+
+                        <p class="govuk-body govuk-!-margin-bottom-1">
+                            <span class="govuk-hint">Funding status:</span>
+                            We've added a last start date for learners to this course.
+                            You can claim funding for new learners enrolled up until this date.
+                        </p>
+
+                        <p class="govuk-body govuk-!-margin-bottom-0">
+                            <span class="govuk-hint">Last start date:</span>
+                            @course.LastDateStarts?.ToString("dd MMM yyyy")
+                        </p>
+                    </div>
+                    <div asp-show="@course.FundingClosed"
+                            class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+
+                        <p class="govuk-body govuk-!-margin-bottom-1">
+                            <span class="govuk-hint">Funding status:</span>
+                            We've closed this apprenticeship to new starts.
+                            This means you can no longer claim funding for any learners you enrol.
+                        </p>
+
+                        <p class="govuk-body govuk-!-margin-bottom-0">
+                            <span class="govuk-hint">Last start date:</span>
+                            @course.LastDateStarts?.ToString("dd MMM yyyy")
+                        </p>
+                    </div>
+                    <div asp-show="@course.StandardRequiresMoreInfo" class="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+                        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                        <strong class="govuk-warning-text__text">
+                            <span class="govuk-visually-hidden">Warning</span>
+                            This apprenticeship is missing information, which means it's not showing on Find apprenticeship training. Update your details to advertise it.
+                        </strong>
+                    </div>
+                </div>
+            </li>
             }
+        </ul>            
+    </div>
+    <div asp-show="Model.HasNoFilteredResults" class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">No results</h2>
+        <p class="govuk-body">There are no courses that match your search.</p>
+        <p class="govuk-body">You may need to:</p>
+        <ul class="govuk-list govuk-list--bullet">
+            <li>clear filters you've selected</li>
+            <li>check your spelling or enter another search term and try again</li>
         </ul>
+        <p class="govuk-body">Change your search using the filters on this page.</p>
     </div>
 </div>

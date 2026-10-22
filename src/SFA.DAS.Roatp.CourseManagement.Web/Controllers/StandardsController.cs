@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -33,7 +34,7 @@ public class StandardsController : ControllerBase
 
     [HttpGet(Name = RouteNames.ViewStandards)]
     [ClearSession(nameof(StandardSessionModel))]
-    public async Task<IActionResult> ViewStandards()
+    public async Task<IActionResult> ViewStandards(ViewStandardsRequestModel requestModel)
     {
         _logger.LogInformation("Getting standards for {Ukprn}", Ukprn);
 
@@ -69,6 +70,11 @@ public class StandardsController : ControllerBase
         {
             model.ShowNotificationBannerAddStandard = true;
         }
+
+        model.Filters = ViewStandardsFilterBuilder.CreateFiltersViewModel(requestModel, Ukprn, Url);
+
+        model.FilteredCourses = ViewStandardsFilterBuilder.ApplyFilters(model.Standards, requestModel).OrderBy(
+                course => course.CourseDisplayName).ToList();
 
         model.SetCourseValues();
 
