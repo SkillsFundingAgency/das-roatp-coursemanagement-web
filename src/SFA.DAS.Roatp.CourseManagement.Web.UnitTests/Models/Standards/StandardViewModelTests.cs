@@ -70,9 +70,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         }
 
         [TestCase(false, 0, false)]
-        [TestCase(true, -1, true)]
+        [TestCase(true, -1, false)]
         [TestCase(true, 0, false)]
-        [TestCase(true, 1, false)]
+        [TestCase(true, 1, true)]
         public void WhenDifferentLastDateStartsValuesArePassed_ThenFundingClosingIsSet(
             bool hasLastDateStarts,
             int dayOffset,
@@ -88,9 +88,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         }
 
         [TestCase(false, 0, false)]
-        [TestCase(true, -1, false)]
+        [TestCase(true, -1, true)]
         [TestCase(true, 0, true)]
-        [TestCase(true, 1, true)]
+        [TestCase(true, 1, false)]
         public void WhenDifferentLastDateStartsValuesArePassed_ThenFundingClosedIsSet(
             bool hasLastDateStarts,
             int dayOffset,

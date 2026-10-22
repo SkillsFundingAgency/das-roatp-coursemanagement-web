@@ -18,7 +18,7 @@ public class FilterService
     public const string SearchTermSectionHeading = "Provider name";
     public const string SearchTermSectionSubHeading = "Search by name or UKPRN";
     public const string CourseNameSectionHeading = "Course name";
-    public const string CourseNameSectionSubHeading = "Search by course name or LARS code";
+    public const string CourseNameSectionSubHeading = "Search by name or LARS code";
     public const string FundingStatusSectionHeading = "Funding status";
     public const string LearningTypeSectionHeading = "Training type";
 

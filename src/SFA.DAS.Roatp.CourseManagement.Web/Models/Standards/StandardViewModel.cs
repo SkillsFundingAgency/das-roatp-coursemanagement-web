@@ -57,12 +57,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 
         private bool SetFundingClosing()
         {
-            return HasLastDateStarts && LastDateStarts.Value < DateTime.UtcNow.Date;
+            return HasLastDateStarts && LastDateStarts.Value > DateTime.UtcNow.Date;
         }
 
         private bool SetFundingClosed()
         {
-            return HasLastDateStarts && LastDateStarts.Value >= DateTime.UtcNow.Date;
+            return HasLastDateStarts && LastDateStarts.Value <= DateTime.UtcNow.Date;
         }
     }
 }

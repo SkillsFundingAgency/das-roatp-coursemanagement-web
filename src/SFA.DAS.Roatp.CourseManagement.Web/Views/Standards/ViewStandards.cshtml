@@ -21,7 +21,7 @@
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
-        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">Manage your standards</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">Manage your apprenticeships</h1>
     </div>
     <div class="govuk-grid-column-two-thirds">
         <p class="govuk-body">Add, remove or change the courses you advertise on Find apprenticeship training.</p>
@@ -67,12 +67,12 @@
                     </span>
                 </h4>
             </div>
-            <div id="course-missing-info-accordion-content-1" class="govuk-accordion__section-content" style="padding-top: 0 !important;">
+            <div id="course-missing-info-accordion-content-1" class="govuk-accordion__section-content" style="padding-top: 0;">
                 <ul class="govuk-list">
                     @foreach (var standard in Model.Standards
                         .Where(s => s.StandardRequiresMoreInfo))
                     {
-                        <li style="padding-bottom: 15px !important;">
+                        <li style="padding-bottom: 15px;">
                             <a class="govuk-link" href="@standard.StandardUrl">
                                 @standard.CourseDisplayName
                             </a>
@@ -87,7 +87,7 @@
 <hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
 
 <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-6">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-0">
         <h5 class="govuk-heading-l">Your apprenticeships</h5>
         <p asp-show="Model.HasNoCourses" class="govuk-body">
             There are currently no courses, add one above.

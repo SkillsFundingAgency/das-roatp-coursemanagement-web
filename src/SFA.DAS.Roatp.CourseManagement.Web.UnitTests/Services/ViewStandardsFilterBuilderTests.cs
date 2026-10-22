@@ -245,13 +245,13 @@ public class ViewStandardsFilterBuilderTests
         {
             LarsCode = "124",
             CourseDisplayName = "Cleaning hygiene operative",
-            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
+            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
         },
         new()
         {
             LarsCode = "163",
             CourseDisplayName = "Beacon manager",
-            LastDateStarts = DateTime.UtcNow.Date
+            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
         },
         new()
         {

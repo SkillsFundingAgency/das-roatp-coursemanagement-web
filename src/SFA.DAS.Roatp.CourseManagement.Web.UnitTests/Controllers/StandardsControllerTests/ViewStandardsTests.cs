@@ -256,13 +256,13 @@ public class ViewStandardsTests
                          {
                             CourseName = "Funding closing course",
                             Level = 2,
-                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
                          },
                          new Standard
                          {
                             CourseName = "Funding closed course",
                             Level = 2,
-                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
                          }
                      }
                  });
@@ -299,13 +299,13 @@ public class ViewStandardsTests
                          {
                             CourseName = "Funding closing course",
                             Level = 2,
-                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
                          },
                          new Standard
                          {
                             CourseName = "Funding closed course",
                             Level = 2,
-                            LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+                            LastDateStarts = DateTime.UtcNow.Date.AddDays(-1)
                          }
                      }
                  });
