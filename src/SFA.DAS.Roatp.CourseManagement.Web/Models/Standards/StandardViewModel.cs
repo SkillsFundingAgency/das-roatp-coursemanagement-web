@@ -1,4 +1,5 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using System;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -17,6 +18,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool? IsApprovedByRegulator { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
+        public DateTime? LastDateStarts { get; set; }
+        public bool HasLastDateStarts => SetHasLastDateStarts();
+        public bool FundingClosing => SetFundingClosing();
+        public bool FundingClosed => SetFundingClosed();
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -30,7 +35,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ApprovalBody = source.ApprovalBody,
                 IsApprovedByRegulator = source.IsApprovedByRegulator,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
-                HasLocation = source.HasLocations
+                HasLocation = source.HasLocations,
+                LastDateStarts = source.LastDateStarts
             };
         }
 
@@ -42,6 +48,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         private bool SetIsApprovalPending()
         {
             return IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault();
+        }
+
+        private bool SetHasLastDateStarts()
+        {
+            return LastDateStarts != null;
+        }
+
+        private bool SetFundingClosing()
+        {
+            return HasLastDateStarts && LastDateStarts.Value > DateTime.UtcNow.Date;
+        }
+
+        private bool SetFundingClosed()
+        {
+            return HasLastDateStarts && LastDateStarts.Value <= DateTime.UtcNow.Date;
         }
     }
 }

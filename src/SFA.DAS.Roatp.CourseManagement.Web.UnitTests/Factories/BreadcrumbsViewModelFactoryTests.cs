@@ -51,7 +51,7 @@ public class BreadcrumbsViewModelFactoryTests
             {
                 new BreadcrumbItemModel(
                     BreadcrumbNames.ProviderDashboard,
-                    DashboardUrl)
+                    DashboardUrl + "/account")
             },
             options => options.WithStrictOrdering());
     }
@@ -151,7 +151,7 @@ public class BreadcrumbsViewModelFactoryTests
             {
                 new BreadcrumbItemModel(
                     BreadcrumbNames.ProviderDashboard,
-                    DashboardUrl),
+                    DashboardUrl + "/account"),
                 new BreadcrumbItemModel(
                     BreadcrumbNames.ManageYourCourses,
                     ReviewYourDetailsUrl),
