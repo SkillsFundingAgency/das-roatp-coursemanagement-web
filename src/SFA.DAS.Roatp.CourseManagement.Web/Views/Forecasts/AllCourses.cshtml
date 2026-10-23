@@ -9,11 +9,25 @@
     <div class="govuk-grid-column-two-thirds">
         <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Add your delivery forecast for @Model.LearningTypeLowerPlural</h1>
         
-        <p class="govuk-body">Tell us how many learners you expect will start an @Model.LearningTypeLower over the next 12 months. This can be an estimate and you can update it later.</p>
+        <p class="govuk-body">Tell us how many learners you expect will start an @Model.LearningTypeLower over the next 12 months.</p>
         
-        <p class="govuk-body">Select an @Model.LearningTypeLower from the list below to add your estimate for it.</p>
+        <p class="govuk-body">This can be an estimate and you can update it later. You do not hae to train this amount of learners.</p>
         
-        <h2 class="govuk-heading-m">Your @Model.LearningTypeLowerPlural</h2>
+        <details class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    Will adding a forecast affect my funding?
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                Adding your estimate will not impact your funding. As apprenticeship units are new, we want to understand how many learners are doing them.
+            </div>
+            <div class="govuk-details__text">
+                Your estimates will not impact how many learners you can enrol, or when they're allowed to start.
+            </div>
+        </details>
+
+        <h2 class="govuk-heading-m">Your @Model.LearningTypeLower delivery forecasts</h2>
         
         <partial name="_CourseLinks" for="CourseLinks" />
     </div>
