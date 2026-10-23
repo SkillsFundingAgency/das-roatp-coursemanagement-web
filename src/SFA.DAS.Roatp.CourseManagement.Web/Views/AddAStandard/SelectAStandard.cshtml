@@ -9,16 +9,17 @@
         <partial name="_validationSummary" />
         <form method="post" asp-route="@RouteNames.PostAddStandardSelectStandard" enctype="multipart/form-data" novalidate>
 
-            <span class="govuk-caption-l">Add a standard</span>
             <h1 class="govuk-label-wrapper">
                 <label class="govuk-label govuk-label--xl" asp-for="SelectedLarsCode">
-                    Select a standard
+                    Add an apprenticeship
                 </label>
             </h1>
 
+            <p class="govuk-body govuk-!-margin-top-6 govuk-!-margin-bottom-8">You can only deliver apprenticeships that are available for delivery.</p>
+
             <div esfa-validation-marker-for="SelectedLarsCode" class="govuk-form-group">
                 <div class="govuk-hint">
-                    To add a standard, start typing in the box and its name will appear.
+                    Start typing the apprenticeship name or code
                 </div>
                 <span asp-validation-for="SelectedLarsCode" class="govuk-error-message"></span>
                 <select asp-for="SelectedLarsCode" asp-items="@Model.Standards" class="govuk-select app-autocomplete" data-placeholder="Start typing the name of the standard">
@@ -26,10 +27,17 @@
                 </select>
             </div>
 
-            <div class="govuk-button-group">
+            <div class="govuk-button-group govuk-!-margin-bottom-8">
                 <button id="submit" type="submit" class="govuk-button">Continue</button>
             </div>
             
+            <h2 class="govuk-heading-m">If you cannot find an apprenticeship</h2>
+            <p>Some apprenticeships may not appear because they are:</p>
+            <ul class="govuk-list govuk-list--bullet">
+                <li>restricted to certain providers</li>
+                <li>being decommissioned</li>
+            </ul>
+
         </form>
     </div>
 </div>
