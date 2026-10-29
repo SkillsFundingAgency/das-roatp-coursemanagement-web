@@ -22,6 +22,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool HasLastDateStarts => SetHasLastDateStarts();
         public bool FundingClosing => SetFundingClosing();
         public bool FundingClosed => SetFundingClosed();
+        public string TagColour => SetTagColour();
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -63,6 +64,21 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         private bool SetFundingClosed()
         {
             return HasLastDateStarts && LastDateStarts.Value <= DateTime.UtcNow.Date;
+        }
+
+        private string SetTagColour()
+        {
+            if (FundingClosing)
+            {
+                return "govuk-tag govuk-tag--orange";
+            }
+
+            if (FundingClosed)
+            {
+                return "govuk-tag govuk-tag--grey";
+            }
+
+            return string.Empty;
         }
     }
 }

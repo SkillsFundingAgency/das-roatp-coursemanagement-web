@@ -132,18 +132,15 @@
         {
             <li class="app-results-list__item">
 
-                <div class="govuk-!-margin-bottom-2">
-                    <div asp-show="@course.FundingClosing">
-                        <strong class="govuk-tag govuk-tag--orange govuk-!-margin-bottom-2">
+                <div asp-show="@(course.FundingClosing || course.FundingClosed)" class="govuk-!-margin-bottom-2">
+                    <strong class="govuk-tag @course.TagColour govuk-!-margin-bottom-2">
+                        <span asp-show="@course.FundingClosing">
                             Funding closing for new starts
-                        </strong>
-                    </div>
-
-                    <div asp-show="@course.FundingClosed">
-                        <strong class="govuk-tag govuk-tag--grey govuk-!-margin-bottom-2">
+                        </span>
+                        <span asp-show="@course.FundingClosed">
                             Funding closed for new starts
-                        </strong>
-                    </div>
+                        </span>
+                    </strong>
                 </div>
 
                 <div class="app-results-list__content">

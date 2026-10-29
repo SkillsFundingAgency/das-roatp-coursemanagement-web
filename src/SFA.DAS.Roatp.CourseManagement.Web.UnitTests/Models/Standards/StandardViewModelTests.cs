@@ -104,5 +104,22 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
             viewModel.FundingClosed.Should().Be(expected);
         }
+
+        [TestCase(false, 0, "")]
+        [TestCase(true, 1, "govuk-tag govuk-tag--orange")]
+        [TestCase(true, 0, "govuk-tag govuk-tag--grey")]
+        public void WhenDifferentLastDateStartsValuesArePassed_ThenTagColourIsSet(
+            bool hasLastDateStarts,
+            int dayOffset,
+            string expected)
+        {
+            var today = DateTime.UtcNow.Date;
+            var viewModel = new StandardViewModel
+            {
+                LastDateStarts = hasLastDateStarts ? today.AddDays(dayOffset) : null
+            };
+
+            viewModel.TagColour.Should().Be(expected);
+        }
     }
 }
