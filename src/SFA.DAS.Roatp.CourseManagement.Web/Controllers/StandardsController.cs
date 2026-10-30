@@ -7,10 +7,14 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -20,15 +24,17 @@ public class StandardsController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ILogger<StandardsController> _logger;
-    public StandardsController(IMediator mediator, ILogger<StandardsController> logger)
+    private readonly IBreadcrumbsViewModelFactory _breadcrumbsFactory;
+    public StandardsController(IMediator mediator, ILogger<StandardsController> logger, IBreadcrumbsViewModelFactory breadcrumbsFactory)
     {
         _logger = logger;
         _mediator = mediator;
+        _breadcrumbsFactory = breadcrumbsFactory;
     }
 
     [HttpGet(Name = RouteNames.ViewStandards)]
     [ClearSession(nameof(StandardSessionModel))]
-    public async Task<IActionResult> ViewStandards()
+    public async Task<IActionResult> ViewStandards(ViewStandardsRequestModel requestModel)
     {
         _logger.LogInformation("Getting standards for {Ukprn}", Ukprn);
 
@@ -64,6 +70,24 @@ public class StandardsController : ControllerBase
         {
             model.ShowNotificationBannerAddStandard = true;
         }
+
+        model.Filters = ViewStandardsFilterBuilder.CreateFiltersViewModel(requestModel, Ukprn, Url);
+
+        model.FilteredCourses = ViewStandardsFilterBuilder.ApplyFilters(model.Standards, requestModel).OrderBy(
+                course => course.CourseDisplayName).ToList();
+
+        model.SetCourseValues();
+
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
+        {
+            Ukprn = Ukprn,
+            BreadcrumbNames =
+            [
+                BreadcrumbNames.ProviderDashboard,
+                BreadcrumbNames.ManageYourCourses
+            ]
+        };
+        model.Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel);
 
         return View("~/Views/Standards/ViewStandards.cshtml", model);
     }
