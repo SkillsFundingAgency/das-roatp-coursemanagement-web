@@ -3,7 +3,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
@@ -36,7 +36,7 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
         var (sessionModel, redirectResult) = GetSessionModelWithEscapeRoute(_logger);
         if (sessionModel == null) return redirectResult;
 
-        var model = await GetViewModel(sessionModel.LarsCode);
+        var model = await GetViewModel(sessionModel.LarsCode, Ukprn, CourseType.Apprenticeship);
         return View(ViewPath, model);
     }
 
@@ -52,7 +52,7 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
 
         if (!ModelState.IsValid)
         {
-            var model = await GetViewModel(sessionModel.LarsCode);
+            var model = await GetViewModel(sessionModel.LarsCode, Ukprn, CourseType.Apprenticeship);
 
             return View(ViewPath, model);
         }
@@ -63,7 +63,7 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
         }
 
         sessionModel.IsConfirmed = true;
-        sessionModel.StandardInformation = await _mediator.Send(new GetStandardInformationQuery(sessionModel.LarsCode));
+        sessionModel.StandardInformation = await _mediator.Send(new GetProviderAvailableCourseDetailsQuery(Ukprn, CourseType.Apprenticeship, sessionModel.LarsCode));
         _sessionService.Set(sessionModel);
 
         if (sessionModel.LatestProviderContactModel != null)
@@ -87,13 +87,14 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
         return View("~/Views/AddAStandard/NeedApprovalForRegulatedStandard.cshtml", model);
     }
 
-    private async Task<ConfirmNewRegulatedStandardViewModel> GetViewModel(string larsCode)
+    private async Task<ConfirmNewRegulatedStandardViewModel> GetViewModel(string larsCode, int ukprn, CourseType courseType)
     {
-        var standardInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
+        var standardInfo = await _mediator.Send(new GetProviderAvailableCourseDetailsQuery(ukprn, courseType, larsCode));
         var model = new ConfirmNewRegulatedStandardViewModel()
         {
             StandardInformation = standardInfo,
-            ContinueLink = GetUrlWithUkprn(RouteNames.ViewStandards)
+            ContinueLink = GetUrlWithUkprn(RouteNames.ViewStandards),
+            HasLastDateStarts = standardInfo.LastDateStarts != null
         };
         return model;
     }

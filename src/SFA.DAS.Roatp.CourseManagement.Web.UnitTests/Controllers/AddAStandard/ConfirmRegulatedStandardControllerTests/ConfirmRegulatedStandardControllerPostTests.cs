@@ -8,8 +8,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -38,7 +39,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.ReviewYourDetails);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, MoqAutoData]
@@ -58,7 +59,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (ViewResult)response;
             result.Should().NotBeNull();
             result.ViewName.Should().Be(ConfirmRegulatedStandardController.ViewPath);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()));
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()));
         }
 
         [Test, MoqAutoData]
@@ -80,7 +81,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetNeedApprovalToDeliverRegulatedStandard);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, MoqAutoData]
@@ -91,10 +92,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel,
-            GetStandardInformationQueryResult getStandardInformationQueryResult)
+            GetProviderAvailableCourseDetailsQueryResult getStandardInformationQueryResult)
         {
             mediatorMock
-                .Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode),
+                .Setup(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == sessionModel.LarsCode && q.CourseType == CourseType.Apprenticeship),
                     It.IsAny<CancellationToken>())).ReturnsAsync(getStandardInformationQueryResult);
             submitModel.IsApprovedByRegulator = true;
             sut.AddDefaultContextWithUser();
@@ -106,14 +107,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Verify(m => m.Set(sessionModel), Times.Once);
             sessionModel.IsConfirmed.Should().BeTrue();
             sessionModel.StandardInformation.Should().BeEquivalentTo(getStandardInformationQueryResult, option => option
-                .Excluding(c => c.StandardUId)
                 .Excluding(c => c.IsRegulatedForProvider)
-                .Excluding(c => c.Duration)
-                .Excluding(c => c.DurationUnits)
-                .Excluding(c => c.CourseType)
                 .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName)
                 .WithMapping<StandardInformationViewModel>(c => c.ApprovalBody, v => v.RegulatorName)
-                .WithMapping<StandardInformationViewModel>(c => c.Route, v => v.Sector));
+                .WithMapping<StandardInformationViewModel>(c => c.Sector, v => v.Sector));
 
         }
 

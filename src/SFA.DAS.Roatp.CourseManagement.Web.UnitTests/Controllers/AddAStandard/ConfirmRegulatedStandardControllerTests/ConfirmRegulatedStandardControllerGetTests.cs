@@ -6,7 +6,9 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
@@ -53,7 +55,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.ReviewYourDetails);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, MoqAutoData]
@@ -62,11 +64,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Greedy] ConfirmRegulatedStandardController sut,
             StandardSessionModel sessionModel,
-            GetStandardInformationQueryResult standardInformation)
+            GetProviderAvailableCourseDetailsQueryResult standardInformation)
         {
             sut.AddDefaultContextWithUser();
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
-            mediatorMock.Setup(m => m.Send(It.Is<GetStandardInformationQuery>(q => q.LarsCode == sessionModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
+            mediatorMock.Setup(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == sessionModel.LarsCode && q.CourseType == CourseType.Apprenticeship), It.IsAny<CancellationToken>())).ReturnsAsync(standardInformation);
 
             var response = await sut.GetConfirmationOfRegulatedStandard();
 

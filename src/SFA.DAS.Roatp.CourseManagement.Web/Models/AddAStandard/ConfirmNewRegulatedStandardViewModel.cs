@@ -6,6 +6,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard
     {
         public string ContinueLink { get; set; }
         public StandardInformationViewModel StandardInformation { get; set; }
+        public bool HasLastDateStarts { get; set; }
     }
 
     public class ConfirmNewRegulatedStandardSubmitModel
