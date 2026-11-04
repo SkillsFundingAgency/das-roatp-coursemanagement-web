@@ -58,7 +58,7 @@ public class StandardInformationViewModel
 
     private bool SetFundingClosing()
     {
-        return HasLastDateStarts && LastDateStarts.Value > DateTime.UtcNow.Date;
+        return HasLastDateStarts && LastDateStarts.Value >= DateTime.UtcNow.Date;
     }
 
     private string SetStatusText()

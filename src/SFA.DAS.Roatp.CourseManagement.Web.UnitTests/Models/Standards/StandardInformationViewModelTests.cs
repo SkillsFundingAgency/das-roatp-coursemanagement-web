@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
         [TestCase(false, 0, false)]
         [TestCase(true, -1, false)]
-        [TestCase(true, 0, false)]
+        [TestCase(true, 0, true)]
         [TestCase(true, 1, true)]
         public void Operator_SetsFundingClosing(
             bool hasLastDateStarts,
@@ -87,8 +87,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         }
 
         [TestCase(false, 0, "")]
+        [TestCase(true, -1, "")]
         [TestCase(true, 1, "Funding closing for new starts")]
-        [TestCase(true, 0, "")]
+        [TestCase(true, 0, "Funding closing for new starts")]
         public void Operator_SetsStatusText(
             bool hasLastDateStarts,
             int dayOffset,
@@ -106,8 +107,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
         }
 
         [TestCase(false, 0, "")]
+        [TestCase(true, -1, "")]
         [TestCase(true, 1, "govuk-tag govuk-tag--orange")]
-        [TestCase(true, 0, "")]
+        [TestCase(true, 0, "govuk-tag govuk-tag--orange")]
         public void Operator_SetsTagColour(
             bool hasLastDateStarts,
             int dayOffset,
