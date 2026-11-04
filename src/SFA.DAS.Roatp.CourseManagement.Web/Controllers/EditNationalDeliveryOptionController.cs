@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddNationalLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -62,34 +63,40 @@ public class EditNationalDeliveryOptionController : ControllerBase
         var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
         if (sessionModel is null) return NotFound();
 
-        if (model.HasNationalDeliveryOption.GetValueOrDefault())
+        if (!model.HasNationalDeliveryOption.GetValueOrDefault())
         {
-            _logger.LogInformation("National delivery option selected, adding national location to ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
-            if (sessionModel.Existing.LocationOption != sessionModel.Updated.LocationOption && sessionModel.Updated.LocationOption == LocationOption.EmployerLocation)
-            {
-                var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
-                await _mediator.Send(command);
-            }
-            await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
-            await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId, UserDisplayName));
-            _sessionService.Delete(sessionModel);
-            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
+            // make no changes to existing locations till regions are selected
+            _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
+
+            return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode });
         }
 
-        _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
+        _logger.LogInformation("National delivery option selected, adding national location to ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
 
-        sessionModel.Updated.HasNationalOption = false;
-        _sessionService.Set(sessionModel);
+        GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
-        return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode });
+        if (existing.HasRegionalLocation)
+        {
+            await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
+        }
+
+        await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId, UserDisplayName));
+
+        if (sessionModel.UpdatedLocationOption == LocationOption.EmployerLocation && existing.HasProviderLocation)
+        {
+            var deleteProviderLocationCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
+            await _mediator.Send(deleteProviderLocationCommand);
+        }
+
+        // delete session model as this is end of journey
+        _sessionService.Delete(sessionModel);
+        return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
+
     }
 
     private bool IsCorrectLocationOptionSetInSession()
     {
         var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        return
-            (sessionModel != null)
-            && (sessionModel.Updated.LocationOption.HasValue)
-            && (sessionModel.Updated.LocationOption == LocationOption.EmployerLocation || sessionModel.Updated.LocationOption == LocationOption.Both);
+        return (sessionModel != null) && (sessionModel.UpdatedLocationOption is LocationOption.EmployerLocation or LocationOption.Both);
     }
 }

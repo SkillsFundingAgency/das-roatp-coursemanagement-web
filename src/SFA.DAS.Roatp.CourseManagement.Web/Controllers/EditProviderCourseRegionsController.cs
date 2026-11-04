@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -84,18 +85,14 @@ public class EditProviderCourseRegionsController : ControllerBase
             model.AllRegions.ForEach(s => s.IsSelected = false);
             return View(ViewPath, model);
         }
+        GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
-        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        if (sessionModel != null && sessionModel.Existing.LocationOption != sessionModel.Updated.LocationOption && sessionModel.Updated.LocationOption == LocationOption.EmployerLocation)
+        if (existing.HasNationalLocation)
         {
-            var deleteProviderLocationsCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
-            await _mediator.Send(deleteProviderLocationsCommand);
-            _sessionService.Delete(sessionModel);
+            // delete national location if it exists
+            var deleteEmployerLocationsCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+            await _mediator.Send(deleteEmployerLocationsCommand);
         }
-
-        var deleteEmployerLocationsCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
-        await _mediator.Send(deleteEmployerLocationsCommand);
-
         var command = new UpdateStandardSubRegionsCommand
         {
             LarsCode = larsCode,
@@ -104,8 +101,21 @@ public class EditProviderCourseRegionsController : ControllerBase
             UserDisplayName = UserDisplayName,
             SelectedSubRegions = submitModel.SelectedSubRegions.Select(subregion => int.Parse(subregion)).ToList()
         };
-
         await _mediator.Send(command);
+
+        // if session model exists the user has come via the change options journey
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel != null && sessionModel.UpdatedLocationOption == LocationOption.EmployerLocation)
+        {
+            if (existing.HasProviderLocation)
+            {
+                // delete provider location if it exists
+                var deleteProviderLocationCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
+                await _mediator.Send(deleteProviderLocationCommand);
+            }
+            // delete session model as this is end of journey
+            _sessionService.Delete(sessionModel);
+        }
 
         return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
     }

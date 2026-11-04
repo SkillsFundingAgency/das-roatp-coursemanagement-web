@@ -54,6 +54,30 @@ public class ProviderCourseLocationsController : ControllerBase
         return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
     }
 
+    [HttpPost(Name = RouteNames.PostProviderCourseLocations)]
+    public async Task<IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
+    {
+        model = await BuildViewModel(model.LarsCode);
+        var validatedResult = _validator.Validate(model);
+
+        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
+
+        if (!ModelState.IsValid)
+        {
+            return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
+        }
+
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel != null && sessionModel.UpdatedLocationOption == LocationOption.Both)
+        {
+            return RedirectToRoute(RouteNames.GetNationalDeliveryOption, new { Ukprn, model.LarsCode });
+        }
+        else
+        {
+            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
+        }
+    }
+
     private async Task<ProviderCourseLocationListViewModel> BuildViewModel(string larsCode)
     {
         var result = await _mediator.Send(new GetProviderCourseLocationsQuery(Ukprn, larsCode));
@@ -76,29 +100,5 @@ public class ProviderCourseLocationsController : ControllerBase
 
         model.AddTrainingLocationUrl = Url.RouteUrl(RouteNames.GetAddProviderCourseLocation, new { ukprn = Ukprn, larsCode = model.LarsCode });
         return model;
-    }
-
-    [HttpPost(Name = RouteNames.PostProviderCourseLocations)]
-    public async Task<IActionResult> ConfirmedProviderCourseLocations(ProviderCourseLocationListViewModel model)
-    {
-        model = await BuildViewModel(model.LarsCode);
-        var validatedResult = _validator.Validate(model);
-
-        if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
-
-        if (!ModelState.IsValid)
-        {
-            return View("~/Views/ProviderCourseLocations/EditTrainingLocations.cshtml", model);
-        }
-
-        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        if (sessionModel != null && sessionModel.Updated.LocationOption == LocationOption.Both)
-        {
-            return RedirectToRoute(RouteNames.GetNationalDeliveryOption, new { Ukprn, model.LarsCode });
-        }
-        else
-        {
-            return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, model.LarsCode });
-        }
     }
 }
