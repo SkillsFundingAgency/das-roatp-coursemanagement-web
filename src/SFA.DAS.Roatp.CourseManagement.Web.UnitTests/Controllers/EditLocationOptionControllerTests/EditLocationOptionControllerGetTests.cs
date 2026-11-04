@@ -15,9 +15,9 @@ public class EditLocationOptionControllerGetTests : EditLocationOptionController
     private const string LarsCode = "123";
 
     [Test]
-    public async Task Get_NoCourseLocation_ReturnsNullLocationOption()
+    public async Task Get_NoCourseLocation_ReturnsNoneLocationOption()
     {
-        SetProviderCourseLocationsInMediatorResponse(new List<ProviderCourseLocation>());
+        SetProviderCourseLocationsInMediatorResponse([]);
 
         var actionResult = await _sut.Index(LarsCode);
 
@@ -30,7 +30,7 @@ public class EditLocationOptionControllerGetTests : EditLocationOptionController
     [Test]
     public async Task Get_WithProviderLocationOnly_ReturnsProviderLocationOption()
     {
-        var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Provider } };
+        var providerCourseLocations = new List<ProviderCourseLocation> { new() { LocationType = LocationType.Provider } };
         SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
         var actionResult = await _sut.Index(LarsCode);
@@ -46,8 +46,8 @@ public class EditLocationOptionControllerGetTests : EditLocationOptionController
     {
         var providerCourseLocations = new List<ProviderCourseLocation>
         {
-            new ProviderCourseLocation { LocationType = LocationType.Provider },
-            new ProviderCourseLocation { LocationType = LocationType.National },
+            new() { LocationType = LocationType.Provider },
+            new() { LocationType = LocationType.National },
         };
         SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
@@ -64,8 +64,8 @@ public class EditLocationOptionControllerGetTests : EditLocationOptionController
     {
         var providerCourseLocations = new List<ProviderCourseLocation>
         {
-            new ProviderCourseLocation { LocationType = LocationType.Provider },
-            new ProviderCourseLocation { LocationType = LocationType.Regional },
+            new() { LocationType = LocationType.Provider },
+            new() { LocationType = LocationType.Regional },
         };
         SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 
@@ -82,7 +82,7 @@ public class EditLocationOptionControllerGetTests : EditLocationOptionController
     {
         var providerCourseLocations = new List<ProviderCourseLocation>
         {
-            new ProviderCourseLocation { LocationType = LocationType.Regional },
+            new() { LocationType = LocationType.Regional },
         };
         SetProviderCourseLocationsInMediatorResponse(providerCourseLocations);
 

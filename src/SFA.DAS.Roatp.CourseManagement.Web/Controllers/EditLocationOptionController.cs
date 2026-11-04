@@ -49,13 +49,12 @@ public class EditLocationOptionController : ControllerBase
     public async Task<IActionResult> Index([FromRoute] string larsCode, [FromRoute] int ukprn, LocationOptionSubmitModel submitModel)
     {
         var validatedResult = _validator.Validate(submitModel);
-
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
-
         if (!ModelState.IsValid)
         {
             return View(submitModel);
         }
+
         _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {LocationOption}", Ukprn, larsCode, submitModel.LocationOption);
 
         GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
