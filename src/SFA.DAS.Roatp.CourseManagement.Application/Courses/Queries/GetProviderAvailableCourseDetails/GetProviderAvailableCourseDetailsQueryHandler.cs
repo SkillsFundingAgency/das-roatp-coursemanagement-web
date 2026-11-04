@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -15,8 +14,8 @@ public class GetProviderAvailableCourseDetailsQueryHandler(IApiClient _apiClient
 
         if (result == null)
         {
-            _logger.LogError("Failed to get course details for ukprn:{Ukprn} and larscode:{Larscode}", request.Ukprn, request.LarsCode);
-            throw new InvalidOperationException($"Course details not found for ukprn: {request.Ukprn} and larscode: {request.LarsCode}");
+            _logger.LogInformation("Course details not found for ukprn:{Ukprn} and larscode:{Larscode}", request.Ukprn, request.LarsCode);
+            return null;
         }
 
         return result;

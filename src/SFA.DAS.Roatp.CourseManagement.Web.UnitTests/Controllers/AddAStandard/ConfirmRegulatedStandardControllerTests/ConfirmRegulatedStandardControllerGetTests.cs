@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAStandard;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
@@ -35,7 +34,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.ReviewYourDetails);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetStandardInformationQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
         }
 
         [Test, MoqAutoData]

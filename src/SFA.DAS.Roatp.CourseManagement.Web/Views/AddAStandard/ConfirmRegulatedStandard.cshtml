@@ -10,22 +10,7 @@
         <div class="govuk-caption-l">Add a standard</div>
         <partial name="_StandardInformation" for="StandardInformation" />
 
-        <div asp-show="Model.HasLastDateStarts"
-             class="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
-            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
-            <strong class="govuk-warning-text__text">
-                <span class="govuk-visually-hidden">Warning</span>
-                This course has a last start date set. Once it has passed, you will not be able to:
-            </strong>
-            <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-6 govuk-!-margin-left-7">
-                <li><strong>add new learners</strong></li>
-                <li><strong>advertise it on Find apprenticeship training</strong></li>
-                <li><strong>submit ILRs for learners who start after this date</strong></li>
-            </ul>
-            <p class="govuk-warning-text__text govuk-!-margin-top-6">
-                You can continue to train learners who are already on the course.
-            </p>
-        </div>
+        <partial name="_LastStartDateWarning" model="Model.StandardInformation.HasLastDateStarts" />
 
         <form method="post" asp-route="@RouteNames.PostAddStandardConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsApprovedByRegulator" class="govuk-form-group">

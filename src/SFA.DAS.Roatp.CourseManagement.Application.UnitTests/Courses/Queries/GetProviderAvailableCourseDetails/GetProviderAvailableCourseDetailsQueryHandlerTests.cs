@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
@@ -32,7 +31,7 @@ public class GetProviderAvailableCourseDetailsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenApiCallReturnsNull_ThenThrowsInvalidOperationException(
+    public async Task WhenApiCallIsNotSuccessful_ThenReturnsNull(
         [Frozen] Mock<IApiClient> apiClientMock,
         GetProviderAvailableCourseDetailsQueryHandler sut,
         GetProviderAvailableCourseDetailsQuery request)
@@ -43,8 +42,8 @@ public class GetProviderAvailableCourseDetailsQueryHandlerTests
             .Setup(client => client.Get<GetProviderAvailableCourseDetailsQueryResult>(url))
             .ReturnsAsync((GetProviderAvailableCourseDetailsQueryResult)null);
 
-        Func<Task> action = () => sut.Handle(request, CancellationToken.None);
+        var actualResult = await sut.Handle(request, CancellationToken.None);
 
-        await action.Should().ThrowAsync<InvalidOperationException>();
+        actualResult.Should().BeNull();
     }
 }

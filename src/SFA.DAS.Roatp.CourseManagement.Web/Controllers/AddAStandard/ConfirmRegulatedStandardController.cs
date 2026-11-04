@@ -93,8 +93,7 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
         var model = new ConfirmNewRegulatedStandardViewModel()
         {
             StandardInformation = standardInfo,
-            ContinueLink = GetUrlWithUkprn(RouteNames.ViewStandards),
-            HasLastDateStarts = standardInfo.LastDateStarts != null
+            ContinueLink = GetUrlWithUkprn(RouteNames.ViewStandards)
         };
         return model;
     }

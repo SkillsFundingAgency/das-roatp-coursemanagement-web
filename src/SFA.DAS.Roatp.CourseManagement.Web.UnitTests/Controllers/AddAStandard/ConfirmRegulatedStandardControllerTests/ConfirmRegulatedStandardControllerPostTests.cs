@@ -107,10 +107,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             sessionServiceMock.Verify(m => m.Set(sessionModel), Times.Once);
             sessionModel.IsConfirmed.Should().BeTrue();
             sessionModel.StandardInformation.Should().BeEquivalentTo(getStandardInformationQueryResult, option => option
-                .Excluding(c => c.IsRegulatedForProvider)
+                .WithMapping<StandardInformationViewModel>(c => c.LarsCode, v => v.LarsCode)
+                .WithMapping<StandardInformationViewModel>(c => c.Level, v => v.Level)
                 .WithMapping<StandardInformationViewModel>(c => c.Title, v => v.CourseName)
                 .WithMapping<StandardInformationViewModel>(c => c.ApprovalBody, v => v.RegulatorName)
-                .WithMapping<StandardInformationViewModel>(c => c.Sector, v => v.Sector));
+                .WithMapping<StandardInformationViewModel>(c => c.Sector, v => v.Sector)
+                .WithMapping<StandardInformationViewModel>(c => c.LastDateStarts, v => v.LastDateStarts)
+                .WithMapping<StandardInformationViewModel>(c => c.IfateReferenceNumber, v => v.IfateReferenceNumber)
+                .WithMapping<StandardInformationViewModel>(c => c.LearningType, v => v.LearningType));
 
         }
 
