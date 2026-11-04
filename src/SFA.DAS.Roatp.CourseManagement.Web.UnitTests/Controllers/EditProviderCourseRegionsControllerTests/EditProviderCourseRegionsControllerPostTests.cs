@@ -16,69 +16,71 @@ using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderCourseRegionsControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditProviderCourseRegionsControllerTests;
+
+[TestFixture]
+public class EditProviderCourseRegionsControllerPostTests
 {
-    [TestFixture]
-    public class EditProviderCourseRegionsControllerPostTests
+    private static string DetailsUrl = Guid.NewGuid().ToString();
+    private Mock<ILogger<EditProviderCourseRegionsController>> _loggerMock;
+    private Mock<IMediator> _mediatorMock;
+    private Mock<IValidator<RegionsSubmitModel>> _validatorMock;
+    private Mock<ISessionService> _sessionServiceMock;
+    private EditProviderCourseRegionsController _sut;
+
+    [SetUp]
+    public void Before_Each_Test()
     {
-        private static string DetailsUrl = Guid.NewGuid().ToString();
-        private Mock<ILogger<EditProviderCourseRegionsController>> _loggerMock;
-        private Mock<IMediator> _mediatorMock;
-        private Mock<IValidator<RegionsSubmitModel>> _validatorMock;
-        private EditProviderCourseRegionsController _sut;
+        _loggerMock = new Mock<ILogger<EditProviderCourseRegionsController>>();
+        _mediatorMock = new Mock<IMediator>();
+        _validatorMock = new Mock<IValidator<RegionsSubmitModel>>();
+        _sessionServiceMock = new Mock<ISessionService>();
 
-        [SetUp]
-        public void Before_Each_Test()
-        {
-            _loggerMock = new Mock<ILogger<EditProviderCourseRegionsController>>();
-            _mediatorMock = new Mock<IMediator>();
-            _validatorMock = new Mock<IValidator<RegionsSubmitModel>>();
+        _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object, _sessionServiceMock.Object);
+        _sut
+            .AddDefaultContextWithUser()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.GetStandardDetails, DetailsUrl);
+    }
 
-            _sut = new EditProviderCourseRegionsController(_mediatorMock.Object, _loggerMock.Object, _validatorMock.Object);
-            _sut
-                .AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetStandardDetails, DetailsUrl);
-        }
+    [Test, AutoData]
+    public async Task Post_ValidModel_SendsUpdateCommand(RegionsSubmitModel model, string larsCode)
+    {
+        string[] selectedSubRegions = new string[] { "1", "2" };
+        model.SelectedSubRegions = selectedSubRegions;
 
-        [Test, AutoData]
-        public async Task Post_ValidModel_SendsUpdateCommand(RegionsSubmitModel model, string larsCode)
-        {
-            string[] selectedSubRegions = new string[] { "1", "2" };
-            model.SelectedSubRegions = selectedSubRegions;
+        _validatorMock.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(new ValidationResult());
+        var result = await _sut.UpdateStandardSubRegions(larsCode, model);
+        _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Once);
 
-            var result = await _sut.UpdateStandardSubRegions(larsCode, model);
-            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+        var routeResult = result as RedirectToRouteResult;
+        routeResult.Should().NotBeNull();
+        routeResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
+        routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
+        routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(Convert.ToInt32(TestConstants.DefaultUkprn));
+        routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(larsCode);
+    }
 
-            var routeResult = result as RedirectToRouteResult;
-            routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
-            routeResult.RouteValues.Should().NotBeEmpty().And.HaveCount(2);
-            routeResult.RouteValues.Should().ContainKey("ukprn").WhoseValue.Should().Be(Convert.ToInt32(TestConstants.DefaultUkprn));
-            routeResult.RouteValues.Should().ContainKey("larsCode").WhoseValue.Should().Be(larsCode);
-        }
+    [Test, AutoData]
+    public async Task Post_InValidData_RedirectToSameView(RegionsSubmitModel model, GetAllStandardRegionsQueryResult queryResult, string larsCode)
+    {
+        var validationResult = new ValidationResult();
 
-        [Test, AutoData]
-        public async Task Post_InValidData_RedirectToSameView(RegionsSubmitModel model, GetAllStandardRegionsQueryResult queryResult, string larsCode)
-        {
-            var validationResult = new ValidationResult();
+        validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
 
-            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+        _validatorMock.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(validationResult);
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<RegionsSubmitModel>())).Returns(validationResult);
-
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(queryResult);
-            model.SelectedSubRegions = null;
-            var result = await _sut.UpdateStandardSubRegions(larsCode, model);
-            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
-            result.As<ViewResult>().ViewName.Should().Be(EditProviderCourseRegionsController.ViewPath);
-            result.As<ViewResult>().Model.As<RegionsViewModel>().AllRegions.TrueForAll(r => r.IsSelected);
-        }
+        _mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetAllStandardRegionsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(queryResult);
+        model.SelectedSubRegions = null;
+        var result = await _sut.UpdateStandardSubRegions(larsCode, model);
+        _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateStandardSubRegionsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        result.As<ViewResult>().ViewName.Should().Be(EditProviderCourseRegionsController.ViewPath);
+        result.As<ViewResult>().Model.As<RegionsViewModel>().AllRegions.TrueForAll(r => r.IsSelected);
     }
 }
