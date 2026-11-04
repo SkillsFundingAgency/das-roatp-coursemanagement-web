@@ -94,7 +94,7 @@ public class StandardsController : ControllerBase
 
     [HttpGet("{larsCode}", Name = RouteNames.GetStandardDetails)]
     [CheckCourseType(CourseType.Apprenticeship)]
-    [ClearSession(SessionKeys.SelectedLocationOption)]
+    [ClearSession(nameof(EditLocationOptionsSessionModel))]
     public async Task<IActionResult> ViewStandard(string larsCode)
     {
         _logger.LogInformation("Getting Course details for ukprn {Ukprn} LarsCode {LarsCode}", Ukprn, larsCode);

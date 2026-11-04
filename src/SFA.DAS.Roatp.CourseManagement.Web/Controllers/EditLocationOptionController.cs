@@ -1,12 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
@@ -39,19 +36,21 @@ public class EditLocationOptionController : ControllerBase
     public async Task<IActionResult> Index([FromRoute] string larsCode)
     {
         var model = new EditLocationOptionViewModel();
-        var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption);
-        if (string.IsNullOrEmpty(locationOption))
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel == null)
         {
+            sessionModel = new EditLocationOptionsSessionModel();
             var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+            sessionModel.Existing.LocationOption = result.LocationOption;
+            sessionModel.Existing.HasNationalOption = result.HasNationalLocation;
+            _sessionService.Set(sessionModel); //TODO do not set session on get
             model.LocationOption = result.LocationOption;
         }
         else
         {
-            Enum.TryParse<LocationOption>(locationOption, out var result);
-            model.LocationOption = result;
+            model.LocationOption = sessionModel.Updated.LocationOption.Value;
         }
         _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is set to {LocationOption}", Ukprn, larsCode, model.LocationOption);
-        _sessionService.Delete(SessionKeys.SelectedLocationOption);
 
         return View(model);
     }
@@ -71,25 +70,31 @@ public class EditLocationOptionController : ControllerBase
         }
         _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {LocationOption}", Ukprn, larsCode, submitModel.LocationOption);
 
-        _sessionService.Set(submitModel.LocationOption.ToString(), SessionKeys.SelectedLocationOption);
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel == null) return NotFound();
 
-        switch (submitModel.LocationOption)
-        {
-            case LocationOption.ProviderLocation:
-            case LocationOption.EmployerLocation:
-                var deleteOption =
-                    submitModel.LocationOption == LocationOption.ProviderLocation ?
-                    DeleteProviderCourseLocationOption.DeleteEmployerLocations :
-                    DeleteProviderCourseLocationOption.DeleteProviderLocations;
-                var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, deleteOption);
-                await _mediator.Send(command);
-                break;
-            case LocationOption.Both:
-            default:
-                break;
-        }
+        sessionModel.Updated.LocationOption = submitModel.LocationOption;
+        _sessionService.Set(sessionModel);
+
+        //switch (submitModel.LocationOption)
+        //{
+        //    case LocationOption.ProviderLocation:
+        //    case LocationOption.EmployerLocation:
+        //        var deleteOption =
+        //            submitModel.LocationOption == LocationOption.ProviderLocation ?
+        //            DeleteProviderCourseLocationOption.DeleteEmployerLocations :
+        //            DeleteProviderCourseLocationOption.DeleteProviderLocations;
+        //        var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, deleteOption);
+        //        await _mediator.Send(command);
+        //        break;
+        //    case LocationOption.Both:
+        //    default:
+        //        break;
+        //}
+
         if (submitModel.LocationOption == LocationOption.ProviderLocation || submitModel.LocationOption == LocationOption.Both)
         {
+            // TODO
             return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
         }
         return RedirectToRoute(RouteNames.GetNationalDeliveryOption, new { ukprn, larsCode });

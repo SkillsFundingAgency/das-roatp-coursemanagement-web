@@ -8,12 +8,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.UpdateStandardSubRegions;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllStandardRegions;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -26,11 +30,14 @@ public class EditProviderCourseRegionsController : ControllerBase
     private readonly IMediator _mediator;
     private readonly ILogger<EditProviderCourseRegionsController> _logger;
     private readonly IValidator<RegionsSubmitModel> _validator;
-    public EditProviderCourseRegionsController(IMediator mediator, ILogger<EditProviderCourseRegionsController> logger, IValidator<RegionsSubmitModel> validator)
+    private readonly ISessionService _sessionService;
+
+    public EditProviderCourseRegionsController(IMediator mediator, ILogger<EditProviderCourseRegionsController> logger, IValidator<RegionsSubmitModel> validator, ISessionService sessionService)
     {
         _logger = logger;
         _mediator = mediator;
         _validator = validator;
+        _sessionService = sessionService;
     }
 
     [HttpGet(Name = RouteNames.GetStandardSubRegions)]
@@ -57,9 +64,10 @@ public class EditProviderCourseRegionsController : ControllerBase
             throw new InvalidOperationException(message);
         }
 
-        RegionsViewModel model = new RegionsViewModel();
-
-        model.AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList();
+        RegionsViewModel model = new()
+        {
+            AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList()
+        };
         return model;
     }
 
@@ -76,6 +84,17 @@ public class EditProviderCourseRegionsController : ControllerBase
             model.AllRegions.ForEach(s => s.IsSelected = false);
             return View(ViewPath, model);
         }
+
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel != null && sessionModel.Existing.LocationOption != sessionModel.Updated.LocationOption && sessionModel.Updated.LocationOption == LocationOption.EmployerLocation)
+        {
+            var deleteProviderLocationsCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
+            await _mediator.Send(deleteProviderLocationsCommand);
+            _sessionService.Delete(sessionModel);
+        }
+
+        var deleteEmployerLocationsCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+        await _mediator.Send(deleteEmployerLocationsCommand);
 
         var command = new UpdateStandardSubRegionsCommand
         {

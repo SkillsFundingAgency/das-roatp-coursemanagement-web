@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -60,25 +59,37 @@ public class EditNationalDeliveryOptionController : ControllerBase
             return View(new EditNationalDeliveryOptionViewModel());
         }
 
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel is null) return NotFound();
+
         if (model.HasNationalDeliveryOption.GetValueOrDefault())
         {
             _logger.LogInformation("National delivery option selected, adding national location to ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
+            if (sessionModel.Existing.LocationOption != sessionModel.Updated.LocationOption && sessionModel.Updated.LocationOption == LocationOption.EmployerLocation)
+            {
+                var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
+                await _mediator.Send(command);
+            }
             await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
             await _mediator.Send(new AddNationalLocationToStandardCommand(Ukprn, larsCode, UserId, UserDisplayName));
+            _sessionService.Delete(sessionModel);
             return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
         }
 
         _logger.LogInformation("National delivery option not selected, navigating to region page ukprn:{Ukprn} larscode:{LarsCode}", Ukprn, larsCode);
+
+        sessionModel.Updated.HasNationalOption = false;
+        _sessionService.Set(sessionModel);
 
         return RedirectToRoute(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode });
     }
 
     private bool IsCorrectLocationOptionSetInSession()
     {
-        var sessionValue = _sessionService.Get(SessionKeys.SelectedLocationOption);
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
         return
-            (!string.IsNullOrEmpty(sessionValue) &&
-            (Enum.TryParse<LocationOption>(sessionValue, out var locationOption)
-                && (locationOption == LocationOption.EmployerLocation || locationOption == LocationOption.Both)));
+            (sessionModel != null)
+            && (sessionModel.Updated.LocationOption.HasValue)
+            && (sessionModel.Updated.LocationOption == LocationOption.EmployerLocation || sessionModel.Updated.LocationOption == LocationOption.Both);
     }
 }
