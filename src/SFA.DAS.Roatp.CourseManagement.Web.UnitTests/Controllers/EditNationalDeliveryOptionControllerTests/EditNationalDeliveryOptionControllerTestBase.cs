@@ -1,7 +1,12 @@
-﻿using FluentValidation;
+﻿using System.Collections.Generic;
+using System.Threading;
+using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -23,12 +28,21 @@ public abstract class EditNationalDeliveryOptionControllerTestBase
         MediatorMock = new Mock<IMediator>();
         SessionServiceMock = new Mock<ISessionService>();
         _validatorMock = new Mock<IValidator<ConfirmNationalProviderSubmitModel>>();
+        _validatorMock.Setup(x => x.Validate(It.IsAny<ConfirmNationalProviderSubmitModel>())).Returns(new ValidationResult());
 
         Sut = new EditNationalDeliveryOptionController(MediatorMock.Object, SessionServiceMock.Object, Mock.Of<ILogger<EditNationalDeliveryOptionController>>(), _validatorMock.Object);
 
-        Sut
-            .AddDefaultContextWithUser();
+        Sut.AddDefaultContextWithUser();
     }
 
-    public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get<EditLocationOptionsSessionModel>()).Returns(new EditLocationOptionsSessionModel());
+    public void SetLocationOptionInSession(LocationOption locationOption) => SessionServiceMock.Setup(s => s.Get<EditLocationOptionsSessionModel>()).Returns(new EditLocationOptionsSessionModel() { UpdatedLocationOption = locationOption });
+
+    protected GetProviderCourseDetailsQueryResult SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations)
+    {
+        var result = new GetProviderCourseDetailsQueryResult { ProviderCourseLocations = providerCourseLocations };
+        MediatorMock
+            .Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+        return result;
+    }
 }

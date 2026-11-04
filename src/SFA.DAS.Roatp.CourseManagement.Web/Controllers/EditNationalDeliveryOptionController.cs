@@ -37,7 +37,11 @@ public class EditNationalDeliveryOptionController : ControllerBase
     [HttpGet(Name = RouteNames.GetNationalDeliveryOption)]
     public IActionResult Index([FromRoute] string larsCode)
     {
-        if (!IsCorrectLocationOptionSetInSession())
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+
+        if (sessionModel == null) return NotFound();
+
+        if (sessionModel.UpdatedLocationOption is LocationOption.ProviderLocation)
         {
             _logger.LogWarning("Location option is not set in session, navigating back to the question ukprn:{Ukprn} larscode: {LarsCode}", Ukprn, larsCode);
             return RedirectToRoute(RouteNames.GetLocationOption, new { Ukprn, larsCode });
@@ -49,6 +53,9 @@ public class EditNationalDeliveryOptionController : ControllerBase
     [HttpPost(Name = RouteNames.PostNationalDeliveryOption)]
     public async Task<IActionResult> Index([FromRoute] string larsCode, ConfirmNationalProviderSubmitModel model)
     {
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel is null) return NotFound();
+
         var validatedResult = _validator.Validate(model);
 
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
@@ -59,9 +66,6 @@ public class EditNationalDeliveryOptionController : ControllerBase
 
             return View(new EditNationalDeliveryOptionViewModel());
         }
-
-        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        if (sessionModel is null) return NotFound();
 
         if (!model.HasNationalDeliveryOption.GetValueOrDefault())
         {
@@ -75,7 +79,7 @@ public class EditNationalDeliveryOptionController : ControllerBase
 
         GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
-        if (existing.HasRegionalLocation)
+        if (existing.HasEmployerLocations)
         {
             await _mediator.Send(new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations));
         }
@@ -92,11 +96,5 @@ public class EditNationalDeliveryOptionController : ControllerBase
         _sessionService.Delete(sessionModel);
         return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
 
-    }
-
-    private bool IsCorrectLocationOptionSetInSession()
-    {
-        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        return (sessionModel != null) && (sessionModel.UpdatedLocationOption is LocationOption.EmployerLocation or LocationOption.Both);
     }
 }
