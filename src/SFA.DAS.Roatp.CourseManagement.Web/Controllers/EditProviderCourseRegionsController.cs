@@ -54,24 +54,6 @@ public class EditProviderCourseRegionsController : ControllerBase
         return View(ViewPath, model);
     }
 
-    private async Task<RegionsViewModel> BuildRegionsViewModel(string larsCode)
-    {
-        var result = await _mediator.Send(new GetAllStandardRegionsQuery(Ukprn, larsCode));
-
-        if (result == null)
-        {
-            var message = $"Sub Regions not found";
-            _logger.LogError(message);
-            throw new InvalidOperationException(message);
-        }
-
-        RegionsViewModel model = new()
-        {
-            AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList()
-        };
-        return model;
-    }
-
     [HttpPost(Name = RouteNames.PostStandardSubRegions)]
     public async Task<IActionResult> UpdateStandardSubRegions([FromRoute] string larsCode, RegionsSubmitModel submitModel)
     {
@@ -93,6 +75,7 @@ public class EditProviderCourseRegionsController : ControllerBase
             var deleteEmployerLocationsCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
             await _mediator.Send(deleteEmployerLocationsCommand);
         }
+
         var command = new UpdateStandardSubRegionsCommand
         {
             LarsCode = larsCode,
@@ -105,9 +88,9 @@ public class EditProviderCourseRegionsController : ControllerBase
 
         // if session model exists the user has come via the change options journey
         var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        if (sessionModel != null && sessionModel.UpdatedLocationOption == LocationOption.EmployerLocation)
+        if (sessionModel != null)
         {
-            if (existing.HasProviderLocation)
+            if (sessionModel.UpdatedLocationOption == LocationOption.EmployerLocation && existing.HasProviderLocation)
             {
                 // delete provider location if it exists
                 var deleteProviderLocationCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
@@ -118,5 +101,23 @@ public class EditProviderCourseRegionsController : ControllerBase
         }
 
         return RedirectToRoute(RouteNames.GetStandardDetails, new { Ukprn, larsCode });
+    }
+
+    private async Task<RegionsViewModel> BuildRegionsViewModel(string larsCode)
+    {
+        var result = await _mediator.Send(new GetAllStandardRegionsQuery(Ukprn, larsCode));
+
+        if (result == null)
+        {
+            var message = $"Sub Regions not found";
+            _logger.LogError(message);
+            throw new InvalidOperationException(message);
+        }
+
+        RegionsViewModel model = new()
+        {
+            AllRegions = result.Regions.Select(c => (RegionViewModel)c).ToList()
+        };
+        return model;
     }
 }
