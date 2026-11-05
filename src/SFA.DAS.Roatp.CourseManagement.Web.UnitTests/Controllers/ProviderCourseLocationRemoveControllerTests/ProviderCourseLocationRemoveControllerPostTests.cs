@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -35,10 +36,10 @@ public class ProviderCourseLocationRemoveControllerPostTests
            .AddUrlForRoute(RouteNames.GetRemoveProviderCourseLocation, verifyUrl);
     }
 
-    [Ignore("TODO Deven")]
     [Test, AutoData]
-    public async Task Post_ValidModel_RedirectToRoute(ProviderCourseLocationRemoveViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+    public async Task WhenThereAreLocationsAvailable_ThenRemovesSelectedLocation(ProviderCourseLocationRemoveViewModel model, GetProviderCourseLocationsQueryResult queryResult)
     {
+        model.IsOnlyLocation = false;
         _mediatorMock
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
@@ -50,5 +51,25 @@ public class ProviderCourseLocationRemoveControllerPostTests
         var actual = (RedirectToRouteResult)result;
         Assert.NotNull(actual);
         actual.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
+    }
+
+    [Test, AutoData]
+    public async Task WhenSelectedLocationIsTheOnlyLocation_ThenReturnsViewWithErrors(ProviderCourseLocationRemoveViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+    {
+        model.IsOnlyLocation = true;
+        _mediatorMock
+           .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
+           .ReturnsAsync(queryResult);
+
+        var result = await _sut.RemoveProviderCourseLocation(model);
+
+        using (new AssertionScope())
+        {
+            var view = result.Should().BeOfType<ViewResult>().Subject;
+            view.ViewData.ModelState.IsValid.Should().BeFalse();
+            // verify the error message is present
+            view.ViewData.ModelState.Should().ContainSingle(x => x.Key == "LocationName" && x.Value.Errors[0].ErrorMessage == "You cannot remove the only location for a standard.");
+            _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteProviderCourseLocationCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+        }
     }
 }

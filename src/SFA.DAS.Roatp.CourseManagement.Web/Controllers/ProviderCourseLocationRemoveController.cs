@@ -60,7 +60,7 @@ public class ProviderCourseLocationRemoveController : ControllerBase
     {
         if (model.IsOnlyLocation)
         {
-            ModelState.AddModelError("LocationName", "You cannot remove the only location for a standard.");
+            ModelState.AddModelError(nameof(model.LocationName), "You cannot remove the only location for a standard.");
             return View(ViewName, model);
         }
         var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode, model.Id, UserId, UserDisplayName);
