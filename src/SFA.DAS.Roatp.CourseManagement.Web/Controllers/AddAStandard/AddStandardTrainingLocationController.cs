@@ -94,7 +94,9 @@ public class AddStandardTrainingLocationController : AddAStandardControllerBase
         foreach (var location in allProviderLocations.Where(x => x.LocationType == LocationType.Provider))
         {
             if (!sessionModel.ProviderLocations.Any(x => x.LocationType == LocationType.Provider && x.LocationName == location.LocationName))
+            {
                 availableProviderLocations.Add(location);
+            }
         }
 
         var model = new CourseLocationAddViewModel

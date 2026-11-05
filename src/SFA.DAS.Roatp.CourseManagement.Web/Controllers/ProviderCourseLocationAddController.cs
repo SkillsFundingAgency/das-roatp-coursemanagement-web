@@ -75,13 +75,17 @@ public class ProviderCourseLocationAddController : ControllerBase
         await _mediator.Send(command);
 
         var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
-        if (sessionModel != null && sessionModel.UpdatedLocationOption == LocationOption.ProviderLocation)
+        if (sessionModel != null)
         {
-            GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
-            if (existing.HasEmployerLocations)
+            if (sessionModel.UpdatedLocationOption == LocationOption.ProviderLocation)
             {
-                var deleteEmployerLocationCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
-                await _mediator.Send(deleteEmployerLocationCommand);
+                GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+                if (existing.HasEmployerLocations)
+                {
+                    var deleteEmployerLocationCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+                    await _mediator.Send(deleteEmployerLocationCommand);
+                }
             }
             _sessionService.Delete(sessionModel);
         }
