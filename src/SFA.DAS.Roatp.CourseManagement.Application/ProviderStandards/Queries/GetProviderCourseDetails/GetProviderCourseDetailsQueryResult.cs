@@ -30,6 +30,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public bool HasProviderLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Provider);
         public bool HasNationalLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.National);
         public bool HasRegionalLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Regional);
+        public bool HasEmployerLocations => HasNationalLocation || HasRegionalLocation;
 
         public LocationOption LocationOption
         {
@@ -37,9 +38,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
             {
                 if (ProviderCourseLocations.Count == 0)
                     return LocationOption.None;
-                if (HasProviderLocation && !HasNationalLocation && !HasRegionalLocation)
+                if (HasProviderLocation && !HasEmployerLocations)
                     return LocationOption.ProviderLocation;
-                else if (!HasProviderLocation && (HasNationalLocation || HasRegionalLocation))
+                else if (!HasProviderLocation && HasEmployerLocations)
                     return LocationOption.EmployerLocation;
                 else
                     return LocationOption.Both;

@@ -1,5 +1,5 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations
-@model ProviderCourseLocationViewModel
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+@model ProviderCourseLocationRemoveViewModel
 @{
     ViewBag.Title = "Remove option";
 }
@@ -10,6 +10,10 @@
         <div class="govuk-caption-l">Manage a standard</div>
         <h1 class="govuk-heading-xl">Are you sure you want to remove this training venue?</h1>
         <form method="post" asp-route="@RouteNames.PostRemoveProviderCourseLocation" enctype="multipart/form-data" novalidate>
+            <input type="hidden" asp-for="@Model.IsOnlyLocation" />
+            <input type="hidden" asp-for="LocationName" />
+            <input type="hidden" asp-for="DeliveryMethod.HasDayReleaseDeliveryOption" />
+            <input type="hidden" asp-for="DeliveryMethod.HasBlockReleaseDeliveryOption" />
             <div class="grid-row">
                 <div class="column-two-thirds">
                     <table class="govuk-table">

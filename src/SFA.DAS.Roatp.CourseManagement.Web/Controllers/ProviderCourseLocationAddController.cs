@@ -8,11 +8,17 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderLocations.Queries.GetAvailableProviderLocations;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Commands.AddProviderCourseLocation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
@@ -25,12 +31,14 @@ public class ProviderCourseLocationAddController : ControllerBase
     private readonly ILogger<ProviderCourseLocationAddController> _logger;
     private readonly IMediator _mediator;
     private readonly IValidator<ProviderCourseLocationAddSubmitModel> _validator;
+    private readonly ISessionService _sessionService;
 
-    public ProviderCourseLocationAddController(ILogger<ProviderCourseLocationAddController> logger, IMediator mediator, IValidator<ProviderCourseLocationAddSubmitModel> validator)
+    public ProviderCourseLocationAddController(ILogger<ProviderCourseLocationAddController> logger, IMediator mediator, IValidator<ProviderCourseLocationAddSubmitModel> validator, ISessionService sessionService)
     {
         _logger = logger;
         _mediator = mediator;
         _validator = validator;
+        _sessionService = sessionService;
     }
 
     [HttpGet(Name = RouteNames.GetAddProviderCourseLocation)]
@@ -53,6 +61,7 @@ public class ProviderCourseLocationAddController : ControllerBase
 
             return View(ViewPath, model);
         }
+
         var command = new AddProviderCourseLocationCommand()
         {
             Ukprn = base.Ukprn,
@@ -63,8 +72,23 @@ public class ProviderCourseLocationAddController : ControllerBase
             HasDayReleaseDeliveryOption = submitModel.HasDayReleaseDeliveryOption,
             HasBlockReleaseDeliveryOption = submitModel.HasBlockReleaseDeliveryOption
         };
-
         await _mediator.Send(command);
+
+        var sessionModel = _sessionService.Get<EditLocationOptionsSessionModel>();
+        if (sessionModel != null)
+        {
+            if (sessionModel.UpdatedLocationOption == LocationOption.ProviderLocation)
+            {
+                GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+
+                if (existing.HasEmployerLocations)
+                {
+                    var deleteEmployerLocationCommand = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+                    await _mediator.Send(deleteEmployerLocationCommand);
+                }
+            }
+            _sessionService.Delete(sessionModel);
+        }
 
         return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { ukprn = Ukprn, larsCode });
     }

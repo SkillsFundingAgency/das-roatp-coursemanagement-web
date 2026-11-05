@@ -5,10 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
-using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
@@ -18,6 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 [Route("{ukprn}/standards/{larsCode}/providerlocations/{id}/remove-providerlocation")]
 public class ProviderCourseLocationRemoveController : ControllerBase
 {
+    private const string ViewName = "~/Views/ProviderCourseLocations/RemoveProviderCourseLocation.cshtml";
     private readonly IMediator _mediator;
     private readonly ILogger<ProviderCourseLocationRemoveController> _logger;
 
@@ -41,22 +43,26 @@ public class ProviderCourseLocationRemoveController : ControllerBase
             throw new InvalidOperationException(message);
         }
 
-        var model = new ProviderCourseLocationViewModel
-        {
-            LarsCode = larsCode
-        };
+        ProviderCourseLocation pcl = result.ProviderCourseLocations.Find(l => l.Id == id);
+        if (pcl == null) return NotFound();
 
-        if (result.ProviderCourseLocations.Find(l => l.Id == id) != null)
-        {
-            model = (ProviderCourseLocationViewModel)result.ProviderCourseLocations.Find(l => l.Id == id);
-        }
+        ProviderCourseLocationRemoveViewModel model = new() { Id = id, LarsCode = larsCode, Ukprn = Ukprn };
+        model.DeliveryMethod.HasBlockReleaseDeliveryOption = pcl.HasBlockReleaseDeliveryOption;
+        model.DeliveryMethod.HasDayReleaseDeliveryOption = pcl.HasDayReleaseDeliveryOption;
+        model.LocationName = pcl.LocationName;
+        model.IsOnlyLocation = result.ProviderCourseLocations.Count == 1;
 
-        return View("~/Views/ProviderCourseLocations/RemoveProviderCourseLocation.cshtml", model);
+        return View(ViewName, model);
     }
 
     [HttpPost(Name = RouteNames.PostRemoveProviderCourseLocation)]
-    public async Task<IActionResult> RemoveProviderCourseLocation(ProviderCourseLocationViewModel model)
+    public async Task<IActionResult> RemoveProviderCourseLocation(ProviderCourseLocationRemoveViewModel model)
     {
+        if (model.IsOnlyLocation)
+        {
+            ModelState.AddModelError(nameof(model.LocationName), "You cannot remove the only location for a standard.");
+            return View(ViewName, model);
+        }
         var command = new DeleteProviderCourseLocationCommand(Ukprn, model.LarsCode, model.Id, UserId, UserDisplayName);
         await _mediator.Send(command);
 
