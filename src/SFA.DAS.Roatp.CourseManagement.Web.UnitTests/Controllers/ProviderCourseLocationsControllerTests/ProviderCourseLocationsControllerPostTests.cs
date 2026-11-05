@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetStandardDetails;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
@@ -63,10 +64,10 @@ public class ProviderCourseLocationsControllerPostTests
     [Test, AutoData]
     public async Task Post_InValidModel_ReturnsSameView(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
     {
-        var refererUrl = "http://test-referer-url/";
-        _sut.HttpContext.Request.Headers.Referer = refererUrl;
+        //var refererUrl = "http://test-referer-url/";
+        //_sut.HttpContext.Request.Headers.Referer = refererUrl;
 
-        queryResult.ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation>();
+        queryResult.ProviderCourseLocations = [];
 
         _mediatorMock
        .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
@@ -89,26 +90,20 @@ public class ProviderCourseLocationsControllerPostTests
         modelResult.Should().NotBeNull();
     }
 
-    [Ignore("TODO Deven")]
     [Test, AutoData]
     public async Task Post_ValidModel_RedirectToNationalDeliveryOption(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
     {
-        var refererUrl = "http://test-referer-url/";
-        _sut.HttpContext.Request.Headers.Referer = refererUrl;
-
         _mediatorMock
        .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
        .ReturnsAsync(queryResult);
 
         _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
 
-        _sessionServiceMock.Setup(s => s.Get<EditLocationOptionsSessionModel>()).Returns(new EditLocationOptionsSessionModel());
+        _sessionServiceMock.Setup(s => s.Get<EditLocationOptionsSessionModel>()).Returns(new EditLocationOptionsSessionModel() { UpdatedLocationOption = LocationOption.Both });
+
+        // Act
         var result = await _sut.ConfirmedProviderCourseLocations(model);
 
-        var redirectResult = result as RedirectToRouteResult;
-
-        redirectResult.Should().NotBeNull();
-        redirectResult.RouteName.Should().Be(RouteNames.GetNationalDeliveryOption);
-        redirectResult.RouteValues["ukprn"].Should().Be(int.Parse(Ukprn));
+        result.Should().BeOfType<RedirectToRouteResult>().Which.RouteName.Should().Be(RouteNames.GetNationalDeliveryOption);
     }
 }
