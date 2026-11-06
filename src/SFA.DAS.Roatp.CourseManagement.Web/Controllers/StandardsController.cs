@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
@@ -13,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Shared;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
@@ -78,6 +80,8 @@ public class StandardsController : ControllerBase
 
         model.SetCourseValues();
 
+        ApplyPagination(model, model.FilteredCourses, requestModel);
+
         var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
         {
             Ukprn = Ukprn,
@@ -122,5 +126,25 @@ public class StandardsController : ControllerBase
 
         model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
         return View("~/Views/Standards/ViewStandardDetails.cshtml", model);
+    }
+
+    private void ApplyPagination(
+        StandardListViewModel viewModel,
+        List<StandardViewModel> filteredCourses,
+        ViewStandardsRequestModel requestModel)
+    {
+        var (pagedItems, totalCount, pagination) = PaginationHelper.Paginate(
+            filteredCourses,
+            requestModel.PageNumber,
+            Url,
+            RouteNames.ViewStandards,
+            requestModel.ToQueryString(),
+            ViewStandardsFilterBuilder.ViewStandardsFilterResultsFragment);
+
+        viewModel.FilteredCourseCount = totalCount;
+        viewModel.FilteredCourses = pagedItems
+            .Select(course => course)
+            .ToList();
+        viewModel.Pagination = pagination;
     }
 }

@@ -16,6 +16,8 @@ public class ViewStandardsRequestModel
 
     public bool HasFilters => HasSearchTermFilter || HasFundingStatusFilter;
 
+    public int PageNumber { get; set; } = 1;
+
     public List<(string, string)> ToQueryString()
     {
         var queryParams = new List<(string, string)>();

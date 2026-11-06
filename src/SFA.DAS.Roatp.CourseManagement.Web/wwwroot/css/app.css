@@ -163,3 +163,24 @@ li.list-item-margin-left-20 {
 h1.margin-bottom-30 {
     margin-bottom: 30px;
 }
+
+.navigation-flexbox {
+    display: flex;
+    justify-content: center;
+}
+
+.navigation-flexbox nav {
+    gap: 13px;
+    display: flex;
+}
+
+.app-pagination-nav {
+    float: right;
+}
+
+.das-pagination-links > a,
+.das-pagination-links span {
+    height: 40px;
+    line-height: 40px;
+    margin-left: 15px;
+}

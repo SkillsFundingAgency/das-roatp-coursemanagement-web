@@ -20,6 +20,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.AddAStandard;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Shared;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using static System.String;
@@ -373,4 +374,79 @@ public class ViewStandardsTests
         var course = model!.FilteredCourses;
         course.Count.Should().Be(2);
     }
+
+    [Test]
+    public async Task ViewStandards_WhenMoreThanTenStandards_ReturnsFirstPageWithNextPageLink()
+    {
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetAllProviderStandardsQueryResult
+            {
+                Standards = CreateStandards(15)
+            });
+
+        _controller.TempData = new Mock<ITempDataDictionary>().Object;
+
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel());
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as StandardListViewModel;
+
+        model!.FilteredCourses.Should().HaveCount(PaginationViewModel.DefaultPageSize);
+        model.Pagination.PageNumber.Should().Be(1);
+        model.Pagination.Pages.Should().Contain(page => page.Title == PaginationViewModel.NextPageTitle);
+        model.Pagination.Pages.Should().NotContain(page => page.Title == PaginationViewModel.PreviousPageTitle);
+    }
+
+    [Test]
+    public async Task ViewStandards_WhenPageNumberIsTwo_ReturnsSecondPageWithPreviousPageLink()
+    {
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetAllProviderStandardsQueryResult
+            {
+                Standards = CreateStandards(15)
+            });
+
+        _controller.TempData = new Mock<ITempDataDictionary>().Object;
+
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel { PageNumber = 2 });
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as StandardListViewModel;
+
+        model!.FilteredCourses.Should().HaveCount(5);
+        model.Pagination.PageNumber.Should().Be(2);
+        model.Pagination.Pages.Should().Contain(page => page.Title == PaginationViewModel.PreviousPageTitle);
+        model.Pagination.Pages.Should().NotContain(page => page.Title == PaginationViewModel.NextPageTitle);
+    }
+
+    [Test]
+    public async Task ViewStandards_WhenThereAreTenStandards_DoesNotShowPagination()
+    {
+        _mediator.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetAllProviderStandardsQueryResult
+            {
+                Standards = CreateStandards(10)
+            });
+
+        _controller.TempData = new Mock<ITempDataDictionary>().Object;
+
+        var result = await _controller.ViewStandards(new ViewStandardsRequestModel());
+
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as StandardListViewModel;
+
+        model!.FilteredCourses.Should().HaveCount(10);
+        model.Pagination.Pages.Should().BeEmpty();
+    }
+
+    private static List<Standard> CreateStandards(int count)
+        => Enumerable.Range(1, count)
+            .Select(i => new Standard
+            {
+                ProviderCourseId = i,
+                CourseName = $"Course {i:D2}",
+                Level = 2,
+                LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+            })
+            .ToList();
 }
