@@ -71,7 +71,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
         [TestCase(false, 0, false)]
         [TestCase(true, -1, false)]
-        [TestCase(true, 0, false)]
+        [TestCase(true, 0, true)]
         [TestCase(true, 1, true)]
         public void WhenDifferentLastDateStartsValuesArePassed_ThenFundingClosingIsSet(
             bool hasLastDateStarts,
@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
         [TestCase(false, 0, false)]
         [TestCase(true, -1, true)]
-        [TestCase(true, 0, true)]
+        [TestCase(true, 0, false)]
         [TestCase(true, 1, false)]
         public void WhenDifferentLastDateStartsValuesArePassed_ThenFundingClosedIsSet(
             bool hasLastDateStarts,
@@ -107,7 +107,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
 
         [TestCase(false, 0, "")]
         [TestCase(true, 1, "govuk-tag govuk-tag--orange")]
-        [TestCase(true, 0, "govuk-tag govuk-tag--grey")]
+        [TestCase(true, 0, "govuk-tag govuk-tag--orange")]
+        [TestCase(true, -1, "govuk-tag govuk-tag--grey")]
         public void WhenDifferentLastDateStartsValuesArePassed_ThenTagColourIsSet(
             bool hasLastDateStarts,
             int dayOffset,
