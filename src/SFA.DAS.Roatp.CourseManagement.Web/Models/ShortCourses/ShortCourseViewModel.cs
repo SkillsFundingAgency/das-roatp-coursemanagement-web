@@ -40,4 +40,34 @@ public class ShortCourseViewModel
     {
         return (!HasLocation && !HasOnlineDeliveryOption);
     }
+
+    private bool SetHasLastDateStarts()
+    {
+        return LastDateStarts != null;
+    }
+
+    private bool SetFundingClosing()
+    {
+        return HasLastDateStarts && LastDateStarts.Value >= DateTime.UtcNow.Date;
+    }
+
+    private bool SetFundingClosed()
+    {
+        return HasLastDateStarts && LastDateStarts.Value < DateTime.UtcNow.Date;
+    }
+
+    private string SetTagColour()
+    {
+        if (FundingClosing)
+        {
+            return "govuk-tag govuk-tag--orange";
+        }
+
+        if (FundingClosed)
+        {
+            return "govuk-tag govuk-tag--grey";
+        }
+
+        return string.Empty;
+    }
 }
