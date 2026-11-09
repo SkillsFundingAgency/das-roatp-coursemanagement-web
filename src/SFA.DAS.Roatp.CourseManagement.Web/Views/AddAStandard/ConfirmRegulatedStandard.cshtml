@@ -10,6 +10,8 @@
         <div class="govuk-caption-l">Add a standard</div>
         <partial name="_StandardInformation" for="StandardInformation" />
 
+        <partial name="_LastStartDateWarning" model="Model.StandardInformation.HasLastDateStarts" />
+
         <form method="post" asp-route="@RouteNames.PostAddStandardConfirmRegulatedStandard" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsApprovedByRegulator" class="govuk-form-group">
                 <span asp-validation-for="IsApprovedByRegulator" class="govuk-error-message"></span>
@@ -17,7 +19,7 @@
                 <fieldset class="govuk-fieldset">
                     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                         <h1 class="govuk-fieldset__heading">
-                            Have you been approved by the regulator to deliver this standard?
+                            Have you been approved by the regulator to deliver this apprenticeship?
                         </h1>
                     </legend>
                     <div id="IsApprovedByRegulator" class="govuk-radios" data-module="govuk-radios">

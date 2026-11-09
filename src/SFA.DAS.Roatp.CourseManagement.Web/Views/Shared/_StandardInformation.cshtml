@@ -1,24 +1,17 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+﻿@using Humanizer
 @using SFA.DAS.DfESignIn.Auth.Extensions
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 @model StandardInformationViewModel
 
 <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
 <table class="govuk-table" aria-label="Standard details">
     <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header das-table-cell-width-30" scope="row">
-               ST Code
-            </th>
-            <td class="govuk-table__cell das-table-cell-width-70">
-                @Model.IfateReferenceNumber
-            </td>
-        </tr>
-        <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="row">
                 Type
             </th>
             <td class="govuk-table__cell">
-                @Model.LearningType.GetDescription()
+                @Model.LearningType.ToString().Humanize()
             </td>
         </tr>
         <tr class="govuk-table__row">
@@ -48,5 +41,21 @@
                 </td>
             </tr>
         }
+        <tr asp-show="@Model.FundingClosing" class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">
+                Status
+            </th>
+            <td class="govuk-table__cell">
+                <span class="@Model.TagColour">@Model.StatusText</span>
+            </td>
+        </tr>
+        <tr asp-show="@Model.HasLastDateStarts" class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">
+                Last start date
+            </th>
+            <td class="govuk-table__cell">
+                @Model.LastDateStarts?.ToString("dd MMM yyyy")
+            </td>
+        </tr>
     </tbody>
 </table>
