@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters;
+using SFA.DAS.Roatp.CourseManagement.Web.Models.Shared;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -23,6 +24,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool HasNoFilteredResults { get; set; }
         public BreadcrumbsViewModel Breadcrumbs { get; set; }
         public FiltersViewModel Filters { get; set; } = new() { Route = string.Empty };
+        public PaginationViewModel Pagination { get; set; } = null;
 
         public void SetCourseValues()
         {
