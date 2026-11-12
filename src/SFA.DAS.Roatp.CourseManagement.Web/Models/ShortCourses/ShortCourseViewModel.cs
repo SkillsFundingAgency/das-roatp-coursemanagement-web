@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
@@ -15,10 +16,10 @@ public class ShortCourseViewModel
     public bool HasOnlineDeliveryOption { get; set; }
     public bool StandardRequiresMoreInfo => SetMissingInfo();
     public DateTime? LastDateStarts { get; set; }
-    public bool HasLastDateStarts => SetHasLastDateStarts();
-    public bool FundingClosing => SetFundingClosing();
-    public bool FundingClosed => SetFundingClosed();
-    public string TagColour => SetTagColour();
+    public bool HasLastDateStarts => CourseViewModelHelper.HasLastDateStarts(LastDateStarts);
+    public bool FundingClosing => CourseViewModelHelper.IsFundingClosing(LastDateStarts);
+    public bool FundingClosed => CourseViewModelHelper.IsFundingClosed(LastDateStarts);
+    public string TagColour => CourseViewModelHelper.GetTagColour(FundingClosing, FundingClosed);
 
     public static implicit operator ShortCourseViewModel(Standard source)
     {
@@ -38,35 +39,5 @@ public class ShortCourseViewModel
     private bool SetMissingInfo()
     {
         return (!HasLocation && !HasOnlineDeliveryOption);
-    }
-
-    private bool SetHasLastDateStarts()
-    {
-        return LastDateStarts != null;
-    }
-
-    private bool SetFundingClosing()
-    {
-        return HasLastDateStarts && LastDateStarts.Value >= DateTime.UtcNow.Date;
-    }
-
-    private bool SetFundingClosed()
-    {
-        return HasLastDateStarts && LastDateStarts.Value < DateTime.UtcNow.Date;
-    }
-
-    private string SetTagColour()
-    {
-        if (FundingClosing)
-        {
-            return "govuk-tag govuk-tag--orange";
-        }
-
-        if (FundingClosed)
-        {
-            return "govuk-tag govuk-tag--grey";
-        }
-
-        return string.Empty;
     }
 }
