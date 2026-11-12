@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -53,21 +54,26 @@ public class SelectShortCourseControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public async Task SelectShortCourse_ValidState_SetsSessionAndRedirectsToConfirmApprenticeshipUnit(
+    public async Task SelectShortCourse_IsUnRegulatedCourse_SetsSessionAndRedirectsToConfirmShortCourse(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IValidator<SelectShortCourseSubmitModel>> validator,
             [Greedy] SelectShortCourseController sut,
-            GetLatestProviderContactQueryResult queryResult)
+            GetLatestProviderContactQueryResult queryResult,
+            GetProviderAvailableCourseDetailsQueryResult courseDetailsResult)
     {
         // Arrange
         var learningType = LearningType.ApprenticeshipUnit;
+
+        courseDetailsResult.IsRegulatedForProvider = false;
 
         var submitModel = new SelectShortCourseSubmitModel() { LearningType = learningType };
 
         sut.AddDefaultContextWithUser();
 
         mediatorMock.Setup(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == submitModel.SelectedLarsCode && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>())).ReturnsAsync(courseDetailsResult);
 
         validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseSubmitModel>())).Returns(new ValidationResult());
 
@@ -79,6 +85,43 @@ public class SelectShortCourseControllerPostTests
         redirectResult!.RouteName.Should().Be(RouteNames.ConfirmShortCourse);
         mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Never());
         mediatorMock.Verify(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == submitModel.SelectedLarsCode && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Once());
+        sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode && m.SavedProviderContactModel!.EmailAddress == queryResult.EmailAddress && m.SavedProviderContactModel!.PhoneNumber == queryResult.PhoneNumber)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public async Task SelectShortCourse_IsRegulatedCourse_SetsSessionAndRedirectsToConfirmRegulatedShortCourse(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Frozen] Mock<ISessionService> sessionServiceMock,
+            [Frozen] Mock<IValidator<SelectShortCourseSubmitModel>> validator,
+            [Greedy] SelectShortCourseController sut,
+            GetLatestProviderContactQueryResult queryResult,
+            GetProviderAvailableCourseDetailsQueryResult courseDetailsResult)
+    {
+        // Arrange
+        var learningType = LearningType.ApprenticeshipUnit;
+
+        courseDetailsResult.IsRegulatedForProvider = true;
+
+        var submitModel = new SelectShortCourseSubmitModel() { LearningType = learningType };
+
+        sut.AddDefaultContextWithUser();
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == submitModel.SelectedLarsCode && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>())).ReturnsAsync(courseDetailsResult);
+
+        validator.Setup(x => x.Validate(It.IsAny<SelectShortCourseSubmitModel>())).Returns(new ValidationResult());
+
+        // Act
+        var response = await sut.SelectShortCourse(submitModel, learningType);
+
+        // Assert
+        var redirectResult = response as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmRegulatedShortCourse);
+        mediatorMock.Verify(m => m.Send(It.Is<GetAvailableProviderStandardsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Never());
+        mediatorMock.Verify(m => m.Send(It.Is<GetLatestProviderContactQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn), It.IsAny<CancellationToken>()), Times.Once());
+        mediatorMock.Verify(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == submitModel.SelectedLarsCode && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Once());
         sessionServiceMock.Verify(s => s.Set(It.Is<ShortCourseSessionModel>(m => m.LarsCode == submitModel.SelectedLarsCode && m.SavedProviderContactModel!.EmailAddress == queryResult.EmailAddress && m.SavedProviderContactModel!.PhoneNumber == queryResult.PhoneNumber)), Times.Once);
     }
 }

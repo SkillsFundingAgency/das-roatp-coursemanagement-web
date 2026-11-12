@@ -45,6 +45,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 option.WithMapping<StandardInformationViewModel>(c => c.LastDateStarts, v => v.LastDateStarts);
                 option.WithMapping<StandardInformationViewModel>(c => c.IfateReferenceNumber, v => v.IfateReferenceNumber);
                 option.WithMapping<StandardInformationViewModel>(c => c.LearningType, v => v.LearningType);
+                option.ExcludingMissingMembers();
                 return option;
             });
         }
