@@ -4,6 +4,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderContact.Queries;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAvailableProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -61,6 +62,13 @@ public class SelectShortCourseController(IMediator _mediator, ISessionService _s
         }
 
         _sessionService.Set(sessionModel);
+
+        var shortCourseInfo = await _mediator.Send(new GetProviderAvailableCourseDetailsQuery(Ukprn, CourseType.ShortCourse, submitModel.SelectedLarsCode));
+
+        if (shortCourseInfo.IsRegulatedForProvider)
+        {
+            return RedirectToRoute(RouteNames.ConfirmRegulatedShortCourse, new { ukprn = Ukprn, learningType });
+        }
 
         return RedirectToRoute(RouteNames.ConfirmShortCourse, new { ukprn = Ukprn, learningType });
     }
