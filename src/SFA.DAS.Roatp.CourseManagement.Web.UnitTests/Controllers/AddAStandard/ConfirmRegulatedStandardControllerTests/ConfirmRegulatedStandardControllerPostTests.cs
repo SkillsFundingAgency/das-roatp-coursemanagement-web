@@ -114,7 +114,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
                 .WithMapping<StandardInformationViewModel>(c => c.Sector, v => v.Sector)
                 .WithMapping<StandardInformationViewModel>(c => c.LastDateStarts, v => v.LastDateStarts)
                 .WithMapping<StandardInformationViewModel>(c => c.IfateReferenceNumber, v => v.IfateReferenceNumber)
-                .WithMapping<StandardInformationViewModel>(c => c.LearningType, v => v.LearningType));
+                .WithMapping<StandardInformationViewModel>(c => c.LearningType, v => v.LearningType)
+                .ExcludingMissingMembers());
 
         }
 

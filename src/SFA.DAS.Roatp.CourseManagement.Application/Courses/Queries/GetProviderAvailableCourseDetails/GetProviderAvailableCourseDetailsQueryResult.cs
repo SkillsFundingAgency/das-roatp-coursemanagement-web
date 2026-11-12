@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 
 namespace SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 
@@ -14,4 +15,6 @@ public class GetProviderAvailableCourseDetailsQueryResult
     public DateTime? LastDateStarts { get; set; }
     public string IfateReferenceNumber { get; set; }
     public LearningType LearningType { get; set; }
+    public int Duration { get; set; }
+    public DurationUnits DurationUnits { get; set; }
 }
