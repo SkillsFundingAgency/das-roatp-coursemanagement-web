@@ -5,8 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
@@ -15,7 +18,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{learningType}", Name = RouteNames.ManageShortCourses)]
-public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
+public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewModelFactory _breadcrumbsFactory) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCourses.cshtml";
 
@@ -50,6 +53,19 @@ public class ManageShortCoursesController(IMediator _mediator) : ControllerBase
         }
 
         viewModel.ShowShortCourseHeading = viewModel.ShortCourses.Count > 0;
+
+        viewModel.SetCourseValues();
+
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
+        {
+            Ukprn = Ukprn,
+            BreadcrumbNames =
+            [
+                BreadcrumbNames.ProviderDashboard,
+                BreadcrumbNames.ManageYourCourses
+            ]
+        };
+        viewModel.Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel);
 
         return View(ViewPath, viewModel);
     }

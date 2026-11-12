@@ -1,4 +1,6 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using System;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
@@ -13,6 +15,11 @@ public class ShortCourseViewModel
     public bool HasLocation { get; set; }
     public bool HasOnlineDeliveryOption { get; set; }
     public bool StandardRequiresMoreInfo => SetMissingInfo();
+    public DateTime? LastDateStarts { get; set; }
+    public bool HasLastDateStarts => CourseViewModelHelper.HasLastDateStarts(LastDateStarts);
+    public bool FundingClosing => CourseViewModelHelper.IsFundingClosing(LastDateStarts);
+    public bool FundingClosed => CourseViewModelHelper.IsFundingClosed(LastDateStarts);
+    public string TagColour => CourseViewModelHelper.GetTagColour(FundingClosing, FundingClosed);
 
     public static implicit operator ShortCourseViewModel(Standard source)
     {
@@ -25,6 +32,7 @@ public class ShortCourseViewModel
             LarsCode = source.LarsCode,
             HasLocation = source.HasLocations,
             HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
+            LastDateStarts = source.LastDateStarts
         };
     }
 
