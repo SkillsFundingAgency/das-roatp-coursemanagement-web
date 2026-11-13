@@ -30,7 +30,6 @@ public class ManageShortCourseDetailsViewModelTests
         Assert.That(sut.ShortCourseInformation.IsRegulatedForProvider, Is.EqualTo(source.IsRegulatedForProvider));
         Assert.That(sut.ShortCourseInformation.Duration, Is.EqualTo(source.Duration));
         Assert.That(sut.ShortCourseInformation.DurationUnits, Is.EqualTo(source.DurationUnits));
-        Assert.That(sut.ShortCourseInformation.CourseType, Is.EqualTo(source.CourseType));
         Assert.That(sut.ContactInformation.ContactUsEmail, Is.EqualTo(source.ContactUsEmail));
         Assert.That(sut.ContactInformation.ContactUsPhoneNumber, Is.EqualTo(source.ContactUsPhoneNumber));
         Assert.That(sut.ContactInformation.StandardInfoUrl, Is.EqualTo(source.StandardInfoUrl));

@@ -1,0 +1,63 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse
+@model ConfirmRegulatedShortCourseViewModel
+@{
+    ViewBag.Title = $"Confirm regulated {Model.LearningTypeLower}";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <partial name="_validationSummary" />
+        <span class="govuk-caption-l">Add an @Model.LearningTypeLower</span>
+        <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
+
+        <partial name="_LastStartDateWarning" model="Model.ShortCourseInformation.HasLastDateStarts" />
+
+        <form method="post" asp-route="@RouteNames.ConfirmRegulatedShortCourse" enctype="multipart/form-data" novalidate>
+            <div esfa-validation-marker-for="IsApprovedByRegulator" class="govuk-form-group">
+                <span asp-validation-for="IsApprovedByRegulator" class="govuk-error-message"></span>
+                <input type="hidden" asp-for="LearningType" />
+                <fieldset class="govuk-fieldset">
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">Have you been approved by the regulator to deliver this @Model.LearningTypeLower?</legend>
+                    <div id="IsApprovedByRegulator" class="govuk-radios" data-module="govuk-radios">
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-regulated-shortcourse-yes" type="radio" value="true"
+                                   asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-regulated-shortcourse-yes">
+                                Yes
+                            </label>
+                        </div>
+                        <div class="govuk-radios__item">
+                            <input class="govuk-radios__input" id="is-regulated-shortcourse-no" type="radio" value="false"
+                                   asp-for="IsApprovedByRegulator" sfa-validationerror-class="form-control-error">
+                            <label class="govuk-label govuk-radios__label" for="is-regulated-shortcourse-no">
+                                No
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <nav>
+                <details class="govuk-details" data-module="govuk-details">
+                    <summary class="govuk-details__summary">
+                        <span class="govuk-details__summary-text">
+                            What is a regulated @Model.LearningTypeLower?
+                        </span>
+                    </summary>
+                    <div class="govuk-details__text">
+                        This means there is a regulator that is responsible for this @Model.LearningTypeLower, and you must be approved by them to deliver it.
+                    </div>
+                    <div class="govuk-details__text">
+                        Not having the regulator’s approval will invalidate the training you give your apprentices. They will also not be accepted for assessment.
+                    </div>
+                    <div class="govuk-details__text">
+                        If you are not approved or are unsure about your approval status, get in touch with the regulator.
+                    </div>
+                </details>
+            </nav>
+
+            <div class="govuk-button-group">
+                <button id="submit" type="submit" class="govuk-button">Continue</button>
+            </div>
+        </form>
+    </div>
+</div>

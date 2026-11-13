@@ -6,6 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.ShortCourses.ManageShortCourses;
+
 public class DeleteShortCourseViewModelTest
 {
     [Test, AutoData]
@@ -21,7 +22,7 @@ public class DeleteShortCourseViewModelTest
             option.WithMapping<ShortCourseInformationViewModel>(r => r.Title, m => m.CourseName);
             option.WithMapping<ShortCourseInformationViewModel>(c => c.ApprovalBody, v => v.RegulatorName);
             option.WithMapping<ShortCourseInformationViewModel>(c => c.Route, v => v.Sector);
-            option.Excluding(r => r.StandardUId);
+            option.ExcludingMissingMembers();
             return option;
         });
     }

@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
@@ -26,7 +26,7 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
 
         if (sessionModel == null) return RedirectToRouteWithUkprn(RouteNames.ReviewYourDetails);
 
-        var model = await GetViewModel(sessionModel.LarsCode, learningType);
+        var model = await GetViewModel(Ukprn, sessionModel.LarsCode, learningType);
 
         sessionModel.ShortCourseInformation = model.ShortCourseInformation;
 
@@ -72,9 +72,9 @@ public class ConfirmShortCourseController(IMediator _mediator, ISessionService _
         return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, learningType });
     }
 
-    private async Task<ConfirmShortCourseViewModel> GetViewModel(string larsCode, LearningType learningType)
+    private async Task<ConfirmShortCourseViewModel> GetViewModel(int ukprn, string larsCode, LearningType learningType)
     {
-        var shortCourseInfo = await _mediator.Send(new GetStandardInformationQuery(larsCode));
+        var shortCourseInfo = await _mediator.Send(new GetProviderAvailableCourseDetailsQuery(ukprn, CourseType.ShortCourse, larsCode));
         var model = new ConfirmShortCourseViewModel()
         {
             ShortCourseInformation = shortCourseInfo,
