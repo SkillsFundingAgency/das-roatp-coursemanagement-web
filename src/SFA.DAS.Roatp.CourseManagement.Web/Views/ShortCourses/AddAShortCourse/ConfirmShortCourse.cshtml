@@ -8,13 +8,15 @@
         <partial name="_validationSummary" />
         <span class="govuk-caption-l">Add an @Model.LearningTypeLower</span>
         <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
+
+        <partial name="_LastStartDateWarning" model="Model.ShortCourseInformation.HasLastDateStarts" />
         
         <form method="post" asp-route="@RouteNames.ConfirmShortCourse" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsCorrectShortCourse" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectShortCourse" class="govuk-error-message"></span>
                 <input type="hidden" asp-for="LearningType" />
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the right @Model.LearningTypeLower?</legend>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the correct @Model.LearningTypeLower?</legend>
                     <div id="IsCorrectShortCourse" class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="is-correct-shortcourse-yes" type="radio" value="true"
