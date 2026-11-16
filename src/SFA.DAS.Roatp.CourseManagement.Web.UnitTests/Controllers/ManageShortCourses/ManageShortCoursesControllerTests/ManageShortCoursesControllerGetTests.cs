@@ -12,8 +12,11 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -103,5 +106,44 @@ public class ManageShortCoursesControllerGetTests
         tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted), Times.Once);
         tempDataMock.Verify(t => t.Remove(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey), Times.Once);
         mediatorMock.Verify(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Test, MoqAutoData]
+    public async Task Index_ManageShortCoursesController_ReturnsBreadcrumbs(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<ITempDataDictionary> tempDataMock,
+        [Frozen] Mock<IBreadcrumbsViewModelFactory> breadcrumbsFactoryMock,
+        [Greedy] ManageShortCoursesController sut,
+        GetAllProviderStandardsQueryResult queryResult)
+    {
+        var expectedLearningType = LearningType.ApprenticeshipUnit;
+        var expectedStandardDetailsLink = Guid.NewGuid().ToString();
+
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        var expectedBreadcrumbs = new BreadcrumbsViewModel();
+        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, "https://test/dashboard");
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, "https://test/review-your-details");
+
+        breadcrumbsFactoryMock
+            .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+            .Returns(expectedBreadcrumbs);
+
+        object isShortCourseDeleted = null;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted));
+        sut.TempData = tempDataMock.Object;
+
+        sut.AddDefaultContextWithUser();
+
+        var selectShortCourseUrl = RouteNames.SelectShortCourse;
+        sut.AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.SelectShortCourse, selectShortCourseUrl)
+            .AddUrlForRoute(RouteNames.ManageShortCourseDetails, expectedStandardDetailsLink);
+
+        var result = await sut.Index(expectedLearningType) as ViewResult;
+
+        var model = result.Model as ManageShortCoursesViewModel;
+
+        model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
     }
 }

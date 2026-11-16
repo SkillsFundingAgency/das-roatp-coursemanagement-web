@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -19,10 +20,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string ConfirmRegulatedStandardUrl { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
         public DateTime? LastDateStarts { get; set; }
-        public bool HasLastDateStarts => SetHasLastDateStarts();
-        public bool FundingClosing => SetFundingClosing();
-        public bool FundingClosed => SetFundingClosed();
-        public string TagColour => SetTagColour();
+        public bool HasLastDateStarts => CourseViewModelHelper.HasLastDateStarts(LastDateStarts);
+        public bool FundingClosing => CourseViewModelHelper.IsFundingClosing(LastDateStarts);
+        public bool FundingClosed => CourseViewModelHelper.IsFundingClosed(LastDateStarts);
+        public string TagColour => CourseViewModelHelper.GetTagColour(FundingClosing, FundingClosed);
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -49,36 +50,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         private bool SetIsApprovalPending()
         {
             return IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault();
-        }
-
-        private bool SetHasLastDateStarts()
-        {
-            return LastDateStarts != null;
-        }
-
-        private bool SetFundingClosing()
-        {
-            return HasLastDateStarts && LastDateStarts.Value >= DateTime.UtcNow.Date;
-        }
-
-        private bool SetFundingClosed()
-        {
-            return HasLastDateStarts && LastDateStarts.Value < DateTime.UtcNow.Date;
-        }
-
-        private string SetTagColour()
-        {
-            if (FundingClosing)
-            {
-                return "govuk-tag govuk-tag--orange";
-            }
-
-            if (FundingClosed)
-            {
-                return "govuk-tag govuk-tag--grey";
-            }
-
-            return string.Empty;
         }
     }
 }
