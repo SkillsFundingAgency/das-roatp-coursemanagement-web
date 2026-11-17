@@ -160,6 +160,7 @@ public class ManageShortCoursesControllerGetTests
         model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
     }
 
+    [Test, MoqAutoData]
     public async Task Index_DoesNotHaveCourseTypeShortCourse_RedirectsToShortCourseCourseTypeNotAvailable(
     [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
     [Greedy] ManageShortCoursesController sut)
