@@ -13,19 +13,27 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 
-[AuthorizeCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{learningType}", Name = RouteNames.ManageShortCourses)]
-public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewModelFactory _breadcrumbsFactory) : ControllerBase
+public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewModelFactory _breadcrumbsFactory, IProviderCourseTypeService _providerCourseTypeService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCourses.cshtml";
+    public const string ShortCourseNotAvailableViewPath = "~/Views/ShutterPages/ShortCourseNotAvailable.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
     public async Task<IActionResult> Index(LearningType learningType)
     {
+        var courseTypeResponse = await _providerCourseTypeService.GetProviderCourseType(Ukprn);
+
+        if (!courseTypeResponse.Any(c => c.CourseType == CourseType.ShortCourse))
+        {
+            return RedirectToRoute(RouteNames.ShortCourseNotAvailable, new { ukprn = Ukprn, learningType });
+        }
+
         var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, learningType });
 
         var viewModel = new ManageShortCoursesViewModel()
@@ -68,5 +76,27 @@ public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewM
         viewModel.Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel);
 
         return View(ViewPath, viewModel);
+    }
+
+    [HttpGet("course-type-not-available", Name = RouteNames.ShortCourseNotAvailable)]
+    public IActionResult ShortCourseNotAvailable(LearningType learningType)
+    {
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
+        {
+            Ukprn = Ukprn,
+            BreadcrumbNames =
+            [
+                BreadcrumbNames.ProviderDashboard,
+                BreadcrumbNames.ManageYourCourses
+            ]
+        };
+
+        var viewModel = new ShortCourseShutterPagesViewModel
+        {
+            LearningType = learningType,
+            Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel)
+        };
+
+        return View(ShortCourseNotAvailableViewPath, viewModel);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -12,12 +13,15 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models;
+using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -29,6 +33,7 @@ public class ManageShortCoursesControllerGetTests
     public async Task Index_CourseTypeReturnsShortCourse_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
+        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
         [Greedy] ManageShortCoursesController sut,
         GetAllProviderStandardsQueryResult queryResult)
     {
@@ -41,6 +46,8 @@ public class ManageShortCoursesControllerGetTests
         sut.TempData = tempDataMock.Object;
 
         mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        providerCourseTypeService.Setup(p => p.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(new List<CourseTypeModel> { new() { CourseType = CourseType.ShortCourse } });
 
         sut.AddDefaultContextWithUser();
 
@@ -70,6 +77,7 @@ public class ManageShortCoursesControllerGetTests
     public async Task Index_TempDataRetursShowDeleteBannerAsTrue_ReturnsViewWithBanner(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
+        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
         [Greedy] ManageShortCoursesController sut,
         GetAllProviderStandardsQueryResult queryResult)
     {
@@ -82,6 +90,8 @@ public class ManageShortCoursesControllerGetTests
         sut.TempData = tempDataMock.Object;
 
         mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        providerCourseTypeService.Setup(p => p.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(new List<CourseTypeModel> { new() { CourseType = CourseType.ShortCourse } });
 
         sut.AddDefaultContextWithUser();
 
@@ -113,6 +123,7 @@ public class ManageShortCoursesControllerGetTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IBreadcrumbsViewModelFactory> breadcrumbsFactoryMock,
+        [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
         [Greedy] ManageShortCoursesController sut,
         GetAllProviderStandardsQueryResult queryResult)
     {
@@ -120,6 +131,8 @@ public class ManageShortCoursesControllerGetTests
         var expectedStandardDetailsLink = Guid.NewGuid().ToString();
 
         mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
+
+        providerCourseTypeService.Setup(p => p.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(new List<CourseTypeModel> { new() { CourseType = CourseType.ShortCourse } });
 
         var expectedBreadcrumbs = new BreadcrumbsViewModel();
         expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, "https://test/dashboard");
@@ -144,6 +157,51 @@ public class ManageShortCoursesControllerGetTests
 
         var model = result.Model as ManageShortCoursesViewModel;
 
+        model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
+    }
+
+    public async Task Index_DoesNotHaveCourseTypeShortCourse_RedirectsToShortCourseNotAvailable(
+    [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
+    [Greedy] ManageShortCoursesController sut)
+    {
+        var expectedLearningType = LearningType.ApprenticeshipUnit;
+
+        providerCourseTypeService.Setup(p => p.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(new List<CourseTypeModel> { new() { CourseType = CourseType.Apprenticeship } });
+
+        sut.AddDefaultContextWithUser();
+
+        var result = await sut.Index(expectedLearningType);
+
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult!.RouteName.Should().Be(RouteNames.ShortCourseNotAvailable);
+    }
+
+    [Test, MoqAutoData]
+    public async Task ShortCourseNotAvailable_ReturnsView(
+        [Frozen] Mock<IBreadcrumbsViewModelFactory> breadcrumbsFactoryMock,
+        [Greedy] ManageShortCoursesController sut)
+    {
+        // Arrange
+        var expectedLearningType = LearningType.ApprenticeshipUnit;
+
+        var expectedBreadcrumbs = new BreadcrumbsViewModel();
+        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, "https://test/dashboard");
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, "https://test/review-your-details");
+
+        breadcrumbsFactoryMock
+            .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+            .Returns(expectedBreadcrumbs);
+
+        sut.AddDefaultContextWithUser();
+
+        // Act
+        var result = sut.ShortCourseNotAvailable(expectedLearningType) as ViewResult;
+
+        // Assert
+        result.Should().NotBeNull();
+        result!.Model.Should().NotBeNull();
+        var model = result!.Model as ShortCourseShutterPagesViewModel;
+        model.LearningType.Should().Be(expectedLearningType);
         model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
     }
 }
