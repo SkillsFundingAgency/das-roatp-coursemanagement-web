@@ -160,7 +160,7 @@ public class ManageShortCoursesControllerGetTests
         model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
     }
 
-    public async Task Index_DoesNotHaveCourseTypeShortCourse_RedirectsToShortCourseNotAvailable(
+    public async Task Index_DoesNotHaveCourseTypeShortCourse_RedirectsToShortCourseCourseTypeNotAvailable(
     [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
     [Greedy] ManageShortCoursesController sut)
     {
@@ -173,11 +173,11 @@ public class ManageShortCoursesControllerGetTests
         var result = await sut.Index(expectedLearningType);
 
         var redirectResult = result as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ShortCourseNotAvailable);
+        redirectResult!.RouteName.Should().Be(RouteNames.ShortCourseCourseTypeNotAvailable);
     }
 
     [Test, MoqAutoData]
-    public async Task ShortCourseNotAvailable_ReturnsView(
+    public async Task CourseTypeNotAvailable_ReturnsView(
         [Frozen] Mock<IBreadcrumbsViewModelFactory> breadcrumbsFactoryMock,
         [Greedy] ManageShortCoursesController sut)
     {
@@ -195,7 +195,7 @@ public class ManageShortCoursesControllerGetTests
         sut.AddDefaultContextWithUser();
 
         // Act
-        var result = sut.ShortCourseNotAvailable(expectedLearningType) as ViewResult;
+        var result = sut.CourseTypeNotAvailable(expectedLearningType) as ViewResult;
 
         // Assert
         result.Should().NotBeNull();

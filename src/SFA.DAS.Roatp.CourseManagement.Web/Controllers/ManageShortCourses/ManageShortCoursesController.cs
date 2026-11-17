@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewModelFactory _breadcrumbsFactory, IProviderCourseTypeService _providerCourseTypeService) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCourses.cshtml";
-    public const string ShortCourseNotAvailableViewPath = "~/Views/ShutterPages/ShortCourseNotAvailable.cshtml";
+    public const string ShortCourseCourseTypeNotAvailableViewPath = "~/Views/ShutterPages/ShortCourseCourseTypeNotAvailable.cshtml";
 
     [HttpGet]
     [ClearSession(nameof(ShortCourseSessionModel))]
@@ -31,7 +31,7 @@ public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewM
 
         if (!courseTypeResponse.Any(c => c.CourseType == CourseType.ShortCourse))
         {
-            return RedirectToRoute(RouteNames.ShortCourseNotAvailable, new { ukprn = Ukprn, learningType });
+            return RedirectToRoute(RouteNames.ShortCourseCourseTypeNotAvailable, new { ukprn = Ukprn, learningType });
         }
 
         var selectShortCourseUrl = Url.RouteUrl(RouteNames.SelectShortCourse, new { ukprn = Ukprn, learningType });
@@ -78,8 +78,8 @@ public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewM
         return View(ViewPath, viewModel);
     }
 
-    [HttpGet("course-type-not-available", Name = RouteNames.ShortCourseNotAvailable)]
-    public IActionResult ShortCourseNotAvailable(LearningType learningType)
+    [HttpGet("course-type-not-available", Name = RouteNames.ShortCourseCourseTypeNotAvailable)]
+    public IActionResult CourseTypeNotAvailable(LearningType learningType)
     {
         var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
         {
@@ -97,6 +97,6 @@ public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewM
             Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel)
         };
 
-        return View(ShortCourseNotAvailableViewPath, viewModel);
+        return View(ShortCourseCourseTypeNotAvailableViewPath, viewModel);
     }
 }
