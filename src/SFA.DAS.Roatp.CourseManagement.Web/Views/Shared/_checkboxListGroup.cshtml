@@ -1,0 +1,19 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents
+@model CheckboxListFilterSectionViewModel
+
+<div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+        <legend class="govuk-visually-hidden">@Model.Heading</legend>
+        <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+            <h3 class="govuk-heading-s">
+                @Model.Heading
+            </h3>
+            @if (!string.IsNullOrWhiteSpace(Model.SubHeading))
+            {
+                <p class="govuk-hint">@Model.SubHeading</p>
+            }
+
+            @await Html.PartialAsync("_checkboxItems", Model)
+        </div>
+    </fieldset>
+</div>

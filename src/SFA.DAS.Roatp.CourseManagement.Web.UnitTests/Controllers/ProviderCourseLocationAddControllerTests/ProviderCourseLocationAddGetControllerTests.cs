@@ -13,47 +13,49 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
+using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationAddControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationAddControllerTests;
+
+[TestFixture]
+public class ProviderCourseLocationAddGetControllerTests
 {
-    [TestFixture]
-    public class ProviderCourseLocationAddGetControllerTests
+    private const string Ukprn = "10012002";
+    private Mock<IMediator> _mediatorMock;
+    private Mock<IValidator<ProviderCourseLocationAddSubmitModel>> _validatorMock;
+    private Mock<ISessionService> _sessionServiceMock;
+    private ProviderCourseLocationAddController _sut;
+    private readonly string verifyUrl = "http://test";
+
+    [SetUp]
+    public void Before_Each_Test()
     {
-        private const string Ukprn = "10012002";
-        private Mock<IMediator> _mediatorMock;
-        private Mock<IValidator<ProviderCourseLocationAddSubmitModel>> _validatorMock;
-        private ProviderCourseLocationAddController _sut;
-        private readonly string verifyUrl = "http://test";
+        _mediatorMock = new Mock<IMediator>();
+        _validatorMock = new Mock<IValidator<ProviderCourseLocationAddSubmitModel>>();
+        _sessionServiceMock = new Mock<ISessionService>();
+        _sut = new ProviderCourseLocationAddController(Mock.Of<ILogger<ProviderCourseLocationAddController>>(), _mediatorMock.Object, _validatorMock.Object, _sessionServiceMock.Object);
+        _sut.AddDefaultContextWithUser()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.GetProviderCourseLocations, verifyUrl);
+    }
 
-        [SetUp]
-        public void Before_Each_Test()
-        {
-            _mediatorMock = new Mock<IMediator>();
-            _validatorMock = new Mock<IValidator<ProviderCourseLocationAddSubmitModel>>();
-            _sut = new ProviderCourseLocationAddController(Mock.Of<ILogger<ProviderCourseLocationAddController>>(), _mediatorMock.Object, _validatorMock.Object);
-            _sut.AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetProviderCourseLocations, verifyUrl);
-        }
+    [Test, AutoData]
+    public async Task SelectAProviderlocation_ValidRequest_ReturnsView(
+        GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult,
+        GetProviderCourseLocationsQueryResult resultProviderCourseLocations,
+        string larsCode)
+    {
+        _mediatorMock
+            .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(availableProviderLocationsQueryResult);
 
-        [Test, AutoData]
-        public async Task SelectAProviderlocation_ValidRequest_ReturnsView(
-            GetAvailableProviderLocationsQueryResult availableProviderLocationsQueryResult,
-            GetProviderCourseLocationsQueryResult resultProviderCourseLocations,
-            string larsCode)
-        {
-            _mediatorMock
-                .Setup(m => m.Send(It.Is<GetAvailableProviderLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == larsCode), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(availableProviderLocationsQueryResult);
+        var result = await _sut.SelectAProviderlocation(larsCode);
 
-            var result = await _sut.SelectAProviderlocation(larsCode);
-
-            var viewResult = result as ViewResult;
-            viewResult.Should().NotBeNull();
-            viewResult!.ViewName.Should().Contain(ProviderCourseLocationAddController.ViewPath);
-            var model = viewResult.Model as ProviderCourseLocationAddViewModel;
-            model.Should().NotBeNull();
-        }
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        viewResult!.ViewName.Should().Contain(ProviderCourseLocationAddController.ViewPath);
+        var model = viewResult.Model as ProviderCourseLocationAddViewModel;
+        model.Should().NotBeNull();
     }
 }

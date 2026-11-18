@@ -1,0 +1,12 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Filters.FilterComponents
+@model ClearFilterSectionViewModel
+
+<h4 class="das-filter__selected-sub-heading">@Model.Title</h4>
+@foreach (ClearFilterItemViewModel item in Model.Items)
+{
+    <a href="@item.ClearLink"
+       title="Clear this filter '@item.DisplayText'"
+       class="das-filter__tag das-breakable">
+        @item.DisplayText
+    </a>
+}

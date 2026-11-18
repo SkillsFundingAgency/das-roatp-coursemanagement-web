@@ -10,11 +10,13 @@
         <span class="govuk-caption-l">Add a standard</span>
         <partial name="_StandardInformation" for="StandardInformation" />
 
+        <partial name="_LastStartDateWarning" model="Model.StandardInformation.HasLastDateStarts" />
+
         <form method="post" asp-route="@RouteNames.PostAddStandardConfirmNonRegulatedStandard" enctype="multipart/form-data" novalidate>
             <div esfa-validation-marker-for="IsCorrectStandard" class="govuk-form-group">
                 <span asp-validation-for="IsCorrectStandard" class="govuk-error-message"></span>
                 <fieldset class="govuk-fieldset">
-                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the correct standard?</legend>
+                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">Is this the correct apprenticeship?</legend>
                     <div id="IsCorrectStandard" class="govuk-radios" data-module="govuk-radios">
                         <div class="govuk-radios__item">
                             <input class="govuk-radios__input" id="is-correct-standard-yes" type="radio" value="true"

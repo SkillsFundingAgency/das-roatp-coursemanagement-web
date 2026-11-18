@@ -10,7 +10,7 @@
         <div class="govuk-caption-l">Check your record</div>
         <h1 class="govuk-heading-xl">Where will this standard be delivered?</h1>
 
-        <form method="post" asp-route="@RouteNames.PostLocationOption" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.PostLocationOption" enctype="multipart/form-data" autocomplete="off" novalidate>
 
             <div esfa-validation-marker-for="LocationOption" class="govuk-form-group">
                 <span asp-validation-for="LocationOption" class="govuk-error-message"></span>

@@ -26,7 +26,7 @@
           </details>
     
 
-        <form method="post" asp-route="@RouteNames.PostNationalDeliveryOption" enctype="multipart/form-data" novalidate>
+        <form method="post" asp-route="@RouteNames.PostNationalDeliveryOption" enctype="multipart/form-data" autocomplete="off" novalidate>
             <div esfa-validation-marker-for="HasNationalDeliveryOption" class="govuk-form-group">
                 <span asp-validation-for="HasNationalDeliveryOption" class="govuk-error-message"></span>
                 <div id="HasNationalDeliveryOption" class="govuk-radios" data-module="govuk-radios">

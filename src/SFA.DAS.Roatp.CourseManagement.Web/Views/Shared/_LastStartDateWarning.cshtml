@@ -1,0 +1,17 @@
+﻿@model bool
+
+<div asp-show="Model" class="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        This course has a last start date set. Once the last start date has passed, you will not be able to:
+    </strong>
+    <ul class="govuk-list govuk-list--bullet govuk-!-margin-top-6 govuk-!-margin-left-7">
+        <li><strong>add new learners</strong></li>
+        <li><strong>advertise it on Find apprenticeship training</strong></li>
+        <li><strong>submit ILRs for learners who start after this date</strong></li>
+    </ul>
+    <p class="govuk-warning-text__text govuk-!-margin-top-6">
+        You can continue to train learners who are already on the course.
+    </p>
+</div>
