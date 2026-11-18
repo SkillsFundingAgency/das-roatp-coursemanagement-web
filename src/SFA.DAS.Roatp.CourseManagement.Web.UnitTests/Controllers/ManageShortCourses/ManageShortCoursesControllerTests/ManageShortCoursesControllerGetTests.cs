@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using Humanizer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCo
 
 public class ManageShortCoursesControllerGetTests
 {
+    private const string providerDashboardUrl = "https://test/dashboard";
+    private const string manageYourCoursesUrl = "https://test/review-your-details";
+
     [Test, MoqAutoData]
     public async Task Index_CourseTypeReturnsShortCourse_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
@@ -135,8 +139,8 @@ public class ManageShortCoursesControllerGetTests
         providerCourseTypeService.Setup(p => p.GetProviderCourseType(It.IsAny<int>())).ReturnsAsync(new List<CourseTypeModel> { new() { CourseType = CourseType.ShortCourse } });
 
         var expectedBreadcrumbs = new BreadcrumbsViewModel();
-        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, "https://test/dashboard");
-        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, "https://test/review-your-details");
+        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, providerDashboardUrl);
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, manageYourCoursesUrl);
 
         breadcrumbsFactoryMock
             .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
@@ -186,8 +190,8 @@ public class ManageShortCoursesControllerGetTests
         var expectedLearningType = LearningType.ApprenticeshipUnit;
 
         var expectedBreadcrumbs = new BreadcrumbsViewModel();
-        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, "https://test/dashboard");
-        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, "https://test/review-your-details");
+        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, providerDashboardUrl);
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, manageYourCoursesUrl);
 
         breadcrumbsFactoryMock
             .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
@@ -199,10 +203,13 @@ public class ManageShortCoursesControllerGetTests
         var result = sut.CourseTypeNotAvailable(expectedLearningType) as ViewResult;
 
         // Assert
-        result.Should().NotBeNull();
-        result!.Model.Should().NotBeNull();
-        var model = result!.Model as ShortCourseShutterPagesViewModel;
-        model.LearningType.Should().Be(expectedLearningType);
-        model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
+        using (new AssertionScope())
+        {
+            result.Should().NotBeNull();
+            result!.Model.Should().NotBeNull();
+            var model = result!.Model as ShortCourseShutterPagesViewModel;
+            model.LearningType.Should().Be(expectedLearningType);
+            model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
+        }
     }
 }

@@ -1,4 +1,8 @@
-﻿@model ShortCourseShutterPagesViewModel
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants
+@model ShortCourseShutterPagesViewModel
+@{
+    ViewData["Title"] = $"Courses not available";
+}
 
 @section breadcrumb
 {
@@ -14,14 +18,14 @@
         <p class="govuk-body govuk-!-margin-bottom-6">The delivery of @Model.LearningTypeLowerPlural is managed by the Apprentice Service. When you were invited to offer them, you were only approved for certain courses.</p>
         <p class="govuk-body govuk-!-margin-bottom-6">
             If you would like to offer more, you can contact us at
-            <a class="govuk-link" href="mailto:apar.mailbox@DWP.GOV.UK">
-                apar.mailbox@DWP.GOV.UK
+            <a class="govuk-link" href="mailto:@ExternalLinks.AparMailLink">
+                @ExternalLinks.AparMailLink
             </a>.
         </p>
         <p class="govuk-body govuk-!-margin-bottom-6">We may ask you to provide additional evidence to demonstrate your eligibility.</p>
         <p class="govuk-body">
             Find out more about
-            <a class="govuk-link" href="https://www.gov.uk/government/publications/resources-for-promoting-the-growth-and-skills-levy/apprenticeship-units-accessible-version-of-toolkit" target="_blank">
+            <a class="govuk-link" href="@ExternalLinks.FindOutAboutApprenticeshipUnitsLink" target="_blank">
                 what @Model.LearningTypeLowerPlural are, who can deliver them and how they're funded
             </a>.
         </p>

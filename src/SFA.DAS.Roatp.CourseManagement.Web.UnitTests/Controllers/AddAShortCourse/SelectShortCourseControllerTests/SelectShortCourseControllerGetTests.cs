@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -90,10 +91,13 @@ public class SelectShortCourseControllerGetTests
         var response = sut.CoursesNotAvailable(expectedLearningType) as ViewResult;
 
         // Assert
-        response.Should().NotBeNull();
-        response!.Model.Should().NotBeNull();
-        var model = response!.Model as ShortCourseShutterPagesViewModel;
-        model.LearningType.Should().Be(expectedLearningType);
-        model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
+        using (new AssertionScope())
+        {
+            response.Should().NotBeNull();
+            response!.Model.Should().NotBeNull();
+            var model = response!.Model as ShortCourseShutterPagesViewModel;
+            model.LearningType.Should().Be(expectedLearningType);
+            model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
+        }
     }
 }
