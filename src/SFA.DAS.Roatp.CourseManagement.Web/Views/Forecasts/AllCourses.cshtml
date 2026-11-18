@@ -1,8 +1,12 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
-@using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts
 @model ForecastCoursesViewModel
 @{
     ViewData["Title"] = $"Select {Model.LearningTypeLower} to add forecasts";
+}
+
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
 }
 
 <div class="govuk-grid-row">
