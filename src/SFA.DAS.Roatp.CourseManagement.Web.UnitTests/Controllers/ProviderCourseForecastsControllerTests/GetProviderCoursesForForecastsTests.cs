@@ -9,7 +9,9 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts;
@@ -21,6 +23,7 @@ public class GetProviderCoursesForForecastsTests
 {
     private readonly Standard _expectedStandard = new() { CourseName = "course name", Level = 1 };
     private Mock<IValidator<CourseForecastsSubmitModel>> _validatorMock;
+    private Mock<IBreadcrumbsViewModelFactory> _breadcrumbFactoryMock;
     ProviderCourseForecastsController _sut;
     ForecastCoursesViewModel _actualModel;
 
@@ -31,7 +34,15 @@ public class GetProviderCoursesForForecastsTests
         GetAllProviderStandardsQueryResult coursesResult = new() { Standards = [_expectedStandard] };
         mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(coursesResult);
         _validatorMock = new Mock<IValidator<CourseForecastsSubmitModel>>();
-        _sut = new(mediatorMock.Object, _validatorMock.Object);
+        _breadcrumbFactoryMock = new();
+        var breadcrumbViewModel = new BreadcrumbsViewModel();
+        breadcrumbViewModel.Add(BreadcrumbNames.ProviderDashboard, "url");
+        breadcrumbViewModel.Add(BreadcrumbNames.ManageYourCourses, "url");
+
+        _breadcrumbFactoryMock
+            .Setup(x => x.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+            .Returns(breadcrumbViewModel);
+        _sut = new(mediatorMock.Object, _validatorMock.Object, _breadcrumbFactoryMock.Object);
 
         _sut
             .AddDefaultContextWithUser()
@@ -55,5 +66,12 @@ public class GetProviderCoursesForForecastsTests
         CourseLink link = _actualModel.CourseLinks.Courses.First();
         link.Name.Should().Be(_expectedStandard.DisplayName);
         link.Url.Should().Be(TestConstants.DefaultUrl);
+    }
+
+    [Test]
+    public async Task GetProviderCoursesForForecasts_PopulatedBreadcrumbs()
+    {
+        _actualModel.Breadcrumbs.Items.Should().Contain(item => item.Description == BreadcrumbNames.ProviderDashboard);
+        _actualModel.Breadcrumbs.Items.Should().Contain(item => item.Description == BreadcrumbNames.ManageYourCourses);
     }
 }
