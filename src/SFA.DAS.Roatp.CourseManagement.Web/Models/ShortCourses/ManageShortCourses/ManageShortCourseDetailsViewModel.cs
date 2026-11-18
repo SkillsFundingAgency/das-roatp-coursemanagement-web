@@ -39,8 +39,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
                 LearningType = source.LearningType,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Duration = source.Duration,
-                DurationUnits = source.DurationUnits,
-                CourseType = source.CourseType
+                DurationUnits = source.DurationUnits
             },
             ContactInformation = new ShortCourseContactInformationViewModel()
             {

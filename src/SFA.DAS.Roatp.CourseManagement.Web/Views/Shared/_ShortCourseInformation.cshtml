@@ -1,11 +1,16 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses
 @model ShortCourseInformationViewModel
 
 <h1 class="govuk-heading-xl">@Model.CourseDisplayName</h1>
 <table class="govuk-table" aria-label="Course details">
     <tbody class="govuk-table__body">
         <tr class="govuk-table__row">
-            <th class="govuk-table__header das-table-cell-width-40" scope="row">Sector</th>
+            <th class="govuk-table__header das-table-cell-width-40" scope="row">Type</th>
+            <td class="govuk-table__cell das-table-cell-width-70">@Model.LearningType.ToString().Humanize()</td>
+        </tr>
+        <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Sector</th>
             <td class="govuk-table__cell das-table-cell-width-70">@Model.Sector</td>
         </tr>
         <tr class="govuk-table__row">
@@ -23,6 +28,20 @@
         <tr class="govuk-table__row">
             <th class="govuk-table__header" scope="row">Level</th>
             <td class="govuk-table__cell">@Model.Level</td>
+        </tr>
+        <tr asp-show="@Model.IsRegulatedForProvider" class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Regulated by</th>
+            <td class="govuk-table__cell">@Model.RegulatorName</td>
+        </tr>
+        <tr asp-show="@Model.FundingClosing" class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Status</th>
+            <td class="govuk-table__cell">
+                <span class="@Model.TagColour">@Model.StatusText</span>
+            </td>
+        </tr>
+        <tr asp-show="@Model.HasLastDateStarts" class="govuk-table__row">
+            <th class="govuk-table__header" scope="row">Last start date</th>
+            <td class="govuk-table__cell">@Model.LastDateStarts?.ToString("dd MMM yyyy")</td>
         </tr>
     </tbody>
 </table>
