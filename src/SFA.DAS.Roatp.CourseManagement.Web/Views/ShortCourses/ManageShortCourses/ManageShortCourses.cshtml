@@ -5,48 +5,132 @@
     ViewData["Title"] = $"Manage your {Model.LearningTypeLowerPlural}";
 }
 
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
+}
+
 <div asp-show="Model.ShowDeleteShortCourseNotificationBanner">
     <partial name="_ShortCourseDeleteNotificationBanner" model="Model.Banner" />
 </div>
 
 <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5" id="header-apprenticeshipUnit">Manage your @Model.LearningTypeLowerPlural</h1>
+    </div>
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-xl margin-bottom-30" id="header-apprenticeshipUnit">Manage your @Model.LearningTypeLowerPlural</h1>
-        <p class="govuk-body">Use this section to add a new @Model.LearningTypeLower, update its details or delete it. Any changes you make will update Find apprenticeship training.</p>
-        <p class="govuk-body">
-            <a href="@Model.AddAShortCourseLink" class="govuk-button">
-                Add an @Model.LearningTypeLower
-            </a>
+        <p class="govuk-body">Add, remove or change the @Model.LearningTypeLowerPlural you advertise on Find apprenticeship training.</p>
+        <p class="govuk-body">If you want to claim government funding for a course, it must be added here.</p>
+    </div>
+</div>
+
+<div class="app-action-panel govuk-!-margin-bottom-8 govuk-!-margin-top-2">
+    <h2 class="govuk-heading-l">Add an @Model.LearningTypeLower</h2>
+    <p class="govuk-body">Add a new @Model.LearningTypeLower to your offering on Find apprenticeship training.</p>
+    <p class="govuk-body">
+        <a href="@Model.AddAShortCourseLink" class="govuk-button">
+            Add an @Model.LearningTypeLower
+        </a>
+    </p>
+</div>
+
+<hr class="govuk-section-break govuk-section-break--visible govuk-!-margin-bottom-6">
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds govuk-!-margin-bottom-0">
+        <h5 class="govuk-heading-l">Your @Model.LearningTypeLowerPlural</h5>
+        <p asp-show="Model.HasNoCourses" class="govuk-body">
+            There are currently no courses, add one above.
         </p>
+        <p asp-show="Model.HasCourses" class="govuk-body">
+            This is a list of your current @Model.LearningTypeLowerPlural.
+        </p>
+        <details asp-show="Model.HasCourses" class="govuk-details">
+            <summary class="govuk-details__summary">
+                <span class="govuk-details__summary-text">
+                    What do the funding statuses mean?
+                </span>
+            </summary>
+            <div class="govuk-details__text">
+                <p>The Apprenticeship Service (AS) is responsible for managing the courses training providers can deliver and claim funding for.</p>
+                <p>Sometimes, we may choose to limit who can deliver a course. We also may decide to stop all providers from offering it. For example, when a course is being defunded.</p>
+                <p>Funding statuses help you understand if a course is:</p>
+                <ul class="govuk-list govuk-list--bullet">
+                    <li>closing to new government funded learners soon</li>
+                    <li>no longer funded by the government</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</div>
 
-        <h2 asp-show="Model.ShowShortCourseHeading" class="govuk-heading-m">
-            Your @Model.LearningTypeLowerPlural
-            </h2>   
-        
-        <table class="govuk-table" aria-labelledby="course-list">
-            <thead class="govuk-table__head govuk-visually-hidden">
-                <tr class="govuk-table__row">
-                    <th class="govuk-table__header govuk-!-font-size-24" scope="col">Courses</th>
-                </tr>
-            </thead>
-            <tbody class="govuk-table__body">
-                @foreach (var course in Model.ShortCourses)
-                {
-                    <tr class="govuk-table__row">
-                        <td class="govuk-table__cell">
-                            <div class="govuk-!-margin-top-1 govuk-!-margin-bottom-2" asp-show="course.StandardRequiresMoreInfo">
-                                <strong class="govuk-tag govuk-tag--orange">
-                                    More details needed
-                                </strong>
-                            </div>
-                                <a class="govuk-link" href="@course.StandardUrl">
-                                    @course.CourseDisplayName
-                                </a>                            
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
+<div asp-show="Model.HasCourses" class="govuk-grid-row govuk-!-margin-top-6">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="app-results-header govuk-!-margin-bottom-3">
+            <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-0">@Model.TotalCourseCount @(Model.TotalCourseCount == 1 ? "course" : "courses")</p>
+            <p class="govuk-body govuk-!-margin-bottom-0">
+                Sorted by: <span class="govuk-!-font-weight-bold">Name of course</span>
+            </p>
+        </div>
 
+        <ul class="govuk-list app-results-list app-results-list--bordered">
+            @foreach (var course in Model.ShortCourses)
+            {
+                <li class="app-results-list__item">
+
+                    <div asp-show="@(course.FundingClosing || course.FundingClosed)" class="govuk-!-margin-bottom-2">
+                        <strong class="govuk-tag @course.TagColour govuk-!-margin-bottom-2">
+                            <span asp-show="@course.FundingClosing">
+                                Funding closing for new starts
+                            </span>
+                            <span asp-show="@course.FundingClosed">
+                                Funding closed for new starts
+                            </span>
+                        </strong>
+                    </div>
+
+                    <div class="app-results-list__content">
+                        <h6 class="govuk-heading-m govuk-!-margin-bottom-1">
+                            <a class="govuk-link govuk-link--no-visited-state"
+                                href="@course.StandardUrl">
+                                @course.CourseDisplayName
+                            </a>
+                        </h6>
+                        <p class="govuk-body govuk-!-margin-top-2 govuk-!-margin-bottom-1">
+                            <span class="govuk-hint">LARS Code:</span>
+                            @course.LarsCode
+                        </p>
+                        <div asp-show="@course.FundingClosing"
+                                class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+
+                            <p class="govuk-body govuk-!-margin-bottom-1">
+                                <span class="govuk-hint">Funding status:</span>
+                                We've added a last start date for learners to this course.
+                                You can claim funding for new learners enrolled up until this date.
+                            </p>
+
+                            <p class="govuk-body govuk-!-margin-bottom-0">
+                                <span class="govuk-hint">Last start date:</span>
+                                @course.LastDateStarts?.ToString("dd MMM yyyy")
+                            </p>
+                        </div>
+                        <div asp-show="@course.FundingClosed"
+                                class="govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+
+                            <p class="govuk-body govuk-!-margin-bottom-1">
+                                <span class="govuk-hint">Funding status:</span>
+                                We've closed this @Model.LearningTypeLower to new starts.
+                                This means you can no longer claim funding for any learners you enrol.
+                            </p>
+
+                            <p class="govuk-body govuk-!-margin-bottom-0">
+                                <span class="govuk-hint">Last start date:</span>
+                                @course.LastDateStarts?.ToString("dd MMM yyyy")
+                            </p>
+                        </div>
+                    </div>
+                </li>
+            }
+        </ul>
     </div>
 </div>

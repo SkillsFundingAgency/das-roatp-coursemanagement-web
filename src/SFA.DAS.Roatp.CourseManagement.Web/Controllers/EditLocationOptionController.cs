@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -36,22 +35,12 @@ public class EditLocationOptionController : ControllerBase
     }
 
     [HttpGet(Name = RouteNames.GetLocationOption)]
+    [ClearSession(nameof(EditLocationOptionsSessionModel))]
     public async Task<IActionResult> Index([FromRoute] string larsCode)
     {
-        var model = new EditLocationOptionViewModel();
-        var locationOption = _sessionService.Get(SessionKeys.SelectedLocationOption);
-        if (string.IsNullOrEmpty(locationOption))
-        {
-            var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
-            model.LocationOption = result.LocationOption;
-        }
-        else
-        {
-            Enum.TryParse<LocationOption>(locationOption, out var result);
-            model.LocationOption = result;
-        }
+        var result = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
+        EditLocationOptionViewModel model = new() { LocationOption = result.LocationOption };
         _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is set to {LocationOption}", Ukprn, larsCode, model.LocationOption);
-        _sessionService.Delete(SessionKeys.SelectedLocationOption);
 
         return View(model);
     }
@@ -60,38 +49,43 @@ public class EditLocationOptionController : ControllerBase
     public async Task<IActionResult> Index([FromRoute] string larsCode, [FromRoute] int ukprn, LocationOptionSubmitModel submitModel)
     {
         var validatedResult = _validator.Validate(submitModel);
-
         if (!validatedResult.IsValid) ModelState.AddValidationErrors(validatedResult.Errors);
-
         if (!ModelState.IsValid)
         {
-            var model = new EditLocationOptionViewModel();
-
-            return View(model);
+            return View(submitModel);
         }
+
         _logger.LogInformation("For Ukprn:{Ukprn} LarsCode:{LarsCode} the location option is being updated to {LocationOption}", Ukprn, larsCode, submitModel.LocationOption);
 
-        _sessionService.Set(submitModel.LocationOption.ToString(), SessionKeys.SelectedLocationOption);
+        GetProviderCourseDetailsQueryResult existing = await _mediator.Send(new GetProviderCourseDetailsQuery(Ukprn, larsCode));
 
-        switch (submitModel.LocationOption)
+        EditLocationOptionsSessionModel sessionModel = new()
         {
-            case LocationOption.ProviderLocation:
-            case LocationOption.EmployerLocation:
-                var deleteOption =
-                    submitModel.LocationOption == LocationOption.ProviderLocation ?
-                    DeleteProviderCourseLocationOption.DeleteEmployerLocations :
-                    DeleteProviderCourseLocationOption.DeleteProviderLocations;
-                var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, deleteOption);
+            ExistingLocationOption = existing.LocationOption,
+            HasExistingNationalOption = existing.HasNationalLocation,
+            UpdatedLocationOption = submitModel.LocationOption
+        };
+        _sessionService.Set(sessionModel);
+
+        if (sessionModel.HasLocationOptionChanged && existing.HasProviderLocation && (existing.HasNationalLocation || existing.HasRegionalLocation))
+        {
+            if (submitModel.LocationOption == LocationOption.EmployerLocation)
+            {
+                var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteProviderLocations);
                 await _mediator.Send(command);
-                break;
-            case LocationOption.Both:
-            default:
-                break;
+            }
+            else if (submitModel.LocationOption == LocationOption.ProviderLocation)
+            {
+                var command = new DeleteCourseLocationsCommand(Ukprn, larsCode, UserId, UserDisplayName, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+                await _mediator.Send(command);
+            }
         }
-        if (submitModel.LocationOption == LocationOption.ProviderLocation || submitModel.LocationOption == LocationOption.Both)
+
+        if (submitModel.LocationOption is LocationOption.ProviderLocation or LocationOption.Both)
         {
             return RedirectToRoute(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
         }
+
         return RedirectToRoute(RouteNames.GetNationalDeliveryOption, new { ukprn, larsCode });
     }
 }

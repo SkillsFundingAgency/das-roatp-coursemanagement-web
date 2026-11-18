@@ -6,116 +6,118 @@ using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests;
+
+[TestFixture]
+public class EditLocationOptionControllerPostTests : EditLocationOptionControllerTestBase
 {
-    [TestFixture]
-    public class EditLocationOptionControllerPostTests : EditLocationOptionControllerTestBase
+    private const string LarsCode = "123";
+    private const int Ukprn = 10012002;
+    [Test]
+    public async Task Post_InvalidModel_ThenReturnsViewWithValidationError()
     {
-        private const string LarsCode = "123";
-        private const int Ukprn = 10012002;
-        [Test]
-        public async Task Post_InvalidModel_ReturnsViewWithValidationError()
-        {
-            var validationResult = new ValidationResult();
+        var validationResult = new ValidationResult();
 
-            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+        validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(validationResult);
+        _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(validationResult);
 
-            var model = new EditLocationOptionViewModel();
-            _sut.ModelState.AddModelError("key", "message");
+        var model = new EditLocationOptionViewModel();
+        _sut.ModelState.AddModelError("key", "message");
 
-            var result = await _sut.Index(LarsCode, Ukprn, model);
+        // Action
+        var result = await _sut.Index(LarsCode, Ukprn, model);
 
-            result.As<ViewResult>().Should().NotBeNull();
+        result.Should().BeOfType<ViewResult>().Which.Model.Should().BeOfType<EditLocationOptionViewModel>().Which.LocationOption.Should().Be(LocationOption.None);
+        _mediatorMock.Verify(m => m.Send(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
 
-            result.As<ViewResult>().Model.As<EditLocationOptionViewModel>().LocationOption.Should().Be(LocationOption.None);
-            _mediatorMock.Verify(m => m.Send(It.IsAny<object>(), It.IsAny<CancellationToken>()), Times.Never);
-        }
+    [Test, AutoData]
+    public async Task Post_ThenSetsSessionModel(ProviderCourseLocation providerCourseLocation, EditLocationOptionViewModel model)
+    {
+        GetProviderCourseDetailsQueryResult result = SetProviderCourseLocationsInMediatorResponse([providerCourseLocation]);
 
-        [Test, AutoData]
-        public async Task Post_LocationOptionProvider_DeletesEmployerLocations(EditLocationOptionViewModel model)
-        {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+        await _sut.Index(LarsCode, Ukprn, model);
 
-            model.LocationOption = LocationOption.ProviderLocation;
+        _sessionServiceMock.Verify(s => s.Set(It.Is<EditLocationOptionsSessionModel>(m => m.ExistingLocationOption == result.LocationOption && m.HasExistingNationalOption == result.HasNationalLocation && m.UpdatedLocationOption == model.LocationOption)), Times.Once);
+    }
 
-            await _sut.Index(LarsCode, Ukprn, model);
+    [TestCase(LocationType.National)]
+    [TestCase(LocationType.Regional)]
+    public async Task WhenChangingFromBothToProviderOption_ThenDeletesEmployerLocations(LocationType employerLocation)
+    {
+        SetProviderCourseLocationsInMediatorResponse(
+        [
+            new ProviderCourseLocation { LocationType = LocationType.Provider },
+            new ProviderCourseLocation { LocationType = employerLocation }
+        ]);
+        EditLocationOptionViewModel model = new() { LocationOption = LocationOption.ProviderLocation };
 
-            _mediatorMock.Verify(m => m.Send(
-                It.Is<DeleteCourseLocationsCommand>(d => d.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteEmployerLocations), It.IsAny<CancellationToken>()));
-        }
+        await _sut.Index(LarsCode, Ukprn, model);
 
-        [Test, AutoData]
-        public async Task Post_LocationOptionEmployer_DeletesProviderLocations(EditLocationOptionViewModel model)
-        {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+        _mediatorMock.Verify(m => m.Send(
+            It.Is<DeleteCourseLocationsCommand>(d => d.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteEmployerLocations), It.IsAny<CancellationToken>()));
+        // Verify no other deletes are invoked
+        _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteCourseLocationsCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
 
-            model.LocationOption = LocationOption.EmployerLocation;
+    [TestCase(LocationType.National)]
+    [TestCase(LocationType.Regional)]
+    public async Task WhenChangingFromBothToEmployerOption_ThenDeletesProviderLocations(LocationType employerLocation)
+    {
+        SetProviderCourseLocationsInMediatorResponse(
+        [
+            new ProviderCourseLocation { LocationType = LocationType.Provider },
+            new ProviderCourseLocation { LocationType = employerLocation }
+        ]);
+        EditLocationOptionViewModel model = new() { LocationOption = LocationOption.EmployerLocation };
 
-            await _sut.Index(LarsCode, Ukprn, model);
+        await _sut.Index(LarsCode, Ukprn, model);
 
-            _mediatorMock.Verify(m => m.Send(
-                It.Is<DeleteCourseLocationsCommand>(d => d.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteProviderLocations), It.IsAny<CancellationToken>()));
-        }
+        _mediatorMock.Verify(m => m.Send(It.Is<DeleteCourseLocationsCommand>(d => d.DeleteProviderCourseLocationOption == DeleteProviderCourseLocationOption.DeleteProviderLocations), It.IsAny<CancellationToken>()));
+        // Verify no other deletes are invoked
+        _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteCourseLocationsCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
 
-        [Test, AutoData]
-        public async Task Post_LocationOptionBoth_DoesNotDeleteAnyProviderLocations(EditLocationOptionViewModel model)
-        {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+    [TestCase(LocationType.National, LocationOption.ProviderLocation)]
+    [TestCase(LocationType.Regional, LocationOption.ProviderLocation)]
+    [TestCase(LocationType.Provider, LocationOption.EmployerLocation)]
+    [TestCase(LocationType.Provider, LocationOption.ProviderLocation)]
+    [TestCase(LocationType.National, LocationOption.EmployerLocation)]
+    [TestCase(LocationType.Regional, LocationOption.EmployerLocation)]
+    public async Task GivenCombinations_ThenDoesNotDeleteAnyLocation(LocationType locationType, LocationOption locationOption)
+    {
+        SetProviderCourseLocationsInMediatorResponse([new ProviderCourseLocation { LocationType = locationType }]);
+        EditLocationOptionViewModel model = new() { LocationOption = locationOption };
 
-            model.LocationOption = LocationOption.Both;
+        await _sut.Index(LarsCode, Ukprn, model);
 
-            await _sut.Index(LarsCode, Ukprn, model);
+        _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteCourseLocationsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
 
-            _mediatorMock.Verify(m => m.Send(
-                It.IsAny<DeleteCourseLocationsCommand>(), It.IsAny<CancellationToken>()), Times.Never);
-        }
+    [TestCase(LocationOption.ProviderLocation, LocationType.National, RouteNames.GetProviderCourseLocations)]
+    [TestCase(LocationOption.ProviderLocation, LocationType.Regional, RouteNames.GetProviderCourseLocations)]
+    [TestCase(LocationOption.ProviderLocation, LocationType.Provider, RouteNames.GetProviderCourseLocations)]
+    [TestCase(LocationOption.Both, LocationType.National, RouteNames.GetProviderCourseLocations)]
+    [TestCase(LocationOption.Both, LocationType.Regional, RouteNames.GetProviderCourseLocations)]
+    [TestCase(LocationOption.Both, LocationType.Provider, RouteNames.GetProviderCourseLocations)]
+    [TestCase(LocationOption.EmployerLocation, LocationType.National, RouteNames.GetNationalDeliveryOption)]
+    [TestCase(LocationOption.EmployerLocation, LocationType.Regional, RouteNames.GetNationalDeliveryOption)]
+    [TestCase(LocationOption.EmployerLocation, LocationType.Provider, RouteNames.GetNationalDeliveryOption)]
+    public async Task ThenRedirectsBasedOnOptionsSelected(LocationOption locationOption, LocationType locationType, string routeName)
+    {
+        SetProviderCourseLocationsInMediatorResponse([new ProviderCourseLocation { LocationType = locationType }]);
+        EditLocationOptionViewModel model = new() { LocationOption = locationOption };
 
-        [Test, AutoData]
-        public async Task Post_LocationOptionProvider_SetsLocationOptionInSession(EditLocationOptionViewModel model)
-        {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
+        var result = await _sut.Index("123", Ukprn, model);
 
-            model.LocationOption = LocationOption.ProviderLocation;
-
-            await _sut.Index(LarsCode, Ukprn, model);
-
-            _sessionServiceMock.Verify(s => s.Set(model.LocationOption.ToString(), SessionKeys.SelectedLocationOption));
-        }
-
-        [Test, AutoData]
-        public async Task Post_LocationOptionProvider_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
-        {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
-
-            model.LocationOption = LocationOption.ProviderLocation;
-
-            var result = await _sut.Index("123", Ukprn, model);
-
-            var routeResult = result as RedirectToRouteResult;
-            routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
-        }
-
-        [Test, AutoData]
-        public async Task Post_LocationOptionBoth_RedirectToProviderCourseLocations(EditLocationOptionViewModel model)
-        {
-            _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
-
-            model.LocationOption = LocationOption.Both;
-
-            var result = await _sut.Index("123", Ukprn, model);
-
-            var routeResult = result as RedirectToRouteResult;
-            routeResult.Should().NotBeNull();
-            routeResult.RouteName.Should().Be(RouteNames.GetProviderCourseLocations);
-        }
+        result.Should().BeOfType<RedirectToRouteResult>().Which.RouteName.Should().Be(routeName);
     }
 }

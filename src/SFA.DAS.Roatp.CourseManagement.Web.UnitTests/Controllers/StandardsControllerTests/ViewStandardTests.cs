@@ -10,6 +10,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -22,6 +23,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private StandardsController _controller;
         private Mock<ILogger<StandardsController>> _logger;
         private Mock<IMediator> _mediator;
+        private Mock<IBreadcrumbsViewModelFactory> _breadcrumbsFactoryMock;
         private const string LarsCode = "123";
         private const LearningType LearningType = Domain.ApiModels.LearningType.Apprenticeship;
         private const string verifyUrl = "http://test";
@@ -38,6 +40,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         public void Before_each_test()
         {
             _logger = new Mock<ILogger<StandardsController>>();
+            _breadcrumbsFactoryMock = new Mock<IBreadcrumbsViewModelFactory>();
 
             var response = new GetProviderCourseDetailsQueryResult
             {
@@ -60,7 +63,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -100,7 +103,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                      .ReturnsAsync(() => null);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock();
@@ -124,7 +127,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock();
@@ -152,7 +155,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock();
@@ -178,7 +181,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -203,7 +206,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -229,7 +232,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -254,7 +257,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -270,7 +273,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         [Test]
         public async Task ViewStandard_PopulatesEditTrainingLocationsUrl()
         {
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -295,7 +298,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()
@@ -320,7 +323,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(response);
 
-            _controller = new StandardsController(_mediator.Object, _logger.Object);
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
             _controller
                 .AddDefaultContextWithUser()
                 .AddUrlHelperMock()

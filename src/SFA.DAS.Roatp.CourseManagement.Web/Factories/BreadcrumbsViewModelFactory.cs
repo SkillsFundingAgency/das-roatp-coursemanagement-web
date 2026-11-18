@@ -26,7 +26,7 @@ public class BreadcrumbsViewModelFactory(IOptions<ProviderSharedUIConfiguration>
     {
         return breadcrumbName switch
         {
-            BreadcrumbNames.ProviderDashboard => providerConfiguration.Value.DashboardUrl ?? string.Empty,
+            BreadcrumbNames.ProviderDashboard => providerConfiguration.Value.DashboardUrl.TrimEnd('/') + "/account",
 
             BreadcrumbNames.ManageYourCourses => urlHelper.RouteUrl(RouteNames.ReviewYourDetails, new { model.Ukprn }) ?? string.Empty,
 

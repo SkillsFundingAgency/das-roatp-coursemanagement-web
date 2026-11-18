@@ -1,0 +1,21 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Shared
+@model PaginationViewModel
+
+<div class="navigation-flexbox">
+    <nav class="das-flex-space-around app-pagination-nav das-pagination-links" role="navigation" aria-label="Pagination">
+        @if (Model.Pages.Count > 1)
+        {
+            @foreach (var link in Model.Pages)
+            {
+                if (link.HasLink)
+                {
+                    <a href="@link.Url" class="govuk-link govuk-body govuk-link--no-visited-state">@link.Title</a>
+                }
+                else
+                {
+                    <span class="govuk-body govuk-!-font-weight-bold" aria-current="page">@link.Title</span>
+                }
+            }
+        }
+    </nav>
+</div>

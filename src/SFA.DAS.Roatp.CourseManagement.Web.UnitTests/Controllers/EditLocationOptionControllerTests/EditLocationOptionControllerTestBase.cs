@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -13,34 +14,38 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.EditLocationOptionControllerTests;
+
+public abstract class EditLocationOptionControllerTestBase
 {
-    public abstract class EditLocationOptionControllerTestBase
+    protected Mock<ILogger<EditLocationOptionController>> _loggerMock;
+    protected Mock<IMediator> _mediatorMock;
+    protected Mock<ISessionService> _sessionServiceMock;
+    protected Mock<IValidator<LocationOptionSubmitModel>> _validatorMock;
+    protected EditLocationOptionController _sut;
+
+    [SetUp]
+    public void Before_Each_Test()
     {
-        protected Mock<ILogger<EditLocationOptionController>> _loggerMock;
-        protected Mock<IMediator> _mediatorMock;
-        protected Mock<ISessionService> _sessionServiceMock;
-        protected Mock<IValidator<LocationOptionSubmitModel>> _validatorMock;
-        protected EditLocationOptionController _sut;
+        _loggerMock = new Mock<ILogger<EditLocationOptionController>>();
+        _mediatorMock = new Mock<IMediator>();
+        _sessionServiceMock = new Mock<ISessionService>();
+        _validatorMock = new Mock<IValidator<LocationOptionSubmitModel>>();
+        _validatorMock.Setup(x => x.Validate(It.IsAny<LocationOptionSubmitModel>())).Returns(new ValidationResult());
 
-        [SetUp]
-        public void Before_Each_Test()
-        {
-            _loggerMock = new Mock<ILogger<EditLocationOptionController>>();
-            _mediatorMock = new Mock<IMediator>();
-            _sessionServiceMock = new Mock<ISessionService>();
-            _validatorMock = new Mock<IValidator<LocationOptionSubmitModel>>();
+        _sut = new EditLocationOptionController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object, _validatorMock.Object);
+        _sut
+            .AddDefaultContextWithUser()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.GetStandardDetails);
+    }
 
-            _sut = new EditLocationOptionController(_mediatorMock.Object, _loggerMock.Object, _sessionServiceMock.Object, _validatorMock.Object);
-            _sut
-                .AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetStandardDetails);
-        }
-
-        protected void SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations) =>
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetProviderCourseDetailsQueryResult { ProviderCourseLocations = providerCourseLocations });
+    protected GetProviderCourseDetailsQueryResult SetProviderCourseLocationsInMediatorResponse(List<ProviderCourseLocation> providerCourseLocations)
+    {
+        var result = new GetProviderCourseDetailsQueryResult { ProviderCourseLocations = providerCourseLocations };
+        _mediatorMock
+            .Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(result);
+        return result;
     }
 }

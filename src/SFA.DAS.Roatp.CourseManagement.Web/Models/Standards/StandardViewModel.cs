@@ -1,4 +1,6 @@
-﻿using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+﻿using System;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
@@ -17,6 +19,11 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool? IsApprovedByRegulator { get; set; }
         public string ConfirmRegulatedStandardUrl { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
+        public DateTime? LastDateStarts { get; set; }
+        public bool HasLastDateStarts => CourseViewModelHelper.HasLastDateStarts(LastDateStarts);
+        public bool FundingClosing => CourseViewModelHelper.IsFundingClosing(LastDateStarts);
+        public bool FundingClosed => CourseViewModelHelper.IsFundingClosed(LastDateStarts);
+        public string TagColour => CourseViewModelHelper.GetTagColour(FundingClosing, FundingClosed);
 
         public static implicit operator StandardViewModel(Standard source)
         {
@@ -30,7 +37,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 ApprovalBody = source.ApprovalBody,
                 IsApprovedByRegulator = source.IsApprovedByRegulator,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
-                HasLocation = source.HasLocations
+                HasLocation = source.HasLocations,
+                LastDateStarts = source.LastDateStarts
             };
         }
 

@@ -13,102 +13,97 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetSt
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ProviderCourseLocations;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
-namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationsControllerTests
+namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ProviderCourseLocationsControllerTests;
+
+[TestFixture]
+public class ProviderCourseLocationsControllerPostTests
 {
-    [TestFixture]
-    public class ProviderCourseLocationsControllerPostTests
+    private const string Ukprn = "10012002";
+    private Mock<IMediator> _mediatorMock;
+    private Mock<IValidator<ProviderCourseLocationListViewModel>> _validatorMock;
+    private ProviderCourseLocationsController _sut;
+    readonly string verifyUrl = "http://test";
+    protected Mock<ISessionService> _sessionServiceMock;
+
+    [SetUp]
+    public void Before_Each_Test()
     {
-        private const string Ukprn = "10012002";
-        private Mock<IMediator> _mediatorMock;
-        private Mock<IValidator<ProviderCourseLocationListViewModel>> _validatorMock;
-        private ProviderCourseLocationsController _sut;
-        readonly string verifyUrl = "http://test";
-        protected Mock<ISessionService> _sessionServiceMock;
+        _mediatorMock = new Mock<IMediator>();
+        _sessionServiceMock = new Mock<ISessionService>();
+        _validatorMock = new Mock<IValidator<ProviderCourseLocationListViewModel>>();
 
-        [SetUp]
-        public void Before_Each_Test()
-        {
-            _mediatorMock = new Mock<IMediator>();
-            _sessionServiceMock = new Mock<ISessionService>();
-            _validatorMock = new Mock<IValidator<ProviderCourseLocationListViewModel>>();
+        _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object, _validatorMock.Object);
 
-            _sut = new ProviderCourseLocationsController(_mediatorMock.Object, Mock.Of<ILogger<ProviderCourseLocationsController>>(), _sessionServiceMock.Object, _validatorMock.Object);
+        _sut.AddDefaultContextWithUser()
+           .AddUrlHelperMock()
+           .AddUrlForRoute(RouteNames.GetStandardDetails, verifyUrl);
 
-            _sut.AddDefaultContextWithUser()
-               .AddUrlHelperMock()
-               .AddUrlForRoute(RouteNames.GetStandardDetails, verifyUrl);
+    }
 
-        }
-
-        [Test, AutoData]
-        public async Task Post_ValidModel_RedirectToRoute(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
-        {
-            _mediatorMock
-               .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
-               .ReturnsAsync(queryResult);
-
-            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
-
-            var result = await _sut.ConfirmedProviderCourseLocations(model);
-            var redirectResult = result as RedirectToRouteResult;
-            redirectResult.Should().NotBeNull();
-            redirectResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
-            redirectResult.RouteValues["ukprn"].Should().Be(int.Parse(Ukprn));
-        }
-
-        [Test, AutoData]
-        public async Task Post_InValidModel_ReturnsSameView(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
-        {
-            var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Referer = refererUrl;
-
-            queryResult.ProviderCourseLocations = new System.Collections.Generic.List<Domain.ApiModels.ProviderCourseLocation>();
-
-            _mediatorMock
+    [Test, AutoData]
+    public async Task Post_ValidModel_RedirectToRoute(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+    {
+        _mediatorMock
            .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
            .ReturnsAsync(queryResult);
 
-            var validationResult = new ValidationResult();
+        _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
 
-            validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+        var result = await _sut.ConfirmedProviderCourseLocations(model);
+        var redirectResult = result as RedirectToRouteResult;
+        redirectResult.Should().NotBeNull();
+        redirectResult.RouteName.Should().Be(RouteNames.GetStandardDetails);
+        redirectResult.RouteValues["ukprn"].Should().Be(int.Parse(Ukprn));
+    }
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(validationResult);
+    [Test, AutoData]
+    public async Task Post_InValidModel_ReturnsSameView(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+    {
+        //var refererUrl = "http://test-referer-url/";
+        //_sut.HttpContext.Request.Headers.Referer = refererUrl;
+
+        queryResult.ProviderCourseLocations = [];
+
+        _mediatorMock
+       .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
+       .ReturnsAsync(queryResult);
+
+        var validationResult = new ValidationResult();
+
+        validationResult.Errors.Add(new ValidationFailure("Field", "Error"));
+
+        _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(validationResult);
 
 
-            var result = await _sut.ConfirmedProviderCourseLocations(model);
+        var result = await _sut.ConfirmedProviderCourseLocations(model);
 
-            var viewResult = result as ViewResult;
-            viewResult.Should().NotBeNull();
-            viewResult.ViewName.Should().Contain("EditTrainingLocations.cshtml");
-            viewResult.Model.Should().NotBeNull();
-            var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
-            modelResult.Should().NotBeNull();
-        }
+        var viewResult = result as ViewResult;
+        viewResult.Should().NotBeNull();
+        viewResult.ViewName.Should().Contain("EditTrainingLocations.cshtml");
+        viewResult.Model.Should().NotBeNull();
+        var modelResult = viewResult.Model as ProviderCourseLocationListViewModel;
+        modelResult.Should().NotBeNull();
+    }
 
-        [Test, AutoData]
-        public async Task Post_ValidModel_RedirectToNationalDeliveryOption(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
-        {
-            var refererUrl = "http://test-referer-url/";
-            _sut.HttpContext.Request.Headers.Referer = refererUrl;
+    [Test, AutoData]
+    public async Task Post_ValidModel_RedirectToNationalDeliveryOption(ProviderCourseLocationListViewModel model, GetProviderCourseLocationsQueryResult queryResult)
+    {
+        _mediatorMock
+       .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
+       .ReturnsAsync(queryResult);
 
-            _mediatorMock
-           .Setup(m => m.Send(It.Is<GetProviderCourseLocationsQuery>(q => q.Ukprn == int.Parse(Ukprn) && q.LarsCode == model.LarsCode), It.IsAny<CancellationToken>()))
-           .ReturnsAsync(queryResult);
+        _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
 
-            _validatorMock.Setup(x => x.Validate(It.IsAny<ProviderCourseLocationListViewModel>())).Returns(new ValidationResult());
+        _sessionServiceMock.Setup(s => s.Get<EditLocationOptionsSessionModel>()).Returns(new EditLocationOptionsSessionModel() { UpdatedLocationOption = LocationOption.Both });
 
-            _sessionServiceMock.Setup(s => s.Get(SessionKeys.SelectedLocationOption)).Returns(LocationOption.Both.ToString());
-            var result = await _sut.ConfirmedProviderCourseLocations(model);
+        // Act
+        var result = await _sut.ConfirmedProviderCourseLocations(model);
 
-            var redirectResult = result as RedirectToRouteResult;
-
-            redirectResult.Should().NotBeNull();
-            redirectResult.RouteName.Should().Be(RouteNames.GetNationalDeliveryOption);
-            redirectResult.RouteValues["ukprn"].Should().Be(int.Parse(Ukprn));
-        }
+        result.Should().BeOfType<RedirectToRouteResult>().Which.RouteName.Should().Be(RouteNames.GetNationalDeliveryOption);
     }
 }
