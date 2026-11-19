@@ -9,9 +9,11 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 
@@ -34,6 +36,9 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private const string verifyEditTrainingLocationsUrl = "http://test-verifyEditTrainingLocationsUrl";
         private const string verifydeleteStandardUrl = "http://test-delete-standard-url";
         private readonly DateTime? LastDateStarts = DateTime.Today.Date;
+        private const string BreadcrumbDashboardLink = "https://test/dashboard";
+        private const string BreadcrumbManageCoursesLink = "https://test/review-your-details";
+        private const string BreadcrumbManageAppreticeshipsLink = "https://test/manage-appreticeships";
 
 
         [SetUp]
@@ -312,6 +317,31 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
             model.DeleteStandardUrl.Should().Be(verifydeleteStandardUrl);
+        }
+
+        [Test]
+        public async Task ViewStandard_ReturnsBreadcrumbs()
+        {
+            var expectedBreadcrumbs = new BreadcrumbsViewModel();
+            expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, BreadcrumbDashboardLink);
+            expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, BreadcrumbManageCoursesLink);
+            expectedBreadcrumbs.Add(BreadcrumbNames.ManageApprenticeships, BreadcrumbManageAppreticeshipsLink);
+
+            _breadcrumbsFactoryMock
+                .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
+                .Returns(expectedBreadcrumbs);
+
+            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
+            _controller
+                .AddDefaultContextWithUser();
+
+
+            var result = await _controller.ViewStandard(LarsCode);
+
+            var viewResult = result as ViewResult;
+            var model = viewResult.Model as StandardDetailsViewModel;
+
+            model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
         }
     }
 }

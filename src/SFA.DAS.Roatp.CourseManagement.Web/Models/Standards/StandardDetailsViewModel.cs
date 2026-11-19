@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class StandardDetailsViewModel : IBackLink
+    public class StandardDetailsViewModel
     {
         public StandardInformationViewModel StandardInformation { get; set; }
 
@@ -47,6 +47,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool HasLocations { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
         public MissingInfoBannerViewModel MissingInfoBannerViewModel { get; set; }
+        public BreadcrumbsViewModel Breadcrumbs { get; set; }
 
         public static implicit operator StandardDetailsViewModel(GetProviderCourseDetailsQueryResult standardDetails)
         {

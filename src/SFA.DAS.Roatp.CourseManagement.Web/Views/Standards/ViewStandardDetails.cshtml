@@ -5,6 +5,11 @@
     ViewBag.Title = "Standard details";
 }
 
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
+}
+
 @if (Model.MissingInfoBannerViewModel.HasMissingRegulatorApproval || Model.MissingInfoBannerViewModel.HasMissingLocationAndRegulatorApproval)
 {
     <partial name="~/Views/Standards/StandardsPartials/_MissingInfoBanner.cshtml" for="MissingInfoBannerViewModel" />
