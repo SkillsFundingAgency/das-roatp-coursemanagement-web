@@ -1,0 +1,33 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants
+@model ShortCourseShutterPagesViewModel
+@{
+    ViewData["Title"] = $"Course type not available";
+}
+
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">You do not have permission to deliver @Model.LearningTypeLowerPlural</h1>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body govuk-!-font-size-24 govuk-!-margin-bottom-6">The Apprenticeship Service invited a group of training providers to offer @Model.LearningTypeLowerPlural in 2025.</p>
+        <p class="govuk-body govuk-!-margin-bottom-6">If your organisation was not invited or found to be ineligible but you want to offer them, get in touch.</p>
+        <p class="govuk-body govuk-!-margin-bottom-6">
+            You can contact us at
+            <a class="govuk-link" href="mailto:@ExternalLinks.AparMailLink">
+                @ExternalLinks.AparMailLink
+            </a>.
+        </p>
+        <p class="govuk-body govuk-!-margin-bottom-6">We may ask you to provide evidence that shows why you should be eligible.</p>
+        <p class="govuk-body">
+            Find out more about 
+            <a class="govuk-link" href="@ExternalLinks.FindOutAboutApprenticeshipUnitsLink" target="_blank">
+                what @Model.LearningTypeLowerPlural are, who can deliver them and how they're funded
+            </a>.
+        </p>
+    </div>
+</div>
