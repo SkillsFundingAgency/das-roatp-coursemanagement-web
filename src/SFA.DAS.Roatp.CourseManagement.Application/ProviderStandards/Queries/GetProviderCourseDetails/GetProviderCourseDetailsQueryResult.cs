@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -25,6 +26,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
         public CourseType CourseType { get; set; }
         public int Duration { get; set; }
         public DurationUnits DurationUnits { get; set; }
+        public DateTime? LastDateStarts { get; set; }
         public List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
 
         public bool HasProviderLocation => ProviderCourseLocations.Any(l => l.LocationType == LocationType.Provider);
@@ -68,7 +70,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.G
                 HasOnlineDeliveryOption = v.HasOnlineDeliveryOption,
                 Duration = v.Duration,
                 DurationUnits = v.DurationUnits,
-                CourseType = v.CourseType
+                CourseType = v.CourseType,
+                LastDateStarts = v.LastDateStarts
             };
         }
     }

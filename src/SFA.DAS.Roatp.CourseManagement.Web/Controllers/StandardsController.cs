@@ -120,8 +120,6 @@ public class StandardsController : ControllerBase
         model.EditLocationOptionUrl = Url.RouteUrl(RouteNames.GetLocationOption, new { Ukprn, larsCode });
         model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });
 
-        model.ConfirmRegulatedStandardUrl = model.StandardInformation.IsRegulatedForProvider ? Url.RouteUrl(RouteNames.GetConfirmRegulatedStandard, new { Ukprn, larsCode }) : string.Empty;
-
         model.EditProviderCourseRegionsUrl = model.SubRegionCourseLocations.Any() ? Url.RouteUrl(RouteNames.GetStandardSubRegions, new { Ukprn, larsCode }) : string.Empty;
 
         model.EditTrainingLocationsUrl = Url.RouteUrl(RouteNames.GetProviderCourseLocations, new { Ukprn, larsCode });

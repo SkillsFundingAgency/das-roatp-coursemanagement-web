@@ -32,8 +32,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
         private const string Regulator = "Test-Regulator";
         private const string verifyeditProviderCourseRegionsUrl = "http://update-standardSubRegions";
         private const string verifyEditTrainingLocationsUrl = "http://test-verifyEditTrainingLocationsUrl";
-        private const string verifyConfirmRegulatedStandardUrl = "http://test-verifyConfirmRegulatedStandardUrl";
         private const string verifydeleteStandardUrl = "http://test-delete-standard-url";
+        private readonly DateTime? LastDateStarts = DateTime.Today.Date;
 
 
         [SetUp]
@@ -56,6 +56,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
                 ContactUsPhoneNumber = "123456789",
                 IsRegulatedForProvider = true,
                 IsApprovedByRegulator = true,
+                LastDateStarts = DateTime.Today.Date,
                 ProviderCourseLocations = new System.Collections.Generic.List<ProviderCourseLocation> { new ProviderCourseLocation { LocationType = LocationType.Regional, RegionName = "Region1" } }
             };
 
@@ -77,7 +78,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             {
                 IsRegulatedForProvider = true,
                 IsApprovedByRegulator = true,
-                LarsCode = LarsCode
+                LarsCode = LarsCode,
+                LastDateStarts = DateTime.Today.Date
             };
 
             _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
@@ -93,6 +95,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             model.Should().NotBeNull();
             model!.StandardInformation.LarsCode.Should().Be(LarsCode);
             model.StandardInformation.LearningType.Should().Be(LearningType);
+            model.StandardInformation.LastDateStarts.Should().Be(LastDateStarts);
             model.BackUrl.Should().Be(verifyUrl);
             _logger.Verify(x => x.Log(LogLevel.Warning, It.IsAny<EventId>(), It.IsAny<It.IsAnyType>(), It.IsAny<Exception>(), It.IsAny<Func<It.IsAnyType, Exception, string>>()), Times.Never);
         }
@@ -284,31 +287,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.StandardsCont
             var viewResult = result as ViewResult;
             var model = viewResult.Model as StandardDetailsViewModel;
             model.EditTrainingLocationsUrl.Should().Be(verifyEditTrainingLocationsUrl);
-        }
-
-        [Test]
-        public async Task ViewStandard_PopulatesConfirmRegulatedStandardUrl()
-        {
-            var response = new GetProviderCourseDetailsQueryResult
-            {
-                IsRegulatedForProvider = true,
-                IsApprovedByRegulator = true
-            };
-
-            _mediator.Setup(x => x.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(response);
-
-            _controller = new StandardsController(_mediator.Object, _logger.Object, _breadcrumbsFactoryMock.Object);
-            _controller
-                .AddDefaultContextWithUser()
-                .AddUrlHelperMock()
-                .AddUrlForRoute(RouteNames.GetConfirmRegulatedStandard, verifyConfirmRegulatedStandardUrl);
-
-            var result = await _controller.ViewStandard(LarsCode);
-
-            var viewResult = result as ViewResult;
-            var model = viewResult.Model as StandardDetailsViewModel;
-            model.ConfirmRegulatedStandardUrl.Should().Be(verifyConfirmRegulatedStandardUrl);
         }
 
         [Test]

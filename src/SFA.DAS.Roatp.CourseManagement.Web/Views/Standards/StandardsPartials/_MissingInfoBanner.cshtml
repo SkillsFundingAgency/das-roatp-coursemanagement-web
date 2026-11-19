@@ -10,11 +10,6 @@
                 </h2>
             </div>
             <div class="govuk-notification-banner__content">
-                <p class="govuk-body" asp-show="@Model.HasMissingLocation">
-                    <strong>
-                        You must add a training option to this standard. It will not show on Find apprenticeship training until you do.
-                    </strong>
-                </p>
                 <p class="govuk-body" asp-show="@Model.HasMissingRegulatorApproval">
                     <strong>
                         You must confirm if this standard has regulatory approval. It will not show on Find apprenticeship training until you do.

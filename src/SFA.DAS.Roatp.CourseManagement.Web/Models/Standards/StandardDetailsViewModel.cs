@@ -41,7 +41,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string DeleteStandardUrl { get; set; }
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
-        public string ConfirmRegulatedStandardUrl { get; set; }
         public string EditTrainingLocationsUrl { get; set; }
         public string EditProviderCourseRegionsUrl { get; set; }
         public bool IsRegulatedForProvider { get; set; }
@@ -62,7 +61,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,
                     LearningType = standardDetails.LearningType,
-                    IsRegulatedForProvider = standardDetails.IsRegulatedForProvider
+                    IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
+                    LastDateStarts = standardDetails.LastDateStarts
                 },
                 ContactInformation = new StandardContactInformationViewModel
                 {

@@ -1,22 +1,35 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 @model StandardDetailsViewModel
 @{
     ViewBag.Title = "Standard details";
 }
 
-@if (Model.StandardRequiresMoreInfo)
+@if (Model.MissingInfoBannerViewModel.HasMissingRegulatorApproval || Model.MissingInfoBannerViewModel.HasMissingLocationAndRegulatorApproval)
 {
     <partial name="~/Views/Standards/StandardsPartials/_MissingInfoBanner.cshtml" for="MissingInfoBannerViewModel" />
 }
+
+<div asp-show="Model.StandardRequiresMoreInfo" class="govuk-grid-row govuk-warning-text govuk-!-margin-bottom-4">
+    <div class="govuk-grid-column-two-thirds">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">Warning</span>
+            This apprenticeship is missing a training option. It will not show on Find apprenticeship training until you add one. <a href="@Model.EditLocationOptionUrl" class="govuk-link">Add a training option.</a>
+        </strong>
+    </div>
+</div>
 
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-l">Manage a standard</div>
         <partial name="_StandardInformation" for="StandardInformation" />
+        <partial name="_LastStartDateWarning" model="Model.StandardInformation.FundingClosing" />
+        <partial name="_LastStartDatePassedWarning" model="Model.StandardInformation.FundingClosed" />
     </div>
 </div>
 
-<div class="govuk-grid-row govuk-!-margin-top-8">
+<div asp-show ="!@Model.StandardInformation.FundingClosed" class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
         <partial name="_StandardContactInformation" for="ContactInformation" />
         <p class="govuk-body">
@@ -27,42 +40,8 @@
     </div>
 </div>
 
-<div class="govuk-grid-row govuk-!-margin-top-8" asp-show="@Model.StandardInformation.IsRegulatedForProvider">
-    <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-heading-l" id="table-header-regulation">Regulatory Approval</h2>
-            <p class="govuk-body">This is a regulated standard. Tell us if you are approved by the regulating body to deliver it.</p>
-            <table class="govuk-table" aria-labelledby="table-header-regulation">
-                <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header das-table-cell-width-30" scope="row">
-                    Regulator
-                </th>
-                <td class="govuk-table__cell das-table-cell-width-50">
-                    @Model.StandardInformation.RegulatorName
-                </td>
-                <td class="govuk-table__cell das-table-cell-width-20">
-                </td>
-            </tr>
-            <tr class="govuk-table__row">
-                <th class="govuk-table__header" scope="row">
-                    Approved
-                </th>
-                <td class="govuk-table__cell">
-                    @Model.ApprovedByRegulatorStatus()
-                </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric">
-                    <a href="@Model.ConfirmRegulatedStandardUrl" class="govuk-link">
-                        Change<span class="govuk-visually-hidden"> the regulated information</span>
-                    </a>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <partial name="~/Views/Standards/StandardsPartials/_RegulatedStandardInfo.cshtml"/>
-    </div>
-</div>
 
-<div class="govuk-grid-row govuk-!-margin-top-8">
+<div asp-show ="!@Model.StandardInformation.FundingClosed" class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
         <table class="govuk-table" aria-label="Where you deliver this standard">
             <thead class="govuk-table__head">
@@ -149,14 +128,32 @@
     </div>
 </div>
 
-
-<div class="govuk-grid-row">
+<div class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
-        <div class="das-highlight">
-            <h2 class="govuk-heading-m">Actions</h2>
-            <ul class="govuk-list govuk-!-margin-bottom-0">
-                <li><a href="@Model.DeleteStandardUrl" class="govuk-link govuk-link--no-visited-state">Delete standard</a> </li>
-            </ul>
+        <h4 class="govuk-heading-l">
+            Delete this course
+            </h4>
+        <p class="govuk-body">
+            Deleting a course from your offering will stop you from claiming government funding for it. You will not be able to submit any Individualised Learner Records (ILRs) for it.
+            </p>
+        <p class="govuk-body">
+            If you choose to delete it, it will be removed from your account and no longer show on Find apprenticeship training.
+            </p>
+        <div class="govuk-inset-text">
+            <p class="govuk-body">
+                <strong>Do not delete this course if you still have learners on it, or if you have outstanding ILR submissions for previous learners.</strong>
+            </p>
+
+            <p class="govuk-body">
+                <strong>This apprenticeship must stay in your offering if you want to receive government funding for it.</strong>
+            </p>
+
+            <p class="govuk-body">
+                <strong>Find out more about <a href="@ExternalLinks.FindOutAboutIlrSubmissionsLink" target="_blank" class="govuk-link">making ILR submissions</a>.</strong>
+            </p>
+        </div>
+        <div class="govuk-button-group">
+            <a id="submit" href="@Model.DeleteStandardUrl" class="govuk-button govuk-button--secondary">Delete apprenticeship</a>
         </div>
     </div>
 </div>
