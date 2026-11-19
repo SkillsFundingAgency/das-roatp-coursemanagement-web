@@ -53,14 +53,21 @@ public class CourseViewModelHelperTests
     [Test]
     public void GetFundingStatusText_WhenFundingIsClosing_ReturnsFundingClosingDescription()
     {
-        CourseViewModelHelper.GetFundingStatusText(true)
+        CourseViewModelHelper.GetFundingStatusText(true, false)
             .Should().Be(FundingStatus.FundingClosing.GetDescription());
     }
 
     [Test]
-    public void GetFundingStatusText_WhenFundingIsNotClosing_ReturnsEmptyString()
+    public void GetFundingStatusText_WhenFundingIsClosed_ReturnsFundingClosedDescription()
     {
-        CourseViewModelHelper.GetFundingStatusText(false)
+        CourseViewModelHelper.GetFundingStatusText(false, true)
+            .Should().Be(FundingStatus.FundingClosed.GetDescription());
+    }
+
+    [Test]
+    public void GetFundingStatusText_WhenNoFundingStatus_ReturnsEmptyString()
+    {
+        CourseViewModelHelper.GetFundingStatusText(false, false)
             .Should().BeEmpty();
     }
 

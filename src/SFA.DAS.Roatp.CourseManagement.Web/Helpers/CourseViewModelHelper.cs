@@ -15,10 +15,20 @@ public static class CourseViewModelHelper
     public static bool IsFundingClosed(DateTime? lastDateStarts) =>
         lastDateStarts.HasValue && lastDateStarts.Value < DateTime.UtcNow.Date;
 
-    public static string GetFundingStatusText(bool fundingClosing) =>
-        fundingClosing
-            ? FundingStatus.FundingClosing.GetDescription()
-            : string.Empty;
+    public static string GetFundingStatusText(bool fundingClosing, bool fundingClosed)
+    {
+        if (fundingClosing)
+        {
+            return FundingStatus.FundingClosing.GetDescription();
+        }
+
+        if (fundingClosed)
+        {
+            return FundingStatus.FundingClosed.GetDescription();
+        }
+
+        return string.Empty;
+    }
 
     public static string GetTagColour(bool fundingClosing, bool fundingClosed)
     {

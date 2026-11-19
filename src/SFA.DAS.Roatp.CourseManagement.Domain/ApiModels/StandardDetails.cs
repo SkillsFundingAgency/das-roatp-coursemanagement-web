@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 
@@ -24,4 +25,5 @@ public class StandardDetails
     public CourseType CourseType { get; set; }
     public int Duration { get; set; }
     public DurationUnits DurationUnits { get; set; }
+    public DateTime? LastDateStarts { get; set; }
 }
