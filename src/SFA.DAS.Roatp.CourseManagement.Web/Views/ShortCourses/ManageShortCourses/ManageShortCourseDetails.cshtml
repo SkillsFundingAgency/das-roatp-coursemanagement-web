@@ -12,13 +12,55 @@
     <div class="govuk-grid-column-two-thirds">
         <div class="govuk-caption-l">Manage an @Model.LearningTypeLower</div>
         <partial name="_ShortCourseInformation" for="ShortCourseInformation" />
+        <partial name="_LastStartDateWarning" model="Model.ShortCourseInformation.FundingClosing" />
+        <partial name="_LastStartDatePassedWarning" model="Model.ShortCourseInformation.FundingClosed" />
 
+        <div asp-show="!@Model.ShortCourseInformation.FundingClosed" class="app-action-panel govuk-!-margin-bottom-6 govuk-!-margin-top-2">
+            <h2 class="govuk-heading-l">Add your delivery forecast for this @Model.LearningTypeLower</h2>
+            <p class="govuk-body">Tell us how many learners you expect will start this apprenticeship unit over the next 12 months</p>
+            <p class="govuk-body">This can be an estimate and you can update it later on.</p>
+            <p class="govuk-body">
+                <a href="@Model.SubmitForecastLink" class="govuk-button">
+                    Submit your forecast
+                </a>
+            </p>
+        </div>
     </div>
 </div>
 
-<partial name="_ShortCourseContactInformation" for="ContactInformation" />
+<div asp-show="!@Model.ShortCourseInformation.FundingClosed">
+    <partial name="_ShortCourseContactInformation" for="ContactInformation" />
+    <partial name="_ShortCourseLocationInformation" for="LocationInformation" />
+</div>
 
-<partial name="_ShortCourseLocationInformation" for="LocationInformation" />
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-!-margin-top-6">
+            <h4 class="govuk-heading-l">
+                Delete this course
+            </h4>
+            <p class="govuk-body">
+                Deleting a course from your offering will stop you from claiming government funding for it. You will not be able to submit any Individualised Learner Records (ILRs) for it.
+            </p>
+            <p class="govuk-body">
+                If you choose to delete it, it will be removed from your account and no longer show on Find apprenticeship training.
+            </p>
+            <div class="govuk-inset-text">
+                <p asp-show="!@Model.ShortCourseInformation.FundingClosed" class="govuk-body">
+                    <strong>Do not delete this course if you have learners still completing it. It must stay in your offering to claim government funding.</strong>
+                </p>
 
-<a id="submit" href="@Model.DeleteShortCourseLink" class="govuk-button govuk-button--secondary">Delete @Model.LearningTypeLower</a> <br />
-<a href="@Model.BackToManageShortCoursesLink" class="govuk-link govuk-body">Back to managing your @Model.LearningTypeLowerPlural</a>
+                <p asp-show="@Model.ShortCourseInformation.FundingClosed" class="govuk-body">
+                    <strong>You can delete this course if you no longer have learners on it.</strong>
+                </p>
+
+                <p asp-show="@Model.ShortCourseInformation.FundingClosed" class="govuk-body">
+                    <strong>Do not delete it if you have active learners. It must stay in your offering to claim government funding..</strong>
+                </p>
+            </div>
+        </div>
+        <div class="govuk-button-group">
+            <a id="submit" href="@Model.DeleteShortCourseLink" class="govuk-button govuk-button--secondary">Delete @Model.LearningTypeLower</a> <br />
+        </div>
+    </div>
+</div>

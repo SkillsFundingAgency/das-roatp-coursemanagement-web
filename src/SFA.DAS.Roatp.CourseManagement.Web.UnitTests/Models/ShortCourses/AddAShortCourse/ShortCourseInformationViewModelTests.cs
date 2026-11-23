@@ -94,8 +94,28 @@ public class ShortCourseInformationViewModelTests
         sut.FundingClosing.Should().Be(expected);
     }
 
+    [TestCase(false, 0, false)]
+    [TestCase(true, -1, true)]
+    [TestCase(true, 0, false)]
+    [TestCase(true, 1, false)]
+    public void Operator_SetsFundingClosed(
+            bool hasLastDateStarts,
+            int dayOffset,
+            bool expected)
+    {
+        var today = DateTime.UtcNow.Date;
+        var source = new GetProviderAvailableCourseDetailsQueryResult
+        {
+            LastDateStarts = hasLastDateStarts ? today.AddDays(dayOffset) : null
+        };
+
+        ShortCourseInformationViewModel sut = source;
+
+        sut.FundingClosed.Should().Be(expected);
+    }
+
     [TestCase(false, 0, "")]
-    [TestCase(true, -1, "")]
+    [TestCase(true, -1, "Funding closed for new starts")]
     [TestCase(true, 1, "Funding closing for new starts")]
     [TestCase(true, 0, "Funding closing for new starts")]
     public void Operator_SetsStatusText(
@@ -115,7 +135,7 @@ public class ShortCourseInformationViewModelTests
     }
 
     [TestCase(false, 0, "")]
-    [TestCase(true, -1, "")]
+    [TestCase(true, -1, "govuk-tag govuk-tag--grey")]
     [TestCase(true, 1, "govuk-tag govuk-tag--orange")]
     [TestCase(true, 0, "govuk-tag govuk-tag--orange")]
     public void Operator_SetsTagColour(

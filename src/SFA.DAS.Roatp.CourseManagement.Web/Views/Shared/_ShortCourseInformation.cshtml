@@ -33,7 +33,7 @@
             <th class="govuk-table__header" scope="row">Regulated by</th>
             <td class="govuk-table__cell">@Model.RegulatorName</td>
         </tr>
-        <tr asp-show="@Model.FundingClosing" class="govuk-table__row">
+        <tr asp-show="@(Model.FundingClosing || Model.FundingClosed)" class="govuk-table__row">
             <th class="govuk-table__header" scope="row">Status</th>
             <td class="govuk-table__cell">
                 <span class="@Model.TagColour">@Model.StatusText</span>

@@ -12,7 +12,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
     public ShortCourseContactInformationViewModel ContactInformation { get; set; }
     public ShortCourseLocationInformationViewModel LocationInformation { get; set; }
     public string DeleteShortCourseLink { get; set; } = "#";
-    public string BackToManageShortCoursesLink { get; set; } = "#";
+    public string SubmitForecastLink { get; set; } = "#";
     public bool ShowMissingInfoBanner { get; set; }
     public BannerViewModel Banner { get; set; } = new BannerViewModel();
 
@@ -39,7 +39,8 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
                 LearningType = source.LearningType,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Duration = source.Duration,
-                DurationUnits = source.DurationUnits
+                DurationUnits = source.DurationUnits,
+                LastDateStarts = source.LastDateStarts
             },
             ContactInformation = new ShortCourseContactInformationViewModel()
             {

@@ -33,7 +33,7 @@ public class ManageShortCourseDetailsControllerGetTests
 
         int ukprn = 12345;
         string larsCode = "ABC1234";
-        string backToManageShortCoursesLink = Guid.NewGuid().ToString();
+        string submitForecastLink = Guid.NewGuid().ToString();
         string contactDetailsChangeLink = Guid.NewGuid().ToString();
         string deleteShortCourseLink = Guid.NewGuid().ToString();
         string trainingRegionsChangeLink = Guid.NewGuid().ToString();
@@ -46,7 +46,7 @@ public class ManageShortCourseDetailsControllerGetTests
 
         sut.AddDefaultContextWithUser();
         sut.AddUrlHelperMock()
-            .AddUrlForRoute(RouteNames.ManageShortCourses, backToManageShortCoursesLink)
+            .AddUrlForRoute(RouteNames.CourseForecasts, submitForecastLink)
             .AddUrlForRoute(RouteNames.EditShortCourseContactDetails, contactDetailsChangeLink)
             .AddUrlForRoute(RouteNames.DeleteShortCourse, deleteShortCourseLink)
             .AddUrlForRoute(RouteNames.EditShortCourseRegions, trainingRegionsChangeLink)
@@ -67,7 +67,7 @@ public class ManageShortCourseDetailsControllerGetTests
         var model = viewResult!.Model as ManageShortCourseDetailsViewModel;
         model!.Should().NotBeNull();
         model.LearningType.Should().Be(learningType);
-        model.BackToManageShortCoursesLink.Should().Be(backToManageShortCoursesLink);
+        model.SubmitForecastLink.Should().Be(submitForecastLink);
         model.DeleteShortCourseLink.Should().Be(deleteShortCourseLink);
         model.ContactInformation.ContactDetailsChangeLink.Should().Be(contactDetailsChangeLink);
         model.LocationInformation.TrainingRegionsChangeLink.Should().Be(trainingRegionsChangeLink);
