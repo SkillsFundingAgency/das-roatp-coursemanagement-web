@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
-public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBackLink
+public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel
 {
     public ShortCourseInformationViewModel ShortCourseInformation { get; set; }
     public ShortCourseContactInformationViewModel ContactInformation { get; set; }
@@ -15,6 +15,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
     public string SubmitForecastLink { get; set; } = "#";
     public bool ShowMissingInfoBanner { get; set; }
     public BannerViewModel Banner { get; set; } = new BannerViewModel();
+    public BreadcrumbsViewModel Breadcrumbs { get; set; }
 
     public static implicit operator ManageShortCourseDetailsViewModel(GetProviderCourseDetailsQueryResult source)
     {

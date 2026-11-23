@@ -11,9 +11,12 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure.Authorization;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -22,6 +25,10 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCo
 
 public class ManageShortCourseDetailsControllerGetTests
 {
+    private const string BreadcrumbDashboardLink = "https://test/dashboard";
+    private const string BreadcrumbManageCoursesLink = "https://test/review-your-details";
+    private const string BreadcrumbManageShortCoursesLink = "https://test/manage-short-courses";
+
     [Test, MoqAutoData]
     public async Task ManageShortCourseDetails_GetStandardsDetailsApiReturnedValidResponse_ReturnsView(
         [Frozen] Mock<IMediator> mediatorMock,
@@ -99,5 +106,34 @@ public class ManageShortCourseDetailsControllerGetTests
         viewResult.Should().NotBeNull();
         viewResult!.ViewName.Should().Be(ViewsPath.PageNotFoundPath);
         mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
+    }
+
+    [Test, MoqAutoData]
+    public async Task ManageShortCourseDetails_ReturnsBreadcrumbs(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IBreadcrumbsViewModelFactory> breadcrumbsFactoryMock,
+        [Greedy] ManageShortCourseDetailsController sut,
+        GetProviderCourseDetailsQueryResult apiResponse)
+    {
+        // Arrange
+        string larsCode = "ABC1234";
+        var learningType = LearningType.ApprenticeshipUnit;
+
+        var expectedBreadcrumbs = new BreadcrumbsViewModel();
+        expectedBreadcrumbs.Add(BreadcrumbNames.ProviderDashboard, BreadcrumbDashboardLink);
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageYourCourses, BreadcrumbManageCoursesLink);
+        expectedBreadcrumbs.Add(BreadcrumbNames.ManageApprenticeships, BreadcrumbManageShortCoursesLink);
+
+        sut.AddDefaultContextWithUser();
+        mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(apiResponse);
+        breadcrumbsFactoryMock.Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>())).Returns(expectedBreadcrumbs);
+
+        // Act
+        var result = await sut.ManageShortCourseDetails(learningType, larsCode);
+
+        // Assert
+        var viewResult = result as ViewResult;
+        var model = viewResult!.Model as ManageShortCourseDetailsViewModel;
+        model.Breadcrumbs.Should().BeEquivalentTo(expectedBreadcrumbs);
     }
 }

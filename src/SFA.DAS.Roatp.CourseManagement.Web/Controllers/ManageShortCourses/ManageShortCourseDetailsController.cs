@@ -5,8 +5,11 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
@@ -14,7 +17,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.ManageShortCourses;
 [AuthorizeCourseType(CourseType.ShortCourse)]
 [CheckCourseType(CourseType.ShortCourse)]
 [Route("{ukprn}/courses/{learningType}/{larsCode}", Name = RouteNames.ManageShortCourseDetails)]
-public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<ManageShortCourseDetailsController> _logger) : ControllerBase
+public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<ManageShortCourseDetailsController> _logger, IBreadcrumbsViewModelFactory _breadcrumbsFactory) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/ManageShortCourses/ManageShortCourseDetails.cshtml";
 
@@ -46,6 +49,19 @@ public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<Man
         model.SubmitForecastLink = Url.RouteUrl(RouteNames.CourseForecasts, new { ukprn = Ukprn, larsCode });
         model.DeleteShortCourseLink = Url.RouteUrl(RouteNames.DeleteShortCourse, new { Ukprn, learningType, larsCode });
         model.Banner.LearningType = model.LearningTypeLower;
+
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
+        {
+            Ukprn = Ukprn,
+            LearningType = learningType,
+            BreadcrumbNames =
+            [
+                BreadcrumbNames.ProviderDashboard,
+                BreadcrumbNames.ManageYourCourses,
+                BreadcrumbNames.ManageShortCourses
+            ]
+        };
+        model.Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel);
 
         return View(ViewPath, model);
     }
