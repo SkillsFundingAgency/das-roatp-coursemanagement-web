@@ -294,18 +294,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.ApprovedByRegulatorStatus().Should().Be(approvedByRegulatorStatus);
         }
 
-        [TestCase(false, false, false, true)]
-        [TestCase(true, false, null, false)]
-        [TestCase(true, true, false, true)]
-        [TestCase(true, true, true, false)]
-        [TestCase(true, false, null, false)]
-        public void StandardRequiresMoreInfoIsSet(bool hasLocations, bool isRegulatedForProvider, bool? isApprovedByRegulator, bool expected)
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        public void StandardRequiresMoreInfoIsSet(bool hasLocations, bool expected)
         {
             var standardDetails = new GetProviderCourseDetailsQueryResult
             {
-                HasLocations = hasLocations,
-                IsRegulatedForProvider = isRegulatedForProvider,
-                IsApprovedByRegulator = isApprovedByRegulator
+                HasLocations = hasLocations
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
