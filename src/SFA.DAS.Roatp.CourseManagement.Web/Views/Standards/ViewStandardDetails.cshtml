@@ -10,12 +10,7 @@
     @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
 }
 
-@if (Model.MissingInfoBannerViewModel.HasMissingRegulatorApproval || Model.MissingInfoBannerViewModel.HasMissingLocationAndRegulatorApproval)
-{
-    <partial name="~/Views/Standards/StandardsPartials/_MissingInfoBanner.cshtml" for="MissingInfoBannerViewModel" />
-}
-
-<div asp-show="Model.StandardRequiresMoreInfo" class="govuk-grid-row govuk-warning-text govuk-!-margin-bottom-4">
+<div asp-show="@(Model.StandardRequiresMoreInfo && !Model.StandardInformation.FundingClosed)" class="govuk-grid-row govuk-warning-text govuk-!-margin-bottom-4">
     <div class="govuk-grid-column-two-thirds">
         <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
         <strong class="govuk-warning-text__text">
@@ -44,7 +39,6 @@
         </p>
     </div>
 </div>
-
 
 <div asp-show ="!@Model.StandardInformation.FundingClosed" class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
@@ -135,9 +129,9 @@
 
 <div class="govuk-grid-row govuk-!-margin-top-8">
     <div class="govuk-grid-column-two-thirds">
-        <h4 class="govuk-heading-l">
+        <h2 class="govuk-heading-l">
             Delete this course
-            </h4>
+            </h2>
         <p class="govuk-body">
             Deleting a course from your offering will stop you from claiming government funding for it. You will not be able to submit any Individualised Learner Records (ILRs) for it.
             </p>

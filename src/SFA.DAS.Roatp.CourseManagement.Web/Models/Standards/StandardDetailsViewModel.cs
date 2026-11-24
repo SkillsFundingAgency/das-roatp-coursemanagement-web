@@ -46,7 +46,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
-        public MissingInfoBannerViewModel MissingInfoBannerViewModel { get; set; }
         public BreadcrumbsViewModel Breadcrumbs { get; set; }
 
         public static implicit operator StandardDetailsViewModel(GetProviderCourseDetailsQueryResult standardDetails)
@@ -76,14 +75,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
                 IsApprovedByRegulator = standardDetails.IsApprovedByRegulator,
                 IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
-                HasLocations = standardDetails.HasLocations,
-                MissingInfoBannerViewModel = new MissingInfoBannerViewModel
-                    (standardDetails.IsRegulatedForProvider, standardDetails.HasLocations, standardDetails.IsApprovedByRegulator)
+                HasLocations = standardDetails.HasLocations
             };
         }
         private bool SetMissingInfo()
         {
-            return (!HasLocations) || (IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault());
+            return (!HasLocations);
         }
     }
 }
