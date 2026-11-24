@@ -48,7 +48,6 @@ public class ManageShortCourseDetailsController(IMediator _mediator, ILogger<Man
         model.LocationInformation.LocationOptionsChangeLink = Url.RouteUrl(RouteNames.EditShortCourseLocationOptions, new { Ukprn, learningType, larsCode });
         model.SubmitForecastLink = Url.RouteUrl(RouteNames.CourseForecasts, new { ukprn = Ukprn, larsCode });
         model.DeleteShortCourseLink = Url.RouteUrl(RouteNames.DeleteShortCourse, new { Ukprn, learningType, larsCode });
-        model.Banner.LearningType = model.LearningTypeLower;
 
         var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
         {

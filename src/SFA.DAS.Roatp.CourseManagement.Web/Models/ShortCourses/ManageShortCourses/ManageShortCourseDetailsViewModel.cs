@@ -13,8 +13,6 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel
     public ShortCourseLocationInformationViewModel LocationInformation { get; set; }
     public string DeleteShortCourseLink { get; set; } = "#";
     public string SubmitForecastLink { get; set; } = "#";
-    public bool ShowMissingInfoBanner { get; set; }
-    public BannerViewModel Banner { get; set; } = new BannerViewModel();
     public BreadcrumbsViewModel Breadcrumbs { get; set; }
 
     public static implicit operator ManageShortCourseDetailsViewModel(GetProviderCourseDetailsQueryResult source)
@@ -59,8 +57,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel
                 DeliversAtEmployerLocation = locationOptions.Contains(ShortCourseLocationOption.EmployerLocation),
                 ShowTrainingVenues = source.ProviderCourseLocations.Any(x => x.LocationType == LocationType.Provider),
                 ShowTrainingRegions = source.ProviderCourseLocations.Any(x => x.LocationType == LocationType.Regional),
-            },
-            ShowMissingInfoBanner = !source.HasLocations && !source.HasOnlineDeliveryOption
+            }
         };
     }
 }

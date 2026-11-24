@@ -81,7 +81,6 @@ public class ManageShortCourseDetailsControllerGetTests
         model.LocationInformation.TrainingVenuesChangeLink.Should().Be(trainingVenuesChangeLink);
         model.LocationInformation.NationalProviderChangeLink.Should().Be(nationalDeliveryChangeLink);
         model.LocationInformation.LocationOptionsChangeLink.Should().Be(locationOptionsChangeLink);
-        model.Banner.LearningType.Should().Be(model.LearningTypeLower);
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderCourseDetailsQuery>(r => r.Ukprn == ukprn && r.LarsCode == larsCode), It.IsAny<CancellationToken>()), Times.Once());
     }
 
