@@ -1,0 +1,33 @@
+﻿@using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants
+@model ShortCourseShutterPagesViewModel
+@{
+    ViewData["Title"] = $"Courses not available";
+}
+
+@section breadcrumb
+{
+    @await Html.PartialAsync("_Breadcrumbs", Model.Breadcrumbs)
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-5">You cannot add a new @Model.LearningTypeLower right now</h1>
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+        <p class="govuk-body govuk-!-font-size-24 govuk-!-margin-bottom-6">This is because you have already added all your approved @Model.LearningTypeLowerPlural to your course offering.</p>
+        <p class="govuk-body govuk-!-margin-bottom-6">The delivery of @Model.LearningTypeLowerPlural is managed by the Apprentice Service. When you were invited to offer them, you were only approved for certain courses.</p>
+        <p class="govuk-body govuk-!-margin-bottom-6">
+            If you would like to offer more, you can contact us at
+            <a class="govuk-link" href="mailto:@ExternalLinks.AparMailLink">
+                @ExternalLinks.AparMailLink
+            </a>.
+        </p>
+        <p class="govuk-body govuk-!-margin-bottom-6">We may ask you to provide additional evidence to demonstrate your eligibility.</p>
+        <p class="govuk-body">
+            Find out more about
+            <a class="govuk-link" href="@ExternalLinks.FindOutAboutApprenticeshipUnitsLink" target="_blank">
+                what @Model.LearningTypeLowerPlural are, who can deliver them and how they're funded
+            </a>.
+        </p>
+    </div>
+</div>
