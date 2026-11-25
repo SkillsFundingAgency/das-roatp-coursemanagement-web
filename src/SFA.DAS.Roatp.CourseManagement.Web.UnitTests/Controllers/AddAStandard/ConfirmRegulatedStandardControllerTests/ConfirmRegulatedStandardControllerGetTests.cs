@@ -4,6 +4,7 @@ using AutoFixture.NUnit4;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
@@ -81,9 +82,14 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
 
         [Test, MoqAutoData]
         public void Get_NeedConfirmationOfStandard_ReturnsView(
+            [Frozen] Mock<ITempDataDictionary> tempDataMock,
             [Greedy] ConfirmRegulatedStandardController sut,
             string selectStandardLink)
         {
+            object regulatedBy = "test regulator";
+            tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.RegulatedByTempDataKey, out regulatedBy)).Returns(true);
+            sut.TempData = tempDataMock.Object;
+
             sut.AddDefaultContextWithUser().AddUrlHelperMock().AddUrlForRoute(RouteNames.GetAddStandardSelectStandard, selectStandardLink);
 
             var response = sut.NeedConfirmationOfRegulatedStandard();
@@ -95,6 +101,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var viewModel = result.Model as NeedApprovalForRegulatedStandardViewModel;
             viewModel.Should().NotBeNull();
             viewModel!.SelectAStandardLink.Should().Be(selectStandardLink);
+            viewModel!.RegulatedBy.Should().Be(regulatedBy.ToString());
+            tempDataMock.Verify(t => t.Remove(TempDataKeys.RegulatedByTempDataKey));
         }
     }
 }
