@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
@@ -18,6 +19,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 public class ConfirmRegulatedShortCourseController(IMediator _mediator, ISessionService _sessionService, IValidator<ConfirmRegulatedShortCourseSubmitModel> _validator) : ControllerBase
 {
     public const string ViewPath = "~/Views/ShortCourses/AddAShortCourse/ConfirmRegulatedShortCourse.cshtml";
+    public const string ShortCourseApprovalRequiredViewPath = "~/Views/ShutterPages/ShortCourseApprovalRequired.cshtml";
 
     [HttpGet]
     public async Task<IActionResult> ConfirmRegulatedShortCourse(LearningType learningType)
@@ -59,7 +61,9 @@ public class ConfirmRegulatedShortCourseController(IMediator _mediator, ISession
 
         if (submitModel.IsApprovedByRegulator == false)
         {
-            return RedirectToRoute(RouteNames.ConfirmRegulatedShortCourse, new { ukprn = Ukprn, learningType });
+            TempData.Add(TempDataKeys.RegulatedByTempDataKey, sessionModel.ShortCourseInformation.RegulatorName);
+            _sessionService.Delete(nameof(ShortCourseSessionModel));
+            return RedirectToRoute(RouteNames.ShortCourseApprovalRequired, new { ukprn = Ukprn, learningType });
         }
 
         if (sessionModel.SavedProviderContactModel == null || (sessionModel.SavedProviderContactModel.EmailAddress == null && sessionModel.SavedProviderContactModel.PhoneNumber == null))
@@ -68,6 +72,23 @@ public class ConfirmRegulatedShortCourseController(IMediator _mediator, ISession
         }
 
         return RedirectToRoute(RouteNames.ConfirmSavedContactDetailsForShortCourse, new { ukprn = Ukprn, learningType });
+    }
+
+    [HttpGet("approval-required", Name = RouteNames.ShortCourseApprovalRequired)]
+    public ActionResult ShortCourseApprovalRequired(LearningType learningType)
+    {
+        TempData.TryGetValue(TempDataKeys.RegulatedByTempDataKey, out var regulatedBy);
+
+        var model = new ShortCourseShutterPagesViewModel
+        {
+            Link = Url.RouteUrl(RouteNames.SelectShortCourse, new { Ukprn, learningType }),
+            RegulatedBy = regulatedBy.ToString(),
+            LearningType = learningType
+        };
+
+        TempData.Remove(TempDataKeys.RegulatedByTempDataKey);
+
+        return View(ShortCourseApprovalRequiredViewPath, model);
     }
 
     private async Task<ConfirmRegulatedShortCourseViewModel> GetViewModel(int ukprn, string larsCode, LearningType learningType)

@@ -111,5 +111,6 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Infrastructure
         public const string CourseForecasts = nameof(CourseForecasts);
         public const string ShortCourseCourseTypeNotAvailable = "ShortCourseCourseTypeNotAvailable";
         public const string ShortCoursesNotAvailable = "ShortCoursesNotAvailable";
+        public const string ShortCourseApprovalRequired = "ShortCourseApprovalRequired";
     }
 }
