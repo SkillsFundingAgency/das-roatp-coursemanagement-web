@@ -23,7 +23,7 @@ public class ShortCourseInformationViewModel
     public DateTime? LastDateStarts { get; set; }
     public bool HasLastDateStarts => CourseViewModelHelper.HasLastDateStarts(LastDateStarts);
     public bool FundingClosing => CourseViewModelHelper.IsFundingClosing(LastDateStarts);
-    public string StatusText => CourseViewModelHelper.GetFundingStatusText(FundingClosing);
+    public string StatusText => CourseViewModelHelper.GetFundingStatusText(FundingClosing, false);
     public string TagColour => CourseViewModelHelper.GetTagColour(FundingClosing, false);
 
     public static implicit operator ShortCourseInformationViewModel(GetStandardInformationQueryResult source)

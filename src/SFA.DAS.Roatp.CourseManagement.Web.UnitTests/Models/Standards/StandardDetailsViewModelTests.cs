@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
@@ -27,6 +28,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             const string standardInfoUrl = "http://test.com";
             const string contactUsPhoneNumber = "12345";
             const string contactUsEmail = "me@test.com";
+            DateTime? lastDateStarts = DateTime.Today.Date;
 
             var standardDetails = new GetProviderCourseDetailsQueryResult
             {
@@ -41,7 +43,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 IsRegulatedForProvider = isRegulated,
-                IsApprovedByRegulator = true
+                IsApprovedByRegulator = true,
+                LastDateStarts = lastDateStarts
             };
 
             StandardDetailsViewModel viewModel = standardDetails;
@@ -57,6 +60,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.ContactInformation.ContactUsEmail.Should().Be(contactUsEmail);
             viewModel.ContactInformation.ContactUsPhoneNumber.Should().Be(contactUsPhoneNumber);
             viewModel.StandardInformation.IsRegulatedForProvider.Should().Be(isRegulated);
+            viewModel.StandardInformation.LastDateStarts.Should().Be(lastDateStarts);
         }
 
         [Test]
@@ -290,18 +294,13 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Models.Standards
             viewModel.ApprovedByRegulatorStatus().Should().Be(approvedByRegulatorStatus);
         }
 
-        [TestCase(false, false, false, true)]
-        [TestCase(true, false, null, false)]
-        [TestCase(true, true, false, true)]
-        [TestCase(true, true, true, false)]
-        [TestCase(true, false, null, false)]
-        public void StandardRequiresMoreInfoIsSet(bool hasLocations, bool isRegulatedForProvider, bool? isApprovedByRegulator, bool expected)
+        [TestCase(false, true)]
+        [TestCase(true, false)]
+        public void StandardRequiresMoreInfoIsSet(bool hasLocations, bool expected)
         {
             var standardDetails = new GetProviderCourseDetailsQueryResult
             {
-                HasLocations = hasLocations,
-                IsRegulatedForProvider = isRegulatedForProvider,
-                IsApprovedByRegulator = isApprovedByRegulator
+                HasLocations = hasLocations
             };
 
             StandardDetailsViewModel viewModel = standardDetails;

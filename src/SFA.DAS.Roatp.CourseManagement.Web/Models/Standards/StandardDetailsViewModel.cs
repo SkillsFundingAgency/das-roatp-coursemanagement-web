@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Services;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
 {
-    public class StandardDetailsViewModel : IBackLink
+    public class StandardDetailsViewModel
     {
         public StandardInformationViewModel StandardInformation { get; set; }
 
@@ -41,13 +41,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
         public string DeleteStandardUrl { get; set; }
         public string BackUrl { get; set; }
         public string EditContactDetailsUrl { get; set; }
-        public string ConfirmRegulatedStandardUrl { get; set; }
         public string EditTrainingLocationsUrl { get; set; }
         public string EditProviderCourseRegionsUrl { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public bool HasLocations { get; set; }
         public bool StandardRequiresMoreInfo => SetMissingInfo();
-        public MissingInfoBannerViewModel MissingInfoBannerViewModel { get; set; }
+        public BreadcrumbsViewModel Breadcrumbs { get; set; }
 
         public static implicit operator StandardDetailsViewModel(GetProviderCourseDetailsQueryResult standardDetails)
         {
@@ -62,7 +61,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                     RegulatorName = standardDetails.RegulatorName,
                     Sector = standardDetails.Sector,
                     LearningType = standardDetails.LearningType,
-                    IsRegulatedForProvider = standardDetails.IsRegulatedForProvider
+                    IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
+                    LastDateStarts = standardDetails.LastDateStarts
                 },
                 ContactInformation = new StandardContactInformationViewModel
                 {
@@ -75,14 +75,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.Models.Standards
                 NationalCourseLocation = standardDetails.ProviderCourseLocations.Where(a => a.LocationType == LocationType.National).Select(x => (ProviderCourseLocationViewModel)x).FirstOrDefault(),
                 IsApprovedByRegulator = standardDetails.IsApprovedByRegulator,
                 IsRegulatedForProvider = standardDetails.IsRegulatedForProvider,
-                HasLocations = standardDetails.HasLocations,
-                MissingInfoBannerViewModel = new MissingInfoBannerViewModel
-                    (standardDetails.IsRegulatedForProvider, standardDetails.HasLocations, standardDetails.IsApprovedByRegulator)
+                HasLocations = standardDetails.HasLocations
             };
         }
         private bool SetMissingInfo()
         {
-            return (!HasLocations) || (IsRegulatedForProvider && !IsApprovedByRegulator.GetValueOrDefault());
+            return (!HasLocations);
         }
     }
 }
