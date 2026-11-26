@@ -10,7 +10,9 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseForecasts.Queries
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetAllProviderStandards;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
+using SFA.DAS.Roatp.CourseManagement.Web.Common;
 using SFA.DAS.Roatp.CourseManagement.Web.Extensions;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
 using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts;
@@ -18,7 +20,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts;
 namespace SFA.DAS.Roatp.CourseManagement.Web.Controllers;
 
 [Route("{ukprn}")]
-public class ProviderCourseForecastsController(IMediator _mediator, IValidator<CourseForecastsSubmitModel> _validator) : ControllerBase
+public class ProviderCourseForecastsController(IMediator _mediator, IValidator<CourseForecastsSubmitModel> _validator, IBreadcrumbsViewModelFactory _breadcrumbsFactory) : ControllerBase
 {
     public const string AllCoursesViewPath = "~/Views/Forecasts/AllCourses.cshtml";
     public const string CourseForecastsViewPath = "~/Views/Forecasts/CourseForecasts.cshtml";
@@ -28,10 +30,21 @@ public class ProviderCourseForecastsController(IMediator _mediator, IValidator<C
     public async Task<IActionResult> GetProviderCoursesForForecasts(CancellationToken cancellationToken)
     {
         var standards = await GetShortCourses(cancellationToken);
+
+        var breadcrumbModel = new BreadcrumbsViewModelFactoryModel
+        {
+            BreadcrumbNames =
+            [
+                BreadcrumbNames.ProviderDashboard,
+                BreadcrumbNames.ManageYourCourses
+            ]
+        };
+
         ForecastCoursesViewModel model = new()
         {
             LearningType = LearningType.ApprenticeshipUnit,
-            CourseLinks = new(standards.Select(s => new CourseLink(s.DisplayName, Url.RouteUrl(RouteNames.CourseForecasts, new { Ukprn, s.LarsCode }))).OrderBy(c => c.Name))
+            CourseLinks = new(standards.Select(s => new CourseLink(s.DisplayName, Url.RouteUrl(RouteNames.CourseForecasts, new { Ukprn, s.LarsCode }))).OrderBy(c => c.Name)),
+            Breadcrumbs = _breadcrumbsFactory.Create(Url, breadcrumbModel)
         };
         return View(AllCoursesViewPath, model);
     }

@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseForecasts.Command
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderCourseForecasts.Queries.GetProviderCourseForecasts;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers;
+using SFA.DAS.Roatp.CourseManagement.Web.Factories;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.Forecasts;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
@@ -25,6 +26,7 @@ public class GetCourseForecastsTests
     private IActionResult _actual;
     private Mock<IMediator> _mediatorMock;
     private Mock<IValidator<CourseForecastsSubmitModel>> _validatorMock;
+    private Mock<IBreadcrumbsViewModelFactory> _breadcrumbsFactoryMock;
     private GetProviderCourseForecastsQuery _query;
     private GetProviderCourseForecastsQueryResult _queryResult;
 
@@ -38,7 +40,8 @@ public class GetCourseForecastsTests
         _mediatorMock = new();
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseForecastsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(_queryResult);
         _validatorMock = new Mock<IValidator<CourseForecastsSubmitModel>>();
-        ProviderCourseForecastsController sut = new(_mediatorMock.Object, _validatorMock.Object);
+        _breadcrumbsFactoryMock = new();
+        ProviderCourseForecastsController sut = new(_mediatorMock.Object, _validatorMock.Object, _breadcrumbsFactoryMock.Object);
         sut.AddDefaultContextWithUser();
 
         _actual = await sut.GetCourseForecasts(_query.LarsCode, default);
