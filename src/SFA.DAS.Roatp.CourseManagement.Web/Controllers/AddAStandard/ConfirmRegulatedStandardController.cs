@@ -57,13 +57,16 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
             return View(ViewPath, model);
         }
 
+        sessionModel.StandardInformation = await _mediator.Send(new GetProviderAvailableCourseDetailsQuery(Ukprn, CourseType.Apprenticeship, sessionModel.LarsCode));
+
         if (submitModel.IsApprovedByRegulator == false)
         {
+            TempData.Add(TempDataKeys.RegulatedByTempDataKey, sessionModel.StandardInformation.RegulatorName);
             return RedirectToRouteWithUkprn(RouteNames.GetNeedApprovalToDeliverRegulatedStandard);
         }
 
         sessionModel.IsConfirmed = true;
-        sessionModel.StandardInformation = await _mediator.Send(new GetProviderAvailableCourseDetailsQuery(Ukprn, CourseType.Apprenticeship, sessionModel.LarsCode));
+
         _sessionService.Set(sessionModel);
 
         if (sessionModel.LatestProviderContactModel != null)
@@ -79,10 +82,15 @@ public class ConfirmRegulatedStandardController : AddAStandardControllerBase
     [HttpGet("needs-approval", Name = RouteNames.GetNeedApprovalToDeliverRegulatedStandard)]
     public ActionResult NeedConfirmationOfRegulatedStandard()
     {
+        TempData.TryGetValue(TempDataKeys.RegulatedByTempDataKey, out var regulatedBy);
+
         var model = new NeedApprovalForRegulatedStandardViewModel
         {
-            SelectAStandardLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectStandard)
+            SelectAStandardLink = GetUrlWithUkprn(RouteNames.GetAddStandardSelectStandard),
+            RegulatedBy = regulatedBy.ToString()
         };
+
+        TempData.Remove(TempDataKeys.RegulatedByTempDataKey);
 
         return View("~/Views/AddAStandard/NeedApprovalForRegulatedStandard.cshtml", model);
     }

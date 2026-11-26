@@ -1,0 +1,14 @@
+﻿@model ShortCourseShutterPagesViewModel
+@{
+    ViewBag.Title = "Approval required for regulated short course";
+}
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-caption-l">Add an @Model.LearningTypeLower</div>
+        <h1 class="govuk-heading-l">You need to be approved by the regulator before you can offer this @Model.LearningTypeLower.</h1>
+        <p class="govuk-body">This @Model.LearningTypeLower is regulated by the <strong>@Model.RegulatedBy</strong>. Contact them to find out more.</p>
+        <div class="govuk-button-group">
+            <a href="@Model.Link" class="govuk-link">Add a different @Model.LearningTypeLower</a>
+        </div>
+    </div>
+</div>

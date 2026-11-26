@@ -4,6 +4,7 @@ using AutoFixture.NUnit4;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
@@ -11,6 +12,7 @@ using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Controllers.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Infrastructure;
+using SFA.DAS.Roatp.CourseManagement.Web.Models;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.AddAShortCourse;
 using SFA.DAS.Roatp.CourseManagement.Web.Services;
 using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
@@ -74,5 +76,38 @@ public class ConfirmRegulatedShortCourseControllerGetTests
         mediatorMock.Verify(m => m.Send(It.Is<GetProviderAvailableCourseDetailsQuery>(q => q.Ukprn.ToString() == TestConstants.DefaultUkprn && q.LarsCode == sessionModel.LarsCode && q.CourseType == CourseType.ShortCourse), It.IsAny<CancellationToken>()), Times.Never);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
         sessionServiceMock.Verify(s => s.Set(It.IsAny<ShortCourseSessionModel>()), Times.Never);
+    }
+
+    [Test, MoqAutoData]
+    public void WhenGetShortCourseApprovalRequired_ReturnsView(
+    [Frozen] Mock<ITempDataDictionary> tempDataMock,
+    [Greedy] ConfirmRegulatedShortCourseController sut,
+    string link)
+    {
+        // Arrange
+        var learningType = LearningType.ApprenticeshipUnit;
+        object regulatedBy = "test regulator";
+
+        tempDataMock
+            .Setup(t => t.TryGetValue(TempDataKeys.RegulatedByTempDataKey, out regulatedBy))
+            .Returns(true);
+
+        sut.TempData = tempDataMock.Object;
+        sut.AddDefaultContextWithUser()
+            .AddUrlHelperMock()
+            .AddUrlForRoute(RouteNames.SelectShortCourse, link);
+
+        // Act
+        var response = sut.ShortCourseApprovalRequired(learningType);
+
+        // Assert
+        var result = (ViewResult)response;
+        result.ViewName.Should().Contain("ShortCourseApprovalRequired.cshtml");
+
+        var viewModel = result.Model as ShortCourseShutterPagesViewModel;
+        viewModel!.Link.Should().Be(link);
+        viewModel.RegulatedBy.Should().Be(regulatedBy.ToString());
+
+        tempDataMock.Verify(t => t.Remove(TempDataKeys.RegulatedByTempDataKey));
     }
 }

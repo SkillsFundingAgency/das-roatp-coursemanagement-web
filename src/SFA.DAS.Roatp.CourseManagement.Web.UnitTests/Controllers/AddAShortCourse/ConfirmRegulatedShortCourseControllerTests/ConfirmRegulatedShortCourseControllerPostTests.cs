@@ -3,6 +3,7 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
@@ -46,9 +47,10 @@ public class ConfirmRegulatedShortCourseControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public void WhenIsApprovedByRegulatorIsFalse_ThenRedirectsToSelectAnApprenticeshipUnit(
+    public void WhenIsApprovedByRegulatorIsFalse_ThenRedirectsToShortCourseApprovalRequired(
         [Frozen] Mock<ISessionService> sessionServiceMock,
         [Frozen] Mock<IValidator<ConfirmRegulatedShortCourseSubmitModel>> validator,
+        [Frozen] Mock<ITempDataDictionary> tempDataMock,
         [Greedy] ConfirmRegulatedShortCourseController sut,
         ShortCourseSessionModel sessionModel)
     {
@@ -56,6 +58,8 @@ public class ConfirmRegulatedShortCourseControllerPostTests
         var learningType = LearningType.ApprenticeshipUnit;
 
         sut.AddDefaultContextWithUser();
+
+        sut.TempData = tempDataMock.Object;
 
         sessionServiceMock.Setup(s => s.Get<ShortCourseSessionModel>()).Returns(sessionModel);
         validator.Setup(x => x.Validate(It.IsAny<ConfirmRegulatedShortCourseSubmitModel>())).Returns(new ValidationResult());
@@ -65,8 +69,9 @@ public class ConfirmRegulatedShortCourseControllerPostTests
 
         // Assert
         var redirectResult = response as RedirectToRouteResult;
-        redirectResult!.RouteName.Should().Be(RouteNames.ConfirmRegulatedShortCourse);
+        redirectResult!.RouteName.Should().Be(RouteNames.ShortCourseApprovalRequired);
         sessionServiceMock.Verify(s => s.Get<ShortCourseSessionModel>(), Times.Once);
+        sessionServiceMock.Verify(s => s.Delete(nameof(ShortCourseSessionModel)), Times.Once);
     }
 
     [Test, MoqAutoData]

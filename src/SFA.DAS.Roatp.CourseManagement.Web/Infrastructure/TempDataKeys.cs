@@ -11,5 +11,6 @@
         public const string SelectedTrainingVenueAddressTempDataKey = "SelectedTrainingVenueAddressTempDataKey";
         public const string SaveShortCourseBannerTempDataKey = "SaveShortCourseBannerTempDataKey";
         public const string ShowShortCourseDeletedBannerTempDataKey = "ShowShortCourseDeletedBannerTempDataKey";
+        public const string RegulatedByTempDataKey = "RegulatedByTempDataKey";
     }
 }

@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
@@ -63,16 +64,19 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
         }
 
         [Test, MoqAutoData]
-        public async Task Post_IsNotCorrectStandard_RedirectsToSelectStandard(
+        public async Task Post_IsNotApprovedStandard_RedirectsToGetNeedApprovalToDeliverRegulatedStandard(
             [Frozen] Mock<IMediator> mediatorMock,
             [Frozen] Mock<ISessionService> sessionServiceMock,
             [Frozen] Mock<IValidator<ConfirmNewRegulatedStandardSubmitModel>> validator,
+            [Frozen] Mock<ITempDataDictionary> tempDataMock,
             [Greedy] ConfirmRegulatedStandardController sut,
             ConfirmNewRegulatedStandardSubmitModel submitModel,
             StandardSessionModel sessionModel)
         {
             submitModel.IsApprovedByRegulator = false;
+            sessionModel.StandardInformation.RegulatorName = "test regulator";
             sut.AddDefaultContextWithUser();
+            sut.TempData = tempDataMock.Object;
             sessionServiceMock.Setup(s => s.Get<StandardSessionModel>()).Returns(sessionModel);
             validator.Setup(x => x.Validate(It.IsAny<ConfirmNewRegulatedStandardSubmitModel>())).Returns(new ValidationResult());
 
@@ -81,7 +85,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.AddAStandard.
             var result = (RedirectToRouteResult)response;
             result.Should().NotBeNull();
             result.RouteName.Should().Be(RouteNames.GetNeedApprovalToDeliverRegulatedStandard);
-            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Never);
+            mediatorMock.Verify(m => m.Send(It.IsAny<GetProviderAvailableCourseDetailsQuery>(), It.IsAny<CancellationToken>()), Times.Once);
+            tempDataMock.Verify(t => t.Add(TempDataKeys.RegulatedByTempDataKey, sessionModel.StandardInformation.RegulatorName), Times.Once);
         }
 
         [Test, MoqAutoData]

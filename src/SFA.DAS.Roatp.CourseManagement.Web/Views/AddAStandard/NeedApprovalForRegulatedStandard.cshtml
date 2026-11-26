@@ -5,15 +5,11 @@
 }
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <fieldset class="govuk-fieldset">
-            <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                <h1 class="govuk-fieldset__heading">
-                    You must be approved by the regulator to deliver this standard
-                </h1>
-            </legend>
-            <div class="govuk-button-group">
-                <a href="@Model.SelectAStandardLink" class="govuk-link">Add a different standard</a>
-            </div>
-        </fieldset>
+        <div class="govuk-caption-l">Add a standard</div>
+        <h1 class="govuk-heading-l">You need to be approved by the regulator before you can offer this apprenticeship.</h1>
+        <p class="govuk-body">This apprenticeship is regulated by the <strong>@Model.RegulatedBy</strong>. Contact them to find out more.</p>
+        <div class="govuk-button-group">
+            <a href="@Model.SelectAStandardLink" class="govuk-link">Add a different apprenticeship</a>
+        </div>
     </div>
 </div>
