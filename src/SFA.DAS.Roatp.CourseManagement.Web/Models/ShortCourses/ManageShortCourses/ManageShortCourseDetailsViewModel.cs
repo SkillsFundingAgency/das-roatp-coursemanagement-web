@@ -6,15 +6,14 @@ using SFA.DAS.Roatp.CourseManagement.Web.Helpers;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
-public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBackLink
+public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel
 {
     public ShortCourseInformationViewModel ShortCourseInformation { get; set; }
     public ShortCourseContactInformationViewModel ContactInformation { get; set; }
     public ShortCourseLocationInformationViewModel LocationInformation { get; set; }
     public string DeleteShortCourseLink { get; set; } = "#";
-    public string BackToManageShortCoursesLink { get; set; } = "#";
-    public bool ShowMissingInfoBanner { get; set; }
-    public BannerViewModel Banner { get; set; } = new BannerViewModel();
+    public string SubmitForecastLink { get; set; } = "#";
+    public BreadcrumbsViewModel Breadcrumbs { get; set; }
 
     public static implicit operator ManageShortCourseDetailsViewModel(GetProviderCourseDetailsQueryResult source)
     {
@@ -39,7 +38,8 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
                 LearningType = source.LearningType,
                 IsRegulatedForProvider = source.IsRegulatedForProvider,
                 Duration = source.Duration,
-                DurationUnits = source.DurationUnits
+                DurationUnits = source.DurationUnits,
+                LastDateStarts = source.LastDateStarts
             },
             ContactInformation = new ShortCourseContactInformationViewModel()
             {
@@ -57,8 +57,7 @@ public class ManageShortCourseDetailsViewModel : ShortCourseBaseViewModel, IBack
                 DeliversAtEmployerLocation = locationOptions.Contains(ShortCourseLocationOption.EmployerLocation),
                 ShowTrainingVenues = source.ProviderCourseLocations.Any(x => x.LocationType == LocationType.Provider),
                 ShowTrainingRegions = source.ProviderCourseLocations.Any(x => x.LocationType == LocationType.Regional),
-            },
-            ShowMissingInfoBanner = !source.HasLocations && !source.HasOnlineDeliveryOption
+            }
         };
     }
 }
