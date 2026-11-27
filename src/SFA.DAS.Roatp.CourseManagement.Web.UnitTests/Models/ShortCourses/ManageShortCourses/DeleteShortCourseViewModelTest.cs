@@ -1,7 +1,7 @@
 ﻿using AutoFixture.NUnit4;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses;
 
@@ -11,7 +11,7 @@ public class DeleteShortCourseViewModelTest
 {
     [Test, AutoData]
     public void DeleteShortCourseViewModel_ImplicitOperator_MapsPropertiesCorrectly(
-        GetStandardInformationQueryResult source)
+        GetProviderCourseDetailsQueryResult source)
     {
         // Act
         DeleteShortCourseViewModel sut = source;
@@ -19,9 +19,9 @@ public class DeleteShortCourseViewModelTest
         // Assert
         sut.ShortCourseInformation.Should().BeEquivalentTo(source, option =>
         {
-            option.WithMapping<ShortCourseInformationViewModel>(r => r.Title, m => m.CourseName);
-            option.WithMapping<ShortCourseInformationViewModel>(c => c.ApprovalBody, v => v.RegulatorName);
-            option.WithMapping<ShortCourseInformationViewModel>(c => c.Route, v => v.Sector);
+            option.WithMapping<ShortCourseInformationViewModel>(r => r.CourseName, m => m.CourseName);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.RegulatorName, v => v.RegulatorName);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.Sector, v => v.Sector);
             option.ExcludingMissingMembers();
             return option;
         });

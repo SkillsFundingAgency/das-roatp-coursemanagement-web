@@ -1,4 +1,6 @@
-﻿@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
+﻿@using Humanizer
+@using SFA.DAS.Roatp.CourseManagement.Web.Common.Constants
+@using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses.ManageShortCourses
 @model DeleteShortCourseViewModel
 
 @{
@@ -7,15 +9,30 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
         <span class="govuk-caption-l">Manage an @Model.LearningTypeLower</span>
-        <h1 class="govuk-heading-xl">Are you sure you want to delete this @Model.LearningTypeLower?</h1>
+        <h1 class="govuk-heading-xl govuk-!-margin-bottom-6">Are you sure you want to delete this @Model.LearningTypeLower?</h1>
+        <p class="govuk-body">
+            Deleting an @Model.LearningTypeLower will remove it from your account. This means it will no longer show on Find apprenticeship training.
+        </p>
+        <p class="govuk-body">
+            Deleting it will also stop you from submitting Individualised Learning Records (ILR) for government funding.
+        </p>
         <form method="post" asp-route="@RouteNames.DeleteShortCourse" enctype="multipart/form-data" novalidate>
             <input type="hidden" asp-for="ShortCourseInformation.LarsCode" />
+            <input type="hidden" name="CourseDisplayName" asp-for="ShortCourseInformation.CourseDisplayName" />
 
-            <table class="govuk-table" aria-label="Course details">
+            <table class="govuk-table govuk-!-margin-top-8" aria-label="Course details">
                 <tbody class="govuk-table__body">
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header das-table-cell-width-40" scope="row">Sector</th>
-                        <td class="govuk-table__cell das-table-cell-width-70">@Model.ShortCourseInformation.Sector</td>
+                        <th class="govuk-table__header das-table-cell-width-40" scope="row">Course name</th>
+                        <td class="govuk-table__cell das-table-cell-width-70">@Model.ShortCourseInformation.CourseDisplayName</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Type</th>
+                        <td class="govuk-table__cell">@Model.LearningType.ToString().Humanize()</td>
+                    </tr>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Sector</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.Sector</td>
                     </tr>
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">Learning aim reference code</th>
@@ -33,18 +50,42 @@
                         <th class="govuk-table__header" scope="row">Level</th>
                         <td class="govuk-table__cell">@Model.ShortCourseInformation.Level</td>
                     </tr>
+                    <tr asp-show="@Model.ShortCourseInformation.IsRegulatedForProvider" class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Regulated by</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.RegulatorName</td>
+                    </tr>
+                    <tr asp-show="@(Model.ShortCourseInformation.FundingClosing || Model.ShortCourseInformation.FundingClosed)" class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Status</th>
+                        <td class="govuk-table__cell">
+                            <span class="@Model.ShortCourseInformation.TagColour">@Model.ShortCourseInformation.StatusText</span>
+                        </td>
+                    </tr>
+                    <tr asp-show="@Model.ShortCourseInformation.HasLastDateStarts" class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row">Last start date</th>
+                        <td class="govuk-table__cell">@Model.ShortCourseInformation.LastDateStarts?.ToString("dd MMM yyyy")</td>
+                    </tr>
                 </tbody>
             </table>
 
-            <p>This @Model.LearningTypeLower will be removed from your record. It will no longer show as training you deliver.</p>
+            <div class="govuk-warning-text govuk-!-margin-top-2 govuk-!-margin-bottom-0">
+                <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+                <strong class="govuk-warning-text__text">
+                    <span class="govuk-visually-hidden">Warning</span>
+                    Do not delete this course if you still have learners on it, or if you have outstanding ILR submissions for previous learners.
+                </strong>
+                <p class="govuk-warning-text__text govuk-!-margin-top-6">
+                    This apprenticeship unit must stay in your offering if you want to receive government funding for it.
+                </p>
+                <p class="govuk-warning-text__text govuk-!-margin-top-6">
+                    Find out more about <a href="@ExternalLinks.FindOutAboutIlrSubmissionsLink" target="_blank" class="govuk-link">making ILR submissions</a>.
+                </p>
+            </div>
 
             <div class="govuk-button-group">
                 <button id="submit" class="govuk-button govuk-button--warning" data-module="govuk-button" data-disable-on-submit="true">
                     Delete @Model.LearningTypeLower
                 </button>
             </div>
-
-            <a href="@Model.BackToManageShortCoursesLink" class="govuk-link govuk-body">Back to managing your @Model.LearningTypeLowerPlural</a>
         </form>
     </div>
 </div>

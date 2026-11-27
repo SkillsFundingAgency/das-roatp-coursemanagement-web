@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
 using FluentAssertions.Execution;
-using Humanizer;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -45,8 +44,8 @@ public class ManageShortCoursesControllerGetTests
         var expectedLearningType = LearningType.ApprenticeshipUnit;
         var expectedStandardDetailsLink = Guid.NewGuid().ToString();
 
-        object isShortCourseDeleted = null;
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted));
+        object courseName = null;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShortCourseDeletedBannerTempDataKey, out courseName));
         sut.TempData = tempDataMock.Object;
 
         mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
@@ -72,13 +71,13 @@ public class ManageShortCoursesControllerGetTests
         model!.LearningType.Should().Be(expectedLearningType);
         model!.ShowShortCourseHeading.Should().BeTrue();
         model!.ShowDeleteShortCourseNotificationBanner.Should().BeFalse();
-        tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted), Times.Once);
-        tempDataMock.Verify(t => t.Remove(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey), Times.Never);
+        tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShortCourseDeletedBannerTempDataKey, out courseName), Times.Once);
+        tempDataMock.Verify(t => t.Remove(TempDataKeys.ShortCourseDeletedBannerTempDataKey), Times.Never);
         mediatorMock.Verify(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
     [Test, MoqAutoData]
-    public async Task Index_TempDataRetursShowDeleteBannerAsTrue_ReturnsViewWithBanner(
+    public async Task Index_TempDataRetursShowDeleteBanner_ReturnsViewWithBanner(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<ITempDataDictionary> tempDataMock,
         [Frozen] Mock<IProviderCourseTypeService> providerCourseTypeService,
@@ -89,8 +88,8 @@ public class ManageShortCoursesControllerGetTests
         var expectedApprenticeshipType = LearningType.ApprenticeshipUnit;
         var expectedStandardDetailsLink = Guid.NewGuid().ToString();
 
-        object isShortCourseDeleted = true;
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted));
+        object courseName = "Test Course";
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShortCourseDeletedBannerTempDataKey, out courseName));
         sut.TempData = tempDataMock.Object;
 
         mediatorMock.Setup(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(queryResult);
@@ -116,9 +115,9 @@ public class ManageShortCoursesControllerGetTests
         model!.LearningType.Should().Be(expectedApprenticeshipType);
         model!.ShowShortCourseHeading.Should().BeTrue();
         model!.ShowDeleteShortCourseNotificationBanner.Should().BeTrue();
-        model!.Banner.LearningType.Should().Be(expectedApprenticeshipType.Humanize());
-        tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted), Times.Once);
-        tempDataMock.Verify(t => t.Remove(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey), Times.Once);
+        model!.Banner.CourseName.Should().Be(courseName.ToString());
+        tempDataMock.Verify(x => x.TryGetValue(TempDataKeys.ShortCourseDeletedBannerTempDataKey, out courseName), Times.Once);
+        tempDataMock.Verify(t => t.Remove(TempDataKeys.ShortCourseDeletedBannerTempDataKey), Times.Once);
         mediatorMock.Verify(x => x.Send(It.IsAny<GetAllProviderStandardsQuery>(), It.IsAny<CancellationToken>()), Times.Once());
     }
 
@@ -146,8 +145,8 @@ public class ManageShortCoursesControllerGetTests
             .Setup(f => f.Create(It.IsAny<IUrlHelper>(), It.IsAny<BreadcrumbsViewModelFactoryModel>()))
             .Returns(expectedBreadcrumbs);
 
-        object isShortCourseDeleted = null;
-        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out isShortCourseDeleted));
+        object courseName = null;
+        tempDataMock.Setup(t => t.TryGetValue(TempDataKeys.ShortCourseDeletedBannerTempDataKey, out courseName));
         sut.TempData = tempDataMock.Object;
 
         sut.AddDefaultContextWithUser();

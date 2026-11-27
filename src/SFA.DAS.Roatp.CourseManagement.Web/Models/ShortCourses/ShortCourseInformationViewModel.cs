@@ -1,5 +1,6 @@
 ﻿using System;
 using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models;
@@ -52,6 +53,22 @@ public class ShortCourseInformationViewModel
             CourseName = source.Title,
             Level = source.Level,
             RegulatorName = source.ApprovalBody,
+            IsRegulatedForProvider = source.IsRegulatedForProvider,
+            Duration = source.Duration,
+            DurationUnits = source.DurationUnits,
+            LastDateStarts = source.LastDateStarts
+        };
+
+    public static implicit operator ShortCourseInformationViewModel(GetProviderCourseDetailsQueryResult source)
+        => new()
+        {
+            LarsCode = source.LarsCode,
+            IfateReferenceNumber = source.IFateReferenceNumber,
+            LearningType = source.LearningType,
+            Sector = source.Sector,
+            CourseName = source.CourseName,
+            Level = source.Level,
+            RegulatorName = source.RegulatorName,
             IsRegulatedForProvider = source.IsRegulatedForProvider,
             Duration = source.Duration,
             DurationUnits = source.DurationUnits,

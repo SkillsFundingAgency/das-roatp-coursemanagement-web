@@ -3,6 +3,7 @@ using AutoFixture.NUnit4;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.CourseManagement.Application.Courses.Queries.GetProviderAvailableCourseDetails;
+using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Web.Models.ShortCourses;
 
@@ -53,6 +54,29 @@ public class ShortCourseInformationViewModelTests
             option.WithMapping<ShortCourseInformationViewModel>(c => c.LearningType, v => v.LearningType);
             option.WithMapping<ShortCourseInformationViewModel>(c => c.Duration, v => v.Duration);
             option.WithMapping<ShortCourseInformationViewModel>(c => c.DurationUnits, v => v.DurationUnits);
+            return option;
+        });
+    }
+
+    [Test, AutoData]
+    public void Operator_TransformsFromGetProviderCourseDetailsQueryResult(GetProviderCourseDetailsQueryResult source)
+    {
+        ShortCourseInformationViewModel sut = source;
+
+        sut.Should().BeEquivalentTo(source, option =>
+        {
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.LarsCode, v => v.LarsCode);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.Level, v => v.Level);
+            option.WithMapping<ShortCourseInformationViewModel>(r => r.CourseName, m => m.CourseName);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.Sector, v => v.Sector);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.RegulatorName, v => v.RegulatorName);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.LastDateStarts, v => v.LastDateStarts);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.IFateReferenceNumber, v => v.IfateReferenceNumber);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.LearningType, v => v.LearningType);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.LearningType, v => v.LearningType);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.Duration, v => v.Duration);
+            option.WithMapping<ShortCourseInformationViewModel>(c => c.DurationUnits, v => v.DurationUnits);
+            option.ExcludingMissingMembers();
             return option;
         });
     }

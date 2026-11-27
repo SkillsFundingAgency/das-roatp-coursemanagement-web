@@ -3,4 +3,5 @@
 public class DeleteShortCourseSubmitModel
 {
     public required string LarsCode { get; set; } = string.Empty;
+    public string CourseDisplayName { get; set; } = string.Empty;
 }

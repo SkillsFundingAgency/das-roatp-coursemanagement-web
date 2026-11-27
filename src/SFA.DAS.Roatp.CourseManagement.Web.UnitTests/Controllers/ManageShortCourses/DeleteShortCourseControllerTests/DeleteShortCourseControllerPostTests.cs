@@ -16,6 +16,7 @@ using SFA.DAS.Roatp.CourseManagement.Web.UnitTests.TestHelpers;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.CourseManagement.Web.UnitTests.Controllers.ManageShortCourses.DeleteShortCourseControllerTests;
+
 public class DeleteShortCourseControllerPostTests
 {
     [Test, MoqAutoData]
@@ -39,6 +40,6 @@ public class DeleteShortCourseControllerPostTests
         Assert.NotNull(redirectResult);
         redirectResult.RouteName.Should().Be(RouteNames.ManageShortCourses);
         mediatorMock.Verify(m => m.Send(It.IsAny<DeleteProviderCourseCommand>(), It.IsAny<CancellationToken>()), Times.Once);
-        tempDataMock.Verify(t => t.Add(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, true));
+        tempDataMock.Verify(t => t.Add(TempDataKeys.ShortCourseDeletedBannerTempDataKey, model.CourseDisplayName), Times.Once);
     }
 }

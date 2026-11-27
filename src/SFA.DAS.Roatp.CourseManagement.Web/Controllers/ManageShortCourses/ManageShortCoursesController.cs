@@ -42,13 +42,13 @@ public class ManageShortCoursesController(IMediator _mediator, IBreadcrumbsViewM
             AddAShortCourseLink = selectShortCourseUrl,
         };
 
-        TempData.TryGetValue(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, out var showShortCourseDeleteBanner);
+        TempData.TryGetValue(TempDataKeys.ShortCourseDeletedBannerTempDataKey, out var bannerData);
 
-        if (showShortCourseDeleteBanner != null)
+        if (bannerData != null)
         {
             viewModel.ShowDeleteShortCourseNotificationBanner = true;
-            viewModel.Banner.LearningType = viewModel.LearningTypeHumanize;
-            TempData.Remove(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey);
+            viewModel.Banner.CourseName = bannerData.ToString();
+            TempData.Remove(TempDataKeys.ShortCourseDeletedBannerTempDataKey);
         }
 
         var result = await _mediator.Send(new GetAllProviderStandardsQuery(Ukprn, CourseType.ShortCourse));

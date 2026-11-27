@@ -3,4 +3,5 @@
 public class BannerViewModel
 {
     public string LearningType { get; set; }
+    public string CourseName { get; set; }
 }

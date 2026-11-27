@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.CourseManagement.Application.ProviderStandards.Queries.GetProviderCourseDetails;
 using SFA.DAS.Roatp.CourseManagement.Application.Standards.Commands.DeleteCourseLocations;
-using SFA.DAS.Roatp.CourseManagement.Application.Standards.Queries.GetStandardInformation;
 using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.CourseManagement.Domain.Models.Constants;
 using SFA.DAS.Roatp.CourseManagement.Web.Filters;
@@ -27,21 +26,12 @@ public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShor
 
         if (courseDetailsResponse == null)
         {
-            _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode} for User: {UserId}. Redirecting to PageNotFound.", Ukprn, larsCode, UserId);
+            _logger.LogWarning("No data returned for ukprn {Ukprn} and LarsCode {LarsCode}. Redirecting to PageNotFound.", Ukprn, larsCode);
 
             return View(ViewsPath.PageNotFoundPath);
         }
 
-        var courseInformationResponse = await _mediator.Send(new GetStandardInformationQuery(larsCode));
-
-        if (courseInformationResponse == null)
-        {
-            _logger.LogWarning("Course information not found for LarsCode {LarsCode}. Redirecting to PageNotFound.", larsCode);
-
-            return View(ViewsPath.PageNotFoundPath);
-        }
-
-        var model = (DeleteShortCourseViewModel)courseInformationResponse;
+        var model = (DeleteShortCourseViewModel)courseDetailsResponse;
         model.LearningType = learningType;
         model.BackToManageShortCoursesLink = Url.RouteUrl(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType });
 
@@ -55,7 +45,7 @@ public class DeleteShortCourseController(IMediator _mediator, ILogger<DeleteShor
 
         await _mediator.Send(command);
 
-        TempData.Add(TempDataKeys.ShowShortCourseDeletedBannerTempDataKey, true);
+        TempData.Add(TempDataKeys.ShortCourseDeletedBannerTempDataKey, model.CourseDisplayName);
 
         return RedirectToRoute(RouteNames.ManageShortCourses, new { ukprn = Ukprn, learningType });
     }
